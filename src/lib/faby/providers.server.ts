@@ -1,0 +1,429 @@
+import { MODELOS_ALTERNATIVOS, MODELS, ehErroDeModelo } from "./config";
+import type { Anexo, ProvedorCustom } from "./config";
+
+type HistoricoItem = { role: "user" | "assistant"; conteudo: string };
+type Imagem = { mime: string; data: string };
+
+export type ResultadoIA = { ok: boolean; texto: string; status?: number; bruto?: string };
+
+const TIMEOUT_MS = 120_000;
+
+/** Bloqueia endpoints que poderiam apontar o servidor para a rede interna. */
+export function ehUrlPublicaSegura(valor: string) {
+  try {
+    const url = new URL(valor);
+    if (url.protocol !== "https:") return false;
+    const host = url.hostname.toLowerCase().replace(/^\[|\]$/g, "");
+    if (
+      host === "localhost" ||
+      host.endsWith(".localhost") ||
+      host === "local" ||
+      host.endsWith(".local") ||
+      host === "metadata.google.internal" ||
+      host === "host.docker.internal"
+    ) {
+      return false;
+    }
+    const octetos = host.split(".");
+    if (
+      octetos.length === 4 &&
+      octetos.every((parte) => /^\d+$/.test(parte) && Number(parte) <= 255)
+    ) {
+      const [a = 0, b = 0] = octetos.map(Number);
+      if (
+        a === 10 ||
+        a === 127 ||
+        a === 0 ||
+        (a === 169 && b === 254) ||
+        (a === 192 && b === 168)
+      ) {
+        return false;
+      }
+      if (a === 172 && b >= 16 && b <= 31) return false;
+    }
+    if (
+      host === "::1" ||
+      host === "0:0:0:0:0:0:0:1" ||
+      host.startsWith("fc") ||
+      host.startsWith("fd") ||
+      host.startsWith("fe80:")
+    ) {
+      return false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function prepararHistorico(historico: HistoricoItem[]) {
+  // O provedor não guarda conversa. Reenviar todo o histórico evita que uma
+  // confirmação curta ("sim", "pode fazer") perca a tarefa combinada antes.
+  return historico.map((item) => ({ ...item, conteudo: resumirTexto(item.conteudo, 8_000) }));
+}
+
+function resumirTexto(texto: string, limite: number) {
+  if (texto.length <= limite) return texto;
+  const inicio = Math.floor(limite * 0.58);
+  const fim = limite - inicio;
+  return `${texto.slice(0, inicio)}\n\n[trecho anterior reduzido para caber no limite gratuito]\n\n${texto.slice(-fim)}`;
+}
+
+function limiteEntrada(url: string) {
+  if (/api\.groq\.com/i.test(url)) return 18_000;
+  if (/api\.z\.ai/i.test(url)) return 32_000;
+  if (/router\.huggingface\.co/i.test(url)) return 40_000;
+  return 52_000;
+}
+
+async function postJson(
+  url: string,
+  headers: Record<string, string>,
+  body: unknown,
+  timeoutMs: number = TIMEOUT_MS,
+) {
+  const resposta = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...headers },
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(timeoutMs),
+  });
+  const texto = await resposta.text();
+  let json: unknown = null;
+  try {
+    json = JSON.parse(texto);
+  } catch {
+    /* resposta não-JSON */
+  }
+  return { ok: resposta.ok, status: resposta.status, json, texto };
+}
+
+function erroLegivel(status: number, json: unknown, texto: string) {
+  const msg =
+    (json as { error?: { message?: string } | string })?.error &&
+    typeof (json as { error: { message?: string } }).error === "object"
+      ? (json as { error: { message?: string } }).error.message
+      : typeof (json as { error?: string })?.error === "string"
+        ? (json as { error: string }).error
+        : null;
+  const mensagemDireta = (json as { message?: unknown })?.message;
+  const respostaHtml = /<!doctype html|<html[\s>]/i.test(texto);
+  const base =
+    msg ||
+    (typeof mensagemDireta === "string" ? mensagemDireta : null) ||
+    (respostaHtml
+      ? "o endereço respondeu com uma página web, não com a API de IA"
+      : texto.slice(0, 300)) ||
+    "sem detalhes";
+  if (respostaHtml) {
+    return status === 422
+      ? "o endereço configurado não é a API do OmniRoute ou o túnel expirou; abra o OmniRoute pelo terminal e copie o HTTPS atual mostrado em Túneis"
+      : `o endereço respondeu com uma página web em vez da API (${status})`;
+  }
+  if (status === 401) return `chave inválida (${base})`;
+  if (status === 402) return `esse serviço exige saldo ou créditos (${base})`;
+  if (status === 403) return `chave sem permissão para esse modelo (${base})`;
+  if (status === 404 || status === 410) return `modelo indisponível ou aposentado (${base})`;
+  if (status === 429) return `limite gratuito atingido agora; tente novamente mais tarde (${base})`;
+  return `erro ${status}: ${base}`;
+}
+
+function ehFalhaDeModelo(status: number, texto: string) {
+  // A troca automática só é segura quando o provedor deixou claro que o
+  // modelo não existe ou não pode ser usado. Erros de chave, payload e limite
+  // não devem disparar várias chamadas gratuitas em sequência.
+  if (status === 404 || status === 410) return true;
+  return ehErroDeModelo(status, texto);
+}
+
+function endpointModelos(chatUrl: string) {
+  const marcador = "/chat/completions";
+  const indice = chatUrl.indexOf(marcador);
+  return indice >= 0 ? `${chatUrl.slice(0, indice)}/models` : null;
+}
+
+async function descobrirModelos(url: string, key: string) {
+  const alvo = endpointModelos(url);
+  if (!alvo) return [];
+  try {
+    const resposta = await fetch(alvo, {
+      headers: { Authorization: `Bearer ${key}`, Accept: "application/json" },
+    });
+    if (!resposta.ok) return [];
+    const json = (await resposta.json()) as { data?: { id?: string }[] };
+    const ids = (json.data ?? [])
+      .map((m) => m.id?.trim())
+      .filter((id): id is string => Boolean(id));
+    const pontos = (id: string) => {
+      const nome = id.toLowerCase();
+      let total = 0;
+      if (/coder|coding|code|devstral|gpt-oss/.test(nome)) total -= 50;
+      if (/free|flash|small|mini/.test(nome)) total -= 20;
+      if (/instruct|chat/.test(nome)) total -= 10;
+      if (/vision|embed|audio|image|rerank|moderation/.test(nome)) total += 80;
+      return total;
+    };
+    return ids.sort((a, b) => pontos(a) - pontos(b)).slice(0, 8);
+  } catch {
+    return [];
+  }
+}
+
+/** Google Gemini (API gratuita do AI Studio). */
+async function chamarGoogle(
+  prompt: string,
+  historico: HistoricoItem[],
+  key: string,
+  imagens: Imagem[],
+  timeoutMs: number,
+  modelo: string = MODELS.google,
+): Promise<ResultadoIA> {
+  const contents = prepararHistorico(historico).map((m) => ({
+    role: m.role === "assistant" ? "model" : "user",
+    parts: [{ text: m.conteudo }],
+  }));
+
+  const partesAtuais: unknown[] = [{ text: prompt }];
+  for (const img of imagens) {
+    partesAtuais.push({ inline_data: { mime_type: img.mime, data: img.data } });
+  }
+  contents.push({ role: "user", parts: partesAtuais as { text: string }[] });
+
+  const { ok, status, json, texto } = await postJson(
+    `https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`,
+    { "x-goog-api-key": key },
+    { contents },
+    timeoutMs,
+  );
+  if (!ok) return { ok: false, texto: erroLegivel(status, json, texto), status, bruto: texto };
+
+  const partes = (json as { candidates?: { content?: { parts?: { text?: string }[] } }[] })
+    ?.candidates?.[0]?.content?.parts;
+  const saida = (partes ?? [])
+    .map((p) => p.text ?? "")
+    .join("")
+    .trim();
+  if (!saida) return { ok: false, texto: "a IA devolveu uma resposta vazia" };
+  return { ok: true, texto: saida };
+}
+
+/** Qualquer provedor compatível com a API da OpenAI (Groq, OpenRouter, Mistral, customizados). */
+async function chamarOpenAICompat(
+  url: string,
+  modelo: string,
+  prompt: string,
+  historico: HistoricoItem[],
+  key: string,
+  imagens: Imagem[],
+  suportaImagem: boolean,
+  timeoutMs: number,
+): Promise<ResultadoIA> {
+  type Msg = { role: string; content: unknown };
+  const teto = limiteEntrada(url);
+  const historicoCurto = prepararHistorico(historico).map((m) => ({
+    role: m.role,
+    content: resumirTexto(m.conteudo, 2_500),
+  }));
+  const usadoNoHistorico = historicoCurto.reduce(
+    (total, item) => total + (typeof item.content === "string" ? item.content.length : 0),
+    0,
+  );
+  const promptAjustado = resumirTexto(prompt, Math.max(8_000, teto - usadoNoHistorico));
+  const messages: Msg[] = historicoCurto;
+
+  if (imagens.length && suportaImagem) {
+    messages.push({
+      role: "user",
+      content: [
+        { type: "text", text: promptAjustado },
+        ...imagens.map((img) => ({
+          type: "image_url",
+          image_url: { url: `data:${img.mime};base64,${img.data}` },
+        })),
+      ],
+    });
+  } else {
+    messages.push({ role: "user", content: promptAjustado });
+  }
+
+  const { ok, status, json, texto } = await postJson(
+    url,
+    { Authorization: `Bearer ${key}` },
+    { model: modelo, messages, temperature: 0.7 },
+    timeoutMs,
+  );
+  if (!ok) return { ok: false, texto: erroLegivel(status, json, texto), status, bruto: texto };
+
+  const saida = (
+    json as { choices?: { message?: { content?: string } }[] }
+  )?.choices?.[0]?.message?.content?.trim();
+  if (!saida) return { ok: false, texto: "a IA devolveu uma resposta vazia" };
+  return { ok: true, texto: saida };
+}
+
+export const PROVEDORES_FIXOS = [
+  "google",
+  "groq",
+  "openrouter",
+  "huggingface",
+  "deepseek",
+  "zai",
+  "omniroute",
+] as const;
+
+/** Provedores fixos que falam o padrão da OpenAI: endereço + entende imagem. */
+const COMPAT: Record<string, { url: string; imagem: boolean }> = {
+  groq: { url: "https://api.groq.com/openai/v1/chat/completions", imagem: false },
+  openrouter: { url: "https://openrouter.ai/api/v1/chat/completions", imagem: true },
+  huggingface: { url: "https://router.huggingface.co/v1/chat/completions", imagem: false },
+  deepseek: { url: "https://api.deepseek.com/v1/chat/completions", imagem: false },
+  zai: { url: "https://api.z.ai/api/paas/v4/chat/completions", imagem: false },
+};
+
+function endpointOmniRoute(apiUrl?: string) {
+  let base = apiUrl?.trim().replace(/\/+$/, "");
+  if (!base) return null;
+  base = base.replace(/\/(?:home|dashboard(?:\/.*)?)$/i, "");
+  if (!/\/v1$/i.test(base) && !base.endsWith("/chat/completions")) base = `${base}/v1`;
+  return base.endsWith("/chat/completions") ? base : `${base}/chat/completions`;
+}
+
+/** Permite pedir um modelo específico (usado nos combos da OmniRoute). */
+export async function chamarProvedorComModelo(
+  providerId: string,
+  modelo: string,
+  prompt: string,
+  historico: HistoricoItem[],
+  key: string,
+  imagens: Imagem[] = [],
+  timeoutMs: number = TIMEOUT_MS,
+  apiUrl?: string,
+): Promise<ResultadoIA> {
+  try {
+    if (providerId === "google")
+      return await chamarGoogle(prompt, historico, key, imagens, timeoutMs, modelo);
+    const omniUrl = providerId === "omniroute" ? endpointOmniRoute(apiUrl) : null;
+    if (providerId === "omniroute" && !omniUrl) {
+      return {
+        ok: false,
+        texto: "informe o endereço HTTPS público do seu OmniRoute nas configurações",
+      };
+    }
+    const fixo = omniUrl ? { url: omniUrl, imagem: true } : COMPAT[providerId];
+    if (!fixo) return { ok: false, texto: "provedor desconhecido" };
+    return await chamarOpenAICompat(
+      fixo.url,
+      modelo,
+      prompt,
+      historico,
+      key,
+      imagens,
+      fixo.imagem,
+      timeoutMs,
+    );
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    return { ok: false, texto: `falha de conexão: ${msg}` };
+  }
+}
+
+export async function chamarProvedor(
+  providerId: string,
+  prompt: string,
+  historico: HistoricoItem[],
+  key: string,
+  imagens: Imagem[] = [],
+  provedoresCustom: ProvedorCustom[] = [],
+  timeoutMs: number = TIMEOUT_MS,
+  apiUrl?: string,
+): Promise<ResultadoIA> {
+  try {
+    const principal = MODELS[providerId as keyof typeof MODELS];
+    const lista = MODELOS_ALTERNATIVOS[providerId] ?? (principal ? [principal] : []);
+    const modelos = [...new Set([principal, ...lista].filter(Boolean))] as string[];
+
+    if (providerId === "google") {
+      let ultimo: ResultadoIA = { ok: false, texto: "provedor desconhecido" };
+      for (const modelo of modelos) {
+        const r = await chamarGoogle(prompt, historico, key, imagens, timeoutMs, modelo);
+        if (r.ok) return r;
+        ultimo = r;
+        if (!ehErroDeModelo(r.status ?? 0, r.bruto ?? r.texto)) return r;
+      }
+      return ultimo;
+    }
+
+    const omniUrl = providerId === "omniroute" ? endpointOmniRoute(apiUrl) : null;
+    if (providerId === "omniroute" && !omniUrl) {
+      return {
+        ok: false,
+        texto: "informe o endereço HTTPS público do seu OmniRoute nas configurações",
+      };
+    }
+    const fixo = omniUrl ? { url: omniUrl, imagem: true } : COMPAT[providerId];
+    if (fixo) {
+      let ultimo: ResultadoIA = { ok: false, texto: "provedor desconhecido" };
+      let modelosParaTentar = modelos;
+      for (let indice = 0; indice < modelosParaTentar.length; indice += 1) {
+        const modelo = modelosParaTentar[indice];
+        if (!modelo) continue;
+        const r = await chamarOpenAICompat(
+          fixo.url,
+          modelo,
+          prompt,
+          historico,
+          key,
+          imagens,
+          fixo.imagem,
+          timeoutMs,
+        );
+        if (r.ok) return r;
+        ultimo = r;
+        if (!ehFalhaDeModelo(r.status ?? 0, r.bruto ?? r.texto)) return r;
+        if (indice === modelos.length - 1) {
+          const descobertos = await descobrirModelos(fixo.url, key);
+          modelosParaTentar = [...new Set([...modelosParaTentar, ...descobertos])];
+        }
+      }
+      return ultimo;
+    }
+
+    const custom = provedoresCustom.find((p) => p.slug === providerId);
+    if (custom) {
+      const url = custom.url.replace(/\/+$/, "");
+      const alvo = url.endsWith("/chat/completions") ? url : `${url}/chat/completions`;
+      return await chamarOpenAICompat(
+        alvo,
+        custom.modelo,
+        prompt,
+        historico,
+        key,
+        imagens,
+        custom.suporta_imagem,
+        timeoutMs,
+      );
+    }
+
+    return { ok: false, texto: "provedor desconhecido" };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    if (/timeout|aborted/i.test(msg)) {
+      return { ok: false, texto: "a IA demorou além do limite nesta tentativa" };
+    }
+    if (providerId === "omniroute") {
+      return {
+        ok: false,
+        texto: `não foi possível alcançar o OmniRoute. Confirme que ele está rodando e que o endereço HTTPS público está ativo (${msg})`,
+      };
+    }
+    return { ok: false, texto: `falha de conexão: ${msg}` };
+  }
+}
+
+export function textoDeAnexos(anexos: Anexo[]) {
+  const textos = anexos.filter((a) => a.tipo === "texto");
+  if (!textos.length) return "";
+  return textos
+    .map((a) => `--- Conteúdo de ${a.nome} ---\n${(a as { texto: string }).texto}`)
+    .join("\n\n");
+}

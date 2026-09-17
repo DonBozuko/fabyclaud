@@ -1,0 +1,1 @@
+ALTER TABLE public.app_perfis RENAME COLUMN funcao TO cargo;

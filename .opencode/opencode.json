@@ -1,0 +1,19 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [".opencode/plugins/graphify.js"],
+  "references": {
+    "ecc": {
+      "repository": "affaan-m/ECC",
+      "branch": "main",
+      "description": "ECC plugin marketplace and toolkit for skills, workflows, and MCP servers"
+    },
+    "graphify": {
+      "repository": "Graphify-Labs/graphify",
+      "branch": "main",
+      "description": "Graphify knowledge graph and repository visualizer"
+    }
+  },
+  "skills": {
+    "paths": ["C:/Users/Cliente/AppData/Local/Temp/opencode/ECC/skills", ".opencode/skills"]
+  }
+}
