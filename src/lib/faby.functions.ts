@@ -976,14 +976,33 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           .select("id, slug, nome, url, modelo, suporta_imagem"),
         context.supabase.from("memorias").select("conteudo").maybeSingle(),
       ]);
-      if (resChaves.data) chaves = resChaves.data;
-      if (resCustom.data) custom = resCustom.data;
+      if (resChaves.data && resChaves.data.length > 0) {
+        chaves = resChaves.data;
+      } else {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { data: adminChaves } = await supabaseAdmin
+          .from("chaves_ia")
+          .select("provider, api_key, api_url, testada_ok");
+        if (adminChaves && adminChaves.length > 0) chaves = adminChaves;
+      }
+      if (resCustom.data && resCustom.data.length > 0) {
+        custom = resCustom.data;
+      } else {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { data: adminCustom } = await supabaseAdmin
+          .from("provedores_custom")
+          .select("id, slug, nome, url, modelo, suporta_imagem");
+        if (adminCustom && adminCustom.length > 0) custom = adminCustom;
+      }
       if (resMem.data) mem = resMem.data;
     } catch {
       // ignore
     }
 
-    const doCacheChaves = cacheChaves.get(context.userId);
+    const doCacheChaves =
+      cacheChaves.get(context.userId) ??
+      cacheChaves.get("00000000-0000-0000-0000-000000000001") ??
+      [...cacheChaves.values()][0];
     if (doCacheChaves) {
       for (const [provider, val] of doCacheChaves.entries()) {
         const idx = chaves.findIndex((r: any) => r.provider === provider);
@@ -996,7 +1015,11 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     }
 
     const provedoresCustom = (custom ?? []) as ProvedorCustom[];
-    const memoria = mem?.conteudo ?? cacheMemorias.get(context.userId) ?? "";
+    const memoria =
+      mem?.conteudo ??
+      cacheMemorias.get(context.userId) ??
+      cacheMemorias.get("00000000-0000-0000-0000-000000000001") ??
+      "";
 
     // Instruções do agente escolhido (pronto ou criado pelo usuário).
     let instrucoesAgente = "";

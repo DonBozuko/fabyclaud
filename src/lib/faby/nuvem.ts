@@ -31,15 +31,25 @@ export function aplicarApiNoCodigo(
   authUrl?: string,
   privadoUrl?: string,
 ) {
-  return codigo
+  let res = codigo
     .split(MARCADOR_API)
     .join(apiUrl)
     .split(MARCADOR_AUTH)
     .join(authUrl ?? MARCADOR_AUTH)
     .split(MARCADOR_PRIVADO)
-    .join(privadoUrl ?? MARCADOR_PRIVADO)
-    .replace(/https?:\/\/localhost:\d+(?:\/api)?/gi, apiUrl)
-    .replace(/https?:\/\/127\.0\.0\.1:\d+(?:\/api)?/gi, apiUrl);
+    .join(privadoUrl ?? MARCADOR_PRIVADO);
+
+  // Remove any duplicated /api/public/dados/... paths from previous replacements
+  res = res.replace(
+    /https?:\/\/[^"'\s`]+\/api\/public\/dados\/[0-9a-f-]{36}(?:\/public\/dados\/[0-9a-f-]{36})+/gi,
+    apiUrl,
+  );
+  // Replace localhost or 127.0.0.1 base URLs cleanly with the real hosted apiUrl
+  res = res.replace(
+    /https?:\/\/(?:localhost|127\.0\.0\.1):\d+(?:\/api\/public\/dados\/[0-9a-f-]{36})?/gi,
+    apiUrl,
+  );
+  return res;
 }
 
 export function aplicarApiNosArquivos(
