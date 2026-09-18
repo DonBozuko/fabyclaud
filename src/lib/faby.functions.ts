@@ -989,8 +989,8 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     const pedido = `${blocosAnexos ? `${blocosAnexos}\n\n--- Pedido do usuário ---\n` : ""}${pedidoBase}${instrucaoImagem}`;
     // Banco de dados real hospedado: endereço exclusivo deste projeto.
     const origem = (data.origem ?? "").trim() || "https://fabyclaud.lovable.app";
-    const apiUrl = urlDadosProjeto(origem, projetoId);
-    const apiPrivada = urlsPrivadasProjeto(origem, projetoId);
+    const apiUrl = urlDadosProjeto(origem, projetoId!);
+    const apiPrivada = urlsPrivadasProjeto(origem, projetoId!);
     const prepararArquivos = async (brutos: Record<string, string>) =>
       aplicarApiNosArquivos(
         await processarArquivos(brutos),
@@ -1022,7 +1022,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     let execucaoId: string | null = null;
     if (pedidoExigeArquivos(prompt)) {
       execucaoId = await orquestracao.iniciarExecucao(dbOrquestracao, {
-        projetoId,
+        projetoId: projetoId!,
         userId: context.userId,
         pedido: prompt,
         diagnostico,
