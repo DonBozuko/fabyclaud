@@ -1,4 +1,4 @@
-declare module 'jszip' {
+declare module "jszip" {
   interface JSZipObject {
     name: string;
     dir: boolean;
@@ -7,12 +7,12 @@ declare module 'jszip' {
     unixPermissions: number | null;
     dosPermissions: number | null;
     options: Record<string, unknown>;
-    async(type: 'string'): Promise<string>;
-    async(type: 'text'): Promise<string>;
-    async(type: 'base64'): Promise<string>;
-    async(type: 'uint8array'): Promise<Uint8Array>;
-    async(type: 'arraybuffer'): Promise<ArrayBuffer>;
-    async(type: 'blob'): Promise<Blob>;
+    async(type: "string"): Promise<string>;
+    async(type: "text"): Promise<string>;
+    async(type: "base64"): Promise<string>;
+    async(type: "uint8array"): Promise<Uint8Array>;
+    async(type: "arraybuffer"): Promise<ArrayBuffer>;
+    async(type: "blob"): Promise<Blob>;
     async(type: string): Promise<any>;
   }
 
@@ -30,8 +30,17 @@ declare module 'jszip' {
   }
 
   interface JSZipGeneratorOptions {
-    type?: 'base64' | 'string' | 'text' | 'binarystring' | 'array' | 'uint8array' | 'arraybuffer' | 'blob' | 'nodebuffer';
-    compression?: 'STORE' | 'DEFLATE';
+    type?:
+      | "base64"
+      | "string"
+      | "text"
+      | "binarystring"
+      | "array"
+      | "uint8array"
+      | "arraybuffer"
+      | "blob"
+      | "nodebuffer";
+    compression?: "STORE" | "DEFLATE";
     compressionOptions?: {
       level?: number;
     };
@@ -43,7 +52,12 @@ declare module 'jszip' {
     constructor();
     files: { [key: string]: JSZipObject };
     file(name: string): JSZipObject | null;
-    file(name: string, data: string | number[] | Uint8Array | ArrayBuffer | Blob | NodeJS.ReadableStream | Promise<any>, options?: JSZipFileOptions): this;
+    file(
+      name: string,
+      data:
+        string | number[] | Uint8Array | ArrayBuffer | Blob | NodeJS.ReadableStream | Promise<any>,
+      options?: JSZipFileOptions,
+    ): this;
     file(regex: RegExp): JSZipObject[];
     folder(name: string): JSZip | null;
     folder(regex: RegExp): JSZipObject[];

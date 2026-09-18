@@ -169,6 +169,39 @@ async function descobrirModelos(url: string, key: string) {
   }
 }
 
+async function descobrirModelosGoogle(key: string): Promise<string[]> {
+  try {
+    const resposta = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models?key=${key}`,
+      {
+        headers: { "x-goog-api-key": key, Accept: "application/json" },
+        signal: AbortSignal.timeout(10_000),
+      },
+    );
+    if (!resposta.ok) return [];
+    const json = (await resposta.json()) as {
+      models?: { name?: string; supportedGenerationMethods?: string[] }[];
+    };
+    const validos = (json.models ?? [])
+      .filter((m) => (m.supportedGenerationMethods ?? []).includes("generateContent"))
+      .map((m) => (m.name ?? "").replace(/^models\//, "").trim())
+      .filter(Boolean);
+
+    const pontuacao = (id: string) => {
+      const nome = id.toLowerCase();
+      let total = 0;
+      if (nome.includes("flash")) total -= 30;
+      if (nome.includes("2.5") || nome.includes("3.")) total -= 20;
+      if (nome.includes("pro")) total -= 10;
+      if (nome.includes("embedding") || nome.includes("aqa") || nome.includes("imagen")) total += 100;
+      return total;
+    };
+    return validos.sort((a, b) => pontuacao(a) - pontuacao(b)).slice(0, 10);
+  } catch {
+    return [];
+  }
+}
+
 /** Google Gemini (API gratuita do AI Studio). */
 async function chamarGoogle(
   prompt: string,
@@ -178,6 +211,7 @@ async function chamarGoogle(
   timeoutMs: number,
   modelo: string = MODELS.google,
 ): Promise<ResultadoIA> {
+  const modeloLimpo = modelo.replace(/^models\//, "").trim();
   const contents = prepararHistorico(historico).map((m) => ({
     role: m.role === "assistant" ? "model" : "user",
     parts: [{ text: m.conteudo }],
@@ -190,7 +224,7 @@ async function chamarGoogle(
   contents.push({ role: "user", parts: partesAtuais as { text: string }[] });
 
   const { ok, status, json, texto } = await postJson(
-    `https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent`,
     { "x-goog-api-key": key },
     { contents },
     timeoutMs,
@@ -344,11 +378,21 @@ export async function chamarProvedor(
 
     if (providerId === "google") {
       let ultimo: ResultadoIA = { ok: false, texto: "provedor desconhecido" };
-      for (const modelo of modelos) {
+      let modelosGoogle = modelos;
+      for (let i = 0; i < modelosGoogle.length; i++) {
+        const modelo = modelosGoogle[i];
+        if (!modelo) continue;
         const r = await chamarGoogle(prompt, historico, key, imagens, timeoutMs, modelo);
         if (r.ok) return r;
         ultimo = r;
         if (!ehErroDeModelo(r.status ?? 0, r.bruto ?? r.texto)) return r;
+        if (i === modelosGoogle.length - 1) {
+          const descobertos = await descobrirModelosGoogle(key);
+          const novos = descobertos.filter((m) => !modelosGoogle.includes(m));
+          if (novos.length) {
+            modelosGoogle = [...modelosGoogle, ...novos];
+          }
+        }
       }
       return ultimo;
     }

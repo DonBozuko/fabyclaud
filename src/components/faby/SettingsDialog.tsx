@@ -58,7 +58,10 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
       if (typeof window !== "undefined") {
         try {
           const salvas = JSON.parse(localStorage.getItem("faby_local_keys") || "{}");
-          salvas[provedor] = { key: chave.trim(), api_url: provedor === "omniroute" ? omniUrl : "" };
+          salvas[provedor] = {
+            key: chave.trim(),
+            api_url: provedor === "omniroute" ? omniUrl : "",
+          };
           localStorage.setItem("faby_local_keys", JSON.stringify(salvas));
         } catch {
           // ignore

@@ -218,7 +218,9 @@ export const obterCapacidades = createServerFn({ method: "GET" })
       }
     }
 
-    const prontas = rows.filter((chave: any) => chave.testada_ok).map((chave: any) => chave.provider);
+    const prontas = rows
+      .filter((chave: any) => chave.testada_ok)
+      .map((chave: any) => chave.provider);
     const pendentes = rows
       .filter((chave: any) => !chave.testada_ok)
       .map((chave: any) => chave.provider);
@@ -278,10 +280,7 @@ export const salvarChave = createServerFn({ method: "POST" })
     cacheChaves.get(context.userId)!.set(data.provider, registro);
 
     try {
-      await context.supabase.from("chaves_ia").upsert(
-        registro,
-        { onConflict: "user_id,provider" },
-      );
+      await context.supabase.from("chaves_ia").upsert(registro, { onConflict: "user_id,provider" });
     } catch {
       // ignore
     }
@@ -303,10 +302,7 @@ export const apagarChave = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     cacheChaves.get(context.userId)?.delete(data.provider);
     try {
-      await context.supabase
-        .from("chaves_ia")
-        .delete()
-        .eq("provider", data.provider);
+      await context.supabase.from("chaves_ia").delete().eq("provider", data.provider);
     } catch {
       // ignore
     }
@@ -912,7 +908,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       await import("./faby/nuvem");
     const { aplicativoLocalParaPedido } = await import("./faby/aplicativos-locais.server");
 
-    const anexos = ((data.anexos ?? []) as unknown as Anexo[]);
+    const anexos = (data.anexos ?? []) as unknown as Anexo[];
     const prompt = data.prompt.trim();
     let intencao = classificarPedido(prompt);
     if (!prompt && !anexos.length) throw new Error("Mensagem vazia");
@@ -959,7 +955,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     }
 
     const provedoresCustom = (custom ?? []) as ProvedorCustom[];
-    const memoria = mem?.conteudo ?? (cacheMemorias.get(context.userId) ?? "");
+    const memoria = mem?.conteudo ?? cacheMemorias.get(context.userId) ?? "";
 
     // Instruções do agente escolhido (pronto ou criado pelo usuário).
     let instrucoesAgente = "";
@@ -1171,13 +1167,16 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       try {
         await context.supabase
           .from("projetos")
-          .update({ arquivos: aplicativoLocal.arquivos as unknown as never, modelo: "modelo-local" })
+          .update({
+            arquivos: aplicativoLocal.arquivos as unknown as never,
+            modelo: "modelo-local",
+          })
           .eq("id", projetoId);
       } catch {
         // ignore
       }
       const resposta = `${aplicativoLocal.descricao}\n\nFuncionando e testável agora: operações básicas, decimal, limpar, apagar, teclado e aviso de divisão por zero.\nLimite: este modelo local não usa IA e não serve para pedidos personalizados.`;
-      
+
       const novaMsgLocal: MensagemArmazenada = {
         id: crypto.randomUUID(),
         projeto_id: projetoId!,

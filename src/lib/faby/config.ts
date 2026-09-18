@@ -14,7 +14,14 @@ export const MODELS = {
  * sem perder qualidade — todos são modelos fortes pra programar.
  */
 export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
-  google: ["gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.5-pro", "gemini-1.5-flash"],
+  google: [
+    "gemini-2.5-flash",
+    "gemini-2.5-flash-lite",
+    "gemini-2.5-pro",
+    "gemini-1.5-flash-latest",
+    "gemini-1.5-pro-latest",
+    "gemini-2.0-flash-exp",
+  ],
   groq: [
     "llama-3.3-70b-versatile",
     "llama-3.1-8b-instant",

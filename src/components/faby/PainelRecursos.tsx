@@ -28,14 +28,7 @@ import {
 } from "@/lib/faby.functions";
 
 export type PainelNome =
-  | "memoria"
-  | "escola"
-  | "agentes"
-  | "prompts"
-  | "docs"
-  | "backups"
-  | "workspace"
-  | "github";
+  "memoria" | "escola" | "agentes" | "prompts" | "docs" | "backups" | "workspace" | "github";
 
 const TITULOS: Record<PainelNome, { titulo: string; sub: string }> = {
   memoria: {
