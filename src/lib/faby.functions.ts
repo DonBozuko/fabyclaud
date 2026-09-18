@@ -431,7 +431,7 @@ export const testarChave = createServerFn({ method: "POST" })
   });
 
 export function respostaComprovaCapacidade(texto: string) {
-  return /(?:^|\s)FABY_OK\|HTML\|CSS\|JS(?:\s|$)/.test(texto.trim());
+  return (texto || "").includes("FABY_OK|HTML|CSS|JS");
 }
 
 export const listarProvedoresCustom = createServerFn({ method: "GET" })

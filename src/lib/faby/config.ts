@@ -17,9 +17,8 @@ export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
   google: [
     "gemini-2.5-flash",
     "gemini-2.5-flash-lite",
-    "gemini-1.5-flash",
+    "gemini-2.5-pro",
     "gemini-2.0-flash",
-    "gemini-1.5-pro",
   ],
   groq: [
     "llama-3.3-70b-versatile",
@@ -53,8 +52,21 @@ export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
 /** Erros que significam "esse modelo não serve" (dá pra tentar outro modelo). */
 export function ehErroDeModelo(status: number, texto: string) {
   const t = (texto || "").toLowerCase();
+  // Erros de autenticação/chave NÃO devem tentar outros modelos
+  if (
+    t.includes("api key not valid") ||
+    t.includes("api_key_invalid") ||
+    t.includes("invalid api key") ||
+    t.includes("invalid_api_key") ||
+    t.includes("key not found") ||
+    t.includes("unauthenticated") ||
+    t.includes("chave inválida") ||
+    t.includes("permission_denied")
+  ) {
+    return false;
+  }
   if (status === 410 || status === 404) return true;
-  if (status === 400 || status === 403 || status === 422 || status === 401) {
+  if (status === 400 || status === 403 || status === 422) {
     return (
       t.includes("model") ||
       t.includes("not found") ||
@@ -63,9 +75,7 @@ export function ehErroDeModelo(status: number, texto: string) {
       t.includes("end of life") ||
       t.includes("decommission") ||
       t.includes("unsupported") ||
-      t.includes("invalid") ||
       t.includes("not available") ||
-      t.includes("access") ||
       t.includes("deprecated") ||
       t.includes("retired") ||
       t.includes("update your code")
