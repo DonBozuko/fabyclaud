@@ -98,8 +98,10 @@ export function avaliarEntrega(
     falha: incompletos.length ? `arquivos entregues pela metade: ${incompletos.join(", ")}` : null,
   });
 
-  const falsas = graves.filter((p) =>
-    /botão sem ação|link interno|não existe no javascript|não existe no html|não entregue/i.test(p),
+  const falsas = problemas.filter((p) =>
+    /botão sem ação|link interno|links sem destino|href=["']?#|não existe no javascript|não existe no html|não entregue|função.*não existe/i.test(
+      p,
+    ),
   );
   metas.push({
     id: "acoes",
@@ -156,9 +158,23 @@ export function avaliarEntrega(
   }
 
   const falhas = metas.filter((m) => m.falha).map((m) => `${m.titulo}: ${m.falha}`);
-  const cumpridas = metas.length - falhas.length;
-  const nota = metas.length ? Math.round((cumpridas / metas.length) * 100) : 100;
-  return { nota, metas, falhas, atingiuObjetivo: falhas.length === 0 };
+
+  // Qualquer item detectado pela conferência automática DEVE reduzir a nota e impedir o "100/100"
+  if (problemas.length > 0) {
+    for (const p of problemas) {
+      if (!falhas.some((f) => f.includes(p))) {
+        falhas.push(`conferência de arquivos: ${p}`);
+      }
+    }
+  }
+
+  const cumpridas = metas.filter((m) => !m.falha).length;
+  let nota = metas.length ? Math.round((cumpridas / metas.length) * 100) : 100;
+  if (problemas.length > 0) {
+    nota = Math.min(nota, Math.max(30, 100 - problemas.length * 15));
+  }
+
+  return { nota, metas, falhas, atingiuObjetivo: falhas.length === 0 && problemas.length === 0 };
 }
 
 /** Puxão de orelha: a IA recebe a nota, o que faltou e o que não pode repetir. */

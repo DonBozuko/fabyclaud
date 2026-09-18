@@ -1480,7 +1480,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     const apiPrivada = urlsPrivadasProjeto(origem, projetoId!);
     const prepararArquivos = async (brutos: Record<string, string>) =>
       aplicarApiNosArquivos(
-        await processarArquivos(brutos),
+        await processarArquivos(brutos, pedidoBase),
         apiUrl,
         apiPrivada.auth,
         apiPrivada.dados,
@@ -1516,6 +1516,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       contextoPedido.continuacao ||
       intencao === "alterar" ||
       intencao === "recriar";
+    let execucaoId: string | null = null;
     if (exigeArquivos) {
       try {
         execucaoId = await orquestracao.iniciarExecucao(dbOrquestracao, {
@@ -1794,7 +1795,10 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       for (let rodada = 0; rodada < 2; rodada += 1) {
         const pedidos = ferramentas.extrairPedidosDeFerramenta(bruto);
         if (!pedidos.length) break;
-        const resultado = await ferramentas.executarFerramentas(pedidos, { apiUrl });
+        const resultado = await ferramentas.executarFerramentas(pedidos, {
+          apiUrl,
+          contextoProjeto: pedidoBase,
+        });
         for (const p of pedidos) ferramentasUsadas.push(p.nome);
         promptComDados = `${promptComDados}\n\n--- Resultado real das ferramentas que você pediu ---\n${resultado}\n\nUse esses dados como verdade e agora entregue a resposta definitiva. Não peça ferramenta novamente se já tem o necessário.`;
         const r = await chamarProvedor(

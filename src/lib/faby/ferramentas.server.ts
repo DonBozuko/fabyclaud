@@ -158,18 +158,21 @@ function crc32(texto: string) {
   return (crc ^ 0xffffffff) >>> 0;
 }
 
-function gerarImagem(descricao: string) {
+import { enriquecerPromptImagem } from "./builder.server";
+
+function gerarImagem(descricao: string, contextoProjeto?: string) {
   const desc = descricao.trim();
   if (!desc) return "descreva a imagem em inglês para eu gerar";
-  const seed = crc32(desc) % 1_000_000;
-  const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(desc)}?width=1024&height=768&seed=${seed}&nologo=true`;
+  const promptEnriquecido = enriquecerPromptImagem(desc, contextoProjeto);
+  const seed = crc32(promptEnriquecido) % 1_000_000;
+  const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptEnriquecido)}?width=1024&height=768&seed=${seed}&nologo=true`;
   return `imagem pronta, use exatamente este src no HTML: ${url}`;
 }
 
 /** Executa os pedidos e devolve um bloco de texto pronto para voltar à IA. */
 export async function executarFerramentas(
   pedidos: PedidoFerramenta[],
-  contexto: { apiUrl: string },
+  contexto: { apiUrl: string; contextoProjeto?: string },
 ) {
   const resultados = await Promise.all(
     pedidos.map(async ({ nome, entrada }) => {
@@ -178,7 +181,7 @@ export async function executarFerramentas(
         if (nome === "ler_pagina") return await lerPagina(entrada);
         if (nome === "ler_doc" || nome === "documentacao") return await lerDocumentacao(entrada);
         if (nome === "consultar_banco") return await consultarBanco(entrada, contexto.apiUrl);
-        if (nome === "gerar_imagem") return gerarImagem(entrada);
+        if (nome === "gerar_imagem") return gerarImagem(entrada, contexto.contextoProjeto);
         return `ferramenta desconhecida: ${nome}`;
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);

@@ -490,13 +490,75 @@ function crc32(texto: string) {
   return (crc ^ 0xffffffff) >>> 0;
 }
 
+/** Enriquece o prompt da imagem com detalhes de estilo, assunto e contexto para a IA de imagem produzir o resultado certo. */
+export function enriquecerPromptImagem(descricao: string, contextoProjeto?: string): string {
+  const d = descricao.trim();
+  if (!d) return "modern clean user interface graphic design, high resolution";
+
+  const dLower = d.toLowerCase();
+
+  // 1. Detecção de perfil / avatar / pessoa / amigo / usuário
+  if (
+    /\b(perfil|avatar|foto de perfil|usuario|usuário|user|profile|person|pessoa|amigo|amiga|friend|membro|member|author|autor|avatar de|foto de|homem|mulher|garoto|garota)\b/i.test(
+      dLower,
+    )
+  ) {
+    const ehMulher = /\b(mulher|garota|menina|woman|girl|amiga|female)\b/i.test(dLower);
+    const ehHomem = /\b(homem|garoto|menino|man|boy|amigo|male)\b/i.test(dLower);
+    const sujeito = ehMulher
+      ? "young brazilian woman"
+      : ehHomem
+        ? "young brazilian man"
+        : "smiling brazilian person";
+    return `portrait photo of a ${sujeito}, headshot profile picture, warm friendly smile, soft natural studio lighting, neutral aesthetic background, authentic sharp photography, 8k`;
+  }
+
+  // 2. Detecção de rede social / Orkut / comunidade / mensagens / WhatsApp
+  if (
+    /\b(orkut|comunidade|community|depoimento|scrapbook|social network|rede social)\b/i.test(dLower)
+  ) {
+    return "early 2000s vintage social network community header banner, colorful retro aesthetic, clean digital illustration, high quality graphic design";
+  }
+
+  if (/\b(whatsapp|chat|mensagem|conversa|mensagens)\b/i.test(dLower)) {
+    return "modern messaging app interface background banner, clean aesthetic wallpaper, minimalist design";
+  }
+
+  // 3. Detecção de logo / ícone
+  if (/\b(logo|icone|ícone|icon|symbol|brand)\b/i.test(dLower)) {
+    const tema = contextoProjeto ? contextoProjeto.slice(0, 40) : "tech product";
+    return `modern minimalist vector logo icon for ${d}, theme of ${tema}, sleek clean design on solid background, 4k`;
+  }
+
+  // 4. Detecção de banner / capa / hero / background
+  if (/\b(banner|capa|hero|fundo|background|header)\b/i.test(dLower)) {
+    const tema = contextoProjeto ? contextoProjeto.slice(0, 50) : "modern web app";
+    return `sleek hero banner background for ${d} (${tema}), modern vibrant abstract aesthetic, high resolution web design`;
+  }
+
+  // 5. Se o prompt for curto (< 4 palavras) ou em português, enriquece com o contexto
+  const palavras = d.split(/\s+/).filter(Boolean);
+  if (palavras.length < 4 || /[áàâãéêíóôõúç]/i.test(d)) {
+    const ctx = contextoProjeto ? `, contextual for ${contextoProjeto.slice(0, 60)}` : "";
+    return `high quality detailed photography of ${d}${ctx}, professional studio lighting, realistic, 8k resolution, crisp clean focus`;
+  }
+
+  return d;
+}
+
 /** Troca <img src="gerar:descrição"> por uma imagem real da Pollinations.ai (grátis, sem chave). */
-export function substituirGeradoresDeImagem(codigo: string, largura = 1024, altura = 768) {
+export function substituirGeradoresDeImagem(
+  codigo: string,
+  largura = 1024,
+  altura = 768,
+  contextoProjeto?: string,
+) {
   return codigo.replace(PADRAO_IMG_GERAR, (todo, aspas: string, descricao: string) => {
     const desc = descricao.trim();
     if (!desc) return todo;
-    const seed = crc32(desc) % 1_000_000;
-    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(desc)}?width=${largura}&height=${altura}&seed=${seed}&nologo=true`;
+    const promptEnriquecido = enriquecerPromptImagem(desc, contextoProjeto);
+    const seed = crc32(promptEnriquecido) % 1_000_000;
+    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptEnriquecido)}?width=${largura}&height=${altura}&seed=${seed}&nologo=true`;
     return `src=${aspas}${url}${aspas}`;
   });
 }
@@ -548,10 +610,15 @@ async function resolverConsultas(codigo: string) {
 }
 
 /** Resolve marcadores de imagem e consulta em cada arquivo devolvido pela IA. */
-export async function processarArquivos(arquivos: Record<string, string>) {
+export async function processarArquivos(
+  arquivos: Record<string, string>,
+  contextoProjeto?: string,
+) {
   const saida: Record<string, string> = {};
   for (const [nome, conteudo] of Object.entries(arquivos)) {
-    saida[nome] = await resolverConsultas(substituirGeradoresDeImagem(conteudo));
+    saida[nome] = await resolverConsultas(
+      substituirGeradoresDeImagem(conteudo, 1024, 768, contextoProjeto),
+    );
   }
   return saida;
 }

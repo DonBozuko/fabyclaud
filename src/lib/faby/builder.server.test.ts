@@ -183,3 +183,69 @@ test("cópia dos originais não entra nas conferências nem na prévia", () => {
   });
   assert.equal(resultado.ok, true);
 });
+
+test("enriquecerPromptImagem gera retrato de pessoa para avatar/perfil e respeita o contexto do projeto", async () => {
+  const { enriquecerPromptImagem } = await import("./builder.server");
+  const avatar = enriquecerPromptImagem("avatar de usuario", "Clone do Orkut");
+  assert.match(avatar, /portrait photo of a .*person/i);
+  assert.match(avatar, /profile picture/i);
+
+  const orkutBanner = enriquecerPromptImagem("orkut comunidade", "Orkut");
+  assert.match(orkutBanner, /community/i);
+  assert.match(orkutBanner, /aesthetic/i);
+});
+
+test("avaliarEntrega não permite 100/100 se houver links sem destino ou botões sem ação", async () => {
+  const { avaliarEntrega } = await import("./evolucao.server");
+  const arquivosComLinksMortos = {
+    "index.html": `
+      <html>
+        <head><link rel="stylesheet" href="style.css"></head>
+        <body>
+          <a href="#">Link 1</a>
+          <a href="#">Link 2</a>
+          <a href="#">Link 3</a>
+          <button id="btn">Botão</button>
+          <script src="app.js"></script>
+        </body>
+      </html>
+    `,
+    "style.css": "body { background: #fff; }",
+    "app.js": "document.querySelector('#btn').addEventListener('click', () => {});",
+  };
+
+  const avaliacao = avaliarEntrega(arquivosComLinksMortos, {
+    exigeBackend: false,
+    pedido: "Crie um site",
+    imagensEnviadas: [],
+  });
+
+  assert.equal(avaliacao.atingiuObjetivo, false);
+  assert.ok(avaliacao.nota < 100);
+  assert.ok(avaliacao.falhas.some((f) => /links sem destino|referência falsa|conferência/i.test(f)));
+});
+
+test("iniciarExecucao retorna ID válido mesmo sem persistência do Supabase", async () => {
+  const { iniciarExecucao } = await import("./orquestracao.server");
+  const mockDb = {
+    from: () => ({
+      insert: () => ({
+        select: () => ({
+          single: async () => ({ data: null, error: { message: "table missing" } }),
+        }),
+      }),
+      upsert: async () => ({ error: null }),
+      update: () => ({ eq: async () => ({ error: null }) }),
+    }),
+  } as any;
+
+  const id = await iniciarExecucao(mockDb, {
+    projetoId: "proj-1",
+    userId: "user-1",
+    pedido: "teste",
+    diagnostico: "ok",
+  });
+
+  assert.ok(typeof id === "string" && id.length > 10);
+});
+

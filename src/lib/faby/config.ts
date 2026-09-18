@@ -244,7 +244,7 @@ export const EXTENSOES_TEXTO = [
   ".xml",
 ];
 
-export const MODELO_PADRAO = "google";
+export const MODELO_PADRAO = "groq";
 
 export interface Anexo {
   nome: string;
