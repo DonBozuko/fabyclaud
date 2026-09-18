@@ -222,29 +222,68 @@ export type IntencaoPedido = "analisar" | "alterar" | "abrir" | "conversar" | "r
 
 export type ItemHistorico = { role: "user" | "assistant"; conteudo: string };
 
-/** Recupera a ação combinada quando a pessoa responde apenas "sim", "pode" etc. */
-export function resolverPedidoContextual(pedido: string, historico: ItemHistorico[]) {
+/** Recupera a ação combinada quando a pessoa responde apenas "sim", "pode", "crie", "não apareceu na prévia" etc. */
+export function resolverPedidoContextual(
+  pedido: string,
+  historico: ItemHistorico[],
+  arquivosAtuais: Record<string, string> = {},
+) {
   const limpo = pedido.trim();
   let intencao = classificarPedido(limpo);
   const confirmacao =
-    /^(?:sim|isso|pode|pode sim|pode fazer|fa[çc]a|manda|vamos|beleza|ok|claro|quero|bora|continue|continua)[.!\s]*$/i.test(
+    /^(?:sim|isso|pode|pode sim|pode fazer|fa[çc]a|manda|vamos|beleza|ok|claro|quero|bora|continue|continua|crie|vai|criar|execute)[.!\s]*$/i.test(
       limpo,
     );
-  if (!confirmacao || intencao !== "conversar") {
-    return { pedidoEfetivo: limpo, intencao, continuacao: false };
-  }
+  const queixaPrevia =
+    /\b(n[aã]o\s+(?:apareceu|abriu|veio|tem|est[aá]|gerou|criou)|cad[eê]|onde\s+est[aá]|t[aá]\s+vazio|sem\s+nada|nada\s+na\s+tela|tela\s+preta|tela\s+branca|tela\s+vazia|mostra|funcione|arruma)\b/i.test(
+      limpo,
+    );
 
+  const historicoInvertido = [...historico].reverse();
   const ultimaResposta =
-    [...historico]
-      .reverse()
-      .find((item) => item.role === "assistant")
-      ?.conteudo.trim() ?? "";
-  if (!ultimaResposta) return { pedidoEfetivo: limpo, intencao, continuacao: false };
+    historicoInvertido.find((item) => item.role === "assistant")?.conteudo.trim() ?? "";
+
   const ofereceuAcao =
     /(?:quer que eu|posso|diga ["“']?.+?["”']? e eu|se quiser[^.]{0,80}(?:fa[çc]o|monto|crio|corrijo|construo)|pr[oó]ximo passo[^.]{0,80}(?:criar|corrigir|montar|implementar|construir))/i.test(
       ultimaResposta,
     );
-  if (!ofereceuAcao) return { pedidoEfetivo: limpo, intencao, continuacao: false };
+
+  const ultimoPedidoDoUsuario =
+    historicoInvertido
+      .find((item) => item.role === "user" && item.conteudo.trim() !== limpo)
+      ?.conteudo.trim() ?? "";
+
+  // Se o usuário está reclamando que a prévia está vazia:
+  if (queixaPrevia && (ultimoPedidoDoUsuario || ultimaResposta)) {
+    const alvo = ultimoPedidoDoUsuario || ultimaResposta;
+    return {
+      pedidoEfetivo: `O usuário relatou: "${limpo}".\nContexto do projeto solicitado: "${alvo.slice(0, 2000)}".\n\nATENÇÃO CRÍTICA OBRIGATÓRIA: A prévia do projeto ainda está vazia ou sem os arquivos executáveis. Você DEVE GERAR E ENTREGAR AGORA TODOS OS ARQUIVOS COMPLETOS dentro das tags <arquivo nome="index.html">...</arquivo>, <arquivo nome="style.css">...</arquivo>, <arquivo nome="app.js">...</arquivo>. É terminantemente proibido responder apenas com texto explicativo ou promessas sem as tags <arquivo> completas!`,
+      intencao: "alterar" as IntencaoPedido,
+      continuacao: true,
+    };
+  }
+
+  if (confirmacao && intencao === "conversar") {
+    if (!ofereceuAcao && !queixaPrevia) {
+      return { pedidoEfetivo: limpo, intencao, continuacao: false };
+    }
+    intencao = /vers[ãa]o web|recri(?:ar|o)|reconstruir|aplica[çc][ãa]o web/i.test(ultimaResposta)
+      ? "recriar"
+      : "alterar";
+    return {
+      pedidoEfetivo: `Execute agora a ação concreta que você ofereceu na resposta anterior. Não faça outra pergunta e não repita a oferta.\n\nResposta anterior:\n${ultimaResposta.slice(0, 3000)}`,
+      intencao,
+      continuacao: true,
+    };
+  }
+
+  if (intencao !== "conversar") {
+    return { pedidoEfetivo: limpo, intencao, continuacao: false };
+  }
+
+  if (!ultimaResposta || !ofereceuAcao) {
+    return { pedidoEfetivo: limpo, intencao, continuacao: false };
+  }
 
   intencao = /vers[ãa]o web|recri(?:ar|o)|reconstruir|aplica[çc][ãa]o web/i.test(ultimaResposta)
     ? "recriar"
@@ -698,7 +737,10 @@ export function auditarArquivos(arquivos: Record<string, string>): string[] {
   }
 
   // 1b. Backend entregue pela metade.
-  const temBackend = nomes.some((n) => ehArquivoDeServidor(n));
+  // Aplicações web criadas no FabyClaud têm index.html e comunicam com a nuvem hospedada (%%FABY_API%%).
+  // Apenas projetos de servidor dedicados/importados sem index.html são auditados para exigir Node/SQL local.
+  const temIndexPrincipal = nomes.some((n) => /^index\.html?$/i.test(n));
+  const temBackend = !temIndexPrincipal && nomes.some((n) => ehArquivoDeServidor(n));
   if (temBackend) {
     const arquivoServidor = nomes.find(
       (n) => /(^|\/)(server|app|index)\.(js|ts|mjs|cjs)$/i.test(n) && ehArquivoDeServidor(n),

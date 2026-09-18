@@ -1317,7 +1317,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       conteudo: m.conteudo,
     }));
 
-    const contextoPedido = resolverPedidoContextual(prompt, historico);
+    const contextoPedido = resolverPedidoContextual(prompt, historico, arquivosAtuais);
     intencao = contextoPedido.intencao;
     // Recriar: guarda o inventário do projeto de referência para conferir depois
     // se a versão web cobriu tudo — evita entregar metade e chamar de pronto.
@@ -1509,8 +1509,12 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     const dbOrquestracao = context.supabase as unknown as Parameters<
       typeof orquestracao.iniciarExecucao
     >[0];
-    let execucaoId: string | null = null;
-    if (pedidoExigeArquivos(prompt)) {
+    const exigeArquivos =
+      pedidoExigeArquivos(prompt) ||
+      contextoPedido.continuacao ||
+      intencao === "alterar" ||
+      intencao === "recriar";
+    if (exigeArquivos) {
       try {
         execucaoId = await orquestracao.iniciarExecucao(dbOrquestracao, {
           projetoId: projetoId!,
@@ -1784,7 +1788,9 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       // os arquivos originais. Cobrar o banco hospedado aqui só travava a entrega.
       const { projetoExterno } = await import("./faby/builder.server");
       const externo = projetoExterno(arquivosAtuais) && intencao !== "recriar";
-      const exigeBackend = pedidoExigeBackend(prompt) && !externo;
+      const exigeBackend =
+        (pedidoExigeBackend(prompt) || pedidoExigeBackend(contextoPedido.pedidoEfetivo)) &&
+        !externo;
 
       if (intencao === "analisar" || intencao === "conversar") {
         textoFinal = extraido.texto.trim();
