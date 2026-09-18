@@ -1,5 +1,5 @@
 export const MODELS = {
-  google: "gemini-flash-lite-latest",
+  google: "gemini-2.0-flash",
   groq: "openai/gpt-oss-120b",
   openrouter: "deepseek/deepseek-chat-v3.1:free",
   huggingface: "deepseek-ai/DeepSeek-V3.1",
@@ -14,7 +14,13 @@ export const MODELS = {
  * sem perder qualidade — todos são modelos fortes pra programar.
  */
 export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
-  google: ["gemini-flash-lite-latest", "gemini-flash-latest", "gemini-2.0-flash"],
+  google: [
+    "gemini-2.0-flash",
+    "gemini-1.5-flash",
+    "gemini-2.5-flash",
+    "gemini-1.5-pro",
+    "gemini-2.0-flash-lite",
+  ],
   groq: ["openai/gpt-oss-120b", "llama-3.3-70b-versatile", "qwen/qwen3-32b"],
   openrouter: [
     "deepseek/deepseek-chat-v3.1:free",

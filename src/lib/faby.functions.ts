@@ -1255,10 +1255,17 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         const limpo = img.nome.replace(/[^a-zA-Z0-9._-]+/g, "-").toLowerCase();
         arquivosAtuais[`enviados/${limpo}`] = `data:${img.mime};base64,${img.data}`;
       }
-      await context.supabase
-        .from("projetos")
-        .update({ arquivos: arquivosAtuais as unknown as never })
-        .eq("id", projetoId);
+      if (cacheProjetos.has(projetoId!)) {
+        cacheProjetos.get(projetoId!)!.arquivos = arquivosAtuais;
+      }
+      try {
+        await context.supabase
+          .from("projetos")
+          .update({ arquivos: arquivosAtuais as unknown as never })
+          .eq("id", projetoId);
+      } catch {
+        // ignore
+      }
     }
 
     const blocosAnexos = textoDeAnexos(anexos);
@@ -1285,7 +1292,12 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     // Escola das IAs: as regras conquistadas nos estudos entram em toda resposta.
     const escola = await import("./faby/escola.server");
     const dbEscola = context.supabase as unknown as import("./faby/escola.server").Db;
-    const licoesAprendidas = await escola.licoesParaPrompt(dbEscola, context.userId);
+    let licoesAprendidas = "";
+    try {
+      licoesAprendidas = await escola.licoesParaPrompt(dbEscola, context.userId);
+    } catch {
+      // ignore
+    }
     // Plugins: a IA pode pedir busca na web, leitura de página, documentação,
     // consulta ao banco do projeto e geração de imagem — sozinha, sem chave.
     const ferramentas = await import("./faby/ferramentas.server");
@@ -1305,27 +1317,31 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     >[0];
     let execucaoId: string | null = null;
     if (pedidoExigeArquivos(prompt)) {
-      execucaoId = await orquestracao.iniciarExecucao(dbOrquestracao, {
-        projetoId: projetoId!,
-        userId: context.userId,
-        pedido: prompt,
-        diagnostico,
-      });
-      await orquestracao.registrarEtapa(dbOrquestracao, {
-        execucaoId,
-        userId: context.userId,
-        etapa: "planejamento",
-        estado: "concluida",
-        entrada: prompt,
-        resultado: "Contexto, arquivos, memória, capacidades e critérios de pronto preparados.",
-      });
-      await orquestracao.registrarEtapa(dbOrquestracao, {
-        execucaoId,
-        userId: context.userId,
-        etapa: "construcao",
-        estado: "em_andamento",
-        entrada: pedidoBase,
-      });
+      try {
+        execucaoId = await orquestracao.iniciarExecucao(dbOrquestracao, {
+          projetoId: projetoId!,
+          userId: context.userId,
+          pedido: prompt,
+          diagnostico,
+        });
+        await orquestracao.registrarEtapa(dbOrquestracao, {
+          execucaoId,
+          userId: context.userId,
+          etapa: "planejamento",
+          estado: "concluida",
+          entrada: prompt,
+          resultado: "Contexto, arquivos, memória, capacidades e critérios de pronto preparados.",
+        });
+        await orquestracao.registrarEtapa(dbOrquestracao, {
+          execucaoId,
+          userId: context.userId,
+          etapa: "construcao",
+          estado: "em_andamento",
+          entrada: pedidoBase,
+        });
+      } catch {
+        // ignore
+      }
     }
     let usada: { pid: string; key: string; apiUrl?: string | undefined } | null = null;
     // Memória do projeto: cada rodada deixa um registro curto do que ficou decidido,
@@ -1333,10 +1349,17 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     const guardarNota = async (linha: string) => {
       const registro = `- ${new Date().toISOString().slice(0, 16).replace("T", " ")} ${linha}`;
       const atualizado = `${notasProjeto ? `${notasProjeto}\n` : ""}${registro}`.slice(-6000);
-      await context.supabase
-        .from("projetos")
-        .update({ notas: atualizado } as never)
-        .eq("id", projetoId);
+      if (cacheProjetos.has(projetoId!)) {
+        cacheProjetos.get(projetoId!)!.notas = atualizado;
+      }
+      try {
+        await context.supabase
+          .from("projetos")
+          .update({ notas: atualizado } as never)
+          .eq("id", projetoId);
+      } catch {
+        // ignore
+      }
     };
     const imagens = anexos
       .filter((a) => a.tipo === "imagem")
