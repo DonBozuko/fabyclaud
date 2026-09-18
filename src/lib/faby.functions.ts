@@ -28,7 +28,7 @@ export const listarProjetos = createServerFn({ method: "GET" })
       .select("id, nome, modelo, arquivos, updated_at")
       .order("updated_at", { ascending: false });
     if (error) throw new Error(error.message);
-    return (data ?? []).map((p) => ({
+    return (data ?? []).map((p: any) => ({
       id: p.id,
       nome: p.nome,
       modelo: p.modelo,
@@ -81,7 +81,7 @@ export const listarChaves = createServerFn({ method: "GET" })
       .from("chaves_ia")
       .select("provider, api_key, api_url, testada_ok, testada_em, ultimo_erro");
     if (error) throw new Error(error.message);
-    return (data ?? []).map((k) => ({
+    return (data ?? []).map((k: any) => ({
       provider: k.provider,
       mascara: `${k.api_key.slice(0, 4)}••••${k.api_key.slice(-4)}`,
       api_url: k.provider === "omniroute" ? k.api_url : null,
@@ -99,10 +99,10 @@ export const obterCapacidades = createServerFn({ method: "GET" })
       .from("chaves_ia")
       .select("provider, testada_ok, testada_em, ultimo_erro");
     if (error) throw new Error(error.message);
-    const prontas = (data ?? []).filter((chave) => chave.testada_ok).map((chave) => chave.provider);
+    const prontas = (data ?? []).filter((chave: any) => chave.testada_ok).map((chave: any) => chave.provider);
     const pendentes = (data ?? [])
-      .filter((chave) => !chave.testada_ok)
-      .map((chave) => chave.provider);
+      .filter((chave: any) => !chave.testada_ok)
+      .map((chave: any) => chave.provider);
     return {
       ia: { pronta: prontas.length > 0, provedores: prontas, pendentes },
       busca: {
@@ -486,7 +486,7 @@ export const listarBackups = createServerFn({ method: "GET" })
       .order("created_at", { ascending: false })
       .limit(40);
     if (error) throw new Error(error.message);
-    return (rows ?? []).map((b) => ({
+    return (rows ?? []).map((b: any) => ({
       id: b.id,
       rotulo: b.rotulo,
       created_at: b.created_at,
@@ -647,8 +647,8 @@ export const gerarDocumentacao = createServerFn({ method: "POST" })
     }
 
     const provedoresCustom = (custom ?? []) as ProvedorCustom[];
-    const mapaChaves = new Map(
-      (chaves ?? []).map((k) => [
+    const mapaChaves = new Map<string, { key: string; apiUrl?: string; testada?: boolean }>(
+      (chaves ?? []).map((k: any) => [
         k.provider,
         { key: k.api_key, apiUrl: k.api_url ?? undefined, testada: k.testada_ok },
       ]),
@@ -782,8 +782,8 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     }
 
     // Provedor preferido primeiro, depois os outros que já têm chave (fallback automático).
-    const mapaChaves = new Map(
-      (chaves ?? []).map((k) => [
+    const mapaChaves = new Map<string, { key: string; apiUrl?: string; testada?: boolean }>(
+      (chaves ?? []).map((k: any) => [
         k.provider,
         { key: k.api_key, apiUrl: k.api_url ?? undefined, testada: k.testada_ok },
       ]),
@@ -870,7 +870,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       .select("role, conteudo")
       .eq("projeto_id", projetoId)
       .order("created_at", { ascending: true });
-    const historico = (historicoRows ?? []).map((m) => ({
+    const historico = (historicoRows ?? []).map((m: any) => ({
       role: m.role as "user" | "assistant",
       conteudo: m.conteudo,
     }));

@@ -127,14 +127,14 @@ function FabyClaud() {
   const [logado, setLogado] = useState(false);
 
   useEffect(() => {
-    const { data } = supabase.auth.onAuthStateChange((_e, sessao) => {
+    const { data } = supabase.auth.onAuthStateChange((_e: any, sessao: any) => {
       setLogado(Boolean(sessao));
       if (!sessao) void navigate({ to: "/auth" });
     });
-    void supabase.auth.getSession().then(({ data: { session } }) => {
-      setLogado(Boolean(session));
+    void supabase.auth.getSession().then(({ data }: { data: { session: any } }) => {
+      setLogado(Boolean(data?.session));
       setPronto(true);
-      if (!session) void navigate({ to: "/auth" });
+      if (!data?.session) void navigate({ to: "/auth" });
     });
     return () => data.subscription.unsubscribe();
   }, [navigate]);
@@ -482,7 +482,7 @@ function FabyClaud() {
 
           {conversasAbertas ? (
             <div className="flex max-h-56 flex-col gap-1.5 overflow-y-auto pl-2">
-              {(projetos.data ?? []).map((p) => (
+              {(projetos.data ?? []).map((p: any) => (
                 <div key={p.id} className="flex items-center gap-1">
                   <button
                     type="button"
@@ -818,7 +818,7 @@ function FabyClaud() {
                   </div>
                 ) : null}
 
-                {mensagens.map((m) => (
+                {mensagens.map((m: any) => (
                   <div
                     key={m.id}
                     className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
@@ -978,11 +978,11 @@ function FabyClaud() {
           projetoId={projetoId}
           arquivos={arquivos}
           agente={agente}
-          onAgente={(id) => {
+          onAgente={(id: string | null) => {
             setAgente(id);
             toast.success(id ? "Agente ativado para as próximas mensagens." : "Voltou ao padrão.");
           }}
-          onUsarPrompt={(t) => {
+          onUsarPrompt={(t: string) => {
             setTexto(t);
             campoTexto.current?.focus();
           }}
@@ -990,7 +990,7 @@ function FabyClaud() {
             void queryClient.invalidateQueries({ queryKey: ["projeto", projetoId] });
             void queryClient.invalidateQueries({ queryKey: ["projetos"] });
           }}
-          onProjeto={(id) => setProjetoId(id)}
+          onProjeto={(id: string) => setProjetoId(id)}
         />
       ) : null}
     </div>

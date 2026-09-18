@@ -91,18 +91,18 @@ function ClonarSecao({ onProjeto, onAtualizar }: Omit<Props, "projetoId">) {
     mutationFn: async (arquivo: File) => {
       const zip = await JSZip.loadAsync(arquivo);
       const arquivos: Record<string, string> = {};
-      const entradas = Object.values(zip.files).filter((e) => !e.dir);
+      const entradas = Object.values(zip.files).filter((e: any) => !e.dir);
 
       // Remove a pasta-raiz única (ex.: "chef-main/...") pra encurtar os caminhos.
-      const primeiro = entradas[0]?.name ?? "";
+      const primeiro = (entradas[0] as any)?.name ?? "";
       const raiz = primeiro.includes("/") ? primeiro.split("/")[0] + "/" : "";
-      const tudoDentroDaRaiz = raiz !== "" && entradas.every((e) => e.name.startsWith(raiz));
+      const tudoDentroDaRaiz = raiz !== "" && entradas.every((e: any) => (e.name as string).startsWith(raiz));
 
-      for (const entrada of entradas) {
+      for (const entrada of entradas as any[]) {
         const nome = tudoDentroDaRaiz ? entrada.name.slice(raiz.length) : entrada.name;
         if (!nome) continue;
-        if (!EXT_ZIP.some((e) => nome.toLowerCase().endsWith(e))) continue;
-        if (nome.split("/").some((p) => ["node_modules", "vendor", ".git", "dist"].includes(p)))
+        if (!EXT_ZIP.some((e: string) => nome.toLowerCase().endsWith(e))) continue;
+        if (nome.split("/").some((p: string) => ["node_modules", "vendor", ".git", "dist"].includes(p)))
           continue;
         if (Object.keys(arquivos).length >= 60) break;
         const texto = await entrada.async("string");

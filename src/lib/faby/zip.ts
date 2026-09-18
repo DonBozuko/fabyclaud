@@ -81,19 +81,19 @@ export async function lerZipDoNavegador(
 ): Promise<ResultadoImportacao> {
   const zip = await JSZip.loadAsync(arquivo);
   const arquivos: Record<string, string> = {};
-  const entradas = Object.values(zip.files).filter((e) => !e.dir);
+  const entradas = Object.values(zip.files).filter((e: any) => !e.dir);
   let ignorados = 0;
   let limitados = false;
   let totalBytes = 0;
 
   // Remove a pasta-raiz única (ex.: "chef-main/...") pra encurtar os caminhos.
-  const primeiro = entradas[0]?.name ?? "";
+  const primeiro = (entradas[0] as any)?.name ?? "";
   const raiz = primeiro.includes("/") ? primeiro.split("/")[0] + "/" : "";
-  const tudoDentroDaRaiz = raiz !== "" && entradas.every((e) => e.name.startsWith(raiz));
+  const tudoDentroDaRaiz = raiz !== "" && entradas.every((e: any) => (e.name as string).startsWith(raiz));
 
-  const ordenadas = [...entradas].sort((a, b) => prioridade(a.name) - prioridade(b.name));
+  const ordenadas = [...entradas].sort((a: any, b: any) => prioridade(a.name) - prioridade(b.name));
 
-  for (const entrada of ordenadas) {
+  for (const entrada of ordenadas as any[]) {
     const nome = tudoDentroDaRaiz ? entrada.name.slice(raiz.length) : entrada.name;
     if (!nome) continue;
     if (!caminhoAceito(nome)) {

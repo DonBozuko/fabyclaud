@@ -35,11 +35,11 @@ function AuthPage() {
   const [confirmar, setConfirmar] = useState(false);
 
   useEffect(() => {
-    const { data } = supabase.auth.onAuthStateChange((_evento, sessao) => {
+    const { data } = supabase.auth.onAuthStateChange((_evento: any, sessao: any) => {
       if (sessao) void navigate({ to: "/" });
     });
-    void supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) void navigate({ to: "/" });
+    void supabase.auth.getSession().then(({ data }: { data: { session: any } }) => {
+      if (data?.session) void navigate({ to: "/" });
     });
     return () => data.subscription.unsubscribe();
   }, [navigate]);
