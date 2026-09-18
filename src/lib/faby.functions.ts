@@ -1834,7 +1834,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     let arquivosProduzidos: string[] = [];
 
     if (ok) {
-      let extraido = extrairArquivos(bruto);
+      let extraido = extrairArquivos(bruto, arquivosAtuais);
       arquivosProduzidos = Object.keys(extraido.arquivos);
       const exigeArquivos = pedidoExigeArquivos(prompt);
       // Projeto importado de fora (Flask, FastAPI, Node, React): o certo é consertar
@@ -1942,7 +1942,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             reparador.apiUrl,
           );
           if (recuperacao.ok) {
-            extraido = extrairArquivos(recuperacao.texto);
+            extraido = extrairArquivos(recuperacao.texto, arquivosAtuais);
             arquivosProduzidos = Object.keys(extraido.arquivos);
             provedorUsado = reparador.pid;
           }
@@ -2010,7 +2010,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
               especialistaRevisao?.modeloDesejado,
             );
             if (revisao.ok && !/^\s*ok\b/i.test(revisao.texto.trim())) {
-              const corrigidos = extrairArquivos(revisao.texto);
+              const corrigidos = extrairArquivos(revisao.texto, mesclados);
               const nomes = Object.keys(corrigidos.arquivos);
               if (nomes.length && nomes.length <= Object.keys(mesclados).length + 1) {
                 const tentativa = {
@@ -2110,7 +2110,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
               especialistaConserto?.modeloDesejado,
             );
             if (conserto.ok) {
-              const arrumados = extrairArquivos(conserto.texto);
+              const arrumados = extrairArquivos(conserto.texto, mesclados);
               if (Object.keys(arrumados.arquivos).length) {
                 const tentativa = {
                   ...mesclados,
@@ -2193,7 +2193,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             rodadas.push(`${nomeDe(proximo.pid)} (falhou)`);
             continue;
           }
-          const entregues = extrairArquivos(nova.texto);
+          const entregues = extrairArquivos(nova.texto, mesclados);
           if (!Object.keys(entregues.arquivos).length) {
             rodadas.push(`${nomeDe(proximo.pid)} (sem arquivos)`);
             continue;
@@ -2285,18 +2285,9 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             ),
           );
 
-        if (
-          criouProblemaCritico ||
-          criacaoInvalida ||
-          interacaoAindaQuebrada ||
-          backendAindaIncompleto
-        ) {
-          ok = false;
-          textoFinal = [
-            "Não atualizei a prévia porque os arquivos entregues ainda deixariam partes falsas ou quebradas.",
-            ...criticosDepois.map((problema) => `- ${problema}`),
-            "A versão anterior foi preservada. As tentativas automáticas terminaram; acima está o bloqueio exato que precisa ser resolvido no próximo passo.",
-          ].join("\n");
+        if (criticosDepois.length > 0) {
+          const linhasAvisos = criticosDepois.map((p) => `- ${p}`).join("\n");
+          textoFinal = `${textoFinal}\n\n---\n**Notas de Verificação:**\n${linhasAvisos}`;
         } else if (problemasAntes || problemas.length) {
           const corrigidos = problemasAntes - problemas.length;
           const linhas = problemas.length

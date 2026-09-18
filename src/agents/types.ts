@@ -40,6 +40,23 @@ export type CodeEdit = {
   originalContent?: string;
 };
 
+export interface PatchChunk {
+  de: string;
+  para: string;
+}
+
+export interface PatchArquivo {
+  caminho: string;
+  chunks: PatchChunk[];
+}
+
+export interface AlteracaoProjeto {
+  arquivosNovosOuCompletos: Record<string, string>;
+  patches: PatchArquivo[];
+  arquivosRemovidos: string[];
+  resumoAlteracoes?: string;
+}
+
 export interface ModificacaoArquivo {
   caminho: string;
   novoConteudo: string;
