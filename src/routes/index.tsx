@@ -341,8 +341,8 @@ function FabyClaud() {
   );
 
   function consertarErrosDaPrevia(automatico = false) {
-    if (!problemasPrevia.length || mandar.isPending || !projetoIdRef.current) return;
-    const currentProj = projetoIdRef.current;
+    if (!problemasPrevia.length || mandar.isPending) return;
+    const currentProj = projetoId ?? "novo";
     const assinatura = `${currentProj}::${problemasPrevia.join("|")}`;
     if (automatico && consertosFeitos.current.has(assinatura)) return;
     consertosFeitos.current.add(assinatura);
@@ -352,12 +352,12 @@ function FabyClaud() {
       "",
       "Corrija a causa de cada item nos arquivos do projeto, mantendo toda a lógica e o visual que já funcionavam.",
       "Botão sem ação precisa ganhar comportamento de verdade (abrir tela, salvar, filtrar, validar), não um alerta vazio.",
-      "Entregue os arquivos completos alterados. Não invente correção sem olhar o item citado.",
+      'Entregue os arquivos completos alterados com as tags <arquivo nome="...">.',
       automatico ? "(conserto disparado automaticamente pelo controle de qualidade)" : "",
     ]
       .filter(Boolean)
       .join("\n");
-    setPendente("Consertando o que o controle de qualidade encontrou");
+    setPendente("Consertando o que o controle de qualidade encontrou...");
     setPendenteAnexos([]);
     setErrosPreview([]);
     setAuditoria(null);

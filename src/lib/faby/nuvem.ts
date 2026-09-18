@@ -31,24 +31,41 @@ export function aplicarApiNoCodigo(
   authUrl?: string,
   privadoUrl?: string,
 ) {
-  let res = codigo
-    .split(MARCADOR_API)
-    .join(apiUrl)
-    .split(MARCADOR_AUTH)
-    .join(authUrl ?? MARCADOR_AUTH)
-    .split(MARCADOR_PRIVADO)
-    .join(privadoUrl ?? MARCADOR_PRIVADO);
+  const limpaApiUrl = apiUrl.replace(/\/+$/, "");
+  const limpaAuthUrl = authUrl?.replace(/\/+$/, "");
+  const limpaPrivadoUrl = privadoUrl?.replace(/\/+$/, "");
 
-  // Remove any duplicated /api/public/dados/... paths from previous replacements
+  // 1. Remove redundancy in JS template strings/concatenations before variable interpolation
+  let res = codigo
+    .replace(/\$\{API\}\/(?:api\/)?public\/dados\/[0-9a-f-]{36}\//gi, "${API}/")
+    .replace(/\$\{API\}\/(?:api\/)?public\/dados\//gi, "${API}/")
+    .replace(/API\s*\+\s*["']\/(?:api\/)?public\/dados\/[0-9a-f-]{36}\//gi, 'API + "/')
+    .replace(/API\s*\+\s*["']\/(?:api\/)?public\/dados\//gi, 'API + "/');
+
+  // 2. Replace markers
+  res = res
+    .split(MARCADOR_API)
+    .join(limpaApiUrl)
+    .split(MARCADOR_AUTH)
+    .join(limpaAuthUrl ?? MARCADOR_AUTH)
+    .split(MARCADOR_PRIVADO)
+    .join(limpaPrivadoUrl ?? MARCADOR_PRIVADO);
+
+  // 3. Clean up any compounded duplicated URL segments in direct strings
   res = res.replace(
-    /https?:\/\/[^"'\s`]+\/api\/public\/dados\/[0-9a-f-]{36}(?:\/public\/dados\/[0-9a-f-]{36})+/gi,
-    apiUrl,
+    /https?:\/\/[^"'\s`]+\/api\/public\/dados\/[0-9a-f-]{36}(?:\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?)+/gi,
+    limpaApiUrl,
   );
-  // Replace localhost or 127.0.0.1 base URLs cleanly with the real hosted apiUrl
+  // 4. Clean up any localhost base URLs
+  res = res.replace(
+    /https?:\/\/(?:localhost|127\.0\.0\.1):\d+\/api\/public\/dados\/[0-9a-f-]{36}(?:\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?)*/gi,
+    limpaApiUrl,
+  );
   res = res.replace(
     /https?:\/\/(?:localhost|127\.0\.0\.1):\d+(?:\/api\/public\/dados\/[0-9a-f-]{36})?/gi,
-    apiUrl,
+    limpaApiUrl,
   );
+
   return res;
 }
 
@@ -89,6 +106,7 @@ export function instrucaoNuvem(apiUrl: string, authUrl?: string, privadoUrl?: st
     "ARMAZENAMENTO PÚBLICO SIMPLES JÁ HOSPEDADO (use para listas e conteúdo sem dados privados):",
     `O projeto pode guardar dados públicos simples no endereço ${apiUrl}. Não existe nada para instalar e NÃO se cria pasta backend/ para isso.`,
     'No JavaScript do frontend, escreva exatamente: const API = "%%FABY_API%%";  (o sistema troca esse marcador pelo endereço real antes de salvar).',
+    "ATENÇÃO CRÍTICA: %%FABY_API%% já contém o endereço base completo do banco. As coleções são acessadas diretamente na raiz de API: `${API}/recados`, `${API}/usuarios`, `${API}/comunidades`. NUNCA adicione '/api/public/dados' nem o ID do projeto após ${API}.",
     "Cada coleção é uma tabela. Contrato REST:",
     '- listar:  fetch(`${API}/recados`).then(r => r.json())  -> devolve um array de objetos, cada um com "id" e "criado_em".',
     '- criar:   fetch(`${API}/recados`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ autor, texto }) })  -> devolve o registro criado com id.',
