@@ -1,5 +1,5 @@
 export const MODELS = {
-  google: "gemini-2.5-flash",
+  google: "gemini-flash-lite-latest",
   groq: "llama-3.3-70b-versatile",
   openrouter: "deepseek/deepseek-chat:free",
   huggingface: "deepseek-ai/DeepSeek-V3",
@@ -15,12 +15,13 @@ export const MODELS = {
  */
 export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
   google: [
+    "gemini-flash-lite-latest",
+    "gemini-flash-latest",
     "gemini-2.5-flash",
     "gemini-2.5-flash-lite",
     "gemini-2.5-pro",
     "gemini-1.5-flash-latest",
     "gemini-1.5-pro-latest",
-    "gemini-2.0-flash-exp",
   ],
   groq: [
     "llama-3.3-70b-versatile",
@@ -68,7 +69,13 @@ export function ehErroDeModelo(status: number, texto: string) {
     return false;
   }
   if (status === 410 || status === 404) return true;
-  if (status === 400 || status === 403 || status === 422) {
+  if (
+    status === 429 &&
+    (t.includes("limit: 0") || t.includes("limit:0") || t.includes("quota exceeded for metric"))
+  ) {
+    return true;
+  }
+  if (status === 400 || status === 403 || status === 422 || status === 429) {
     return (
       t.includes("model") ||
       t.includes("not found") ||
@@ -80,7 +87,8 @@ export function ehErroDeModelo(status: number, texto: string) {
       t.includes("not available") ||
       t.includes("deprecated") ||
       t.includes("retired") ||
-      t.includes("update your code")
+      t.includes("update your code") ||
+      t.includes("limit: 0")
     );
   }
   return false;

@@ -185,15 +185,31 @@ async function descobrirModelosGoogle(key: string): Promise<string[]> {
     const validos = (json.models ?? [])
       .filter((m) => (m.supportedGenerationMethods ?? []).includes("generateContent"))
       .map((m) => (m.name ?? "").replace(/^models\//, "").trim())
-      .filter(Boolean);
+      .filter((id) => {
+        const n = id.toLowerCase();
+        // Descarta modelos sem cota gratuita de texto ou que são de imagem/áudio/embedding
+        if (
+          n.includes("image") ||
+          n.includes("imagen") ||
+          n.includes("embedding") ||
+          n.includes("aqa") ||
+          n.includes("tts") ||
+          n.includes("audio") ||
+          n.includes("realtime")
+        ) {
+          return false;
+        }
+        return Boolean(id);
+      });
 
     const pontuacao = (id: string) => {
       const nome = id.toLowerCase();
       let total = 0;
-      if (nome.includes("flash")) total -= 30;
-      if (nome.includes("2.5") || nome.includes("3.")) total -= 20;
+      if (nome === "gemini-flash-lite-latest" || nome === "gemini-flash-latest") total -= 60;
+      if (nome.includes("flash-lite")) total -= 50;
+      if (nome.includes("flash")) total -= 40;
+      if (nome.includes("2.5") || nome.includes("3.")) total -= 30;
       if (nome.includes("pro")) total -= 10;
-      if (nome.includes("embedding") || nome.includes("aqa") || nome.includes("imagen")) total += 100;
       return total;
     };
     return validos.sort((a, b) => pontuacao(a) - pontuacao(b)).slice(0, 10);
