@@ -218,7 +218,7 @@ async function descobrirModelosGoogle(key: string): Promise<string[]> {
   }
 }
 
-/** Google Gemini (API gratuita do AI Studio). */
+/** Google Gemini (API gratuita do AI Studio com retry automático para 503). */
 async function chamarGoogle(
   prompt: string,
   historico: HistoricoItem[],
@@ -239,22 +239,68 @@ async function chamarGoogle(
   }
   contents.push({ role: "user", parts: partesAtuais as { text: string }[] });
 
-  const { ok, status, json, texto } = await postJson(
-    `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent`,
-    { "x-goog-api-key": key },
-    { contents },
-    timeoutMs,
-  );
-  if (!ok) return { ok: false, texto: erroLegivel(status, json, texto), status, bruto: texto };
+  // Retry com espera em caso de 503 (alta demanda / sobrecarga temporária)
+  let tentativas = 0;
+  const maxTentativas = 3;
+  while (tentativas < maxTentativas) {
+    tentativas++;
+    const { ok, status, json, texto } = await postJson(
+      `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent`,
+      { "x-goog-api-key": key },
+      { contents },
+      timeoutMs,
+    );
 
-  const partes = (json as { candidates?: { content?: { parts?: { text?: string }[] } }[] })
-    ?.candidates?.[0]?.content?.parts;
-  const saida = (partes ?? [])
-    .map((p) => p.text ?? "")
-    .join("")
-    .trim();
-  if (!saida) return { ok: false, texto: "a IA devolveu uma resposta vazia" };
-  return { ok: true, texto: saida };
+    if (status === 503 && tentativas < maxTentativas) {
+      await new Promise((resolve) => setTimeout(resolve, 1500 * tentativas));
+      continue;
+    }
+
+    if (!ok) return { ok: false, texto: erroLegivel(status, json, texto), status, bruto: texto };
+
+    const partes = (json as { candidates?: { content?: { parts?: { text?: string }[] } }[] })
+      ?.candidates?.[0]?.content?.parts;
+    const saida = (partes ?? [])
+      .map((p) => p.text ?? "")
+      .join("")
+      .trim();
+    if (!saida) return { ok: false, texto: "a IA devolveu uma resposta vazia" };
+    return { ok: true, texto: saida };
+  }
+
+  return { ok: false, status: 503, texto: "Google Gemini sobrecarregado (503) após tentativas" };
+}
+
+/** Tenta a lista ordenada de modelos do Google sem nunca hardcodar um único modelo. */
+async function chamarGoogleComFallback(
+  prompt: string,
+  historico: HistoricoItem[],
+  key: string,
+  imagens: Imagem[] = [],
+  timeoutMs: number = TIMEOUT_MS,
+  modeloPreferido?: string,
+): Promise<ResultadoIA> {
+  const principal = modeloPreferido || MODELS.google;
+  const lista = MODELOS_ALTERNATIVOS.google ?? [];
+  let modelosGoogle = [...new Set([principal, ...lista].filter(Boolean))];
+
+  let ultimo: ResultadoIA = { ok: false, texto: "provedor Google indisponível" };
+  for (let i = 0; i < modelosGoogle.length; i++) {
+    const modelo = modelosGoogle[i];
+    if (!modelo) continue;
+    const r = await chamarGoogle(prompt, historico, key, imagens, timeoutMs, modelo);
+    if (r.ok) return r;
+    ultimo = r;
+    if (!ehErroDeModelo(r.status ?? 0, r.bruto ?? r.texto)) return r;
+    if (i === modelosGoogle.length - 1) {
+      const descobertos = await descobrirModelosGoogle(key);
+      const novos = descobertos.filter((m) => !modelosGoogle.includes(m));
+      if (novos.length) {
+        modelosGoogle = [...modelosGoogle, ...novos];
+      }
+    }
+  }
+  return ultimo;
 }
 
 /** Qualquer provedor compatível com a API da OpenAI (Groq, OpenRouter, Mistral, customizados). */
@@ -327,22 +373,41 @@ async function chamarAntigravity(
     const urlCriar = "https://generativelanguage.googleapis.com/v1beta/interactions";
     const headers: Record<string, string> = {
       "x-goog-api-key": key,
-      "Api-Revision": "2026-05-20",
+      "Content-Type": "application/json",
     };
 
     const corpo = {
-      agent: "antigravity-preview-09-2026",
+      agent: "antigravity-preview-05-2026",
       input: inputCompleto,
       environment: "remote",
       background: true,
     };
 
-    const { ok, status, json, texto } = await postJson(
-      urlCriar,
-      headers,
-      corpo,
-      Math.min(timeoutMs, 25_000),
-    );
+    let tentativasCriacao = 0;
+    let ok = false;
+    let status = 0;
+    let json: unknown = null;
+    let texto = "";
+
+    while (tentativasCriacao < 3) {
+      tentativasCriacao++;
+      const resCriar = await postJson(
+        urlCriar,
+        headers,
+        corpo,
+        Math.min(timeoutMs, 25_000),
+      );
+      ok = resCriar.ok;
+      status = resCriar.status;
+      json = resCriar.json;
+      texto = resCriar.texto;
+
+      if (status === 503 && tentativasCriacao < 3) {
+        await new Promise((resolve) => setTimeout(resolve, 1500 * tentativasCriacao));
+        continue;
+      }
+      break;
+    }
 
     if (!ok) {
       // Se a chave não tiver acesso ao preview ou o endpoint não estiver disponível, repassa erro com status
@@ -385,7 +450,7 @@ async function chamarAntigravity(
       try {
         const res = await fetch(urlStatus, {
           method: "GET",
-          headers,
+          headers: { "x-goog-api-key": key },
           signal: AbortSignal.timeout(15_000),
         });
 
@@ -394,6 +459,11 @@ async function chamarAntigravity(
         try {
           jsonStatus = JSON.parse(textoStatus);
         } catch {}
+
+        if (res.status === 503) {
+          // Temporariamente ocupado, aguarda próximo ciclo de polling
+          continue;
+        }
 
         if (!res.ok) {
           return {
@@ -496,17 +566,17 @@ export async function chamarProvedorComModelo(
     if (providerId === "antigravity") {
       const tentativa = await chamarAntigravity(prompt, historico, key, imagens, timeoutMs);
       if (tentativa.ok) return tentativa;
-      return await chamarGoogle(
+      return await chamarGoogleComFallback(
         prompt,
         historico,
         key,
         imagens,
         timeoutMs,
-        modelo || "gemini-2.5-flash",
+        modelo,
       );
     }
     if (providerId === "google")
-      return await chamarGoogle(prompt, historico, key, imagens, timeoutMs, modelo);
+      return await chamarGoogleComFallback(prompt, historico, key, imagens, timeoutMs, modelo);
     const omniUrl = providerId === "omniroute" ? endpointOmniRoute(apiUrl) : null;
     if (providerId === "omniroute" && !omniUrl) {
       return {
@@ -551,36 +621,26 @@ export async function chamarProvedor(
     if (providerId === "antigravity") {
       const tentativa = await chamarAntigravity(prompt, historico, key, imagens, timeoutMs);
       if (tentativa.ok) return tentativa;
-      // Se não tiver preview ativo ou houver erro, fallback imediato e silencioso para o Gemini normal
-      return await chamarGoogle(
+      // Se não tiver preview ativo ou houver erro, fallback resiliente para lista de modelos Google
+      return await chamarGoogleComFallback(
         prompt,
         historico,
         key,
         imagens,
         timeoutMs,
-        "gemini-2.5-flash",
+        modeloDesejado,
       );
     }
 
     if (providerId === "google") {
-      let ultimo: ResultadoIA = { ok: false, texto: "provedor desconhecido" };
-      let modelosGoogle = modelos;
-      for (let i = 0; i < modelosGoogle.length; i++) {
-        const modelo = modelosGoogle[i];
-        if (!modelo) continue;
-        const r = await chamarGoogle(prompt, historico, key, imagens, timeoutMs, modelo);
-        if (r.ok) return r;
-        ultimo = r;
-        if (!ehErroDeModelo(r.status ?? 0, r.bruto ?? r.texto)) return r;
-        if (i === modelosGoogle.length - 1) {
-          const descobertos = await descobrirModelosGoogle(key);
-          const novos = descobertos.filter((m) => !modelosGoogle.includes(m));
-          if (novos.length) {
-            modelosGoogle = [...modelosGoogle, ...novos];
-          }
-        }
-      }
-      return ultimo;
+      return await chamarGoogleComFallback(
+        prompt,
+        historico,
+        key,
+        imagens,
+        timeoutMs,
+        principal,
+      );
     }
 
     const omniUrl = providerId === "omniroute" ? endpointOmniRoute(apiUrl) : null;
