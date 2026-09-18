@@ -1,1 +1,95 @@
-{"nodes": [{"id": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_md", "label": "abrir-projetos-reais-do-computador-2026-09-16.md", "file_type": "document", "node_kind": "page", "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md", "source_location": "L1"}, {"id": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_abrir_projetos_reais_do_computador", "label": "Abrir projetos reais do computador", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md", "source_location": "L1"}, {"id": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_objetivo", "label": "Objetivo", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md", "source_location": "L3"}, {"id": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_mudan\u00e7as", "label": "Mudan\u00e7as", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md", "source_location": "L7"}, {"id": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_verifica\u00e7\u00e3o", "label": "Verifica\u00e7\u00e3o", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md", "source_location": "L17"}], "edges": [{"source": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_md", "target": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_abrir_projetos_reais_do_computador", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md", "source_location": "L1", "weight": 1.0}, {"source": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_abrir_projetos_reais_do_computador", "target": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_objetivo", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md", "source_location": "L3", "weight": 1.0}, {"source": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_abrir_projetos_reais_do_computador", "target": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_mudan\u00e7as", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md", "source_location": "L7", "weight": 1.0}, {"source": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_abrir_projetos_reais_do_computador", "target": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_verifica\u00e7\u00e3o", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md", "source_location": "L17", "weight": 1.0}], "raw_calls": [{"caller_nid": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_mudan\u00e7as", "callee": "node_modules", "is_member_call": false, "language": "markdown", "context": "node_modules", "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md", "source_location": "L10"}], "input_tokens": 0, "output_tokens": 0}
+{
+  "nodes": [
+    {
+      "id": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_md",
+      "label": "abrir-projetos-reais-do-computador-2026-09-16.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_abrir_projetos_reais_do_computador",
+      "label": "Abrir projetos reais do computador",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_objetivo",
+      "label": "Objetivo",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md",
+      "source_location": "L3"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_mudan\u00e7as",
+      "label": "Mudan\u00e7as",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md",
+      "source_location": "L7"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_verifica\u00e7\u00e3o",
+      "label": "Verifica\u00e7\u00e3o",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md",
+      "source_location": "L17"
+    }
+  ],
+  "edges": [
+    {
+      "source": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_md",
+      "target": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_abrir_projetos_reais_do_computador",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_abrir_projetos_reais_do_computador",
+      "target": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_objetivo",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_abrir_projetos_reais_do_computador",
+      "target": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_mudan\u00e7as",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_abrir_projetos_reais_do_computador",
+      "target": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_verifica\u00e7\u00e3o",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md",
+      "source_location": "L17",
+      "weight": 1.0
+    }
+  ],
+  "raw_calls": [
+    {
+      "caller_nid": "$graphify-root$_lovable_plan_abrir_projetos_reais_do_computador_2026_09_16_mudan\u00e7as",
+      "callee": "node_modules",
+      "is_member_call": false,
+      "language": "markdown",
+      "context": "node_modules",
+      "source_file": ".lovable/plan/abrir-projetos-reais-do-computador-2026-09-16.md",
+      "source_location": "L10"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

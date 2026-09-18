@@ -1,1 +1,119 @@
-{"nodes": [{"id": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_md", "label": "recuperar-o-motor-real-do-fabyclaud-2026-09-16.md", "file_type": "document", "node_kind": "page", "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md", "source_location": "L1"}, {"id": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_recuperar_o_motor_real_do_fabyclaud", "label": "Recuperar o motor real do FabyClaud", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md", "source_location": "L1"}, {"id": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_objetivo", "label": "Objetivo", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md", "source_location": "L3"}, {"id": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_corre\u00e7\u00f5es_imediatas", "label": "Corre\u00e7\u00f5es imediatas", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md", "source_location": "L7"}, {"id": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_chaves_de_ia", "label": "Chaves de IA", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md", "source_location": "L15"}, {"id": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_mem\u00f3ria_e_orquestra\u00e7\u00e3o", "label": "Mem\u00f3ria e orquestra\u00e7\u00e3o", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md", "source_location": "L22"}, {"id": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_verifica\u00e7\u00e3o", "label": "Verifica\u00e7\u00e3o", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md", "source_location": "L29"}], "edges": [{"source": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_md", "target": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_recuperar_o_motor_real_do_fabyclaud", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md", "source_location": "L1", "weight": 1.0}, {"source": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_recuperar_o_motor_real_do_fabyclaud", "target": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_objetivo", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md", "source_location": "L3", "weight": 1.0}, {"source": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_recuperar_o_motor_real_do_fabyclaud", "target": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_corre\u00e7\u00f5es_imediatas", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md", "source_location": "L7", "weight": 1.0}, {"source": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_recuperar_o_motor_real_do_fabyclaud", "target": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_chaves_de_ia", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md", "source_location": "L15", "weight": 1.0}, {"source": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_recuperar_o_motor_real_do_fabyclaud", "target": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_mem\u00f3ria_e_orquestra\u00e7\u00e3o", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md", "source_location": "L22", "weight": 1.0}, {"source": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_recuperar_o_motor_real_do_fabyclaud", "target": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_verifica\u00e7\u00e3o", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md", "source_location": "L29", "weight": 1.0}], "raw_calls": [], "input_tokens": 0, "output_tokens": 0}
+{
+  "nodes": [
+    {
+      "id": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_md",
+      "label": "recuperar-o-motor-real-do-fabyclaud-2026-09-16.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_recuperar_o_motor_real_do_fabyclaud",
+      "label": "Recuperar o motor real do FabyClaud",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_objetivo",
+      "label": "Objetivo",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md",
+      "source_location": "L3"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_corre\u00e7\u00f5es_imediatas",
+      "label": "Corre\u00e7\u00f5es imediatas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md",
+      "source_location": "L7"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_chaves_de_ia",
+      "label": "Chaves de IA",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md",
+      "source_location": "L15"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_mem\u00f3ria_e_orquestra\u00e7\u00e3o",
+      "label": "Mem\u00f3ria e orquestra\u00e7\u00e3o",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md",
+      "source_location": "L22"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_verifica\u00e7\u00e3o",
+      "label": "Verifica\u00e7\u00e3o",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md",
+      "source_location": "L29"
+    }
+  ],
+  "edges": [
+    {
+      "source": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_md",
+      "target": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_recuperar_o_motor_real_do_fabyclaud",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_recuperar_o_motor_real_do_fabyclaud",
+      "target": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_objetivo",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_recuperar_o_motor_real_do_fabyclaud",
+      "target": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_corre\u00e7\u00f5es_imediatas",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_recuperar_o_motor_real_do_fabyclaud",
+      "target": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_chaves_de_ia",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_recuperar_o_motor_real_do_fabyclaud",
+      "target": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_mem\u00f3ria_e_orquestra\u00e7\u00e3o",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_recuperar_o_motor_real_do_fabyclaud",
+      "target": "$graphify-root$_lovable_plan_recuperar_o_motor_real_do_fabyclaud_2026_09_16_verifica\u00e7\u00e3o",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/recuperar-o-motor-real-do-fabyclaud-2026-09-16.md",
+      "source_location": "L29",
+      "weight": 1.0
+    }
+  ],
+  "raw_calls": [],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

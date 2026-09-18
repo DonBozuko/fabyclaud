@@ -1,1 +1,85 @@
-{"nodes": [{"id": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_md", "label": "corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md", "file_type": "document", "node_kind": "page", "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md", "source_location": "L1"}, {"id": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados", "label": "Corrigir an\u00e1lise, mem\u00f3ria e pr\u00e9via de projetos importados", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md", "source_location": "L1"}, {"id": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_objetivo", "label": "Objetivo", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md", "source_location": "L3"}, {"id": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_mudan\u00e7as", "label": "Mudan\u00e7as", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md", "source_location": "L7"}, {"id": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_verifica\u00e7\u00e3o", "label": "Verifica\u00e7\u00e3o", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md", "source_location": "L18"}], "edges": [{"source": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_md", "target": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md", "source_location": "L1", "weight": 1.0}, {"source": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados", "target": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_objetivo", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md", "source_location": "L3", "weight": 1.0}, {"source": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados", "target": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_mudan\u00e7as", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md", "source_location": "L7", "weight": 1.0}, {"source": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados", "target": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_verifica\u00e7\u00e3o", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md", "source_location": "L18", "weight": 1.0}], "raw_calls": [], "input_tokens": 0, "output_tokens": 0}
+{
+  "nodes": [
+    {
+      "id": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_md",
+      "label": "corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados",
+      "label": "Corrigir an\u00e1lise, mem\u00f3ria e pr\u00e9via de projetos importados",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_objetivo",
+      "label": "Objetivo",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md",
+      "source_location": "L3"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_mudan\u00e7as",
+      "label": "Mudan\u00e7as",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md",
+      "source_location": "L7"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_verifica\u00e7\u00e3o",
+      "label": "Verifica\u00e7\u00e3o",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md",
+      "source_location": "L18"
+    }
+  ],
+  "edges": [
+    {
+      "source": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_md",
+      "target": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados",
+      "target": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_objetivo",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados",
+      "target": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_mudan\u00e7as",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados",
+      "target": "$graphify-root$_lovable_plan_corrigir_an\u00e1lise_mem\u00f3ria_e_pr\u00e9via_de_projetos_importados_2026_09_16_verifica\u00e7\u00e3o",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/corrigir-an\u00e1lise-mem\u00f3ria-e-pr\u00e9via-de-projetos-importados-2026-09-16.md",
+      "source_location": "L18",
+      "weight": 1.0
+    }
+  ],
+  "raw_calls": [],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

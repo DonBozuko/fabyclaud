@@ -1,1 +1,85 @@
-{"nodes": [{"id": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_md", "label": "aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md", "file_type": "document", "node_kind": "page", "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md", "source_location": "L1"}, {"id": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via", "label": "Aproximar o FabyClaud do Antigravity sem perder a pr\u00e9via", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md", "source_location": "L1"}, {"id": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_objetivo", "label": "Objetivo", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md", "source_location": "L3"}, {"id": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_entrega_desta_etapa", "label": "Entrega desta etapa", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md", "source_location": "L7"}, {"id": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_limites_honestos", "label": "Limites honestos", "file_type": "document", "node_kind": "heading", "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md", "source_location": "L38"}], "edges": [{"source": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_md", "target": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md", "source_location": "L1", "weight": 1.0}, {"source": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via", "target": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_objetivo", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md", "source_location": "L3", "weight": 1.0}, {"source": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via", "target": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_entrega_desta_etapa", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md", "source_location": "L7", "weight": 1.0}, {"source": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via", "target": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_limites_honestos", "relation": "contains", "confidence": "EXTRACTED", "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md", "source_location": "L38", "weight": 1.0}], "raw_calls": [], "input_tokens": 0, "output_tokens": 0}
+{
+  "nodes": [
+    {
+      "id": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_md",
+      "label": "aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via",
+      "label": "Aproximar o FabyClaud do Antigravity sem perder a pr\u00e9via",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_objetivo",
+      "label": "Objetivo",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md",
+      "source_location": "L3"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_entrega_desta_etapa",
+      "label": "Entrega desta etapa",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md",
+      "source_location": "L7"
+    },
+    {
+      "id": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_limites_honestos",
+      "label": "Limites honestos",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md",
+      "source_location": "L38"
+    }
+  ],
+  "edges": [
+    {
+      "source": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_md",
+      "target": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via",
+      "target": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_objetivo",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via",
+      "target": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_entrega_desta_etapa",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via",
+      "target": "$graphify-root$_lovable_plan_aproximar_o_fabyclaud_do_antigravity_sem_perder_a_pr\u00e9via_2026_09_16_limites_honestos",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".lovable/plan/aproximar-o-fabyclaud-do-antigravity-sem-perder-a-pr\u00e9via-2026-09-16.md",
+      "source_location": "L38",
+      "weight": 1.0
+    }
+  ],
+  "raw_calls": [],
+  "input_tokens": 0,
+  "output_tokens": 0
+}
