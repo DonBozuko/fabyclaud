@@ -204,22 +204,26 @@ function FabyClaud() {
     enabled: logado,
   });
 
+  const inicializadoRef = useRef(false);
   useEffect(() => {
-    if (!projetoId && projetos.data && projetos.data.length > 0) {
+    if (!inicializadoRef.current && projetos.data && projetos.data.length > 0) {
+      inicializadoRef.current = true;
       const salvo =
         typeof window !== "undefined" ? localStorage.getItem("faby_active_project_id") : null;
       const existe = salvo && projetos.data.some((p: any) => p.id === salvo);
       if (existe) {
         setProjetoId(salvo);
-      } else {
-        setProjetoId(projetos.data[0].id);
       }
     }
-  }, [projetos.data, projetoId]);
+  }, [projetos.data]);
 
   useEffect(() => {
-    if (projetoId && typeof window !== "undefined") {
-      localStorage.setItem("faby_active_project_id", projetoId);
+    if (typeof window !== "undefined") {
+      if (projetoId) {
+        localStorage.setItem("faby_active_project_id", projetoId);
+      } else {
+        localStorage.removeItem("faby_active_project_id");
+      }
     }
   }, [projetoId]);
 
@@ -488,8 +492,13 @@ function FabyClaud() {
             type="button"
             onClick={() => {
               setProjetoId(null);
+              if (typeof window !== "undefined") {
+                localStorage.removeItem("faby_active_project_id");
+              }
               setTexto("");
               setAnexos([]);
+              setErrosPreview([]);
+              setAuditoria(null);
               campoTexto.current?.focus();
             }}
             className="flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-bold text-primary-foreground shadow-glow transition hover:brightness-110"
@@ -773,37 +782,27 @@ function FabyClaud() {
             <section className="panel-glass relative flex min-w-[260px] flex-1 flex-col items-center justify-center overflow-hidden rounded-2xl border-[1.5px] border-dashed">
               {previewComSonda ? (
                 <>
-                  {problemasPrevia.length ? (
-                    <div className="w-full border-b border-border bg-destructive/15 px-3 py-2 text-left">
-                      <p className="text-[12px] font-semibold text-foreground">
-                        O controle de qualidade encontrou {problemasPrevia.length} problema(s) reais
-                      </p>
-                      <ul className="mt-1 max-h-16 overflow-y-auto text-[11px] leading-snug text-muted-foreground">
-                        {problemasPrevia.map((e) => (
-                          <li key={e}>• {e}</li>
-                        ))}
-                      </ul>
-                      <button
-                        type="button"
-                        onClick={() => consertarErrosDaPrevia(false)}
-                        disabled={mandar.isPending}
-                        className="mt-1.5 rounded-lg border border-border bg-secondary px-2.5 py-1 text-[11px] transition hover:bg-accent disabled:opacity-50"
-                      >
-                        Consertar agora
-                      </button>
-                    </div>
-                  ) : auditoria ? (
-                    <div className="w-full border-b border-border bg-primary/10 px-3 py-1.5 text-left text-[11px] text-muted-foreground">
-                      Testei {auditoria.total} botão(ões)/link(s) desta tela clicando um por um:
-                      todos responderam.
-                    </div>
-                  ) : null}
                   <iframe
                     title="Prévia do projeto"
                     srcDoc={previewComSonda}
                     sandbox="allow-scripts allow-forms allow-popups"
                     className="size-full rounded-2xl bg-white"
                   />
+                  {problemasPrevia.length > 0 ? (
+                    <div className="absolute bottom-3 right-3 z-10 flex items-center gap-2 rounded-xl border border-destructive/40 bg-background/90 px-3 py-1.5 shadow-lg backdrop-blur-sm">
+                      <span className="text-[11px] text-destructive">
+                        {problemasPrevia.length} ponto(s) detectado(s) na prévia
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => consertarErrosDaPrevia(false)}
+                        disabled={mandar.isPending}
+                        className="rounded-lg bg-destructive px-2 py-0.5 text-[11px] font-semibold text-destructive-foreground transition hover:opacity-90 disabled:opacity-50"
+                      >
+                        Consertar com IA
+                      </button>
+                    </div>
+                  ) : null}
                   {previewParaAuditoria && !auditoria ? (
                     <iframe
                       title="Controle de qualidade (invisível)"

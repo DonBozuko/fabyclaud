@@ -69,6 +69,16 @@ export function montarPreviewHtml(arquivos: Record<string, string>) {
     }
   }
 
+  // Limpa URLs duplicadas de banco que possam ter sido gravadas anteriormente
+  saida = saida.replace(
+    /https?:\/\/[^"'\s`]+\/api\/public\/dados\/[0-9a-f-]{36}(?:\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?)+/gi,
+    (match) => {
+      const idMatch = match.match(/[0-9a-f-]{36}/i);
+      const originMatch = match.match(/^https?:\/\/[^/]+/i);
+      return `${originMatch ? originMatch[0] : ""}/api/public/dados/${idMatch ? idMatch[0] : ""}`;
+    },
+  );
+
   // Links para outras páginas do projeto viram navegação interna na prévia.
   return saida;
 }
