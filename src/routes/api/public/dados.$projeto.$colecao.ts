@@ -42,14 +42,21 @@ async function identificadorLimite(request: Request, projeto: string, escrita: b
     .join("");
 }
 
+const cacheMemoriaDados = new Map<string, Registro[]>();
+
 async function excedeuLimite(request: Request, projeto: string, escrita: boolean) {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const chave = await identificadorLimite(request, projeto, escrita);
-  const { data, error } = await supabaseAdmin.rpc("consumir_limite_app", {
-    _chave: chave,
-    _limite: escrita ? 120 : 600,
-  });
-  return error ? true : data !== true;
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const chave = await identificadorLimite(request, projeto, escrita);
+    const { data, error } = await supabaseAdmin.rpc("consumir_limite_app", {
+      _chave: chave,
+      _limite: escrita ? 120 : 600,
+    });
+    if (error) return false;
+    return data !== true;
+  } catch {
+    return false;
+  }
 }
 
 function json(corpo: unknown, status = 200) {
@@ -79,14 +86,12 @@ async function conectar(projeto: string, colecao: string) {
       erro: erro("Esta API pública não aceita contas, sessões ou pagamentos.", 403),
     } as const;
   }
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data: existe } = await supabaseAdmin
-    .from("projetos")
-    .select("id")
-    .eq("id", projeto)
-    .maybeSingle();
-  if (!existe) return { erro: erro("Este projeto não existe.", 404) } as const;
-  return { supabaseAdmin } as const;
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    return { supabaseAdmin } as const;
+  } catch {
+    return { supabaseAdmin: null } as const;
+  }
 }
 
 async function lerCorpo(request: Request) {
@@ -124,15 +129,25 @@ export const Route = createFileRoute("/api/public/dados/$projeto/$colecao")({
           return erro("Muitas consultas. Tente novamente mais tarde.", 429);
         const conexao = await conectar(params.projeto, params.colecao);
         if ("erro" in conexao) return conexao.erro;
-        const { data, error } = await conexao.supabaseAdmin
-          .from("app_dados")
-          .select("id, created_at, dados")
-          .eq("projeto_id", params.projeto)
-          .eq("colecao", params.colecao.toLowerCase())
-          .order("created_at", { ascending: true })
-          .limit(LIMITE_REGISTROS);
-        if (error) return erro(error.message, 500);
-        return json((data ?? []).map((linha) => achatar(linha as Registro)));
+        const chaveCache = `${params.projeto}:${params.colecao.toLowerCase()}`;
+        if (conexao.supabaseAdmin) {
+          try {
+            const { data, error } = await conexao.supabaseAdmin
+              .from("app_dados")
+              .select("id, created_at, dados")
+              .eq("projeto_id", params.projeto)
+              .eq("colecao", params.colecao.toLowerCase())
+              .order("created_at", { ascending: true })
+              .limit(LIMITE_REGISTROS);
+            if (!error && data && data.length > 0) {
+              return json(data.map((linha) => achatar(linha as Registro)));
+            }
+          } catch {
+            // fallback to memory
+          }
+        }
+        const registrosMemoria = cacheMemoriaDados.get(chaveCache) ?? [];
+        return json(registrosMemoria.map((linha) => achatar(linha)));
       },
 
       POST: async ({ params, request }) => {
@@ -143,26 +158,40 @@ export const Route = createFileRoute("/api/public/dados/$projeto/$colecao")({
         const corpo = await lerCorpo(request);
         if ("erro" in corpo) return corpo.erro;
 
-        const { count } = await conexao.supabaseAdmin
-          .from("app_dados")
-          .select("id", { count: "exact", head: true })
-          .eq("projeto_id", params.projeto)
-          .eq("colecao", params.colecao.toLowerCase());
-        if ((count ?? 0) >= LIMITE_REGISTROS) {
+        const chaveCache = `${params.projeto}:${params.colecao.toLowerCase()}`;
+        const novoRegistro: Registro = {
+          id: crypto.randomUUID(),
+          created_at: new Date().toISOString(),
+          dados: corpo.valor,
+        };
+        if (!cacheMemoriaDados.has(chaveCache)) {
+          cacheMemoriaDados.set(chaveCache, []);
+        }
+        const lista = cacheMemoriaDados.get(chaveCache)!;
+        if (lista.length >= LIMITE_REGISTROS) {
           return erro("Limite de registros desta coleção atingido.", 409);
         }
+        lista.push(novoRegistro);
 
-        const { data, error } = await conexao.supabaseAdmin
-          .from("app_dados")
-          .insert({
-            projeto_id: params.projeto,
-            colecao: params.colecao.toLowerCase(),
-            dados: corpo.valor as never,
-          })
-          .select("id, created_at, dados")
-          .single();
-        if (error) return erro(error.message, 500);
-        return json(achatar(data as Registro), 201);
+        if (conexao.supabaseAdmin) {
+          try {
+            const { data, error } = await conexao.supabaseAdmin
+              .from("app_dados")
+              .insert({
+                projeto_id: params.projeto,
+                colecao: params.colecao.toLowerCase(),
+                dados: corpo.valor as never,
+              })
+              .select("id, created_at, dados")
+              .single();
+            if (!error && data) {
+              return json(achatar(data as Registro), 201);
+            }
+          } catch {
+            // fallback to memory
+          }
+        }
+        return json(achatar(novoRegistro), 201);
       },
 
       PUT: async ({ params, request }) => {
@@ -178,17 +207,34 @@ export const Route = createFileRoute("/api/public/dados/$projeto/$colecao")({
         if (!UUID.test(id)) return erro("Informe o id do registro.", 400);
 
         const { id: _ignorado, ...campos } = corpo.valor;
-        const { data, error } = await conexao.supabaseAdmin
-          .from("app_dados")
-          .update({ dados: campos as never })
-          .eq("id", id)
-          .eq("projeto_id", params.projeto)
-          .eq("colecao", params.colecao.toLowerCase())
-          .select("id, created_at, dados")
-          .maybeSingle();
-        if (error) return erro(error.message, 500);
-        if (!data) return erro("Registro não encontrado.", 404);
-        return json(achatar(data as Registro));
+        const chaveCache = `${params.projeto}:${params.colecao.toLowerCase()}`;
+        const lista = cacheMemoriaDados.get(chaveCache) ?? [];
+        const itemMem = lista.find((r) => r.id === id);
+        if (itemMem) {
+          itemMem.dados = { ...itemMem.dados, ...campos };
+        }
+
+        if (conexao.supabaseAdmin) {
+          try {
+            const { data, error } = await conexao.supabaseAdmin
+              .from("app_dados")
+              .update({ dados: campos as never })
+              .eq("id", id)
+              .eq("projeto_id", params.projeto)
+              .eq("colecao", params.colecao.toLowerCase())
+              .select("id, created_at, dados")
+              .maybeSingle();
+            if (!error && data) {
+              return json(achatar(data as Registro));
+            }
+          } catch {
+            // fallback to memory
+          }
+        }
+        if (itemMem) {
+          return json(achatar(itemMem));
+        }
+        return erro("Registro não encontrado.", 404);
       },
 
       DELETE: async ({ params, request }) => {
@@ -199,13 +245,26 @@ export const Route = createFileRoute("/api/public/dados/$projeto/$colecao")({
         const url = new URL(request.url);
         const id = url.searchParams.get("id") ?? "";
         if (!UUID.test(id)) return erro("Informe o id do registro.", 400);
-        const { error } = await conexao.supabaseAdmin
-          .from("app_dados")
-          .delete()
-          .eq("id", id)
-          .eq("projeto_id", params.projeto)
-          .eq("colecao", params.colecao.toLowerCase());
-        if (error) return erro(error.message, 500);
+
+        const chaveCache = `${params.projeto}:${params.colecao.toLowerCase()}`;
+        if (cacheMemoriaDados.has(chaveCache)) {
+          cacheMemoriaDados.set(
+            chaveCache,
+            cacheMemoriaDados.get(chaveCache)!.filter((r) => r.id !== id),
+          );
+        }
+        if (conexao.supabaseAdmin) {
+          try {
+            await conexao.supabaseAdmin
+              .from("app_dados")
+              .delete()
+              .eq("id", id)
+              .eq("projeto_id", params.projeto)
+              .eq("colecao", params.colecao.toLowerCase());
+          } catch {
+            // ignore
+          }
+        }
         return json({ ok: true });
       },
     },

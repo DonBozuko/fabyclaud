@@ -325,7 +325,7 @@ function FabyClaud() {
     if (!problemasPrevia.length || mandar.isPending || !projetoIdRef.current) return;
     const currentProj = projetoIdRef.current;
     const assinatura = `${currentProj}::${problemasPrevia.join("|")}`;
-    if (consertosFeitos.current.has(assinatura)) return;
+    if (automatico && consertosFeitos.current.has(assinatura)) return;
     consertosFeitos.current.add(assinatura);
     const prompt = [
       "O controle de qualidade abriu o projeto no navegador, clicou em cada botão e encontrou estes problemas reais:",

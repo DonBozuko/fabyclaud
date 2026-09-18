@@ -134,7 +134,8 @@ export function injetarAuditorDeCliques(html: string) {
       }
       var mudou = assinatura() !== antes;
       if (mudou) telas[assinatura()] = true;
-      if (!mudou && !houveRede && !abriuAba && !alertou && !enviouForm && !ancora) {
+      var jaAtivo = el.classList.contains("active") || el.classList.contains("selected") || el.getAttribute("aria-current") === "page" || el.getAttribute("aria-current") === "true" || el.getAttribute("aria-selected") === "true";
+      if (!mudou && !houveRede && !abriuAba && !alertou && !enviouForm && !ancora && !jaAtivo) {
         semAcao.push(rotulo(el));
       }
     }
