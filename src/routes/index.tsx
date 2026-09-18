@@ -204,6 +204,25 @@ function FabyClaud() {
     enabled: logado,
   });
 
+  useEffect(() => {
+    if (!projetoId && projetos.data && projetos.data.length > 0) {
+      const salvo =
+        typeof window !== "undefined" ? localStorage.getItem("faby_active_project_id") : null;
+      const existe = salvo && projetos.data.some((p: any) => p.id === salvo);
+      if (existe) {
+        setProjetoId(salvo);
+      } else {
+        setProjetoId(projetos.data[0].id);
+      }
+    }
+  }, [projetos.data, projetoId]);
+
+  useEffect(() => {
+    if (projetoId && typeof window !== "undefined") {
+      localStorage.setItem("faby_active_project_id", projetoId);
+    }
+  }, [projetoId]);
+
   const [pendente, setPendente] = useState<string | null>(null);
   const [pendenteAnexos, setPendenteAnexos] = useState<Anexo[]>([]);
 

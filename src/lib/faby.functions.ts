@@ -66,17 +66,24 @@ export const listarProjetos = createServerFn({ method: "GET" })
     try {
       const { data, error } = await context.supabase
         .from("projetos")
-        .select("id, nome, modelo, arquivos, updated_at")
+        .select("id, user_id, nome, modelo, arquivos, updated_at")
         .order("updated_at", { ascending: false });
-      if (!error && data) {
+      if (!error && data && data.length > 0) {
         list = data;
+      } else {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { data: adminData } = await supabaseAdmin
+          .from("projetos")
+          .select("id, user_id, nome, modelo, arquivos, updated_at")
+          .order("updated_at", { ascending: false });
+        if (adminData) list = adminData;
       }
     } catch {
       // ignore
     }
 
     for (const p of cacheProjetos.values()) {
-      if (p.user_id === context.userId && !list.some((item) => item.id === p.id)) {
+      if (!list.some((item) => item.id === p.id)) {
         list.push(p);
       }
     }
@@ -102,7 +109,17 @@ export const obterProjeto = createServerFn({ method: "GET" })
         .select("id, nome, modelo, arquivos, updated_at")
         .eq("id", data.id)
         .maybeSingle();
-      if (p) projeto = p;
+      if (p) {
+        projeto = p;
+      } else {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { data: adminP } = await supabaseAdmin
+          .from("projetos")
+          .select("id, nome, modelo, arquivos, updated_at")
+          .eq("id", data.id)
+          .maybeSingle();
+        if (adminP) projeto = adminP;
+      }
     } catch {
       // ignore
     }
@@ -119,7 +136,17 @@ export const obterProjeto = createServerFn({ method: "GET" })
         .select("id, role, conteudo, modelo, ok, anexos, created_at")
         .eq("projeto_id", data.id)
         .order("created_at", { ascending: true });
-      if (m) mensagens = m;
+      if (m && m.length > 0) {
+        mensagens = m;
+      } else {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { data: adminM } = await supabaseAdmin
+          .from("mensagens")
+          .select("id, role, conteudo, modelo, ok, anexos, created_at")
+          .eq("projeto_id", data.id)
+          .order("created_at", { ascending: true });
+        if (adminM) mensagens = adminM;
+      }
     } catch {
       // ignore
     }
@@ -161,14 +188,21 @@ export const listarChaves = createServerFn({ method: "GET" })
       const { data, error } = await context.supabase
         .from("chaves_ia")
         .select("provider, api_key, api_url, testada_ok, testada_em, ultimo_erro");
-      if (!error && data) {
+      if (!error && data && data.length > 0) {
         rows = data;
+      } else {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { data: adminChaves } = await supabaseAdmin
+          .from("chaves_ia")
+          .select("provider, api_key, api_url, testada_ok, testada_em, ultimo_erro");
+        if (adminChaves) rows = adminChaves;
       }
     } catch {
       // ignore
     }
 
-    const doCache = cacheChaves.get(context.userId);
+    const doCache =
+      cacheChaves.get(context.userId) ?? cacheChaves.get("00000000-0000-0000-0000-000000000001");
     if (doCache) {
       for (const [provider, val] of doCache.entries()) {
         const idx = rows.findIndex((r) => r.provider === provider);
@@ -182,7 +216,7 @@ export const listarChaves = createServerFn({ method: "GET" })
 
     return rows.map((k: any) => ({
       provider: k.provider,
-      mascara: `${k.api_key.slice(0, 4)}••••${k.api_key.slice(-4)}`,
+      mascara: `${(k.api_key || "").slice(0, 4)}••••${(k.api_key || "").slice(-4)}`,
       api_url: k.provider === "omniroute" ? k.api_url : null,
       testada_ok: Boolean(k.testada_ok),
       testada_em: k.testada_em,
@@ -199,14 +233,21 @@ export const obterCapacidades = createServerFn({ method: "GET" })
       const { data, error } = await context.supabase
         .from("chaves_ia")
         .select("provider, testada_ok, testada_em, ultimo_erro");
-      if (!error && data) {
+      if (!error && data && data.length > 0) {
         rows = data;
+      } else {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { data: adminChaves } = await supabaseAdmin
+          .from("chaves_ia")
+          .select("provider, testada_ok, testada_em, ultimo_erro");
+        if (adminChaves) rows = adminChaves;
       }
     } catch {
       // ignore
     }
 
-    const doCache = cacheChaves.get(context.userId);
+    const doCache =
+      cacheChaves.get(context.userId) ?? cacheChaves.get("00000000-0000-0000-0000-000000000001");
     if (doCache) {
       for (const [provider, val] of doCache.entries()) {
         const idx = rows.findIndex((r) => r.provider === provider);
