@@ -1114,21 +1114,28 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           arquivosAtuais = (p.arquivos as Record<string, string>) ?? {};
           notasProjeto = ((p as { notas?: string | null }).notas ?? "").trim();
         } else {
-          const cached = cacheProjetos.get(projetoId!);
-          if (cached) {
-            arquivosAtuais = cached.arquivos ?? {};
-            notasProjeto = cached.notas ?? "";
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+          const { data: adminP } = await supabaseAdmin
+            .from("projetos")
+            .select("id, arquivos, notas")
+            .eq("id", projetoId)
+            .maybeSingle();
+          if (adminP) {
+            arquivosAtuais = (adminP.arquivos as Record<string, string>) ?? {};
+            notasProjeto = ((adminP as { notas?: string | null }).notas ?? "").trim();
           } else {
-            projetoId = null;
+            const cached = cacheProjetos.get(projetoId);
+            if (cached) {
+              arquivosAtuais = cached.arquivos ?? {};
+              notasProjeto = cached.notas ?? "";
+            }
           }
         }
       } catch {
-        const cached = cacheProjetos.get(projetoId!);
+        const cached = cacheProjetos.get(projetoId);
         if (cached) {
           arquivosAtuais = cached.arquivos ?? {};
           notasProjeto = cached.notas ?? "";
-        } else {
-          projetoId = null;
         }
       }
     }

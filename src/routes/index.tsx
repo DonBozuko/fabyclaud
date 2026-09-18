@@ -364,17 +364,7 @@ function FabyClaud() {
     mandar.mutate({ prompt, anexos: [] });
   }
 
-  // Auto-correção inteligente (Self-Healing): dispara automaticamente quando o controle de qualidade acha falhas reais
-  useEffect(() => {
-    if (problemasPrevia.length > 0 && !mandar.isPending) {
-      const timer = setTimeout(() => {
-        consertarErrosDaPrevia(true);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-    return undefined;
-  }, [problemasPrevia]);
-
+  // Rolagem automática do chat
   useEffect(() => {
     areaChat.current?.scrollTo({ top: areaChat.current.scrollHeight, behavior: "smooth" });
   }, [mensagens.length, mandar.isPending, pendente]);
