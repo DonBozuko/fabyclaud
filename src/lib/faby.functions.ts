@@ -912,7 +912,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       await import("./faby/nuvem");
     const { aplicativoLocalParaPedido } = await import("./faby/aplicativos-locais.server");
 
-    const anexos = (data.anexos ?? []) as Anexo[];
+    const anexos = ((data.anexos ?? []) as unknown as Anexo[]);
     const prompt = data.prompt.trim();
     let intencao = classificarPedido(prompt);
     if (!prompt && !anexos.length) throw new Error("Mensagem vazia");
