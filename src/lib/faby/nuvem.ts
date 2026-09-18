@@ -12,16 +12,63 @@ export const MARCADOR_PRIVADO = "%%FABY_PRIVADO%%";
 
 /** Endereço real do banco daquele projeto. */
 export function urlDadosProjeto(origem: string, projetoId: string) {
-  const base = origem.replace(/\/+$/, "");
+  const base = (origem ?? "").trim().replace(/\/+$/, "");
+  // Se for localhost ou vazio, usa caminho relativo que funciona em qualquer host/porta/domínio
+  if (!base || /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?$/i.test(base)) {
+    return `/api/public/dados/${projetoId}`;
+  }
   return `${base}/api/public/dados/${projetoId}`;
 }
 
 export function urlsPrivadasProjeto(origem: string, projetoId: string) {
-  const base = origem.replace(/\/+$/, "");
+  const base = (origem ?? "").trim().replace(/\/+$/, "");
+  const prefixo = !base || /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?$/i.test(base) ? "" : base;
   return {
-    auth: `${base}/api/public/app-auth/${projetoId}`,
-    dados: `${base}/api/public/app-private/${projetoId}`,
+    auth: `${prefixo}/api/public/app-auth/${projetoId}`,
+    dados: `${prefixo}/api/public/app-private/${projetoId}`,
   };
+}
+
+/** Detecta e colapsa segmentos duplicados de API para evitar loops de correção. */
+export function normalizarUrlsApi(codigo: string): string {
+  if (!codigo) return codigo;
+  let res = codigo;
+
+  // 1. Remove duplicação em interpolações e concatenações de ${API}
+  res = res
+    .replace(/\$\{API\}\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?\//gi, "${API}/")
+    .replace(/\$\{API\}\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?/gi, "${API}")
+    .replace(/API\s*\+\s*["']\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?\//gi, 'API + "/')
+    .replace(/API\s*\+\s*["']\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?["']/gi, "API");
+
+  // 2. Colapsa segmentos duplicados de URL absoluta ou relativa
+  // Ex: http://localhost:8080/api/public/dados/UUID/public/dados/UUID/recados -> /api/public/dados/UUID/recados
+  // Ex: https://.../api/public/dados/UUID/api/public/dados/UUID/recados -> https://.../api/public/dados/UUID/recados
+  res = res.replace(
+    /(https?:\/\/[^"'\s`]+)?(?:\/api)?\/public\/dados\/([0-9a-f-]{36})(?:\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?)+/gi,
+    (_todo, prefixo, id) => {
+      const p = prefixo && !/localhost|127\.0\.0\.1/i.test(prefixo) ? prefixo : "";
+      return `${p}/api/public/dados/${id}`;
+    },
+  );
+
+  // 3. Colapsa repetições no meio de caminhos relativos
+  res = res.replace(
+    /(?:\/api)?\/public\/dados\/([0-9a-f-]{36})\/public\/dados\/\1/gi,
+    "/api/public/dados/$1",
+  );
+  res = res.replace(
+    /\/public\/dados\/([0-9a-f-]{36})\/public\/dados\//gi,
+    "/public/dados/$1/",
+  );
+
+  // 4. Substitui hostnames de localhost hardcoded por caminho relativo
+  res = res.replace(
+    /https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?\/api\/public\/dados\/([0-9a-f-]{36})/gi,
+    "/api/public/dados/$1",
+  );
+
+  return res;
 }
 
 /** Troca o marcador (e endereços antigos de localhost) pelo endereço real. */
@@ -35,14 +82,10 @@ export function aplicarApiNoCodigo(
   const limpaAuthUrl = authUrl?.replace(/\/+$/, "");
   const limpaPrivadoUrl = privadoUrl?.replace(/\/+$/, "");
 
-  // 1. Remove redundancy in JS template strings/concatenations before variable interpolation
-  let res = codigo
-    .replace(/\$\{API\}\/(?:api\/)?public\/dados\/[0-9a-f-]{36}\//gi, "${API}/")
-    .replace(/\$\{API\}\/(?:api\/)?public\/dados\//gi, "${API}/")
-    .replace(/API\s*\+\s*["']\/(?:api\/)?public\/dados\/[0-9a-f-]{36}\//gi, 'API + "/')
-    .replace(/API\s*\+\s*["']\/(?:api\/)?public\/dados\//gi, 'API + "/');
+  // 1. Normaliza código antes da substituição
+  let res = normalizarUrlsApi(codigo);
 
-  // 2. Replace markers
+  // 2. Substitui marcadores
   res = res
     .split(MARCADOR_API)
     .join(limpaApiUrl)
@@ -51,20 +94,8 @@ export function aplicarApiNoCodigo(
     .split(MARCADOR_PRIVADO)
     .join(limpaPrivadoUrl ?? MARCADOR_PRIVADO);
 
-  // 3. Clean up any compounded duplicated URL segments in direct strings
-  res = res.replace(
-    /https?:\/\/[^"'\s`]+\/api\/public\/dados\/[0-9a-f-]{36}(?:\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?)+/gi,
-    limpaApiUrl,
-  );
-  // 4. Clean up any localhost base URLs
-  res = res.replace(
-    /https?:\/\/(?:localhost|127\.0\.0\.1):\d+\/api\/public\/dados\/[0-9a-f-]{36}(?:\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?)*/gi,
-    limpaApiUrl,
-  );
-  res = res.replace(
-    /https?:\/\/(?:localhost|127\.0\.0\.1):\d+(?:\/api\/public\/dados\/[0-9a-f-]{36})?/gi,
-    limpaApiUrl,
-  );
+  // 3. Normaliza novamente após a substituição para garantir consistência perfeita
+  res = normalizarUrlsApi(res);
 
   return res;
 }

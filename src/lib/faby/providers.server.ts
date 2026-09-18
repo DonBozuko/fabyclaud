@@ -311,7 +311,150 @@ async function chamarOpenAICompat(
   return { ok: true, texto: saida };
 }
 
+/** Google Antigravity Agent API (Loop agêntico com sandbox Linux, execução, testes e entrega). */
+async function chamarAntigravity(
+  prompt: string,
+  historico: HistoricoItem[],
+  key: string,
+  imagens: Imagem[] = [],
+  timeoutMs: number = TIMEOUT_MS,
+): Promise<ResultadoIA> {
+  try {
+    const inputCompleto = historico.length
+      ? `${historico.map((h) => `${h.role === "assistant" ? "Assistente" : "Usuário"}: ${h.conteudo}`).join("\n\n")}\n\nUsuário: ${prompt}`
+      : prompt;
+
+    const urlCriar = "https://generativelanguage.googleapis.com/v1beta/interactions";
+    const headers: Record<string, string> = {
+      "x-goog-api-key": key,
+      "Api-Revision": "2026-05-20",
+    };
+
+    const corpo = {
+      agent: "antigravity-preview-09-2026",
+      input: inputCompleto,
+      environment: "remote",
+      background: true,
+    };
+
+    const { ok, status, json, texto } = await postJson(
+      urlCriar,
+      headers,
+      corpo,
+      Math.min(timeoutMs, 25_000),
+    );
+
+    if (!ok) {
+      // Se a chave não tiver acesso ao preview ou o endpoint não estiver disponível, repassa erro com status
+      return { ok: false, status, texto: erroLegivel(status, json, texto), bruto: texto };
+    }
+
+    const respostaObj = json as Record<string, unknown> | null;
+    const saidaSincrona =
+      (respostaObj?.output as { text?: string } | undefined)?.text ??
+      (respostaObj?.result as { text?: string } | undefined)?.text ??
+      (respostaObj?.response as { text?: string } | undefined)?.text ??
+      (typeof respostaObj?.output === "string" ? respostaObj.output : null);
+
+    if (saidaSincrona && typeof saidaSincrona === "string" && saidaSincrona.trim()) {
+      return { ok: true, texto: saidaSincrona.trim() };
+    }
+
+    const interactionId = (respostaObj?.id ?? respostaObj?.name) as string | undefined;
+    if (!interactionId) {
+      if (texto && texto.length > 50) {
+        return { ok: true, texto };
+      }
+      return {
+        ok: false,
+        status,
+        texto: "Antigravity não retornou ID de interação para acompanhamento",
+      };
+    }
+
+    // Polling em background com intervalo seguro
+    const inicio = Date.now();
+    const tempoMaximo = Math.max(30_000, timeoutMs);
+    const urlStatus = interactionId.startsWith("http")
+      ? interactionId
+      : `https://generativelanguage.googleapis.com/v1beta/interactions/${encodeURIComponent(interactionId)}`;
+
+    while (Date.now() - inicio < tempoMaximo) {
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+
+      try {
+        const res = await fetch(urlStatus, {
+          method: "GET",
+          headers,
+          signal: AbortSignal.timeout(15_000),
+        });
+
+        const textoStatus = await res.text();
+        let jsonStatus: any = null;
+        try {
+          jsonStatus = JSON.parse(textoStatus);
+        } catch {}
+
+        if (!res.ok) {
+          return {
+            ok: false,
+            status: res.status,
+            texto: erroLegivel(res.status, jsonStatus, textoStatus),
+            bruto: textoStatus,
+          };
+        }
+
+        const estado = String(jsonStatus?.status ?? jsonStatus?.state ?? "").toUpperCase();
+
+        if (
+          estado === "COMPLETED" ||
+          estado === "SUCCEEDED" ||
+          estado === "SUCCESS" ||
+          estado === "DONE"
+        ) {
+          const saida =
+            jsonStatus?.output?.text ??
+            jsonStatus?.result?.text ??
+            jsonStatus?.response?.text ??
+            jsonStatus?.output?.artifacts?.[0]?.content ??
+            (typeof jsonStatus?.output === "string" ? jsonStatus.output : "") ??
+            (typeof jsonStatus?.result === "string" ? jsonStatus.result : "");
+
+          if (saida && typeof saida === "string" && saida.trim()) {
+            return { ok: true, texto: saida.trim() };
+          }
+
+          if (jsonStatus?.artifacts && Array.isArray(jsonStatus.artifacts)) {
+            const concatenado = jsonStatus.artifacts
+              .map((art: any) => art.content ?? art.text ?? "")
+              .join("\n\n");
+            if (concatenado.trim()) {
+              return { ok: true, texto: concatenado.trim() };
+            }
+          }
+
+          return { ok: true, texto: textoStatus };
+        }
+
+        if (estado === "FAILED" || estado === "ERROR" || estado === "CANCELLED") {
+          const motivo =
+            jsonStatus?.error?.message ?? jsonStatus?.error ?? "execução falhou no sandbox";
+          return { ok: false, status: 500, texto: `Antigravity: ${motivo}`, bruto: textoStatus };
+        }
+      } catch {
+        // Ignora erro transitório de rede durante polling
+      }
+    }
+
+    return { ok: false, status: 408, texto: "tempo limite de execução do Antigravity atingido" };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return { ok: false, texto: `Antigravity indisponível: ${msg}` };
+  }
+}
+
 export const PROVEDORES_FIXOS = [
+  "antigravity",
   "google",
   "groq",
   "openrouter",
@@ -350,6 +493,18 @@ export async function chamarProvedorComModelo(
   apiUrl?: string,
 ): Promise<ResultadoIA> {
   try {
+    if (providerId === "antigravity") {
+      const tentativa = await chamarAntigravity(prompt, historico, key, imagens, timeoutMs);
+      if (tentativa.ok) return tentativa;
+      return await chamarGoogle(
+        prompt,
+        historico,
+        key,
+        imagens,
+        timeoutMs,
+        modelo || "gemini-2.5-flash",
+      );
+    }
     if (providerId === "google")
       return await chamarGoogle(prompt, historico, key, imagens, timeoutMs, modelo);
     const omniUrl = providerId === "omniroute" ? endpointOmniRoute(apiUrl) : null;
@@ -392,6 +547,20 @@ export async function chamarProvedor(
     const principal = modeloDesejado || MODELS[providerId as keyof typeof MODELS];
     const lista = MODELOS_ALTERNATIVOS[providerId] ?? (principal ? [principal] : []);
     const modelos = [...new Set([principal, ...lista].filter(Boolean))] as string[];
+
+    if (providerId === "antigravity") {
+      const tentativa = await chamarAntigravity(prompt, historico, key, imagens, timeoutMs);
+      if (tentativa.ok) return tentativa;
+      // Se não tiver preview ativo ou houver erro, fallback imediato e silencioso para o Gemini normal
+      return await chamarGoogle(
+        prompt,
+        historico,
+        key,
+        imagens,
+        timeoutMs,
+        "gemini-2.5-flash",
+      );
+    }
 
     if (providerId === "google") {
       let ultimo: ResultadoIA = { ok: false, texto: "provedor desconhecido" };

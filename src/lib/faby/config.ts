@@ -1,4 +1,5 @@
 export const MODELS = {
+  antigravity: "antigravity-preview-09-2026",
   google: "gemini-2.5-flash",
   groq: "qwen/qwen-2.5-coder-32b",
   openrouter: "qwen/qwen-2.5-coder-32b-instruct:free",
@@ -14,6 +15,11 @@ export const MODELS = {
  * sem perder qualidade — todos são modelos fortes pra programar.
  */
 export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
+  antigravity: [
+    "antigravity-preview-09-2026",
+    "gemini-2.5-flash",
+    "gemini-2.5-pro",
+  ],
   google: [
     "gemini-2.5-flash",
     "gemini-2.5-pro",
@@ -61,12 +67,13 @@ export interface PreferenciaModeloEtapa {
 /**
  * Especialização de modelos por etapa (o batalhão de IAs trabalhando nas suas forças):
  * - Planejamento/Arquitetura: modelos de raciocínio profundo.
- * - Construção: modelos especializados em geração de código.
+ * - Construção: modelos especializados em geração de código (com Antigravity como motor agêntico autônomo).
  * - Revisão/Inspeção: modelos críticos e minuciosos (diferentes do construtor).
  * - Conversa: modelos rápidos e leves.
  */
 export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa[]> = {
   planejamento: [
+    { provedor: "antigravity", modelo: "antigravity-preview-09-2026", nomeLegivel: "Antigravity Agent (Google)" },
     { provedor: "openrouter", modelo: "deepseek/deepseek-r1:free", nomeLegivel: "DeepSeek R1 (OpenRouter)" },
     { provedor: "deepseek", modelo: "deepseek-reasoner", nomeLegivel: "DeepSeek Reasoner" },
     { provedor: "google", modelo: "gemini-2.5-pro", nomeLegivel: "Gemini 2.5 Pro" },
@@ -76,6 +83,7 @@ export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa
     { provedor: "huggingface", modelo: "deepseek-ai/DeepSeek-R1", nomeLegivel: "DeepSeek R1 (HF)" },
   ],
   construcao: [
+    { provedor: "antigravity", modelo: "antigravity-preview-09-2026", nomeLegivel: "Antigravity Agent (Google)" },
     { provedor: "groq", modelo: "qwen/qwen-2.5-coder-32b", nomeLegivel: "Qwen 2.5 Coder 32B (Groq)" },
     { provedor: "openrouter", modelo: "qwen/qwen-2.5-coder-32b-instruct:free", nomeLegivel: "Qwen 2.5 Coder 32B (OpenRouter)" },
     { provedor: "openrouter", modelo: "deepseek/deepseek-chat:free", nomeLegivel: "DeepSeek V3 (OpenRouter)" },
@@ -86,6 +94,7 @@ export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa
     { provedor: "groq", modelo: "llama-3.3-70b-versatile", nomeLegivel: "Llama 3.3 70B (Groq)" },
   ],
   revisao: [
+    { provedor: "antigravity", modelo: "antigravity-preview-09-2026", nomeLegivel: "Antigravity Agent (Google)" },
     { provedor: "openrouter", modelo: "deepseek/deepseek-r1:free", nomeLegivel: "DeepSeek R1 (OpenRouter)" },
     { provedor: "groq", modelo: "openai/gpt-oss-120b", nomeLegivel: "GPT-OSS 120B (Groq)" },
     { provedor: "groq", modelo: "llama-3.3-70b-versatile", nomeLegivel: "Llama 3.3 70B (Groq)" },
@@ -189,6 +198,7 @@ export function ehErroDeModelo(status: number, texto: string) {
 }
 
 export const PROVIDER_LABELS: Record<string, string> = {
+  antigravity: "Google Antigravity Agent (Sandbox + Loop Autônomo)",
   groq: "Groq (Qwen 2.5 Coder 32B / Llama 70B)",
   openrouter: "OpenRouter (Qwen Coder / DeepSeek R1 grátis)",
   google: "Gemini 2.5 Flash / Pro",
@@ -199,6 +209,7 @@ export const PROVIDER_LABELS: Record<string, string> = {
 };
 
 export const PROVIDER_LINKS: Record<string, string> = {
+  antigravity: "https://aistudio.google.com/apikey",
   groq: "https://console.groq.com/keys",
   openrouter: "https://openrouter.ai/keys",
   google: "https://aistudio.google.com/apikey",
@@ -209,6 +220,7 @@ export const PROVIDER_LINKS: Record<string, string> = {
 
 /** Ordem de preferência para programar (a primeira com chave vira juíza do duelo). */
 export const ORDEM_QUALIDADE = [
+  "antigravity",
   "groq",
   "openrouter",
   "google",

@@ -1176,6 +1176,13 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         { key: k.api_key, apiUrl: k.api_url ?? undefined, testada: k.testada_ok },
       ]),
     );
+
+    // O Antigravity Agent utiliza a mesma chave do Google Gemini já cadastrada
+    const chaveGoogle = mapaChaves.get("google");
+    if (chaveGoogle && !mapaChaves.has("antigravity")) {
+      mapaChaves.set("antigravity", { ...chaveGoogle });
+    }
+
     const ordem = [
       data.model,
       ...Object.keys(MODELS),

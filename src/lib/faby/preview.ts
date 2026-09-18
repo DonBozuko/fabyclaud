@@ -1,3 +1,5 @@
+import { normalizarUrlsApi } from "./nuvem";
+
 /**
  * Monta um HTML autossuficiente: embute o CSS e o JS dos outros arquivos dentro
  * do index.html. Serve tanto para a prévia (iframe isolado, sem servidor) quanto
@@ -70,14 +72,7 @@ export function montarPreviewHtml(arquivos: Record<string, string>) {
   }
 
   // Limpa URLs duplicadas de banco que possam ter sido gravadas anteriormente
-  saida = saida.replace(
-    /https?:\/\/[^"'\s`]+\/api\/public\/dados\/[0-9a-f-]{36}(?:\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?)+/gi,
-    (match) => {
-      const idMatch = match.match(/[0-9a-f-]{36}/i);
-      const originMatch = match.match(/^https?:\/\/[^/]+/i);
-      return `${originMatch ? originMatch[0] : ""}/api/public/dados/${idMatch ? idMatch[0] : ""}`;
-    },
-  );
+  saida = normalizarUrlsApi(saida);
 
   // Links para outras páginas do projeto viram navegação interna na prévia.
   return saida;
@@ -304,9 +299,13 @@ export function injetarSondaDeErros(html: string) {
       var alvo = ev.target;
       var url = alvo.src || alvo.href || "";
       var tag = String(alvo.tagName).toLowerCase();
-      var ehExterna = url.indexOf("http://") === 0 || url.indexOf("https://") === 0 || url.indexOf("//") === 0;
-      if (tag === "img" && ehExterna) {
+      if (tag === "img") {
         alvo.onerror = null;
+        if (!alvo.__fabyFallback) {
+          alvo.__fabyFallback = true;
+          var altText = (alvo.alt || "imagem").slice(0, 30);
+          alvo.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200" fill="#2d3748"><rect width="300" height="200" fill="#1e293b"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="14">' + altText + '</text></svg>');
+        }
         return;
       }
       avisar("recurso", "não carregou: <" + tag + "> " + url, url);

@@ -785,7 +785,7 @@ function FabyClaud() {
                   <iframe
                     title="Prévia do projeto"
                     srcDoc={previewComSonda}
-                    sandbox="allow-scripts allow-forms allow-popups"
+                    sandbox="allow-scripts allow-forms allow-popups allow-same-origin"
                     className="size-full rounded-2xl bg-white"
                   />
                   {problemasPrevia.length > 0 ? (
@@ -817,7 +817,7 @@ function FabyClaud() {
                     <iframe
                       title="Controle de qualidade (invisível)"
                       srcDoc={previewParaAuditoria}
-                      sandbox="allow-scripts allow-forms"
+                      sandbox="allow-scripts allow-forms allow-same-origin"
                       aria-hidden="true"
                       tabIndex={-1}
                       className="pointer-events-none absolute size-px opacity-0"

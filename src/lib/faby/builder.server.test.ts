@@ -249,3 +249,32 @@ test("iniciarExecucao retorna ID válido mesmo sem persistência do Supabase", a
   assert.ok(typeof id === "string" && id.length > 10);
 });
 
+test("normalizarUrlsApi colapsa segmentos duplicados de API e remove localhost:8080", async () => {
+  const { normalizarUrlsApi, aplicarApiNoCodigo } = await import("./nuvem");
+
+  const urlDuplicada =
+    "http://localhost:8080/api/public/dados/c044dc49-7fe3-4fbb-87b9-780ddfd5aa60/public/dados/c044dc49-7fe3-4fbb-87b9-780ddfd5aa60/recados";
+  const normalizada = normalizarUrlsApi(urlDuplicada);
+  assert.equal(
+    normalizada,
+    "/api/public/dados/c044dc49-7fe3-4fbb-87b9-780ddfd5aa60/recados",
+  );
+
+  // Garante que 'public/dados' só aparece uma vez na URL normalizada
+  const contagem = (normalizada.match(/public\/dados/g) ?? []).length;
+  assert.equal(contagem, 1);
+
+  // Teste de código com %%FABY_API%% e concatenação
+  const jsComMarcador = `
+    const API = "%%FABY_API%%";
+    fetch(\`\${API}/public/dados/c044dc49-7fe3-4fbb-87b9-780ddfd5aa60/recados\`);
+  `;
+  const jsProcessado = aplicarApiNoCodigo(
+    jsComMarcador,
+    "c044dc49-7fe3-4fbb-87b9-780ddfd5aa60",
+    "http://localhost:8080",
+  );
+
+  assert.ok(!jsProcessado.includes("localhost:8080"));
+  assert.ok(!jsProcessado.includes("/public/dados/c044dc49-7fe3-4fbb-87b9-780ddfd5aa60/public/dados"));
+});
