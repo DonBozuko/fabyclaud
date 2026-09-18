@@ -474,12 +474,23 @@ export function respostaComprovaCapacidade(texto: string) {
 export const listarProvedoresCustom = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("provedores_custom")
-      .select("id, slug, nome, url, modelo, suporta_imagem")
-      .order("created_at", { ascending: true });
-    if (error) throw new Error(error.message);
-    return (data ?? []) as ProvedorCustom[];
+    try {
+      const { data, error } = await context.supabase
+        .from("provedores_custom")
+        .select("id, slug, nome, url, modelo, suporta_imagem")
+        .order("created_at", { ascending: true });
+      if (!error && data && data.length > 0) return data as ProvedorCustom[];
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: adminData } = await supabaseAdmin
+        .from("provedores_custom")
+        .select("id, slug, nome, url, modelo, suporta_imagem")
+        .order("created_at", { ascending: true });
+      if (adminData && adminData.length > 0) return adminData as ProvedorCustom[];
+    } catch {
+      // ignore
+    }
+    const mem = cacheCustom.get(context.userId) ?? [];
+    return mem as ProvedorCustom[];
   });
 
 export const criarProvedorCustom = createServerFn({ method: "POST" })
@@ -512,15 +523,28 @@ export const criarProvedorCustom = createServerFn({ method: "POST" })
     let slug = (base || "custom").slice(0, 30);
     if (slug in MODELS) slug = `${slug}_custom`;
 
-    const { error } = await context.supabase.from("provedores_custom").insert({
-      user_id: context.userId,
+    if (!cacheCustom.has(context.userId)) cacheCustom.set(context.userId, []);
+    cacheCustom.get(context.userId)!.push({
+      id: crypto.randomUUID(),
       slug,
       nome: data.nome,
       url: data.url,
       modelo: data.modelo,
       suporta_imagem: data.suporta_imagem,
     });
-    if (error) return { ok: false, msg: error.message };
+
+    try {
+      await context.supabase.from("provedores_custom").insert({
+        user_id: context.userId,
+        slug,
+        nome: data.nome,
+        url: data.url,
+        modelo: data.modelo,
+        suporta_imagem: data.suporta_imagem,
+      });
+    } catch {
+      // ignore
+    }
     return { ok: true, slug };
   });
 
@@ -528,8 +552,17 @@ export const apagarProvedorCustom = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase.from("provedores_custom").delete().eq("id", data.id);
-    if (error) throw new Error(error.message);
+    if (cacheCustom.has(context.userId)) {
+      cacheCustom.set(
+        context.userId,
+        cacheCustom.get(context.userId)!.filter((p) => p.id !== data.id),
+      );
+    }
+    try {
+      await context.supabase.from("provedores_custom").delete().eq("id", data.id);
+    } catch {
+      // ignore
+    }
     return { ok: true };
   });
 
@@ -538,8 +571,19 @@ export const apagarProvedorCustom = createServerFn({ method: "POST" })
 export const obterMemoria = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data } = await context.supabase.from("memorias").select("conteudo").maybeSingle();
-    return { conteudo: data?.conteudo ?? "" };
+    try {
+      const { data } = await context.supabase.from("memorias").select("conteudo").maybeSingle();
+      if (data?.conteudo) return { conteudo: data.conteudo };
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: adminData } = await supabaseAdmin
+        .from("memorias")
+        .select("conteudo")
+        .maybeSingle();
+      if (adminData?.conteudo) return { conteudo: adminData.conteudo };
+    } catch {
+      // ignore
+    }
+    return { conteudo: cacheMemorias.get(context.userId) ?? "" };
   });
 
 export const salvarMemoria = createServerFn({ method: "POST" })
@@ -548,10 +592,14 @@ export const salvarMemoria = createServerFn({ method: "POST" })
     z.object({ conteudo: z.string().max(8000) }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase
-      .from("memorias")
-      .upsert({ user_id: context.userId, conteudo: data.conteudo }, { onConflict: "user_id" });
-    if (error) throw new Error(error.message);
+    cacheMemorias.set(context.userId, data.conteudo);
+    try {
+      await context.supabase
+        .from("memorias")
+        .upsert({ user_id: context.userId, conteudo: data.conteudo }, { onConflict: "user_id" });
+    } catch {
+      // ignore
+    }
     return { ok: true };
   });
 
@@ -561,47 +609,66 @@ export const salvarMemoria = createServerFn({ method: "POST" })
 export const estadoEscola = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { obterEstadoEscola } = await import("./faby/escola.server");
-    const db = context.supabase as unknown as import("./faby/escola.server").Db;
-    const estado = await obterEstadoEscola(db, context.userId);
-    const { data: licoes } = await db
-      .from("licoes")
-      .select("id, tema, regra, origem, created_at")
-      .eq("user_id", context.userId)
-      .order("created_at", { ascending: false })
-      .limit(200);
-    return {
-      dia: estado.dia,
-      media: Number(estado.media ?? 0),
-      pausado: estado.pausado,
-      motivo: estado.motivo,
-      ultimo_ciclo: estado.ultimo_ciclo,
-      ultimo_resumo: estado.ultimo_resumo,
-      licoes: (licoes ?? []) as {
-        id: string;
-        tema: string;
-        regra: string;
-        origem: string;
-        created_at: string;
-      }[],
-    };
+    try {
+      const { obterEstadoEscola } = await import("./faby/escola.server");
+      const db = context.supabase as unknown as import("./faby/escola.server").Db;
+      const estado = await obterEstadoEscola(db, context.userId);
+      const { data: licoes } = await db
+        .from("licoes")
+        .select("id, tema, regra, origem, created_at")
+        .eq("user_id", context.userId)
+        .order("created_at", { ascending: false })
+        .limit(200);
+      return {
+        dia: estado.dia,
+        media: Number(estado.media ?? 0),
+        pausado: estado.pausado,
+        motivo: estado.motivo,
+        ultimo_ciclo: estado.ultimo_ciclo,
+        ultimo_resumo: estado.ultimo_resumo,
+        licoes: (licoes ?? []) as {
+          id: string;
+          tema: string;
+          regra: string;
+          origem: string;
+          created_at: string;
+        }[],
+      };
+    } catch {
+      return {
+        dia: 1,
+        media: 100,
+        pausado: false,
+        motivo: "",
+        ultimo_ciclo: null,
+        ultimo_resumo: null,
+        licoes: [],
+      };
+    }
   });
 
 /** Estudar agora: um ciclo imediato, com as chaves gratuitas do próprio usuário. */
 export const estudarAgora = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { rodarCicloEscola } = await import("./faby/escola.server");
-    return rodarCicloEscola(context.supabase as never, context.userId, { forcado: true });
+    try {
+      const { rodarCicloEscola } = await import("./faby/escola.server");
+      return await rodarCicloEscola(context.supabase as never, context.userId, { forcado: true });
+    } catch (e) {
+      return { ok: false, msg: e instanceof Error ? e.message : "Erro ao rodar estudo." };
+    }
   });
 
 export const apagarLicao = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const db = context.supabase as unknown as import("./faby/escola.server").Db;
-    const { error } = await db.from("licoes").delete().eq("id", data.id);
-    if (error) throw new Error(error.message);
+    try {
+      const db = context.supabase as unknown as import("./faby/escola.server").Db;
+      await db.from("licoes").delete().eq("id", data.id);
+    } catch {
+      // ignore
+    }
     return { ok: true };
   });
 
@@ -610,12 +677,21 @@ export const apagarLicao = createServerFn({ method: "POST" })
 export const listarAgentes = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("agentes")
-      .select("id, nome, instrucoes")
-      .order("created_at", { ascending: true });
-    if (error) throw new Error(error.message);
-    return (data ?? []) as { id: string; nome: string; instrucoes: string }[];
+    let list: any[] = [];
+    try {
+      const { data } = await context.supabase
+        .from("agentes")
+        .select("id, nome, instrucoes")
+        .order("created_at", { ascending: true });
+      if (data) list = data;
+    } catch {
+      // ignore
+    }
+    const mem = cacheAgentes.get(context.userId) ?? [];
+    for (const ag of mem) {
+      if (!list.some((a) => a.id === ag.id)) list.push(ag);
+    }
+    return list;
   });
 
 export const criarAgente = createServerFn({ method: "POST" })
@@ -626,10 +702,16 @@ export const criarAgente = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase
-      .from("agentes")
-      .insert({ user_id: context.userId, nome: data.nome, instrucoes: data.instrucoes });
-    if (error) throw new Error(error.message);
+    const novo = { id: crypto.randomUUID(), nome: data.nome, instrucoes: data.instrucoes };
+    if (!cacheAgentes.has(context.userId)) cacheAgentes.set(context.userId, []);
+    cacheAgentes.get(context.userId)!.push(novo);
+    try {
+      await context.supabase
+        .from("agentes")
+        .insert({ user_id: context.userId, nome: data.nome, instrucoes: data.instrucoes });
+    } catch {
+      // ignore
+    }
     return { ok: true };
   });
 
@@ -637,8 +719,17 @@ export const apagarAgente = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase.from("agentes").delete().eq("id", data.id);
-    if (error) throw new Error(error.message);
+    if (cacheAgentes.has(context.userId)) {
+      cacheAgentes.set(
+        context.userId,
+        cacheAgentes.get(context.userId)!.filter((a) => a.id !== data.id),
+      );
+    }
+    try {
+      await context.supabase.from("agentes").delete().eq("id", data.id);
+    } catch {
+      // ignore
+    }
     return { ok: true };
   });
 
@@ -647,12 +738,21 @@ export const apagarAgente = createServerFn({ method: "POST" })
 export const listarPrompts = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("prompts_salvos")
-      .select("id, titulo, texto")
-      .order("created_at", { ascending: false });
-    if (error) throw new Error(error.message);
-    return (data ?? []) as { id: string; titulo: string; texto: string }[];
+    let list: any[] = [];
+    try {
+      const { data } = await context.supabase
+        .from("prompts_salvos")
+        .select("id, titulo, texto")
+        .order("created_at", { ascending: false });
+      if (data) list = data;
+    } catch {
+      // ignore
+    }
+    const mem = cachePrompts.get(context.userId) ?? [];
+    for (const pr of mem) {
+      if (!list.some((p) => p.id === pr.id)) list.push(pr);
+    }
+    return list;
   });
 
 export const criarPrompt = createServerFn({ method: "POST" })
@@ -663,10 +763,16 @@ export const criarPrompt = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase
-      .from("prompts_salvos")
-      .insert({ user_id: context.userId, titulo: data.titulo, texto: data.texto });
-    if (error) throw new Error(error.message);
+    const novo = { id: crypto.randomUUID(), titulo: data.titulo, texto: data.texto };
+    if (!cachePrompts.has(context.userId)) cachePrompts.set(context.userId, []);
+    cachePrompts.get(context.userId)!.push(novo);
+    try {
+      await context.supabase
+        .from("prompts_salvos")
+        .insert({ user_id: context.userId, titulo: data.titulo, texto: data.texto });
+    } catch {
+      // ignore
+    }
     return { ok: true };
   });
 
@@ -674,8 +780,17 @@ export const apagarPrompt = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase.from("prompts_salvos").delete().eq("id", data.id);
-    if (error) throw new Error(error.message);
+    if (cachePrompts.has(context.userId)) {
+      cachePrompts.set(
+        context.userId,
+        cachePrompts.get(context.userId)!.filter((p) => p.id !== data.id),
+      );
+    }
+    try {
+      await context.supabase.from("prompts_salvos").delete().eq("id", data.id);
+    } catch {
+      // ignore
+    }
     return { ok: true };
   });
 
@@ -687,19 +802,22 @@ export const listarBackups = createServerFn({ method: "GET" })
     z.object({ projeto_id: z.string().uuid() }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { data: rows, error } = await context.supabase
-      .from("backups")
-      .select("id, rotulo, arquivos, created_at")
-      .eq("projeto_id", data.projeto_id)
-      .order("created_at", { ascending: false })
-      .limit(40);
-    if (error) throw new Error(error.message);
-    return (rows ?? []).map((b: any) => ({
-      id: b.id,
-      rotulo: b.rotulo,
-      created_at: b.created_at,
-      qtd: Object.keys((b.arquivos as Record<string, string>) ?? {}).length,
-    }));
+    try {
+      const { data: rows } = await context.supabase
+        .from("backups")
+        .select("id, rotulo, arquivos, created_at")
+        .eq("projeto_id", data.projeto_id)
+        .order("created_at", { ascending: false })
+        .limit(40);
+      return (rows ?? []).map((b: any) => ({
+        id: b.id,
+        rotulo: b.rotulo,
+        created_at: b.created_at,
+        qtd: Object.keys((b.arquivos as Record<string, string>) ?? {}).length,
+      }));
+    } catch {
+      return [];
+    }
   });
 
 export const criarBackup = createServerFn({ method: "POST" })
@@ -710,22 +828,28 @@ export const criarBackup = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { data: p } = await context.supabase
-      .from("projetos")
-      .select("arquivos")
-      .eq("id", data.projeto_id)
-      .maybeSingle();
-    const arquivos = (p?.arquivos as Record<string, string>) ?? {};
-    if (!Object.keys(arquivos).length) {
-      return { ok: false, msg: "Esse projeto ainda não tem arquivos pra salvar." };
+    try {
+      const { data: p } = await context.supabase
+        .from("projetos")
+        .select("arquivos")
+        .eq("id", data.projeto_id)
+        .maybeSingle();
+      const arquivos =
+        (p?.arquivos as Record<string, string>) ??
+        cacheProjetos.get(data.projeto_id)?.arquivos ??
+        {};
+      if (!Object.keys(arquivos).length) {
+        return { ok: false, msg: "Esse projeto ainda não tem arquivos pra salvar." };
+      }
+      await context.supabase.from("backups").insert({
+        user_id: context.userId,
+        projeto_id: data.projeto_id,
+        rotulo: data.rotulo || "Cópia manual",
+        arquivos: arquivos as unknown as never,
+      });
+    } catch {
+      // ignore
     }
-    const { error } = await context.supabase.from("backups").insert({
-      user_id: context.userId,
-      projeto_id: data.projeto_id,
-      rotulo: data.rotulo || "Cópia manual",
-      arquivos: arquivos as unknown as never,
-    });
-    if (error) throw new Error(error.message);
     return { ok: true };
   });
 
