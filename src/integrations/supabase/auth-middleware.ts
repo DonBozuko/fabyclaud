@@ -43,10 +43,17 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
       token = authHeader.replace("Bearer ", "").trim();
     }
 
+    const isValidJwt = Boolean(
+      token &&
+        token !== "local-session-token" &&
+        token.split(".").length === 3 &&
+        !token.includes("local"),
+    );
+
     const globalConfig: { fetch: typeof fetch; headers?: Record<string, string> } = {
       fetch: createSupabaseFetch(SUPABASE_PUBLISHABLE_KEY),
     };
-    if (token) {
+    if (isValidJwt) {
       globalConfig.headers = { Authorization: `Bearer ${token}` };
     }
 
@@ -62,7 +69,7 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
     let userId = "00000000-0000-0000-0000-000000000001";
     let claims: Record<string, any> = { email: "usuario@fabyclaud.local" };
 
-    if (token && token !== "local-session-token" && token.split(".").length === 3) {
+    if (isValidJwt) {
       try {
         const { data, error } = await supabase.auth.getUser(token);
         if (!error && data?.user?.id) {
@@ -70,7 +77,7 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
           claims = (data.user.app_metadata as Record<string, any>) ?? {};
         }
       } catch {
-        // fallback to default
+        // fallback to local userId
       }
     }
 

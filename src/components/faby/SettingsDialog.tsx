@@ -55,13 +55,26 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
 
   const salvarMut = useMutation({
     mutationFn: async () => {
+      if (typeof window !== "undefined") {
+        try {
+          const salvas = JSON.parse(localStorage.getItem("faby_local_keys") || "{}");
+          salvas[provedor] = { key: chave.trim(), api_url: provedor === "omniroute" ? omniUrl : "" };
+          localStorage.setItem("faby_local_keys", JSON.stringify(salvas));
+        } catch {
+          // ignore
+        }
+      }
       if (provedor === "omniroute") {
         salvarOmniRouteLocal({
           apiUrl: normalizarOmniRouteLocal(omniUrl),
           apiKey: chave.trim(),
           pronta: false,
         });
-        await remover({ data: { provider: "omniroute" } });
+        try {
+          await remover({ data: { provider: "omniroute" } });
+        } catch {
+          // ignore
+        }
         return {
           ok: true,
           msg: "Chave do OmniRoute salva somente neste navegador. Agora clique em Testar.",
