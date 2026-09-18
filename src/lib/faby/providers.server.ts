@@ -386,9 +386,10 @@ export async function chamarProvedor(
   provedoresCustom: ProvedorCustom[] = [],
   timeoutMs: number = TIMEOUT_MS,
   apiUrl?: string,
+  modeloDesejado?: string,
 ): Promise<ResultadoIA> {
   try {
-    const principal = MODELS[providerId as keyof typeof MODELS];
+    const principal = modeloDesejado || MODELS[providerId as keyof typeof MODELS];
     const lista = MODELOS_ALTERNATIVOS[providerId] ?? (principal ? [principal] : []);
     const modelos = [...new Set([principal, ...lista].filter(Boolean))] as string[];
 

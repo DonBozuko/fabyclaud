@@ -1,8 +1,8 @@
 export const MODELS = {
-  google: "gemini-flash-lite-latest",
-  groq: "llama-3.3-70b-versatile",
-  openrouter: "deepseek/deepseek-chat:free",
-  huggingface: "deepseek-ai/DeepSeek-V3",
+  google: "gemini-2.5-flash",
+  groq: "qwen/qwen-2.5-coder-32b",
+  openrouter: "qwen/qwen-2.5-coder-32b-instruct:free",
+  huggingface: "Qwen/Qwen2.5-Coder-32B-Instruct",
   deepseek: "deepseek-chat",
   zai: "glm-4-flash",
   omniroute: "auto/coding",
@@ -15,34 +15,32 @@ export const MODELS = {
  */
 export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
   google: [
-    "gemini-flash-lite-latest",
-    "gemini-flash-latest",
     "gemini-2.5-flash",
-    "gemini-2.5-flash-lite",
     "gemini-2.5-pro",
-    "gemini-1.5-flash-latest",
+    "gemini-flash-latest",
+    "gemini-2.5-flash-lite",
+    "gemini-flash-lite-latest",
     "gemini-1.5-pro-latest",
+    "gemini-1.5-flash-latest",
   ],
   groq: [
-    "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
-    "deepseek-r1-distill-llama-70b",
     "qwen/qwen-2.5-coder-32b",
+    "llama-3.3-70b-versatile",
+    "deepseek-r1-distill-llama-70b",
     "openai/gpt-oss-120b",
+    "llama-3.1-8b-instant",
   ],
   openrouter: [
-    "deepseek/deepseek-chat:free",
-    "deepseek/deepseek-r1:free",
-    "meta-llama/llama-3.3-70b-instruct:free",
     "qwen/qwen-2.5-coder-32b-instruct:free",
+    "deepseek/deepseek-r1:free",
+    "deepseek/deepseek-chat:free",
+    "meta-llama/llama-3.3-70b-instruct:free",
     "mistralai/mistral-small-24b-instruct-2501:free",
-    "deepseek/deepseek-chat-v3.1:free",
   ],
   huggingface: [
+    "Qwen/Qwen2.5-Coder-32B-Instruct",
     "deepseek-ai/DeepSeek-V3",
     "deepseek-ai/DeepSeek-R1",
-    "deepseek-ai/DeepSeek-V3.1",
-    "Qwen/Qwen2.5-Coder-32B-Instruct",
     "meta-llama/Llama-3.3-70B-Instruct",
   ],
   /** API oficial da DeepSeek: deepseek-chat = V3.1 direto; deepseek-reasoner = modo pensante. */
@@ -51,6 +49,102 @@ export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
   /** O OmniRoute oficial escolhe somente entre os provedores conectados pelo usuário. */
   omniroute: ["auto/coding", "auto/smart", "auto/fast"],
 };
+
+export type EtapaOrquestracao = "planejamento" | "construcao" | "revisao" | "conversa";
+
+export interface PreferenciaModeloEtapa {
+  provedor: string;
+  modelo: string;
+  nomeLegivel: string;
+}
+
+/**
+ * Especialização de modelos por etapa (o batalhão de IAs trabalhando nas suas forças):
+ * - Planejamento/Arquitetura: modelos de raciocínio profundo.
+ * - Construção: modelos especializados em geração de código.
+ * - Revisão/Inspeção: modelos críticos e minuciosos (diferentes do construtor).
+ * - Conversa: modelos rápidos e leves.
+ */
+export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa[]> = {
+  planejamento: [
+    { provedor: "openrouter", modelo: "deepseek/deepseek-r1:free", nomeLegivel: "DeepSeek R1 (OpenRouter)" },
+    { provedor: "deepseek", modelo: "deepseek-reasoner", nomeLegivel: "DeepSeek Reasoner" },
+    { provedor: "google", modelo: "gemini-2.5-pro", nomeLegivel: "Gemini 2.5 Pro" },
+    { provedor: "groq", modelo: "deepseek-r1-distill-llama-70b", nomeLegivel: "DeepSeek R1 70B (Groq)" },
+    { provedor: "groq", modelo: "llama-3.3-70b-versatile", nomeLegivel: "Llama 3.3 70B (Groq)" },
+    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
+    { provedor: "huggingface", modelo: "deepseek-ai/DeepSeek-R1", nomeLegivel: "DeepSeek R1 (HF)" },
+  ],
+  construcao: [
+    { provedor: "groq", modelo: "qwen/qwen-2.5-coder-32b", nomeLegivel: "Qwen 2.5 Coder 32B (Groq)" },
+    { provedor: "openrouter", modelo: "qwen/qwen-2.5-coder-32b-instruct:free", nomeLegivel: "Qwen 2.5 Coder 32B (OpenRouter)" },
+    { provedor: "openrouter", modelo: "deepseek/deepseek-chat:free", nomeLegivel: "DeepSeek V3 (OpenRouter)" },
+    { provedor: "huggingface", modelo: "Qwen/Qwen2.5-Coder-32B-Instruct", nomeLegivel: "Qwen 2.5 Coder (HF)" },
+    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
+    { provedor: "google", modelo: "gemini-2.5-pro", nomeLegivel: "Gemini 2.5 Pro" },
+    { provedor: "deepseek", modelo: "deepseek-chat", nomeLegivel: "DeepSeek V3" },
+    { provedor: "groq", modelo: "llama-3.3-70b-versatile", nomeLegivel: "Llama 3.3 70B (Groq)" },
+  ],
+  revisao: [
+    { provedor: "openrouter", modelo: "deepseek/deepseek-r1:free", nomeLegivel: "DeepSeek R1 (OpenRouter)" },
+    { provedor: "groq", modelo: "openai/gpt-oss-120b", nomeLegivel: "GPT-OSS 120B (Groq)" },
+    { provedor: "groq", modelo: "llama-3.3-70b-versatile", nomeLegivel: "Llama 3.3 70B (Groq)" },
+    { provedor: "google", modelo: "gemini-2.5-pro", nomeLegivel: "Gemini 2.5 Pro" },
+    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
+    { provedor: "deepseek", modelo: "deepseek-reasoner", nomeLegivel: "DeepSeek Reasoner" },
+    { provedor: "huggingface", modelo: "deepseek-ai/DeepSeek-V3", nomeLegivel: "DeepSeek V3 (HF)" },
+  ],
+  conversa: [
+    { provedor: "google", modelo: "gemini-flash-lite-latest", nomeLegivel: "Gemini Flash-Lite" },
+    { provedor: "groq", modelo: "llama-3.1-8b-instant", nomeLegivel: "Llama 3.1 8B Instant" },
+    { provedor: "zai", modelo: "glm-4-flash", nomeLegivel: "GLM-4 Flash" },
+    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
+    { provedor: "openrouter", modelo: "meta-llama/llama-3.3-70b-instruct:free", nomeLegivel: "Llama 3.3 (OpenRouter)" },
+  ],
+};
+
+/** Seleciona a melhor IA configurada para uma etapa específica de engenharia. */
+export function selecionarMelhorModeloEtapa(
+  etapa: EtapaOrquestracao,
+  candidatos: { pid: string; key: string; apiUrl?: string; testada?: boolean }[],
+  excluirProvedor?: string,
+): { pid: string; key: string; apiUrl?: string; modeloDesejado?: string; rotuloLegivel: string; ehFallbackFraco: boolean } | null {
+  if (!candidatos.length) return null;
+  const preferencias = MODELOS_POR_ETAPA[etapa] ?? [];
+
+  // 1. Tenta a lista de modelos preferidos para esta etapa
+  for (const pref of preferencias) {
+    if (excluirProvedor && pref.provedor === excluirProvedor) continue;
+    const c = candidatos.find((cand) => cand.pid === pref.provedor);
+    if (c && c.key) {
+      return {
+        pid: c.pid,
+        key: c.key,
+        apiUrl: c.apiUrl,
+        modeloDesejado: pref.modelo,
+        rotuloLegivel: pref.nomeLegivel,
+        ehFallbackFraco: false,
+      };
+    }
+  }
+
+  // 2. Fallback resiliente: pega o melhor candidato disponível (diferente do excluído se possível)
+  const disponiveis = candidatos.filter((c) => !excluirProvedor || c.pid !== excluirProvedor);
+  const escolhido = disponiveis[0] ?? candidatos[0];
+  if (!escolhido) return null;
+
+  const ehFraco =
+    escolhido.pid === "zai" ||
+    (escolhido.pid === "google" && etapa === "construcao" && !candidatos.some((c) => c.pid === "groq" || c.pid === "openrouter"));
+
+  return {
+    pid: escolhido.pid,
+    key: escolhido.key,
+    apiUrl: escolhido.apiUrl,
+    rotuloLegivel: PROVIDER_LABELS[escolhido.pid] ?? escolhido.pid,
+    ehFallbackFraco: ehFraco,
+  };
+}
 
 /** Erros que significam "esse modelo não serve" (dá pra tentar outro modelo). */
 export function ehErroDeModelo(status: number, texto: string) {
@@ -95,19 +189,19 @@ export function ehErroDeModelo(status: number, texto: string) {
 }
 
 export const PROVIDER_LABELS: Record<string, string> = {
-  google: "Gemini 2.5 Flash / Flash-Lite",
-  groq: "Groq (Llama 3.3 70B)",
-  openrouter: "OpenRouter (grátis)",
-  huggingface: "Hugging Face (DeepSeek V3 grátis)",
-  deepseek: "DeepSeek oficial (V3 — exige saldo)",
+  groq: "Groq (Qwen 2.5 Coder 32B / Llama 70B)",
+  openrouter: "OpenRouter (Qwen Coder / DeepSeek R1 grátis)",
+  google: "Gemini 2.5 Flash / Pro",
+  deepseek: "DeepSeek oficial (V3 / R1 — exige saldo)",
+  huggingface: "Hugging Face (Qwen Coder / DeepSeek V3)",
   zai: "Z.AI (GLM-4 Flash)",
   omniroute: "OmniRoute local (IAs grátis)",
 };
 
 export const PROVIDER_LINKS: Record<string, string> = {
-  google: "https://aistudio.google.com/apikey",
   groq: "https://console.groq.com/keys",
   openrouter: "https://openrouter.ai/keys",
+  google: "https://aistudio.google.com/apikey",
   huggingface: "https://huggingface.co/settings/tokens",
   deepseek: "https://platform.deepseek.com/api_keys",
   zai: "https://z.ai/manage-apikey/apikey-list",
@@ -115,12 +209,12 @@ export const PROVIDER_LINKS: Record<string, string> = {
 
 /** Ordem de preferência para programar (a primeira com chave vira juíza do duelo). */
 export const ORDEM_QUALIDADE = [
-  "google",
   "groq",
   "openrouter",
+  "google",
   "deepseek",
-  "zai",
   "huggingface",
+  "zai",
   "omniroute",
 ] as const;
 

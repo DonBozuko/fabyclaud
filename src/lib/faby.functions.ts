@@ -7,7 +7,9 @@ import {
   MODELS,
   ORDEM_QUALIDADE,
   PROVIDER_LABELS,
+  selecionarMelhorModeloEtapa,
   type Anexo,
+  type EtapaOrquestracao,
   type ProvedorCustom,
 } from "./faby/config";
 
@@ -1566,6 +1568,28 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     const nomeDe = (pid: string) =>
       PROVIDER_LABELS[pid] ?? provedoresCustom.find((p) => p.slug === pid)?.nome ?? pid;
 
+    const etapaAtual: EtapaOrquestracao =
+      intencao === "conversar"
+        ? "conversa"
+        : intencao === "analisar"
+          ? "planejamento"
+          : "construcao";
+
+    const especialistaConstrucao = selecionarMelhorModeloEtapa(etapaAtual, candidatos);
+    const equipeUtilizada: {
+      planejamento?: string;
+      construcao?: string;
+      revisao?: string;
+      conserto?: string;
+    } = {};
+
+    if (exigeArquivos) {
+      const especialistaPlan = selecionarMelhorModeloEtapa("planejamento", candidatos);
+      if (especialistaPlan) {
+        equipeUtilizada.planejamento = especialistaPlan.rotuloLegivel;
+      }
+    }
+
     let ok = false;
     let bruto = "";
     let provedorUsado = data.model;
@@ -1690,11 +1714,24 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           : `(duelo de ${boas.length} IAs — venceu ${vencedora.rotulo}; a juíza não concluiu a avaliação)`;
       }
     } else {
+      // Reordena candidatos para tentar primeiro o especialista da etapa atual
+      const candidatosOrdenados = especialistaConstrucao
+        ? [
+            ...candidatos.filter((c) => c.pid === especialistaConstrucao.pid),
+            ...candidatos.filter((c) => c.pid !== especialistaConstrucao.pid),
+          ]
+        : candidatos;
+
       // Cada tentativa guarda o motivo real da falha: sem isso a pessoa perde
       // tempo e tokens sem saber se o problema foi chave, limite ou modelo.
       const falhas: string[] = [];
-      for (const candidato of candidatos) {
+      for (const candidato of candidatosOrdenados) {
         provedorUsado = candidato.pid;
+        const modeloDesejado =
+          candidato.pid === especialistaConstrucao?.pid
+            ? especialistaConstrucao.modeloDesejado
+            : undefined;
+
         const r = await chamarProvedor(
           candidato.pid,
           promptFinal,
@@ -1704,11 +1741,16 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           provedoresCustom,
           60_000,
           candidato.apiUrl,
+          modeloDesejado,
         );
         ok = r.ok;
         bruto = r.texto;
         if (ok) {
           usada = { pid: candidato.pid, key: candidato.key, apiUrl: candidato.apiUrl };
+          equipeUtilizada[etapaAtual === "planejamento" ? "planejamento" : "construcao"] =
+            (candidato.pid === especialistaConstrucao?.pid
+              ? especialistaConstrucao.rotuloLegivel
+              : null) ?? nomeDe(candidato.pid);
           // Respondeu de verdade: a chave passa a constar como pronta.
           if (!candidato.testada) {
             const { error: erroTeste } = await context.supabase
@@ -1816,6 +1858,9 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           }
         }
         if (nota) textoFinal = `${textoFinal}\n\n${nota}`;
+        if (intencao === "analisar" && !textoFinal.includes("analisado por")) {
+          textoFinal = `${textoFinal}\n\n*(analisado por ${equipeUtilizada.planejamento ?? nomeDe(provedorUsado)})*`;
+        }
         try {
           await guardarNota(
             `${intencao === "analisar" ? "Análise" : "Conversa"} sobre "${prompt.slice(0, 70)}": ${textoFinal.slice(0, 220).replace(/\s+/g, " ")}`,
@@ -1918,7 +1963,13 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         // Equipe: quem revisa é, de preferência, uma IA diferente de quem escreveu.
         const porForca = [...candidatos].sort((a, b) => forca(a.pid) - forca(b.pid));
         if (totalChars <= 120000) {
-          const revisor = porForca.find((c) => c.pid !== provedorUsado) ?? porForca[0];
+          const especialistaRevisao = selecionarMelhorModeloEtapa("revisao", candidatos, provedorUsado);
+          const revisor = especialistaRevisao
+            ? candidatos.find((c) => c.pid === especialistaRevisao.pid) ??
+              porForca.find((c) => c.pid !== provedorUsado) ??
+              porForca[0]
+            : porForca.find((c) => c.pid !== provedorUsado) ?? porForca[0];
+
           if (revisor) {
             const blocos = Object.entries(mesclados)
               .map(([n, c]) => `<arquivo nome="${n}">\n${c.slice(0, 20000)}\n</arquivo>`)
@@ -1945,6 +1996,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
               provedoresCustom,
               60000,
               revisor.apiUrl,
+              especialistaRevisao?.modeloDesejado,
             );
             if (revisao.ok && !/^\s*ok\b/i.test(revisao.texto.trim())) {
               const corrigidos = extrairArquivos(revisao.texto);
@@ -1962,10 +2014,12 @@ export const enviarMensagem = createServerFn({ method: "POST" })
                   mesclados = tentativa;
                   problemas = depois;
                 }
-                const notaRevisao = `revisado por ${nomeDe(revisor.pid)}`;
+                const rotuloRevisao = especialistaRevisao?.rotuloLegivel ?? nomeDe(revisor.pid);
+                const notaRevisao = `revisado por ${rotuloRevisao}`;
                 nota = nota ? `${nota.slice(0, -1)} · ${notaRevisao})` : `(${notaRevisao})`;
               }
             }
+            equipeUtilizada.revisao = especialistaRevisao?.rotuloLegivel ?? nomeDe(revisor.pid);
           }
         }
         if (execucaoId) {
@@ -1984,7 +2038,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             etapa: "revisao",
             estado: "concluida",
             resultado: `${problemas.length} ponto(s) encontrado(s) na primeira revisão.`,
-            modelo: provedorUsado,
+            modelo: equipeUtilizada.revisao ?? provedorUsado,
           });
         }
         if (exigeBackend) {
@@ -2009,8 +2063,16 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         const gravesPendentes = [...new Set([...problemasCriticos(problemas), ...faltasCobertura])];
 
         if (gravesPendentes.length) {
-          const consertador =
-            porForca.find((c) => c.pid !== provedorUsado) ?? porForca[0] ?? candidatos[0];
+          const especialistaConserto =
+            selecionarMelhorModeloEtapa("construcao", candidatos, provedorUsado) ??
+            selecionarMelhorModeloEtapa("revisao", candidatos, provedorUsado);
+          const consertador = especialistaConserto
+            ? candidatos.find((c) => c.pid === especialistaConserto.pid) ??
+              porForca.find((c) => c.pid !== provedorUsado) ??
+              porForca[0] ??
+              candidatos[0]
+            : porForca.find((c) => c.pid !== provedorUsado) ?? porForca[0] ?? candidatos[0];
+
           if (consertador) {
             const blocosConserto = Object.entries(mesclados)
               .map(([n, c]) => `<arquivo nome="${n}">\n${c.slice(0, 20000)}\n</arquivo>`)
@@ -2034,6 +2096,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
               provedoresCustom,
               60000,
               consertador.apiUrl,
+              especialistaConserto?.modeloDesejado,
             );
             if (conserto.ok) {
               const arrumados = extrairArquivos(conserto.texto);
@@ -2063,8 +2126,10 @@ export const enviarMensagem = createServerFn({ method: "POST" })
                   mesclados = tentativa;
                   problemas = depois;
 
-                  const notaConserto = `corrigido por ${nomeDe(consertador.pid)}`;
+                  const rotuloConserto = especialistaConserto?.rotuloLegivel ?? nomeDe(consertador.pid);
+                  const notaConserto = `corrigido por ${rotuloConserto}`;
                   nota = nota ? `${nota.slice(0, -1)} · ${notaConserto})` : `(${notaConserto})`;
+                  equipeUtilizada.conserto = rotuloConserto;
                 }
               }
             }
@@ -2280,6 +2345,28 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         }
       }
       if (nota) textoFinal = `${textoFinal}\n\n${nota}`;
+
+      const partesEquipe: string[] = [];
+      if (equipeUtilizada.planejamento) partesEquipe.push(`planejado por ${equipeUtilizada.planejamento}`);
+      if (equipeUtilizada.construcao) partesEquipe.push(`construído por ${equipeUtilizada.construcao}`);
+      if (equipeUtilizada.revisao) partesEquipe.push(`revisado por ${equipeUtilizada.revisao}`);
+      if (equipeUtilizada.conserto && equipeUtilizada.conserto !== equipeUtilizada.revisao) {
+        partesEquipe.push(`corrigido por ${equipeUtilizada.conserto}`);
+      }
+
+      if (partesEquipe.length > 0 && intencao !== "conversar") {
+        const infoEquipe = `\n\n*(equipe de IAs: ${partesEquipe.join(" · ")})*`;
+        if (!textoFinal.includes("equipe de IAs:")) {
+          textoFinal = `${textoFinal}${infoEquipe}`;
+        }
+      }
+
+      if (especialistaConstrucao?.ehFallbackFraco && intencao !== "conversar") {
+        const dicaChave = `\n\n> 💡 **Dica de qualidade:** Cadastre uma chave gratuita do **Groq** ou **OpenRouter** nas Configurações para ativar os modelos especialistas em código (**Qwen 2.5 Coder 32B** e **DeepSeek R1**) na construção dos seus projetos.`;
+        if (!textoFinal.includes("Dica de qualidade:")) {
+          textoFinal = `${textoFinal}${dicaChave}`;
+        }
+      }
       try {
         await guardarNota(
           mudouArquivos
