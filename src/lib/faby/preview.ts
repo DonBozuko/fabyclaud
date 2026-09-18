@@ -330,10 +330,65 @@ export function injetarSondaDeErros(html: string) {
   if (typeof buscaAntiga === "function") {
     window.fetch = function(entrada, opcoes){
       var alvo = typeof entrada === "string" ? entrada : (entrada && entrada.url) || "";
+      var metodo = (opcoes && opcoes.method ? opcoes.method : "GET").toUpperCase();
+      var ehRotaDados = /(?:\/api)?\/public\/dados(?:\/[0-9a-f-]+)?\/([a-z0-9_-]+)/i.exec(alvo);
+
+      function tratarMockLocal(colecao) {
+        var storageKey = "faby_previa_dados_" + colecao.toLowerCase();
+        var lista = [];
+        try { lista = JSON.parse(localStorage.getItem(storageKey) || "[]"); } catch (e) { lista = []; }
+        if (!Array.isArray(lista)) lista = [];
+
+        var urlObj = null;
+        try { urlObj = new URL(alvo, window.location.href); } catch (e) {}
+        var queryId = urlObj ? urlObj.searchParams.get("id") : null;
+
+        if (metodo === "GET") {
+          return new Response(JSON.stringify(lista), { status: 200, headers: { "Content-Type": "application/json" } });
+        }
+        if (metodo === "POST") {
+          var corpo = {};
+          try { corpo = typeof (opcoes && opcoes.body) === "string" ? JSON.parse(opcoes.body) : (opcoes && opcoes.body) || {}; } catch (e) { corpo = {}; }
+          var novoItem = Object.assign({}, corpo, {
+            id: corpo.id || "item_" + Math.random().toString(36).slice(2, 10),
+            criado_em: new Date().toISOString()
+          });
+          lista.unshift(novoItem);
+          try { localStorage.setItem(storageKey, JSON.stringify(lista)); } catch (e) {}
+          return new Response(JSON.stringify(novoItem), { status: 200, headers: { "Content-Type": "application/json" } });
+        }
+        if (metodo === "DELETE") {
+          if (queryId) {
+            lista = lista.filter(function(item){ return item && String(item.id) !== String(queryId); });
+            try { localStorage.setItem(storageKey, JSON.stringify(lista)); } catch (e) {}
+          }
+          return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { "Content-Type": "application/json" } });
+        }
+        if (metodo === "PUT") {
+          var corpoPut = {};
+          try { corpoPut = typeof (opcoes && opcoes.body) === "string" ? JSON.parse(opcoes.body) : (opcoes && opcoes.body) || {}; } catch (e) { corpoPut = {}; }
+          var idx = lista.findIndex(function(item){ return item && String(item.id) === String(queryId || corpoPut.id); });
+          if (idx >= 0) {
+            lista[idx] = Object.assign({}, lista[idx], corpoPut);
+            try { localStorage.setItem(storageKey, JSON.stringify(lista)); } catch (e) {}
+            return new Response(JSON.stringify(lista[idx]), { status: 200, headers: { "Content-Type": "application/json" } });
+          }
+        }
+        return new Response(JSON.stringify(lista), { status: 200, headers: { "Content-Type": "application/json" } });
+      }
+
       return buscaAntiga.apply(window, arguments).then(function(resposta){
-        if (!resposta.ok) avisar("rede", "requisição falhou (" + resposta.status + ") em " + alvo, alvo);
+        if (!resposta.ok && ehRotaDados) {
+          return tratarMockLocal(ehRotaDados[1]);
+        }
+        if (!resposta.ok) {
+          avisar("rede", "requisição falhou (" + resposta.status + ") em " + alvo, alvo);
+        }
         return resposta;
       }).catch(function(erro){
+        if (ehRotaDados) {
+          return tratarMockLocal(ehRotaDados[1]);
+        }
         avisar("rede", "requisição não completou em " + alvo + ": " + (erro && erro.message ? erro.message : erro), alvo);
         throw erro;
       });

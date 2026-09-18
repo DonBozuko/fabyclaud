@@ -1807,7 +1807,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           contextoProjeto: pedidoBase,
         });
         for (const p of pedidos) ferramentasUsadas.push(p.nome);
-        promptComDados = `${promptComDados}\n\n--- Resultado real das ferramentas que você pediu ---\n${resultado}\n\nUse esses dados como verdade e agora entregue a resposta definitiva. Não peça ferramenta novamente se já tem o necessário.`;
+        promptComDados = `${promptComDados}\n\n--- Resultado real das ferramentas que você pediu ---\n${resultado}\n\nATENÇÃO: Use esses dados como verdade e entregue a resposta definitiva APLICANDO o resultado diretamente nos arquivos do projeto através de <arquivo nome="..."> ou <modificar arquivo="...">. Se gerou ou buscou uma imagem ou dado, atualize o src ou o código correspondente no arquivo afetado. Nunca responda apenas dizendo que alterou sem entregar as tags com o código atualizado. Não peça ferramenta novamente.`;
         const r = await chamarProvedor(
           usada.pid,
           promptComDados,
