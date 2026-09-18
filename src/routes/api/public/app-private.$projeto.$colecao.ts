@@ -58,7 +58,7 @@ export const Route = createFileRoute("/api/public/app-private/$projeto/$colecao"
         return error
           ? json({ erro: error.message }, 500)
           : json(
-              (data ?? []).map((r: any) => ({
+              (data ?? []).map((r) => ({
                 id: r.id,
                 criado_em: r.created_at,
                 ...(r.dados as object),

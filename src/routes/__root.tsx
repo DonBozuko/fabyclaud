@@ -44,33 +44,28 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-lg w-full text-center rounded-2xl border border-border bg-card p-6 shadow-xl">
+      <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          Ops! Algo deu errado ao carregar
+          This page didn't load
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {error?.message || "Algo inesperado aconteceu ao inicializar a página."}
+          Something went wrong on our end. You can try refreshing or head back home.
         </p>
-        {error?.stack && (
-          <pre className="mt-3 max-h-36 overflow-auto rounded-lg bg-secondary/80 p-3 text-left font-mono text-[11px] text-muted-foreground whitespace-pre-wrap">
-            {error.stack}
-          </pre>
-        )}
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 shadow-sm"
+            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Tentar novamente
+            Try again
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Ir para o início
+            Go home
           </a>
         </div>
       </div>

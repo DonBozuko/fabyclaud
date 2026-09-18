@@ -132,7 +132,7 @@ export const Route = createFileRoute("/api/public/dados/$projeto/$colecao")({
           .order("created_at", { ascending: true })
           .limit(LIMITE_REGISTROS);
         if (error) return erro(error.message, 500);
-        return json((data ?? []).map((linha: any) => achatar(linha as Registro)));
+        return json((data ?? []).map((linha) => achatar(linha as Registro)));
       },
 
       POST: async ({ params, request }) => {
