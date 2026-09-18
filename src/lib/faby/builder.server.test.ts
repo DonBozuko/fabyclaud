@@ -32,6 +32,20 @@ describe("cérebro contextual", () => {
     assert.equal(resultado.intencao, "alterar");
   });
 
+  test("transforma confirmação de plano do orquestrador em alteração imediata", () => {
+    const planoOrquestrador = `
+      Entendi o pedido.
+      O que pretendo alterar: index.html e style.css
+      Pergunta crucial: Você prefere tema escuro ou claro?
+    `;
+    const resultado = resolverPedidoContextual("sim, pode aplicar com tema escuro", [
+      { role: "assistant", conteudo: planoOrquestrador },
+    ]);
+    assert.equal(resultado.intencao, "alterar");
+    assert.equal(resultado.continuacao, true);
+    assert.match(resultado.pedidoEfetivo, /Execute agora/);
+  });
+
   test("não inventa ação quando não houve oferta concreta", () => {
     const resultado = resolverPedidoContextual("sim", [
       { role: "assistant", conteudo: "Entendi o problema." },
