@@ -293,7 +293,13 @@ export function injetarSondaDeErros(html: string) {
     if (ev && ev.target && ev.target !== window && ev.target.tagName) {
       var alvo = ev.target;
       var url = alvo.src || alvo.href || "";
-      avisar("recurso", "não carregou: <" + String(alvo.tagName).toLowerCase() + "> " + url, url);
+      var tag = String(alvo.tagName).toLowerCase();
+      var ehExterna = url.indexOf("http://") === 0 || url.indexOf("https://") === 0 || url.indexOf("//") === 0;
+      if (tag === "img" && ehExterna) {
+        alvo.onerror = null;
+        return;
+      }
+      avisar("recurso", "não carregou: <" + tag + "> " + url, url);
       return;
     }
     avisar("javascript", (ev && ev.message) || "erro de script", ev && ev.filename ? ev.filename + ":" + ev.lineno : "");

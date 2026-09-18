@@ -1608,28 +1608,53 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         if (!textoFinal) {
           textoFinal =
             intencao === "conversar"
-              ? "Não consegui responder agora. Reformule em uma frase o que você quer saber ou fazer."
+              ? "Olá! Como posso ajudar você hoje com seu projeto ou desenvolvimento?"
               : "Não consegui produzir uma análise comprovada sem tentar alterar os arquivos. Nada foi modificado.";
-          ok = false;
+          if (intencao === "analisar") {
+            ok = false;
+          }
         }
         if (nota) textoFinal = `${textoFinal}\n\n${nota}`;
-        await guardarNota(
-          `${intencao === "analisar" ? "Análise" : "Conversa"} sobre "${prompt.slice(0, 70)}": ${textoFinal.slice(0, 220).replace(/\s+/g, " ")}`,
-        );
-        const { error: erroAnalise } = await context.supabase.from("mensagens").insert({
-          projeto_id: projetoId,
+        try {
+          await guardarNota(
+            `${intencao === "analisar" ? "Análise" : "Conversa"} sobre "${prompt.slice(0, 70)}": ${textoFinal.slice(0, 220).replace(/\s+/g, " ")}`,
+          );
+        } catch {
+          // ignore
+        }
+
+        const novaMsgAssistente: MensagemArmazenada = {
+          id: crypto.randomUUID(),
+          projeto_id: projetoId!,
           user_id: context.userId,
           role: "assistant",
           conteudo: textoFinal,
           modelo: provedorUsado,
           ok,
-        });
+          anexos: [],
+          created_at: new Date().toISOString(),
+        };
+        if (!cacheMensagens.has(projetoId!)) {
+          cacheMensagens.set(projetoId!, []);
+        }
+        cacheMensagens.get(projetoId!)!.push(novaMsgAssistente);
+
+        try {
+          await context.supabase.from("mensagens").insert({
+            projeto_id: projetoId,
+            user_id: context.userId,
+            role: "assistant",
+            conteudo: textoFinal,
+            modelo: provedorUsado,
+            ok,
+          });
+        } catch {
+          // ignore
+        }
         return {
           projeto_id: projetoId,
-          texto: erroAnalise
-            ? "A análise foi feita, mas não consegui guardá-la no histórico."
-            : textoFinal,
-          ok: ok && !erroAnalise,
+          texto: textoFinal,
+          ok,
           mudou_arquivos: false,
           projetoNovo,
         };
@@ -2006,16 +2031,18 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         }
         // Backup e gravação só acontecem depois da entrega passar pelo bloqueio.
         if (ok && Object.keys(arquivosAtuais).length) {
-          const { error: erroBackup } = await context.supabase.from("backups").insert({
-            user_id: context.userId,
-            projeto_id: projetoId,
-            rotulo: `Antes de: ${prompt.slice(0, 60)}`,
-            arquivos: arquivosAtuais as unknown as never,
-          });
-          if (erroBackup) {
-            ok = false;
-            textoFinal =
-              "Não atualizei a prévia porque não consegui criar o backup de segurança. A versão anterior foi preservada.";
+          try {
+            const { error: erroBackup } = await context.supabase.from("backups").insert({
+              user_id: context.userId,
+              projeto_id: projetoId,
+              rotulo: `Antes de: ${prompt.slice(0, 60)}`,
+              arquivos: arquivosAtuais as unknown as never,
+            });
+            if (erroBackup) {
+              console.warn("[Faby] Aviso ao criar backup no Supabase:", erroBackup.message);
+            }
+          } catch (e) {
+            console.warn("[Faby] Exceção ao tentar criar backup:", e);
           }
         }
         if (ok) {

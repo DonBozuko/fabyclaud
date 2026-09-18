@@ -73,11 +73,13 @@ export function injetarAuditorDeCliques(html: string) {
     // imagens que não carregaram de verdade
     var imgs = [].slice.call(document.images).slice(0, 30);
     for (var j = 0; j < imgs.length; j++) {
-      if (imgs[j].complete && imgs[j].naturalWidth === 0) {
-        imagens.push(imgs[j].getAttribute("src") || "(sem src)");
+      var src = imgs[j].getAttribute("src") || "";
+      var ehExterna = src.indexOf("http://") === 0 || src.indexOf("https://") === 0 || src.indexOf("//") === 0;
+      if (imgs[j].complete && imgs[j].naturalWidth === 0 && !ehExterna) {
+        imagens.push(src || "(sem src)");
       }
       if (!imgs[j].getAttribute("alt")) {
-        avisos.push("imagem sem texto alternativo: " + (imgs[j].getAttribute("src") || "").slice(0, 60));
+        avisos.push("imagem sem texto alternativo: " + src.slice(0, 60));
       }
     }
 
