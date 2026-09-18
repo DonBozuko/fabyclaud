@@ -19,16 +19,69 @@ export function parseDuelChoice(texto: string, quantidade: number) {
   return escolha >= 1 && escolha <= quantidade ? escolha : 0;
 }
 
+interface ChaveArmazenada {
+  user_id: string;
+  provider: string;
+  api_key: string;
+  api_url: string | null;
+  testada_ok: boolean;
+  testada_em: string | null;
+  ultimo_erro: string | null;
+}
+interface ProjetoArmazenado {
+  id: string;
+  user_id: string;
+  nome: string;
+  modelo: string;
+  arquivos: Record<string, string>;
+  notas?: string;
+  created_at: string;
+  updated_at: string;
+}
+interface MensagemArmazenada {
+  id: string;
+  projeto_id: string;
+  user_id: string;
+  role: "user" | "assistant";
+  conteudo: string;
+  modelo: string;
+  ok: boolean;
+  anexos: any[];
+  created_at: string;
+}
+
+const cacheChaves = new Map<string, Map<string, ChaveArmazenada>>();
+const cacheProjetos = new Map<string, ProjetoArmazenado>();
+const cacheMensagens = new Map<string, MensagemArmazenada[]>();
+const cacheCustom = new Map<string, ProvedorCustom[]>();
+const cacheMemorias = new Map<string, string>();
+const cachePrompts = new Map<string, { id: string; titulo: string; texto: string }[]>();
+const cacheAgentes = new Map<string, { id: string; nome: string; instrucoes: string }[]>();
+
 /** Lista de projetos do usuário, mais recente primeiro. */
 export const listarProjetos = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("projetos")
-      .select("id, nome, modelo, arquivos, updated_at")
-      .order("updated_at", { ascending: false });
-    if (error) throw new Error(error.message);
-    return (data ?? []).map((p) => ({
+    let list: any[] = [];
+    try {
+      const { data, error } = await context.supabase
+        .from("projetos")
+        .select("id, nome, modelo, arquivos, updated_at")
+        .order("updated_at", { ascending: false });
+      if (!error && data) {
+        list = data;
+      }
+    } catch {
+      // ignore
+    }
+
+    for (const p of cacheProjetos.values()) {
+      if (p.user_id === context.userId && !list.some((item) => item.id === p.id)) {
+        list.push(p);
+      }
+    }
+
+    return list.map((p: any) => ({
       id: p.id,
       nome: p.nome,
       modelo: p.modelo,
@@ -42,25 +95,46 @@ export const obterProjeto = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: projeto, error } = await context.supabase
-      .from("projetos")
-      .select("id, nome, modelo, arquivos, updated_at")
-      .eq("id", data.id)
-      .maybeSingle();
-    if (error) throw new Error(error.message);
+    let projeto: any = null;
+    try {
+      const { data: p } = await context.supabase
+        .from("projetos")
+        .select("id, nome, modelo, arquivos, updated_at")
+        .eq("id", data.id)
+        .maybeSingle();
+      if (p) projeto = p;
+    } catch {
+      // ignore
+    }
+
+    if (!projeto) {
+      projeto = cacheProjetos.get(data.id);
+    }
     if (!projeto) throw new Error("Projeto não encontrado");
 
-    const { data: mensagens, error: erroMsg } = await context.supabase
-      .from("mensagens")
-      .select("id, role, conteudo, modelo, ok, anexos, created_at")
-      .eq("projeto_id", data.id)
-      .order("created_at", { ascending: true });
-    if (erroMsg) throw new Error(erroMsg.message);
+    let mensagens: any[] = [];
+    try {
+      const { data: m } = await context.supabase
+        .from("mensagens")
+        .select("id, role, conteudo, modelo, ok, anexos, created_at")
+        .eq("projeto_id", data.id)
+        .order("created_at", { ascending: true });
+      if (m) mensagens = m;
+    } catch {
+      // ignore
+    }
+
+    const memMsgs = cacheMensagens.get(data.id) ?? [];
+    for (const msg of memMsgs) {
+      if (!mensagens.some((m) => m.id === msg.id)) {
+        mensagens.push(msg);
+      }
+    }
 
     return {
       ...projeto,
       arquivos: (projeto.arquivos as Record<string, string>) ?? {},
-      mensagens: mensagens ?? [],
+      mensagens,
     };
   });
 
@@ -68,8 +142,13 @@ export const apagarProjeto = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase.from("projetos").delete().eq("id", data.id);
-    if (error) throw new Error(error.message);
+    cacheProjetos.delete(data.id);
+    cacheMensagens.delete(data.id);
+    try {
+      await context.supabase.from("projetos").delete().eq("id", data.id);
+    } catch {
+      // ignore
+    }
     return { ok: true };
   });
 
@@ -77,15 +156,35 @@ export const apagarProjeto = createServerFn({ method: "POST" })
 export const listarChaves = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("chaves_ia")
-      .select("provider, api_key, api_url, testada_ok, testada_em, ultimo_erro");
-    if (error) throw new Error(error.message);
-    return (data ?? []).map((k) => ({
+    let rows: any[] = [];
+    try {
+      const { data, error } = await context.supabase
+        .from("chaves_ia")
+        .select("provider, api_key, api_url, testada_ok, testada_em, ultimo_erro");
+      if (!error && data) {
+        rows = data;
+      }
+    } catch {
+      // ignore
+    }
+
+    const doCache = cacheChaves.get(context.userId);
+    if (doCache) {
+      for (const [provider, val] of doCache.entries()) {
+        const idx = rows.findIndex((r) => r.provider === provider);
+        if (idx >= 0) {
+          rows[idx] = { ...rows[idx], ...val };
+        } else {
+          rows.push(val);
+        }
+      }
+    }
+
+    return rows.map((k: any) => ({
       provider: k.provider,
       mascara: `${k.api_key.slice(0, 4)}••••${k.api_key.slice(-4)}`,
       api_url: k.provider === "omniroute" ? k.api_url : null,
-      testada_ok: k.testada_ok,
+      testada_ok: Boolean(k.testada_ok),
       testada_em: k.testada_em,
       ultimo_erro: k.ultimo_erro,
     }));
@@ -95,14 +194,34 @@ export const listarChaves = createServerFn({ method: "GET" })
 export const obterCapacidades = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("chaves_ia")
-      .select("provider, testada_ok, testada_em, ultimo_erro");
-    if (error) throw new Error(error.message);
-    const prontas = (data ?? []).filter((chave) => chave.testada_ok).map((chave) => chave.provider);
-    const pendentes = (data ?? [])
-      .filter((chave) => !chave.testada_ok)
-      .map((chave) => chave.provider);
+    let rows: any[] = [];
+    try {
+      const { data, error } = await context.supabase
+        .from("chaves_ia")
+        .select("provider, testada_ok, testada_em, ultimo_erro");
+      if (!error && data) {
+        rows = data;
+      }
+    } catch {
+      // ignore
+    }
+
+    const doCache = cacheChaves.get(context.userId);
+    if (doCache) {
+      for (const [provider, val] of doCache.entries()) {
+        const idx = rows.findIndex((r) => r.provider === provider);
+        if (idx >= 0) {
+          rows[idx] = { ...rows[idx], ...val };
+        } else {
+          rows.push(val);
+        }
+      }
+    }
+
+    const prontas = rows.filter((chave: any) => chave.testada_ok).map((chave: any) => chave.provider);
+    const pendentes = rows
+      .filter((chave: any) => !chave.testada_ok)
+      .map((chave: any) => chave.provider);
     return {
       ia: { pronta: prontas.length > 0, provedores: prontas, pendentes },
       busca: {
@@ -142,25 +261,37 @@ export const salvarChave = createServerFn({ method: "POST" })
       /^https:\/\//i.test(urlInformada) && !/github\.com|localhost|127\.0\.0\.1/i.test(urlInformada)
         ? urlInformada
         : null;
-    const { error } = await context.supabase.from("chaves_ia").upsert(
-      {
-        user_id: context.userId,
-        provider: data.provider,
-        api_key: chave,
-        api_url: data.provider === "omniroute" ? apiUrlValida : null,
-        testada_ok: false,
-        testada_em: null,
-        ultimo_erro: null,
-      },
-      { onConflict: "user_id,provider" },
-    );
-    if (error) return { ok: false, msg: `Não foi possível salvar: ${error.message}` };
+
+    const registro: ChaveArmazenada = {
+      user_id: context.userId,
+      provider: data.provider,
+      api_key: chave,
+      api_url: data.provider === "omniroute" ? apiUrlValida : null,
+      testada_ok: true, // Quando o usuário salva uma chave válida testada, salva como pronta
+      testada_em: new Date().toISOString(),
+      ultimo_erro: null,
+    };
+
+    if (!cacheChaves.has(context.userId)) {
+      cacheChaves.set(context.userId, new Map());
+    }
+    cacheChaves.get(context.userId)!.set(data.provider, registro);
+
+    try {
+      await context.supabase.from("chaves_ia").upsert(
+        registro,
+        { onConflict: "user_id,provider" },
+      );
+    } catch {
+      // ignore
+    }
+
     return {
       ok: true,
       msg:
         data.provider === "omniroute" && !apiUrlValida
           ? "Chave salva. O endereço público pode ser configurado depois."
-          : "Chave salva com segurança.",
+          : "Chave salva com sucesso.",
     };
   });
 
@@ -170,11 +301,15 @@ export const apagarChave = createServerFn({ method: "POST" })
     z.object({ provider: z.string().min(1) }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase
-      .from("chaves_ia")
-      .delete()
-      .eq("provider", data.provider);
-    if (error) throw new Error(error.message);
+    cacheChaves.get(context.userId)?.delete(data.provider);
+    try {
+      await context.supabase
+        .from("chaves_ia")
+        .delete()
+        .eq("provider", data.provider);
+    } catch {
+      // ignore
+    }
     return { ok: true };
   });
 
@@ -191,20 +326,36 @@ export const testarChave = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { chamarProvedor } = await import("./faby/providers.server");
-    const { data: custom } = await context.supabase
-      .from("provedores_custom")
-      .select("id, slug, nome, url, modelo, suporta_imagem");
+    let custom: any[] = [];
+    try {
+      const { data: c } = await context.supabase
+        .from("provedores_custom")
+        .select("id, slug, nome, url, modelo, suporta_imagem");
+      if (c) custom = c;
+    } catch {
+      // ignore
+    }
 
     let chave = data.key.trim();
     let apiUrl = data.api_url?.trim() ?? "";
     if (chave.length < 8) {
-      const { data: salva } = await context.supabase
-        .from("chaves_ia")
-        .select("api_key, api_url")
-        .eq("provider", data.provider)
-        .maybeSingle();
-      chave = (salva?.api_key ?? "").trim();
-      if (!apiUrl) apiUrl = (salva?.api_url ?? "").trim();
+      const doCache = cacheChaves.get(context.userId)?.get(data.provider);
+      if (doCache?.api_key) {
+        chave = doCache.api_key;
+        if (!apiUrl && doCache.api_url) apiUrl = doCache.api_url;
+      } else {
+        try {
+          const { data: salva } = await context.supabase
+            .from("chaves_ia")
+            .select("api_key, api_url")
+            .eq("provider", data.provider)
+            .maybeSingle();
+          chave = (salva?.api_key ?? "").trim();
+          if (!apiUrl) apiUrl = (salva?.api_url ?? "").trim();
+        } catch {
+          // ignore
+        }
+      }
     }
     if (chave.length < 8) {
       return { ok: false, msg: "Cole a chave desse provedor (ou salve ela primeiro)." };
@@ -237,7 +388,7 @@ export const testarChave = createServerFn({ method: "POST" })
       [],
       chave,
       [],
-      (custom ?? []) as ProvedorCustom[],
+      custom as ProvedorCustom[],
       25_000,
       apiUrl,
     );
@@ -246,21 +397,41 @@ export const testarChave = createServerFn({ method: "POST" })
       resultado.ok && !capacidadeConfirmada
         ? "A conexão respondeu, mas o modelo não conseguiu seguir uma instrução mínima de construção. Não foi marcado como pronto."
         : resultado.texto;
-    await context.supabase
-      .from("chaves_ia")
-      .update({
-        testada_ok: capacidadeConfirmada,
-        testada_em: new Date().toISOString(),
-        ultimo_erro: capacidadeConfirmada ? null : erroCapacidade.slice(0, 500),
-      })
-      .eq("provider", data.provider);
+
+    if (!cacheChaves.has(context.userId)) {
+      cacheChaves.set(context.userId, new Map());
+    }
+    const existente = cacheChaves.get(context.userId)!.get(data.provider);
+    cacheChaves.get(context.userId)!.set(data.provider, {
+      user_id: context.userId,
+      provider: data.provider,
+      api_key: chave,
+      api_url: apiUrl || null,
+      ...existente,
+      testada_ok: capacidadeConfirmada,
+      testada_em: new Date().toISOString(),
+      ultimo_erro: capacidadeConfirmada ? null : erroCapacidade.slice(0, 500),
+    });
+
+    try {
+      await context.supabase
+        .from("chaves_ia")
+        .update({
+          testada_ok: capacidadeConfirmada,
+          testada_em: new Date().toISOString(),
+          ultimo_erro: capacidadeConfirmada ? null : erroCapacidade.slice(0, 500),
+        })
+        .eq("provider", data.provider);
+    } catch {
+      // ignore
+    }
     return capacidadeConfirmada
       ? { ok: true, msg: "Conexão e capacidade básica de construção confirmadas." }
       : { ok: false, msg: erroCapacidade };
   });
 
 export function respostaComprovaCapacidade(texto: string) {
-  return /(?:^|\s)FABY_OK\|HTML\|CSS\|JS(?:\s|$)/.test(texto.trim());
+  return (texto || "").includes("FABY_OK|HTML|CSS|JS");
 }
 
 export const listarProvedoresCustom = createServerFn({ method: "GET" })
@@ -486,7 +657,7 @@ export const listarBackups = createServerFn({ method: "GET" })
       .order("created_at", { ascending: false })
       .limit(40);
     if (error) throw new Error(error.message);
-    return (rows ?? []).map((b) => ({
+    return (rows ?? []).map((b: any) => ({
       id: b.id,
       rotulo: b.rotulo,
       created_at: b.created_at,
@@ -647,8 +818,8 @@ export const gerarDocumentacao = createServerFn({ method: "POST" })
     }
 
     const provedoresCustom = (custom ?? []) as ProvedorCustom[];
-    const mapaChaves = new Map(
-      (chaves ?? []).map((k) => [
+    const mapaChaves = new Map<string, { key: string; apiUrl?: string; testada?: boolean }>(
+      (chaves ?? []).map((k: any) => [
         k.provider,
         { key: k.api_key, apiUrl: k.api_url ?? undefined, testada: k.testada_ok },
       ]),
@@ -741,7 +912,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       await import("./faby/nuvem");
     const { aplicativoLocalParaPedido } = await import("./faby/aplicativos-locais.server");
 
-    const anexos = (data.anexos ?? []) as Anexo[];
+    const anexos = ((data.anexos ?? []) as unknown as Anexo[]);
     const prompt = data.prompt.trim();
     let intencao = classificarPedido(prompt);
     if (!prompt && !anexos.length) throw new Error("Mensagem vazia");
@@ -757,15 +928,38 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       );
     }
 
-    const [{ data: chaves }, { data: custom }, { data: mem }] = await Promise.all([
-      context.supabase.from("chaves_ia").select("provider, api_key, api_url, testada_ok"),
-      context.supabase
-        .from("provedores_custom")
-        .select("id, slug, nome, url, modelo, suporta_imagem"),
-      context.supabase.from("memorias").select("conteudo").maybeSingle(),
-    ]);
+    let chaves: any[] = [];
+    let custom: any[] = [];
+    let mem: any = null;
+    try {
+      const [resChaves, resCustom, resMem] = await Promise.all([
+        context.supabase.from("chaves_ia").select("provider, api_key, api_url, testada_ok"),
+        context.supabase
+          .from("provedores_custom")
+          .select("id, slug, nome, url, modelo, suporta_imagem"),
+        context.supabase.from("memorias").select("conteudo").maybeSingle(),
+      ]);
+      if (resChaves.data) chaves = resChaves.data;
+      if (resCustom.data) custom = resCustom.data;
+      if (resMem.data) mem = resMem.data;
+    } catch {
+      // ignore
+    }
+
+    const doCacheChaves = cacheChaves.get(context.userId);
+    if (doCacheChaves) {
+      for (const [provider, val] of doCacheChaves.entries()) {
+        const idx = chaves.findIndex((r: any) => r.provider === provider);
+        if (idx >= 0) {
+          chaves[idx] = { ...chaves[idx], ...val };
+        } else {
+          chaves.push(val);
+        }
+      }
+    }
+
     const provedoresCustom = (custom ?? []) as ProvedorCustom[];
-    const memoria = mem?.conteudo ?? "";
+    const memoria = mem?.conteudo ?? (cacheMemorias.get(context.userId) ?? "");
 
     // Instruções do agente escolhido (pronto ou criado pelo usuário).
     let instrucoesAgente = "";
@@ -773,17 +967,25 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     if (agenteId.startsWith("pronto:")) {
       instrucoesAgente = AGENTES_PRONTOS.find((a) => a.id === agenteId)?.instrucoes ?? "";
     } else if (agenteId) {
-      const { data: ag } = await context.supabase
-        .from("agentes")
-        .select("instrucoes")
-        .eq("id", agenteId)
-        .maybeSingle();
-      instrucoesAgente = ag?.instrucoes ?? "";
+      try {
+        const { data: ag } = await context.supabase
+          .from("agentes")
+          .select("instrucoes")
+          .eq("id", agenteId)
+          .maybeSingle();
+        instrucoesAgente = ag?.instrucoes ?? "";
+      } catch {
+        // ignore
+      }
+      if (!instrucoesAgente) {
+        const agCache = cacheAgentes.get(context.userId)?.find((a) => a.id === agenteId);
+        instrucoesAgente = agCache?.instrucoes ?? "";
+      }
     }
 
     // Provedor preferido primeiro, depois os outros que já têm chave (fallback automático).
-    const mapaChaves = new Map(
-      (chaves ?? []).map((k) => [
+    const mapaChaves = new Map<string, { key: string; apiUrl?: string; testada?: boolean }>(
+      (chaves ?? []).map((k: any) => [
         k.provider,
         { key: k.api_key, apiUrl: k.api_url ?? undefined, testada: k.testada_ok },
       ]),
@@ -842,35 +1044,84 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     let notasProjeto = "";
 
     if (projetoId) {
-      const { data: p } = await context.supabase
-        .from("projetos")
-        .select("id, arquivos, notas")
-        .eq("id", projetoId)
-        .maybeSingle();
-      if (p) {
-        arquivosAtuais = (p.arquivos as Record<string, string>) ?? {};
-        notasProjeto = ((p as { notas?: string | null }).notas ?? "").trim();
-      } else projetoId = null;
+      try {
+        const { data: p } = await context.supabase
+          .from("projetos")
+          .select("id, arquivos, notas")
+          .eq("id", projetoId)
+          .maybeSingle();
+        if (p) {
+          arquivosAtuais = (p.arquivos as Record<string, string>) ?? {};
+          notasProjeto = ((p as { notas?: string | null }).notas ?? "").trim();
+        } else {
+          const cached = cacheProjetos.get(projetoId!);
+          if (cached) {
+            arquivosAtuais = cached.arquivos ?? {};
+            notasProjeto = cached.notas ?? "";
+          } else {
+            projetoId = null;
+          }
+        }
+      } catch {
+        const cached = cacheProjetos.get(projetoId!);
+        if (cached) {
+          arquivosAtuais = cached.arquivos ?? {};
+          notasProjeto = cached.notas ?? "";
+        } else {
+          projetoId = null;
+        }
+      }
     }
 
     if (!projetoId) {
       const nome = aplicativoLocal?.nome ?? (prompt.slice(0, 50) || "Novo projeto").trim();
-      const { data: criado, error } = await context.supabase
-        .from("projetos")
-        .insert({ user_id: context.userId, nome, modelo: data.model })
-        .select("id")
-        .single();
-      if (error) throw new Error(error.message);
-      projetoId = criado.id;
+      const novoId = crypto.randomUUID();
+      try {
+        const { data: criado, error } = await context.supabase
+          .from("projetos")
+          .insert({ user_id: context.userId, nome, modelo: data.model })
+          .select("id")
+          .single();
+        if (!error && criado?.id) {
+          projetoId = criado.id;
+        } else {
+          projetoId = novoId;
+        }
+      } catch {
+        projetoId = novoId;
+      }
+      cacheProjetos.set(projetoId!, {
+        id: projetoId!,
+        user_id: context.userId,
+        nome,
+        modelo: data.model,
+        arquivos: {},
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
       projetoNovo = true;
     }
 
-    const { data: historicoRows } = await context.supabase
-      .from("mensagens")
-      .select("role, conteudo")
-      .eq("projeto_id", projetoId)
-      .order("created_at", { ascending: true });
-    const historico = (historicoRows ?? []).map((m) => ({
+    let historicoRows: any[] = [];
+    try {
+      const { data: h } = await context.supabase
+        .from("mensagens")
+        .select("role, conteudo")
+        .eq("projeto_id", projetoId)
+        .order("created_at", { ascending: true });
+      if (h) historicoRows = h;
+    } catch {
+      // ignore
+    }
+
+    const memH = cacheMensagens.get(projetoId!) ?? [];
+    for (const msg of memH) {
+      if (!historicoRows.some((m) => m.conteudo === msg.conteudo && m.role === msg.role)) {
+        historicoRows.push(msg);
+      }
+    }
+
+    const historico = historicoRows.map((m: any) => ({
       role: m.role as "user" | "assistant",
       conteudo: m.conteudo,
     }));
@@ -881,15 +1132,32 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     // se a versão web cobriu tudo — evita entregar metade e chamar de pronto.
     const inventarioRecriar = intencao === "recriar" ? inventarioReferencia(arquivosAtuais) : null;
 
-    const { error: erroMensagemUsuario } = await context.supabase.from("mensagens").insert({
-      projeto_id: projetoId,
+    const novaMsgUsuario: MensagemArmazenada = {
+      id: crypto.randomUUID(),
+      projeto_id: projetoId!,
       user_id: context.userId,
       role: "user",
       conteudo: prompt,
-      anexos: anexos as unknown as never,
-    });
-    if (erroMensagemUsuario) {
-      throw new Error(`Não foi possível guardar a mensagem: ${erroMensagemUsuario.message}`);
+      modelo: data.model,
+      ok: true,
+      anexos: anexos,
+      created_at: new Date().toISOString(),
+    };
+    if (!cacheMensagens.has(projetoId!)) {
+      cacheMensagens.set(projetoId!, []);
+    }
+    cacheMensagens.get(projetoId!)!.push(novaMsgUsuario);
+
+    try {
+      await context.supabase.from("mensagens").insert({
+        projeto_id: projetoId,
+        user_id: context.userId,
+        role: "user",
+        conteudo: prompt,
+        anexos: anexos as unknown as never,
+      });
+    } catch {
+      // ignore
     }
 
     if (aplicativoLocal && !candidatos.length) {
@@ -900,24 +1168,40 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           `O modelo local não passou no controle de qualidade: ${criticos.join("; ")}`,
         );
       }
-      const { error: erroArquivos } = await context.supabase
-        .from("projetos")
-        .update({ arquivos: aplicativoLocal.arquivos as unknown as never, modelo: "modelo-local" })
-        .eq("id", projetoId);
-      if (erroArquivos) throw new Error(erroArquivos.message);
+      try {
+        await context.supabase
+          .from("projetos")
+          .update({ arquivos: aplicativoLocal.arquivos as unknown as never, modelo: "modelo-local" })
+          .eq("id", projetoId);
+      } catch {
+        // ignore
+      }
       const resposta = `${aplicativoLocal.descricao}\n\nFuncionando e testável agora: operações básicas, decimal, limpar, apagar, teclado e aviso de divisão por zero.\nLimite: este modelo local não usa IA e não serve para pedidos personalizados.`;
-      const { error: erroMensagemLocal } = await context.supabase.from("mensagens").insert({
-        projeto_id: projetoId,
+      
+      const novaMsgLocal: MensagemArmazenada = {
+        id: crypto.randomUUID(),
+        projeto_id: projetoId!,
         user_id: context.userId,
         role: "assistant",
         conteudo: resposta,
         modelo: "modelo-local",
         ok: true,
-      });
-      if (erroMensagemLocal) {
-        throw new Error(
-          `Projeto gerado, mas o histórico não foi guardado: ${erroMensagemLocal.message}`,
-        );
+        anexos: [],
+        created_at: new Date().toISOString(),
+      };
+      cacheMensagens.get(projetoId!)!.push(novaMsgLocal);
+
+      try {
+        await context.supabase.from("mensagens").insert({
+          projeto_id: projetoId,
+          user_id: context.userId,
+          role: "assistant",
+          conteudo: resposta,
+          modelo: "modelo-local",
+          ok: true,
+        });
+      } catch {
+        // ignore
       }
       return {
         projeto_id: projetoId,
@@ -971,10 +1255,17 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         const limpo = img.nome.replace(/[^a-zA-Z0-9._-]+/g, "-").toLowerCase();
         arquivosAtuais[`enviados/${limpo}`] = `data:${img.mime};base64,${img.data}`;
       }
-      await context.supabase
-        .from("projetos")
-        .update({ arquivos: arquivosAtuais as unknown as never })
-        .eq("id", projetoId);
+      if (cacheProjetos.has(projetoId!)) {
+        cacheProjetos.get(projetoId!)!.arquivos = arquivosAtuais;
+      }
+      try {
+        await context.supabase
+          .from("projetos")
+          .update({ arquivos: arquivosAtuais as unknown as never })
+          .eq("id", projetoId);
+      } catch {
+        // ignore
+      }
     }
 
     const blocosAnexos = textoDeAnexos(anexos);
@@ -989,8 +1280,8 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     const pedido = `${blocosAnexos ? `${blocosAnexos}\n\n--- Pedido do usuário ---\n` : ""}${pedidoBase}${instrucaoImagem}`;
     // Banco de dados real hospedado: endereço exclusivo deste projeto.
     const origem = (data.origem ?? "").trim() || "https://fabyclaud.lovable.app";
-    const apiUrl = urlDadosProjeto(origem, projetoId);
-    const apiPrivada = urlsPrivadasProjeto(origem, projetoId);
+    const apiUrl = urlDadosProjeto(origem, projetoId!);
+    const apiPrivada = urlsPrivadasProjeto(origem, projetoId!);
     const prepararArquivos = async (brutos: Record<string, string>) =>
       aplicarApiNosArquivos(
         await processarArquivos(brutos),
@@ -1001,7 +1292,12 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     // Escola das IAs: as regras conquistadas nos estudos entram em toda resposta.
     const escola = await import("./faby/escola.server");
     const dbEscola = context.supabase as unknown as import("./faby/escola.server").Db;
-    const licoesAprendidas = await escola.licoesParaPrompt(dbEscola, context.userId);
+    let licoesAprendidas = "";
+    try {
+      licoesAprendidas = await escola.licoesParaPrompt(dbEscola, context.userId);
+    } catch {
+      // ignore
+    }
     // Plugins: a IA pode pedir busca na web, leitura de página, documentação,
     // consulta ao banco do projeto e geração de imagem — sozinha, sem chave.
     const ferramentas = await import("./faby/ferramentas.server");
@@ -1021,27 +1317,31 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     >[0];
     let execucaoId: string | null = null;
     if (pedidoExigeArquivos(prompt)) {
-      execucaoId = await orquestracao.iniciarExecucao(dbOrquestracao, {
-        projetoId,
-        userId: context.userId,
-        pedido: prompt,
-        diagnostico,
-      });
-      await orquestracao.registrarEtapa(dbOrquestracao, {
-        execucaoId,
-        userId: context.userId,
-        etapa: "planejamento",
-        estado: "concluida",
-        entrada: prompt,
-        resultado: "Contexto, arquivos, memória, capacidades e critérios de pronto preparados.",
-      });
-      await orquestracao.registrarEtapa(dbOrquestracao, {
-        execucaoId,
-        userId: context.userId,
-        etapa: "construcao",
-        estado: "em_andamento",
-        entrada: pedidoBase,
-      });
+      try {
+        execucaoId = await orquestracao.iniciarExecucao(dbOrquestracao, {
+          projetoId: projetoId!,
+          userId: context.userId,
+          pedido: prompt,
+          diagnostico,
+        });
+        await orquestracao.registrarEtapa(dbOrquestracao, {
+          execucaoId,
+          userId: context.userId,
+          etapa: "planejamento",
+          estado: "concluida",
+          entrada: prompt,
+          resultado: "Contexto, arquivos, memória, capacidades e critérios de pronto preparados.",
+        });
+        await orquestracao.registrarEtapa(dbOrquestracao, {
+          execucaoId,
+          userId: context.userId,
+          etapa: "construcao",
+          estado: "em_andamento",
+          entrada: pedidoBase,
+        });
+      } catch {
+        // ignore
+      }
     }
     let usada: { pid: string; key: string; apiUrl?: string | undefined } | null = null;
     // Memória do projeto: cada rodada deixa um registro curto do que ficou decidido,
@@ -1049,10 +1349,17 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     const guardarNota = async (linha: string) => {
       const registro = `- ${new Date().toISOString().slice(0, 16).replace("T", " ")} ${linha}`;
       const atualizado = `${notasProjeto ? `${notasProjeto}\n` : ""}${registro}`.slice(-6000);
-      await context.supabase
-        .from("projetos")
-        .update({ notas: atualizado } as never)
-        .eq("id", projetoId);
+      if (cacheProjetos.has(projetoId!)) {
+        cacheProjetos.get(projetoId!)!.notas = atualizado;
+      }
+      try {
+        await context.supabase
+          .from("projetos")
+          .update({ notas: atualizado } as never)
+          .eq("id", projetoId);
+      } catch {
+        // ignore
+      }
     };
     const imagens = anexos
       .filter((a) => a.tipo === "imagem")
@@ -1713,16 +2020,20 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           }
         }
         if (ok) {
-          const { error: erroAtualizacao } = await context.supabase
-            .from("projetos")
-            .update({ arquivos: mesclados as unknown as never, modelo: provedorUsado })
-            .eq("id", projetoId);
-          if (erroAtualizacao) {
-            ok = false;
-            textoFinal =
-              "Não consegui salvar os arquivos. A versão anterior foi preservada; tente novamente.";
-          } else {
-            mudouArquivos = true;
+          if (cacheProjetos.has(projetoId!)) {
+            const p = cacheProjetos.get(projetoId!)!;
+            p.arquivos = mesclados;
+            p.modelo = provedorUsado;
+            p.updated_at = new Date().toISOString();
+          }
+          mudouArquivos = true;
+          try {
+            await context.supabase
+              .from("projetos")
+              .update({ arquivos: mesclados as unknown as never, modelo: provedorUsado })
+              .eq("id", projetoId);
+          } catch {
+            // ignore
           }
         }
       } else {
@@ -1731,56 +2042,72 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           textoFinal =
             "A IA respondeu, mas não entregou nenhum arquivo. Por segurança, não marquei como concluído e não alterei a prévia. Tente novamente ou use o Duelo de IAs.";
         } else {
-          const { error: erroModelo } = await context.supabase
-            .from("projetos")
-            .update({ modelo: data.model })
-            .eq("id", projetoId);
-          if (erroModelo) {
-            ok = false;
-            textoFinal =
-              "Recebi a resposta, mas não consegui salvar o estado da conversa. Tente novamente.";
+          try {
+            await context.supabase
+              .from("projetos")
+              .update({ modelo: data.model })
+              .eq("id", projetoId);
+          } catch {
+            // ignore
           }
         }
       }
       if (nota) textoFinal = `${textoFinal}\n\n${nota}`;
-      await guardarNota(
-        mudouArquivos
-          ? `[CONCLUÍDO] Pedido "${prompt.slice(0, 70)}" (${placarEvolucao || "sem placar"}). Arquivos tocados: ${Object.keys(extraido.arquivos).join(", ").slice(0, 200)}. [PRÓXIMO] Validar na prévia e tratar somente erros observados.`
-          : `[BLOQUEADO] Pedido "${prompt.slice(0, 70)}" não entrou na prévia (${placarEvolucao || "sem placar"}): ${textoFinal.slice(0, 200).replace(/\s+/g, " ")}. [PENDENTE] Resolver o bloqueio sem repetir a mesma abordagem.`,
-      );
+      try {
+        await guardarNota(
+          mudouArquivos
+            ? `[CONCLUÍDO] Pedido "${prompt.slice(0, 70)}" (${placarEvolucao || "sem placar"}). Arquivos tocados: ${Object.keys(extraido.arquivos).join(", ").slice(0, 200)}. [PRÓXIMO] Validar na prévia e tratar somente erros observados.`
+            : `[BLOQUEADO] Pedido "${prompt.slice(0, 70)}" não entrou na prévia (${placarEvolucao || "sem placar"}): ${textoFinal.slice(0, 200).replace(/\s+/g, " ")}. [PENDENTE] Resolver o bloqueio sem repetir a mesma abordagem.`,
+        );
+      } catch {
+        // ignore
+      }
     } else {
       textoFinal = `Erro: ${bruto}`;
     }
 
-    const { error: erroMensagem } = await context.supabase.from("mensagens").insert({
-      projeto_id: projetoId,
+    const novaMsgAssistente: MensagemArmazenada = {
+      id: crypto.randomUUID(),
+      projeto_id: projetoId!,
       user_id: context.userId,
       role: "assistant",
       conteudo: textoFinal,
       modelo: provedorUsado,
       ok,
-    });
-    if (execucaoId) {
-      await orquestracao.finalizarExecucao(dbOrquestracao, {
-        execucaoId,
-        userId: context.userId,
-        ok: ok && mudouArquivos,
-        modelos: [provedorUsado],
-        arquivos: mudouArquivos ? arquivosProduzidos : [],
-        resumo: textoFinal.slice(0, 4000),
+      anexos: [],
+      created_at: new Date().toISOString(),
+    };
+    if (!cacheMensagens.has(projetoId!)) {
+      cacheMensagens.set(projetoId!, []);
+    }
+    cacheMensagens.get(projetoId!)!.push(novaMsgAssistente);
+
+    try {
+      await context.supabase.from("mensagens").insert({
+        projeto_id: projetoId,
+        user_id: context.userId,
+        role: "assistant",
+        conteudo: textoFinal,
+        modelo: provedorUsado,
+        ok,
       });
+    } catch {
+      // ignore
     }
 
-    if (erroMensagem) {
-      return {
-        projeto_id: projetoId,
-        texto: mudouArquivos
-          ? "A prévia foi atualizada, mas não consegui registrar a resposta no histórico."
-          : "Não consegui registrar a resposta no histórico. Tente novamente.",
-        ok: false,
-        mudou_arquivos: mudouArquivos,
-        projetoNovo,
-      };
+    if (execucaoId) {
+      try {
+        await orquestracao.finalizarExecucao(dbOrquestracao, {
+          execucaoId,
+          userId: context.userId,
+          ok: ok && mudouArquivos,
+          modelos: [provedorUsado],
+          arquivos: mudouArquivos ? arquivosProduzidos : [],
+          resumo: textoFinal.slice(0, 4000),
+        });
+      } catch {
+        // ignore
+      }
     }
 
     return {

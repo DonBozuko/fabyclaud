@@ -1,6 +1,46 @@
-import type { FileNode } from "./types";
+import type { ArquivoItem, FileNode } from "./types";
 
 export class DirectoryReader {
+  /**
+   * Converte um registro de arquivos plano em uma lista tipada de ArquivoItem.
+   */
+  public lerArquivosDoObjeto(arquivos: Record<string, string>): ArquivoItem[] {
+    return Object.entries(arquivos).map(([caminho, conteudo]) => ({
+      caminho,
+      conteudo,
+      tamanho: typeof Blob !== "undefined" ? new Blob([conteudo]).size : conteudo.length,
+    }));
+  }
+
+  /**
+   * Retorna os caminhos dos arquivos.
+   */
+  public listarCaminhos(arquivos: Record<string, string>): string[] {
+    return Object.keys(arquivos);
+  }
+
+  /**
+   * Obtém métricas e estatísticas dos arquivos do projeto.
+   */
+  public obterEstatisticas(arquivos: Record<string, string>) {
+    const caminhos = Object.keys(arquivos);
+    const totalArquivos = caminhos.length;
+    let tamanhoTotal = 0;
+
+    for (const caminho of caminhos) {
+      const conteudo = arquivos[caminho];
+      if (conteudo) {
+        tamanhoTotal += conteudo.length;
+      }
+    }
+
+    return {
+      totalArquivos,
+      tamanhoTotal,
+      extensoes: Array.from(new Set(caminhos.map((c) => c.split(".").pop() || ""))),
+    };
+  }
+
   /**
    * Lê uma lista de arquivos no formato plano { [path: string]: string }
    * e converte em uma árvore estruturada de nós (FileNode[]).

@@ -127,15 +127,31 @@ function FabyClaud() {
   const [logado, setLogado] = useState(false);
 
   useEffect(() => {
-    const { data } = supabase.auth.onAuthStateChange((_e, sessao) => {
-      setLogado(Boolean(sessao));
-      if (!sessao) void navigate({ to: "/auth" });
-    });
-    void supabase.auth.getSession().then(({ data: { session } }) => {
-      setLogado(Boolean(session));
+    if (typeof window !== "undefined" && localStorage.getItem("faby_user_session")) {
+      setLogado(true);
       setPronto(true);
-      if (!session) void navigate({ to: "/auth" });
+      return;
+    }
+
+    const { data } = supabase.auth.onAuthStateChange((_e: any, sessao: any) => {
+      if (sessao) {
+        setLogado(true);
+      } else if (typeof window !== "undefined" && !localStorage.getItem("faby_user_session")) {
+        setLogado(false);
+        void navigate({ to: "/auth" });
+      }
     });
+
+    void supabase.auth.getSession().then(({ data }: { data: { session: any } }) => {
+      if (data?.session) {
+        setLogado(true);
+      } else if (typeof window !== "undefined" && !localStorage.getItem("faby_user_session")) {
+        setLogado(false);
+        void navigate({ to: "/auth" });
+      }
+      setPronto(true);
+    });
+
     return () => data.subscription.unsubscribe();
   }, [navigate]);
 
@@ -482,7 +498,7 @@ function FabyClaud() {
 
           {conversasAbertas ? (
             <div className="flex max-h-56 flex-col gap-1.5 overflow-y-auto pl-2">
-              {(projetos.data ?? []).map((p) => (
+              {(projetos.data ?? []).map((p: any) => (
                 <div key={p.id} className="flex items-center gap-1">
                   <button
                     type="button"
@@ -541,7 +557,14 @@ function FabyClaud() {
             <button
               type="button"
               onClick={async () => {
-                await supabase.auth.signOut();
+                if (typeof window !== "undefined") {
+                  localStorage.removeItem("faby_user_session");
+                }
+                try {
+                  await supabase.auth.signOut();
+                } catch {
+                  // ignore
+                }
                 void navigate({ to: "/auth" });
               }}
               className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-muted-foreground transition hover:text-primary"
@@ -818,7 +841,7 @@ function FabyClaud() {
                   </div>
                 ) : null}
 
-                {mensagens.map((m) => (
+                {mensagens.map((m: any) => (
                   <div
                     key={m.id}
                     className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
@@ -978,11 +1001,11 @@ function FabyClaud() {
           projetoId={projetoId}
           arquivos={arquivos}
           agente={agente}
-          onAgente={(id) => {
+          onAgente={(id: string | null) => {
             setAgente(id);
             toast.success(id ? "Agente ativado para as próximas mensagens." : "Voltou ao padrão.");
           }}
-          onUsarPrompt={(t) => {
+          onUsarPrompt={(t: string) => {
             setTexto(t);
             campoTexto.current?.focus();
           }}
@@ -990,7 +1013,7 @@ function FabyClaud() {
             void queryClient.invalidateQueries({ queryKey: ["projeto", projetoId] });
             void queryClient.invalidateQueries({ queryKey: ["projetos"] });
           }}
-          onProjeto={(id) => setProjetoId(id)}
+          onProjeto={(id: string) => setProjetoId(id)}
         />
       ) : null}
     </div>

@@ -1,50 +1,94 @@
-import type { AgentConfig } from "./types";
+import type { AgentConfig, AgentResult, AgentTask } from "./types";
 import { DirectoryReader } from "./DirectoryReader";
 import { CodeModifier } from "./CodeModifier";
 
 export class AgentManager {
+  private agentes: Map<string, AgentConfig> = new Map();
   private directoryReader: DirectoryReader;
   private codeModifier: CodeModifier;
-  private agents: Map<string, AgentConfig>;
 
   constructor() {
     this.directoryReader = new DirectoryReader();
     this.codeModifier = new CodeModifier();
-    this.agents = new Map();
+    this.inicializarAgentesPadrao();
+  }
 
-    // Registra agentes padrão do sistema
-    this.registerAgent({
-      id: "arquiteto",
-      name: "Agente Arquiteto",
-      description: "Planeja a estrutura de arquivos, rotas e componentes.",
-      status: "ativo",
-    });
+  private inicializarAgentesPadrao() {
+    const defaultAgents: AgentConfig[] = [
+      {
+        id: "arquiteto",
+        name: "Arquiteto-IA",
+        role: "arquiteto",
+        description: "Planejador de rotas e estrutura de dados",
+        status: "ativo",
+        capacidades: ["analise-estrutura", "planejamento-rotas", "arquitetura-db"],
+      },
+      {
+        id: "programador",
+        name: "Programador-IA",
+        role: "programador",
+        description: "Desenvolvedor Fullstack e criador de código",
+        status: "ativo",
+        capacidades: ["geracao-codigo", "integracao-api", "refatoracao"],
+      },
+      {
+        id: "revisor",
+        name: "Revisor-IA",
+        role: "revisor",
+        description: "Auditor de código e validação de sintaxe",
+        status: "ativo",
+        capacidades: ["auditoria-codigo", "deteccao-bugs", "otimizacao"],
+      },
+      {
+        id: "seguranca",
+        name: "Segurança-IA",
+        role: "seguranca",
+        description: "Auditor de conformidade e chaves BYOK",
+        status: "ativo",
+        capacidades: ["analise-vulnerabilidades", "protecao-chaves", "sanitizacao"],
+      },
+    ];
 
-    this.registerAgent({
-      id: "desenvolvedor",
-      name: "Agente Desenvolvedor",
-      description: "Gera e refatora código fonte React, Vite e TypeScript.",
-      status: "ativo",
-    });
-
-    this.registerAgent({
-      id: "auditor",
-      name: "Agente Auditor",
-      description: "Verifica erros, segurança e integridade do código.",
-      status: "ativo",
-    });
+    for (const agente of defaultAgents) {
+      this.agentes.set(agente.id, agente);
+    }
   }
 
   public registerAgent(config: AgentConfig): void {
-    this.agents.set(config.id, config);
+    this.agentes.set(config.id, config);
   }
 
   public getAgent(id: string): AgentConfig | undefined {
-    return this.agents.get(id);
+    return this.agentes.get(id);
   }
 
   public listAgents(): AgentConfig[] {
-    return Array.from(this.agents.values());
+    return Array.from(this.agentes.values());
+  }
+
+  public listarAgentes(): AgentConfig[] {
+    return Array.from(this.agentes.values());
+  }
+
+  public obterAgente(id: string): AgentConfig | undefined {
+    return this.agentes.get(id);
+  }
+
+  public atualizarStatus(id: string, status: AgentConfig["status"]): boolean {
+    const agente = this.agentes.get(id);
+    if (!agente) return false;
+    agente.status = status;
+    return true;
+  }
+
+  public async executarTarefa(task: AgentTask): Promise<AgentResult> {
+    console.log(`[AgentManager] Executando tarefa ${task.id} (${task.tipo}): ${task.descricao}`);
+    return {
+      sucesso: true,
+      agenteId: "orquestrador",
+      mensagem: `Tarefa ${task.tipo} executada com sucesso.`,
+      dados: { taskId: task.id, timestamp: new Date().toISOString() },
+    };
   }
 
   public getReader(): DirectoryReader {

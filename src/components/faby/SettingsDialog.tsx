@@ -55,13 +55,26 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
 
   const salvarMut = useMutation({
     mutationFn: async () => {
+      if (typeof window !== "undefined") {
+        try {
+          const salvas = JSON.parse(localStorage.getItem("faby_local_keys") || "{}");
+          salvas[provedor] = { key: chave.trim(), api_url: provedor === "omniroute" ? omniUrl : "" };
+          localStorage.setItem("faby_local_keys", JSON.stringify(salvas));
+        } catch {
+          // ignore
+        }
+      }
       if (provedor === "omniroute") {
         salvarOmniRouteLocal({
           apiUrl: normalizarOmniRouteLocal(omniUrl),
           apiKey: chave.trim(),
           pronta: false,
         });
-        await remover({ data: { provider: "omniroute" } });
+        try {
+          await remover({ data: { provider: "omniroute" } });
+        } catch {
+          // ignore
+        }
         return {
           ok: true,
           msg: "Chave do OmniRoute salva somente neste navegador. Agora clique em Testar.",
@@ -142,7 +155,7 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
       toast.success("OmniRoute local conectado e pronto para usar.");
       return;
     }
-    const temSalva = (chaves.data ?? []).some((k) => k.provider === provedor);
+    const temSalva = (chaves.data ?? []).some((k: any) => k.provider === provedor);
     if (!chave.trim() && !temSalva) {
       toast.error("Cole a chave primeiro.");
       return;
@@ -325,8 +338,8 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
               </li>
             ) : null}
             {(chaves.data ?? [])
-              .filter((k) => k.provider !== "omniroute")
-              .map((k) => (
+              .filter((k: any) => k.provider !== "omniroute")
+              .map((k: any) => (
                 <li
                   key={k.provider}
                   className="flex items-center justify-between rounded-lg border border-border bg-secondary px-3 py-2 text-xs"
@@ -380,7 +393,7 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
                     className="rounded-lg border border-border px-2.5 py-1.5 text-xs transition hover:bg-accent"
                   >
                     {PROVIDER_LABELS[id] ?? id}
-                    {(chaves.data ?? []).some((k) => k.provider === id) ? " ✓" : ""}
+                    {(chaves.data ?? []).some((k: any) => k.provider === id) ? " ✓" : ""}
                   </a>
                 ))}
             </div>

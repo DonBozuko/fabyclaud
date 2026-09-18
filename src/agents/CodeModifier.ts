@@ -1,4 +1,4 @@
-import type { CodeEdit } from "./types";
+import type { CodeEdit, ModificacaoArquivo } from "./types";
 
 export class CodeModifier {
   /**
@@ -35,6 +35,33 @@ export class CodeModifier {
     const updated = { ...currentFiles };
     delete updated[filePath];
     return updated;
+  }
+
+  /**
+   * Aplica uma lista de modificações de arquivo estruturadas.
+   */
+  public aplicarModificacoes(
+    arquivosAtuais: Record<string, string>,
+    modificacoes: ModificacaoArquivo[],
+  ): Record<string, string> {
+    const copia = { ...arquivosAtuais };
+
+    for (const mod of modificacoes) {
+      if (mod.acao === "remover") {
+        delete copia[mod.caminho];
+      } else {
+        copia[mod.caminho] = mod.novoConteudo;
+      }
+    }
+
+    return copia;
+  }
+
+  /**
+   * Sanitiza e normaliza o código (quebras de linha e espaçamento).
+   */
+  public sanitizarCodigo(codigo: string): string {
+    return codigo.replace(/\r\n/g, "\n").trim();
   }
 }
 
