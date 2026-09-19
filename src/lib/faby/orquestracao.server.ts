@@ -60,7 +60,6 @@ export function injetarSnapshotVFS(
 
   return [
     systemPromptBase,
-    "",
     "================================================================================",
     "STATEFUL VFS SNAPSHOT (ESTADO REAL E ATUAL DO PROJETO - LEITURA OBRIGATÓRIA):",
     "Abaixo está a representação viva e integral de todos os arquivos existentes.",
@@ -69,6 +68,24 @@ export function injetarSnapshotVFS(
     snapshotXml,
     "================================================================================",
   ].join("\n");
+}
+
+/**
+ * Monta o prompt orquestrado completo com o Snapshot VFS injetado.
+ * Esta função une o pedido do usuário, as regras do arquiteto/programador e o estado
+ * real do projeto para que qualquer modelo gratuito (Gemini/Groq/OpenRouter) tenha continuidade perfeita.
+ */
+export function montarPromptComVFS(
+  pedidoUsuario: string,
+  arquivosAtuais: Record<string, string>,
+  instrucoesBase: string,
+  opcoes?: {
+    limiteBytesPorArquivo?: number;
+    ignorarCaminhos?: string[];
+  },
+): string {
+  const promptComSnapshot = injetarSnapshotVFS(instrucoesBase, arquivosAtuais, opcoes);
+  return `${promptComSnapshot}\n\n--- PEDIDO DO USUÁRIO (EXECUÇÃO IMEDIATA) ---\n${pedidoUsuario}`;
 }
 
 export async function iniciarExecucao(
