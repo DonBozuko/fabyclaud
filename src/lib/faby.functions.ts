@@ -2379,6 +2379,27 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             ...(await prepararArquivos(entregues.arquivos)),
           };
           const avaliada = avaliarEntrega(tentativaArquivos, opcoesMeta);
+
+          // Proteção contra regressão: nunca aceitar uma versão que mutilou o projeto,
+          // perdeu o CSS ou simplificou o código para tentar burlar a nota da auditoria.
+          const tamanhoAnterior = Object.values(mesclados).reduce((acc, c) => acc + c.length, 0);
+          const tamanhoNovo = Object.values(tentativaArquivos).reduce((acc, c) => acc + c.length, 0);
+          const tinhaCss =
+            Object.keys(mesclados).some((n) => n.endsWith(".css") && (mesclados[n]?.length ?? 0) > 100) ||
+            Object.values(mesclados).some((c) => /<style[\s>][\s\S]{100,}<\/style>/i.test(c));
+          const manteveCss =
+            Object.keys(tentativaArquivos).some((n) => n.endsWith(".css") && (tentativaArquivos[n]?.length ?? 0) > 100) ||
+            Object.values(tentativaArquivos).some((c) => /<style[\s>][\s\S]{100,}<\/style>/i.test(c));
+
+          if (tinhaCss && !manteveCss) {
+            rodadas.push(`${nomeDe(proximo.pid)} (perdeu estilo CSS)`);
+            continue;
+          }
+          if (tamanhoNovo < tamanhoAnterior * 0.55 && tamanhoAnterior > 1000) {
+            rodadas.push(`${nomeDe(proximo.pid)} (simplificou demais)`);
+            continue;
+          }
+
           rodadas.push(`${nomeDe(proximo.pid)} (${avaliada.nota}/100)`);
           if (avaliada.nota > avaliacao.nota) {
             mesclados = tentativaArquivos;

@@ -109,11 +109,16 @@ export function avaliarEntrega(
     falha: falsas.length ? falsas.slice(0, 6).join("; ") : null,
   });
 
-  const temEstilo = inicial ? /<link[^>]+\.css|<style[\s>]/i.test(arquivos[inicial] ?? "") : false;
+  const inicialHtml = inicial ? (arquivos[inicial] ?? "") : "";
+  const temLinkCss = /<link[^>]+(?:rel=["']stylesheet["']|href=["'][^"']+\.css["'])/i.test(inicialHtml);
+  const temTagStyle = /<style[\s>][\s\S]{80,}<\/style>/i.test(inicialHtml);
+  const temArquivoCss = Object.keys(arquivos).some((n) => n.endsWith(".css") && (arquivos[n] ?? "").trim().length > 80);
+  const temEstilo = temTagStyle || (temLinkCss && temArquivoCss) || (temArquivoCss && !inicialHtml.includes("<style>"));
+
   metas.push({
     id: "estilo",
-    titulo: "a página carrega o próprio estilo",
-    falha: !inicial || temEstilo ? null : "a página inicial não carrega nenhum CSS",
+    titulo: "a página carrega design e estilo CSS ricos",
+    falha: !inicial || temEstilo ? null : "a página inicial está sem estilos CSS ou sem link para o arquivo .css",
   });
 
   if (opcoes.exigeBackend) {
@@ -200,6 +205,10 @@ export function promptPuxaoDeOrelha(args: {
           .map((t) => `- ${t}`)
           .join("\n")}`
       : "",
+    "REGRA CRÍTICA DE QUALIDADE E DESIGN:",
+    "- PRESERVE TODO O DESIGN, CSS, CORES, LAYOUT E COMPONENTES VISUAIS DO PROJETO.",
+    "- NUNCA devolva um HTML cru, sem estilos ou simplificado demais para tentar cumprir metas.",
+    "- Devolva TODOS os arquivos completos (index.html, styles.css, app.js) com interface polida e funcional.",
     args.exigeBackend
       ? 'Dados salvos usam o banco real já hospedado: const API = "%%FABY_API%%" com fetch GET (listar), POST (criar), PUT ?id= (editar) e DELETE ?id= (apagar). Proibido localStorage como banco e proibido criar pasta backend/.'
       : "",
