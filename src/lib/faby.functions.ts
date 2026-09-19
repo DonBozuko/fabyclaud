@@ -2356,14 +2356,14 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         partesEquipe.push(`corrigido por ${equipeUtilizada.conserto}`);
       }
 
-      if (partesEquipe.length > 0 && intencao !== "conversar") {
+      if (partesEquipe.length > 0 && (intencao as string) !== "conversar") {
         const infoEquipe = `\n\n*(equipe de IAs: ${partesEquipe.join(" · ")})*`;
         if (!textoFinal.includes("equipe de IAs:")) {
           textoFinal = `${textoFinal}${infoEquipe}`;
         }
       }
 
-      if (especialistaConstrucao?.ehFallbackFraco && intencao !== "conversar") {
+      if (especialistaConstrucao?.ehFallbackFraco && (intencao as string) !== "conversar") {
         const dicaChave = `\n\n> 💡 **Dica de qualidade:** Cadastre uma chave gratuita do **Groq** ou **OpenRouter** nas Configurações para ativar os modelos especialistas em código (**Qwen 2.5 Coder 32B** e **DeepSeek R1**) na construção dos seus projetos.`;
         if (!textoFinal.includes("Dica de qualidade:")) {
           textoFinal = `${textoFinal}${dicaChave}`;

@@ -113,9 +113,16 @@ export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa
 /** Seleciona a melhor IA configurada para uma etapa específica de engenharia. */
 export function selecionarMelhorModeloEtapa(
   etapa: EtapaOrquestracao,
-  candidatos: { pid: string; key: string; apiUrl?: string; testada?: boolean }[],
+  candidatos: { pid: string; key: string; apiUrl?: string | undefined; testada?: boolean | undefined }[],
   excluirProvedor?: string,
-): { pid: string; key: string; apiUrl?: string; modeloDesejado?: string; rotuloLegivel: string; ehFallbackFraco: boolean } | null {
+): {
+  pid: string;
+  key: string;
+  apiUrl?: string | undefined;
+  modeloDesejado?: string | undefined;
+  rotuloLegivel: string;
+  ehFallbackFraco: boolean;
+} | null {
   if (!candidatos.length) return null;
   const preferencias = MODELOS_POR_ETAPA[etapa] ?? [];
 
