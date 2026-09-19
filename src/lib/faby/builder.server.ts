@@ -7,14 +7,19 @@
 import { instrucaoNuvem, usaAutenticacaoPrivada, usaBancoHospedado } from "./nuvem";
 import { CodeModifier } from "@/agents/CodeModifier";
 import { DirectoryReader } from "@/agents/DirectoryReader";
+import {
+  instrucoesImgToHtml,
+  pedidoUsaReferenciaVisual,
+  preservarLayoutImgToHtml,
+} from "./img-to-html.server";
 
 const directoryReader = new DirectoryReader();
 
 export const INSTRUCAO_PROJETO = [
-  'Você é a FabyClaud / Dev Buddy, uma IA especialista e assistente de desenvolvimento Fullstack no estilo Lovable. Você é colaborativa, calorosa, prestativa e constrói sistemas modernos, elegantes e completos de forma transparente.',
+  "Você é a FabyClaud / Dev Buddy, uma IA especialista e assistente de desenvolvimento Fullstack no estilo Lovable. Você é colaborativa, calorosa, prestativa e constrói sistemas modernos, elegantes e completos de forma transparente.",
   'ESTILO DE CONVERSA E COMUNICAÇÃO (PADRÃO LOVABLE - HUMANO, DETALHISTA E AMIGÁVEL):\n- Converse em português com entusiasmo, empatia e clareza técnica.\n- Sempre explique detalhadamente o que você construiu ou alterou (ex: "✨ Criei a estrutura visual com tema clássico, integrei a lista de contatos, configurei a janela de mensagens e conectei o banco de dados real...").\n- Destaque as decisões de design, paleta de cores e componentes interativos.\n- Sempre convide o usuário a testar na prévia e pergunte a opinião dele sobre próximos passos ou recursos que gostaria de adicionar.',
   'ESTRUTURA DE ARQUIVOS E ENTREGA (PADRÃO LOVABLE - 100% COMPLETO):\nSempre entregue arquivos completos dentro da tag:\n<arquivo nome="index.html">\n<!DOCTYPE html><html>...\n</arquivo>\n<arquivo nome="styles.css">\n/* Estilos ricos, paleta temática, animações */\n</arquivo>\n<arquivo nome="app.js">\n// Lógica interativa completa\n</arquivo>\n\nPRESERVAÇÃO DO PROJETO: Ao alterar ou adicionar uma funcionalidade, preserve sempre tudo o que já funcionava e todo o visual nos outros arquivos.',
-  'PADRÃO DE DESIGN E EXPERIÊNCIA VISUAL (QUALIDADE PREMIUM):\n- NUNCA crie páginas cruas, sem estilo ou com aparência padrão de navegador.\n- Use sempre CSS caprichado, tipografia elegante (Google Fonts), cores harmônicas (ou temáticas/nostálgicas como Windows XP, MSN Messenger, Orkut, Dark Glassmorphism, etc.), sombras suaves, cartões bem definidos e botões interativos com efeitos de hover e active.\n- Em recriações temáticas (ex: MSN, Orkut, Windows), recrie a identidade visual completa: avatares, status, lista de contatos, janela de chat, emojis, animações e sons/efeitos visuais.',
+  "PADRÃO DE DESIGN E EXPERIÊNCIA VISUAL (QUALIDADE PREMIUM):\n- NUNCA crie páginas cruas, sem estilo ou com aparência padrão de navegador.\n- Use sempre CSS caprichado, tipografia elegante (Google Fonts), cores harmônicas (ou temáticas/nostálgicas como Windows XP, MSN Messenger, Orkut, Dark Glassmorphism, etc.), sombras suaves, cartões bem definidos e botões interativos com efeitos de hover e active.\n- Em recriações temáticas (ex: MSN, Orkut, Windows), recrie a identidade visual completa: avatares, status, lista de contatos, janela de chat, emojis, animações e sons/efeitos visuais.",
   'TROCA E GERAÇÃO DE IMAGENS:\nQuando o usuário pedir para gerar ou trocar imagens, use <img src="gerar:descrição detalhada em inglês" alt="..."> nos arquivos correspondentes.',
 ].join("\n\n");
 
@@ -120,6 +125,16 @@ export function montarPrompt(
   }
 
   // Stateful VFS Snapshot completo: injeta a árvore e todos os arquivos do projeto no prompt
+  if (intencao === "recriar" || pedidoUsaReferenciaVisual(pedido, enviados)) {
+    partes.push(
+      instrucoesImgToHtml({
+        pedido,
+        imagensEnviadas: enviados,
+        preservarLayout: preservarLayoutImgToHtml(pedido),
+      }),
+    );
+  }
+
   const nomesReais = todos.filter((n) => !n.startsWith("enviados/") && !n.startsWith("originais/"));
   if (nomesReais.length) {
     const vfsXml = directoryReader.gerarSnapshotXml(arquivosAtuais, {
@@ -425,9 +440,7 @@ export function descartarPatchesParciais(resposta: string): {
   };
 }
 
-export function extrairArquivos(
-  resposta: string,
-): {
+export function extrairArquivos(resposta: string): {
   arquivos: Record<string, string>;
   texto: string;
   patchParcialIgnorado?: boolean;
@@ -477,13 +490,21 @@ export function extrairArquivos(
         arquivosMd["styles.css"] = code;
       } else if (header.includes("index.html") || header.includes("index.htm")) {
         arquivosMd["index.html"] = code;
-      } else if (header.includes("app.js") || header.includes("script.js") || header.includes("main.js")) {
+      } else if (
+        header.includes("app.js") ||
+        header.includes("script.js") ||
+        header.includes("main.js")
+      ) {
         arquivosMd["app.js"] = code;
       } else if (header === "html" || /<!doctype html|<html/i.test(code)) {
         arquivosMd["index.html"] = code;
       } else if (header === "css" || /\{[\s\S]*?[a-z-]+\s*:\s*[^;]+;[\s\S]*?\}/i.test(code)) {
         arquivosMd["styles.css"] = code;
-      } else if (header === "js" || header === "javascript" || /function|const|let|var|document\./i.test(code)) {
+      } else if (
+        header === "js" ||
+        header === "javascript" ||
+        /function|const|let|var|document\./i.test(code)
+      ) {
         arquivosMd["app.js"] = code;
       }
     }
@@ -499,7 +520,8 @@ export function extrairArquivos(
   if (/<!doctype html|<html[\s>]/i.test(resposta)) {
     const inicioHtml = resposta.search(/<!doctype html|<html[\s>]/i);
     const fimHtml = resposta.lastIndexOf("</html>");
-    const code = fimHtml !== -1 ? resposta.slice(inicioHtml, fimHtml + 7) : resposta.slice(inicioHtml);
+    const code =
+      fimHtml !== -1 ? resposta.slice(inicioHtml, fimHtml + 7) : resposta.slice(inicioHtml);
     return {
       arquivos: { "index.html": code.trim() },
       texto: texto || "Projeto atualizado com a nova versão!",
@@ -560,13 +582,18 @@ export function enriquecerPromptImagem(descricao: string, contextoProjeto?: stri
 
   // 2. Detecção de rede social / Orkut / comunidade / mensagens / WhatsApp
   if (
-    /\b(orkut|comunidade|community|depoimento|scrapbook|social network|rede social)\b/i.test(dLower) &&
+    /\b(orkut|comunidade|community|depoimento|scrapbook|social network|rede social)\b/i.test(
+      dLower,
+    ) &&
     !/\b(cadeira|le[aã]o|carro|mesa)\b/i.test(dLower)
   ) {
     return "early 2000s vintage social network community header banner, colorful retro aesthetic, clean digital illustration, high quality graphic design";
   }
 
-  if (/\b(whatsapp|chat|mensagem|conversa|mensagens)\b/i.test(dLower) && !/\b(cadeira|le[aã]o)\b/i.test(dLower)) {
+  if (
+    /\b(whatsapp|chat|mensagem|conversa|mensagens)\b/i.test(dLower) &&
+    !/\b(cadeira|le[aã]o)\b/i.test(dLower)
+  ) {
     return "modern messaging app interface background banner, clean aesthetic wallpaper, minimalist design";
   }
 
@@ -628,7 +655,8 @@ export function processarComandoBarra(
     if (!args) {
       return {
         executou: true,
-        resposta: "⚠️ Especifique o que deseja na imagem. Exemplo: `/imagem pessoa sorrindo estilo retro`",
+        resposta:
+          "⚠️ Especifique o que deseja na imagem. Exemplo: `/imagem pessoa sorrindo estilo retro`",
       };
     }
     const promptEnriquecido = enriquecerPromptImagem(args);
@@ -883,7 +911,6 @@ export function problemasCriticos(problemas: string[]) {
     ),
   );
 }
-
 export function auditarArquivos(arquivos: Record<string, string>): string[] {
   const problemas: string[] = [];
   const nomes = Object.keys(arquivos);
@@ -1027,9 +1054,7 @@ export function auditarArquivos(arquivos: Record<string, string>): string[] {
 
   // 4. Links e botões mortos / placeholders de "em breve".
   const mortos = [
-    ...todoHtml.matchAll(
-      /<a\b([^>]*)href=(["'])\s*(?:#|javascript:void\(0\))\s*\2([^>]*)>/gi,
-    ),
+    ...todoHtml.matchAll(/<a\b([^>]*)href=(["'])\s*(?:#|javascript:void\(0\))\s*\2([^>]*)>/gi),
   ].filter((m) => {
     const attrs = `${m[1] ?? ""} ${m[3] ?? ""}`;
     if (/\bonclick\s*=/i.test(attrs)) return false;
@@ -1048,9 +1073,9 @@ export function auditarArquivos(arquivos: Record<string, string>): string[] {
         return false;
       if (
         classes.some((c) =>
-          new RegExp(
-            `querySelector(?:All)?\\(\\s*["'\\x60][^"'\\x60]*\\.${escapeRegex(c)}`,
-          ).test(js),
+          new RegExp(`querySelector(?:All)?\\(\\s*["'\\x60][^"'\\x60]*\\.${escapeRegex(c)}`).test(
+            js,
+          ),
         )
       )
         return false;
@@ -1078,7 +1103,9 @@ export function auditarArquivos(arquivos: Record<string, string>): string[] {
       /\btype\s*=\s*(["'])submit\1/i.test(attrs) ||
       /\bonclick\s*=/i.test(attrs) ||
       /\bdata-(?:tab|action|view|target|toggle|modal|id|status|user)\b/i.test(attrs) ||
-      /\bclass\s*=\s*(["'])[^"']*\b(tab|nav|menu|item|chip|badge|btn|win-|close|minimize|maximize|avatar)[^"']*\1/i.test(attrs)
+      /\bclass\s*=\s*(["'])[^"']*\b(tab|nav|menu|item|chip|badge|btn|win-|close|minimize|maximize|avatar)[^"']*\1/i.test(
+        attrs,
+      )
     )
       continue;
     const id = attrs.match(/\bid\s*=\s*(["'])([^"']+)\1/i)?.[2];
@@ -1091,9 +1118,9 @@ export function auditarArquivos(arquivos: Record<string, string>): string[] {
         ).test(js)
       : false;
     const ligadoPorClasse = classes.some((classe) =>
-      new RegExp(
-        `querySelector(?:All)?\\(\\s*["'\\x60][^"'\\x60]*\\.${escapeRegex(classe)}`,
-      ).test(js),
+      new RegExp(`querySelector(?:All)?\\(\\s*["'\\x60][^"'\\x60]*\\.${escapeRegex(classe)}`).test(
+        js,
+      ),
     );
     if (!ligadoPorId && !ligadoPorClasse && classes.length === 0 && !id) {
       const depois = todoHtml.slice(m.index + m[0].length);

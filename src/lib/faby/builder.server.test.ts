@@ -13,6 +13,11 @@ import { avaliarEntrega } from "./evolucao.server";
 import { parseDuelChoice, respostaComprovaCapacidade } from "../faby.functions";
 import { montarPreviewHtml, verificarPublicacaoEstatica } from "./preview";
 import { ehUrlPublicaSegura } from "./providers.server";
+import {
+  instrucoesImgToHtml,
+  pedidoUsaReferenciaVisual,
+  problemasImgToHtml,
+} from "./img-to-html.server";
 
 describe("cérebro contextual", () => {
   test("transforma sim depois de oferta de versão web em recriação", () => {
@@ -198,6 +203,27 @@ test("cópia dos originais não entra nas conferências nem na prévia", () => {
   assert.equal(resultado.ok, true);
 });
 
+test("img-to-html só é ativado para referência visual ou imagem enviada", () => {
+  assert.equal(pedidoUsaReferenciaVisual("corrija o botão salvar"), false);
+  assert.equal(pedidoUsaReferenciaVisual("recrie a tela pela screenshot"), true);
+  assert.equal(pedidoUsaReferenciaVisual("melhore a lista", ["enviados/ref.png"]), true);
+  assert.match(
+    instrucoesImgToHtml({ pedido: "recrie pela imagem", imagensEnviadas: ["enviados/ref.png"] }),
+    /preserve hierarquia/i,
+  );
+});
+
+test("img-to-html reprova entrega visual sem CSS ou comportamento", () => {
+  const problemas = problemasImgToHtml(
+    { "index.html": "<button>Salvar</button>" },
+    "recrie a tela pela screenshot",
+    ["enviados/ref.png"],
+  );
+  assert.ok(problemas.some((item) => /estilos CSS/i.test(item)));
+  assert.ok(problemas.some((item) => /JavaScript/i.test(item)));
+  assert.ok(problemas.some((item) => /imagem enviada/i.test(item)));
+});
+
 test("enriquecerPromptImagem gera retrato de pessoa para avatar/perfil e respeita o contexto do projeto", async () => {
   const { enriquecerPromptImagem } = await import("./builder.server");
   const avatar = enriquecerPromptImagem("avatar de usuario", "Clone do Orkut");
@@ -236,7 +262,9 @@ test("avaliarEntrega não permite 100/100 se houver links sem destino ou botões
 
   assert.equal(avaliacao.atingiuObjetivo, false);
   assert.ok(avaliacao.nota < 100);
-  assert.ok(avaliacao.falhas.some((f) => /links sem destino|referência falsa|conferência/i.test(f)));
+  assert.ok(
+    avaliacao.falhas.some((f) => /links sem destino|referência falsa|conferência/i.test(f)),
+  );
 });
 
 test("iniciarExecucao retorna ID válido mesmo sem persistência do Supabase", async () => {
@@ -269,10 +297,7 @@ test("normalizarUrlsApi colapsa segmentos duplicados de API e remove localhost:8
   const urlDuplicada =
     "http://localhost:8080/api/public/dados/c044dc49-7fe3-4fbb-87b9-780ddfd5aa60/public/dados/c044dc49-7fe3-4fbb-87b9-780ddfd5aa60/recados";
   const normalizada = normalizarUrlsApi(urlDuplicada);
-  assert.equal(
-    normalizada,
-    "/api/public/dados/c044dc49-7fe3-4fbb-87b9-780ddfd5aa60/recados",
-  );
+  assert.equal(normalizada, "/api/public/dados/c044dc49-7fe3-4fbb-87b9-780ddfd5aa60/recados");
 
   // Garante que 'public/dados' só aparece uma vez na URL normalizada
   const contagem = (normalizada.match(/public\/dados/g) ?? []).length;
@@ -290,5 +315,7 @@ test("normalizarUrlsApi colapsa segmentos duplicados de API e remove localhost:8
   );
 
   assert.ok(!jsProcessado.includes("localhost:8080"));
-  assert.ok(!jsProcessado.includes("/public/dados/c044dc49-7fe3-4fbb-87b9-780ddfd5aa60/public/dados"));
+  assert.ok(
+    !jsProcessado.includes("/public/dados/c044dc49-7fe3-4fbb-87b9-780ddfd5aa60/public/dados"),
+  );
 });

@@ -13,6 +13,7 @@ import {
 } from "./builder.server";
 import { usaBancoHospedado } from "./nuvem";
 import { classificarPreview } from "./preview";
+import { pedidoUsaReferenciaVisual, problemasImgToHtml } from "./img-to-html.server";
 
 export type Meta = {
   id: string;
@@ -51,7 +52,10 @@ export function avaliarEntrega(
   opcoes: { exigeBackend: boolean; pedido: string; imagensEnviadas: string[] },
 ): Avaliacao {
   const codigo = juntar(arquivos);
-  const problemas = auditarArquivos(arquivos);
+  const problemas = [
+    ...auditarArquivos(arquivos),
+    ...problemasImgToHtml(arquivos, opcoes.pedido, opcoes.imagensEnviadas),
+  ];
   const graves = problemasCriticos(problemas);
   const inicial = paginaInicial(arquivos);
   const metas: Meta[] = [];
@@ -110,16 +114,35 @@ export function avaliarEntrega(
   });
 
   const inicialHtml = inicial ? (arquivos[inicial] ?? "") : "";
-  const temLinkCss = /<link[^>]+(?:rel=["']stylesheet["']|href=["'][^"']+\.css["'])/i.test(inicialHtml);
+  const temLinkCss = /<link[^>]+(?:rel=["']stylesheet["']|href=["'][^"']+\.css["'])/i.test(
+    inicialHtml,
+  );
   const temTagStyle = /<style[\s>][\s\S]{80,}<\/style>/i.test(inicialHtml);
-  const temArquivoCss = Object.keys(arquivos).some((n) => n.endsWith(".css") && (arquivos[n] ?? "").trim().length > 80);
-  const temEstilo = temTagStyle || (temLinkCss && temArquivoCss) || (temArquivoCss && !inicialHtml.includes("<style>"));
+  const temArquivoCss = Object.keys(arquivos).some(
+    (n) => n.endsWith(".css") && (arquivos[n] ?? "").trim().length > 80,
+  );
+  const temEstilo =
+    temTagStyle ||
+    (temLinkCss && temArquivoCss) ||
+    (temArquivoCss && !inicialHtml.includes("<style>"));
 
   metas.push({
     id: "estilo",
     titulo: "a página carrega design e estilo CSS ricos",
-    falha: !inicial || temEstilo ? null : "a página inicial está sem estilos CSS ou sem link para o arquivo .css",
+    falha:
+      !inicial || temEstilo
+        ? null
+        : "a página inicial está sem estilos CSS ou sem link para o arquivo .css",
   });
+
+  if (pedidoUsaReferenciaVisual(opcoes.pedido, opcoes.imagensEnviadas)) {
+    const visual = problemasImgToHtml(arquivos, opcoes.pedido, opcoes.imagensEnviadas);
+    metas.push({
+      id: "img-to-html",
+      titulo: "a referência visual foi preservada com estrutura e controles funcionais",
+      falha: visual.length ? visual.slice(0, 4).join("; ") : null,
+    });
+  }
 
   if (opcoes.exigeBackend) {
     const faltasBanco = problemasDeBanco(arquivos);
