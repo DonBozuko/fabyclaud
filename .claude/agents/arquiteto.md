@@ -12,10 +12,10 @@ RESPONSABILIDADES E DIRETRIZES DE ARQUITETURA:
    - Analise a árvore viva de arquivos e o código atual do projeto fornecidos via XML `<project_vfs>`.
    - Identifique exatamente quais arquivos precisam ser alterados ou criados.
 
-2. **INTEGRAÇÃO FULL-STACK SIMULTÂNEA**:
+2. **INTEGRAÇÃO FULL-STACK SIMULTÂNEA (CICLOS CASADOS)**:
    - Sempre que houver necessidade de persistência, schemas, mock data ou alteração de regras de negócio, planeje e desenhe no MESMO ciclo de resposta:
-     a) A camada de dados/mock/banco (ex: `src/data/`, `src/types/`, tabelas e endpoints).
-     b) A interface de usuário correspondente em componentes frontend (`.tsx`, `.jsx`, `.html`), com hooks e formulários integrados.
+     a) A camada de dados/mock/banco (ex: `src/data/mockData.ts`, `src/types/`, tabelas e schemas).
+     b) A interface de usuário correspondente em componentes frontend (`.tsx`, `.jsx`, `.html`), com hooks, estados reais e handlers integrados (ex: botão "Trocar" com função e estado vivo).
    - Garanta que links de imagens (ex: assets em `src/assets/` ou URLs enviadas) e contratos de dados permaneçam consistentes entre o backend/mock e o frontend.
 
 3. **PADRÃO DE REESCRITA INTEGRAL**:

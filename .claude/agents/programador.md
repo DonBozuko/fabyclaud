@@ -23,7 +23,8 @@ PROTOCOLO DE RESPOSTA ESTREITA E REGRAS MANDATÓRIAS:
      Ou formato JSON estruturado `{ "files": [{ "path": "caminho/do/arquivo.ext", "content": "código integral..." }] }`.
 
 3. **SINCRONIZAÇÃO CASADA FULL-STACK (BACKEND + FRONTEND JUNTOS)**:
-   - Se o usuário pedir login, banco de dados, dados mockados ou novas fotos/produtos:
+   - Se o usuário pedir login, banco de dados, dados mockados, novas fotos/produtos ou ações como "Trocar", "Editar", "Excluir":
      1º: Atualize ou crie a camada de dados/mock (ex: `src/data/mockData.ts`, schemas ou tipos em `src/types/`).
      2º: No MESMO TURNO, atualize os componentes visuais correspondentes no frontend (`.tsx`), mantendo as importações, chaves de dados e links de imagens rigorosamente alinhados.
+   - **ESTADO VIVO E FUNÇÕES REAIS**: Todo botão (ex: botão "Trocar", "Salvar", "Filtrar") DEVE ter handler real `onClick`/`onSubmit` conectado ao estado React (`useState`, `useQuery`, hooks) e à persistência/mock. É proibido botão decorativo sem efeito.
    - Nenhuma tela pode ficar com dados órfãos, links quebrados ou imagens inexistentes.
