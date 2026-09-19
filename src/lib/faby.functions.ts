@@ -169,11 +169,12 @@ export const obterProjeto = createServerFn({ method: "GET" })
 
 export const apagarProjeto = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
+  .inputValidator((input: { id: string }) => z.object({ id: z.string().min(1) }).parse(input))
   .handler(async ({ data, context }) => {
     cacheProjetos.delete(data.id);
     cacheMensagens.delete(data.id);
     try {
+      await context.supabase.from("mensagens").delete().eq("projeto_id", data.id);
       await context.supabase.from("projetos").delete().eq("id", data.id);
     } catch {
       // ignore

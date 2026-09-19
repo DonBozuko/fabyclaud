@@ -534,12 +534,18 @@ function FabyClaud() {
                   <button
                     type="button"
                     aria-label={`Apagar ${p.nome}`}
-                    onClick={async () => {
-                      await removerProjeto({ data: { id: p.id } });
-                      if (projetoId === p.id) setProjetoId(null);
-                      void queryClient.invalidateQueries({ queryKey: ["projetos"] });
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      try {
+                        await removerProjeto({ data: { id: p.id } });
+                        if (projetoId === p.id) setProjetoId(null);
+                        await queryClient.invalidateQueries({ queryKey: ["projetos"] });
+                        toast.success("Conversa excluída com sucesso.");
+                      } catch (err) {
+                        toast.error("Não foi possível excluir a conversa agora.");
+                      }
                     }}
-                    className="rounded-full bg-destructive/25 p-1 text-destructive"
+                    className="rounded-full bg-destructive/25 p-1 text-destructive transition hover:bg-destructive hover:text-destructive-foreground"
                   >
                     <Trash2 className="size-3" />
                   </button>
