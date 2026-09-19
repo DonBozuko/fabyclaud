@@ -1936,17 +1936,24 @@ export const enviarMensagem = createServerFn({ method: "POST" })
 
       // Se a IA usou a ferramenta de gerar imagem e não entregou a tag <arquivo> completa,
       // atualizamos diretamente o src da imagem no HTML para que a nova foto apareça imediatamente.
-      if (!Object.keys(extraido.arquivos).length && (ferramentasUsadas.includes("gerar_imagem") || /image\.pollinations\.ai/i.test(bruto))) {
-        const matchUrl = /(https:\/\/image\.pollinations\.ai\/prompt\/[^\s"'<>]+)/i.exec(bruto) ||
-                         /(https:\/\/image\.pollinations\.ai\/prompt\/[^\s"'<>]+)/i.exec(promptFinal);
+      if (
+        !Object.keys(extraido.arquivos).length &&
+        (ferramentasUsadas.includes("gerar_imagem") || /image\.pollinations\.ai/i.test(bruto))
+      ) {
+        const matchUrl =
+          /(https:\/\/image\.pollinations\.ai\/prompt\/[^\s"'<>]+)/i.exec(bruto) ||
+          /(https:\/\/image\.pollinations\.ai\/prompt\/[^\s"'<>]+)/i.exec(promptFinal);
         if (matchUrl && (arquivosAtuais["index.html"] || arquivosAtuais["index.htm"])) {
           const chaveHtml = arquivosAtuais["index.html"] ? "index.html" : "index.htm";
-          let htmlAtual = arquivosAtuais[chaveHtml];
+          let htmlAtual = arquivosAtuais[chaveHtml] ?? "";
           const novaUrl = matchUrl[1];
           if (/<img[^>]+src=["'][^"']+["']/i.test(htmlAtual)) {
             htmlAtual = htmlAtual.replace(/(<img[^>]+src=["'])[^"']+["']/i, `$1${novaUrl}"`);
           } else if (/<body[^>]*>/i.test(htmlAtual)) {
-            htmlAtual = htmlAtual.replace(/(<body[^>]*>)/i, `$1\n<img src="${novaUrl}" alt="Foto" style="max-width:100%;border-radius:8px;margin-bottom:1rem;" />`);
+            htmlAtual = htmlAtual.replace(
+              /(<body[^>]*>)/i,
+              `$1\n<img src="${novaUrl}" alt="Foto" style="max-width:100%;border-radius:8px;margin-bottom:1rem;" />`,
+            );
           }
           extraido.arquivos[chaveHtml] = htmlAtual;
           if (!extraido.texto || extraido.texto.length < 10) {
@@ -1957,7 +1964,10 @@ export const enviarMensagem = createServerFn({ method: "POST" })
 
       // Se a IA respondeu sem tags para um pedido de troca de cor ou estilo básico,
       // aplicamos a alteração diretamente no CSS ou HTML para nunca frustrar o usuário.
-      if (!Object.keys(extraido.arquivos).length && (arquivosAtuais["styles.css"] || arquivosAtuais["index.html"])) {
+      if (
+        !Object.keys(extraido.arquivos).length &&
+        (arquivosAtuais["styles.css"] || arquivosAtuais["index.html"])
+      ) {
         const cores: Record<string, string> = {
           vermelho: "#dc2626",
           red: "#dc2626",
@@ -2150,12 +2160,16 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         // Equipe: quem revisa é, de preferência, uma IA diferente de quem escreveu.
         const porForca = [...candidatos].sort((a, b) => forca(a.pid) - forca(b.pid));
         if (totalChars <= 120000) {
-          const especialistaRevisao = selecionarMelhorModeloEtapa("revisao", candidatos, provedorUsado);
+          const especialistaRevisao = selecionarMelhorModeloEtapa(
+            "revisao",
+            candidatos,
+            provedorUsado,
+          );
           const revisor = especialistaRevisao
-            ? candidatos.find((c) => c.pid === especialistaRevisao.pid) ??
+            ? (candidatos.find((c) => c.pid === especialistaRevisao.pid) ??
               porForca.find((c) => c.pid !== provedorUsado) ??
-              porForca[0]
-            : porForca.find((c) => c.pid !== provedorUsado) ?? porForca[0];
+              porForca[0])
+            : (porForca.find((c) => c.pid !== provedorUsado) ?? porForca[0]);
 
           if (revisor) {
             const blocos = Object.entries(mesclados)
@@ -2254,11 +2268,11 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             selecionarMelhorModeloEtapa("construcao", candidatos, provedorUsado) ??
             selecionarMelhorModeloEtapa("revisao", candidatos, provedorUsado);
           const consertador = especialistaConserto
-            ? candidatos.find((c) => c.pid === especialistaConserto.pid) ??
+            ? (candidatos.find((c) => c.pid === especialistaConserto.pid) ??
               porForca.find((c) => c.pid !== provedorUsado) ??
               porForca[0] ??
-              candidatos[0]
-            : porForca.find((c) => c.pid !== provedorUsado) ?? porForca[0] ?? candidatos[0];
+              candidatos[0])
+            : (porForca.find((c) => c.pid !== provedorUsado) ?? porForca[0] ?? candidatos[0]);
 
           if (consertador) {
             const blocosConserto = Object.entries(mesclados)
@@ -2313,7 +2327,8 @@ export const enviarMensagem = createServerFn({ method: "POST" })
                   mesclados = tentativa;
                   problemas = depois;
 
-                  const rotuloConserto = especialistaConserto?.rotuloLegivel ?? nomeDe(consertador.pid);
+                  const rotuloConserto =
+                    especialistaConserto?.rotuloLegivel ?? nomeDe(consertador.pid);
                   const notaConserto = `corrigido por ${rotuloConserto}`;
                   nota = nota ? `${nota.slice(0, -1)} · ${notaConserto})` : `(${notaConserto})`;
                   equipeUtilizada.conserto = rotuloConserto;
@@ -2383,13 +2398,21 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           // Proteção contra regressão: nunca aceitar uma versão que mutilou o projeto,
           // perdeu o CSS ou simplificou o código para tentar burlar a nota da auditoria.
           const tamanhoAnterior = Object.values(mesclados).reduce((acc, c) => acc + c.length, 0);
-          const tamanhoNovo = Object.values(tentativaArquivos).reduce((acc, c) => acc + c.length, 0);
+          const tamanhoNovo = Object.values(tentativaArquivos).reduce(
+            (acc, c) => acc + c.length,
+            0,
+          );
           const tinhaCss =
-            Object.keys(mesclados).some((n) => n.endsWith(".css") && (mesclados[n]?.length ?? 0) > 100) ||
-            Object.values(mesclados).some((c) => /<style[\s>][\s\S]{100,}<\/style>/i.test(c));
+            Object.keys(mesclados).some(
+              (n) => n.endsWith(".css") && (mesclados[n]?.length ?? 0) > 100,
+            ) || Object.values(mesclados).some((c) => /<style[\s>][\s\S]{100,}<\/style>/i.test(c));
           const manteveCss =
-            Object.keys(tentativaArquivos).some((n) => n.endsWith(".css") && (tentativaArquivos[n]?.length ?? 0) > 100) ||
-            Object.values(tentativaArquivos).some((c) => /<style[\s>][\s\S]{100,}<\/style>/i.test(c));
+            Object.keys(tentativaArquivos).some(
+              (n) => n.endsWith(".css") && (tentativaArquivos[n]?.length ?? 0) > 100,
+            ) ||
+            Object.values(tentativaArquivos).some((c) =>
+              /<style[\s>][\s\S]{100,}<\/style>/i.test(c),
+            );
 
           if (tinhaCss && !manteveCss) {
             rodadas.push(`${nomeDe(proximo.pid)} (perdeu estilo CSS)`);
@@ -2446,7 +2469,10 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           ].join("\n");
         }
 
-        if (!textoFinal.trim() || textoFinal.trim() === "Projeto atualizado: arquivos reescritos por inteiro.") {
+        if (
+          !textoFinal.trim() ||
+          textoFinal.trim() === "Projeto atualizado: arquivos reescritos por inteiro."
+        ) {
           const arquivosNomes = Object.keys(extraido.arquivos).join(", ");
           textoFinal = `✨ **Pronto! Projeto atualizado com sucesso (${arquivosNomes}).**\n\nTodos os estilos e funcionalidades estão prontos para você testar na prévia ao lado.\n\nO que você achou do resultado? Gostaria de adicionar mais algum recurso ou personalizar algum detalhe?`;
         }
@@ -2550,8 +2576,10 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       if (nota) textoFinal = `${textoFinal}\n\n${nota}`;
 
       const partesEquipe: string[] = [];
-      if (equipeUtilizada.planejamento) partesEquipe.push(`planejado por ${equipeUtilizada.planejamento}`);
-      if (equipeUtilizada.construcao) partesEquipe.push(`construído por ${equipeUtilizada.construcao}`);
+      if (equipeUtilizada.planejamento)
+        partesEquipe.push(`planejado por ${equipeUtilizada.planejamento}`);
+      if (equipeUtilizada.construcao)
+        partesEquipe.push(`construído por ${equipeUtilizada.construcao}`);
       if (equipeUtilizada.revisao) partesEquipe.push(`revisado por ${equipeUtilizada.revisao}`);
       if (equipeUtilizada.conserto && equipeUtilizada.conserto !== equipeUtilizada.revisao) {
         partesEquipe.push(`corrigido por ${equipeUtilizada.conserto}`);
