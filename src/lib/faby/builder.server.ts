@@ -7,7 +7,6 @@
 import { instrucaoNuvem, usaAutenticacaoPrivada, usaBancoHospedado } from "./nuvem";
 import { CodeModifier } from "@/agents/CodeModifier";
 import { DirectoryReader } from "@/agents/DirectoryReader";
-import type { PatchArquivo, PatchChunk } from "@/agents/types";
 
 const directoryReader = new DirectoryReader();
 
