@@ -436,7 +436,7 @@ export function extrairArquivos(
   const modifier = new CodeModifier();
   const arquivosExtraidos = modifier.extrairArquivosCompletos(resposta);
 
-  // Extrai tags para limpar o texto de resposta
+  // Extrai tags <arquivo nome="..."> para limpar o texto de resposta
   const partes: string[] = [];
   let ultimoFim = 0;
 
@@ -465,14 +465,45 @@ export function extrairArquivos(
     };
   }
 
-  const m2 = PADRAO_CODIGO_ANTIGO.exec(resposta);
-  if (m2) {
-    const texto2 = limparPensamento(
-      resposta.slice(0, m2.index) + resposta.slice(m2.index + m2[0].length),
-    );
+  // Fallback para blocos de código Markdown de múltiplas linguagens (HTML, CSS, JS, etc.)
+  const blocosMarkdown = [...resposta.matchAll(/```([a-zA-Z0-9_\-./]*)\s*\n([\s\S]*?)```/g)];
+  if (blocosMarkdown.length > 0) {
+    const arquivosMd: Record<string, string> = {};
+    for (const bloco of blocosMarkdown) {
+      const header = (bloco[1] || "").toLowerCase().trim();
+      const code = (bloco[2] || "").trim();
+      if (!code) continue;
+
+      if (header.includes("styles.css") || header.includes("style.css")) {
+        arquivosMd["styles.css"] = code;
+      } else if (header.includes("index.html") || header.includes("index.htm")) {
+        arquivosMd["index.html"] = code;
+      } else if (header.includes("app.js") || header.includes("script.js") || header.includes("main.js")) {
+        arquivosMd["app.js"] = code;
+      } else if (header === "html" || /<!doctype html|<html/i.test(code)) {
+        arquivosMd["index.html"] = code;
+      } else if (header === "css" || /\{[\s\S]*?[a-z-]+\s*:\s*[^;]+;[\s\S]*?\}/i.test(code)) {
+        arquivosMd["styles.css"] = code;
+      } else if (header === "js" || header === "javascript" || /function|const|let|var|document\./i.test(code)) {
+        arquivosMd["app.js"] = code;
+      }
+    }
+    if (Object.keys(arquivosMd).length > 0) {
+      return {
+        arquivos: arquivosMd,
+        texto: texto || "Projeto atualizado! Veja a prévia ao lado.",
+      };
+    }
+  }
+
+  // Fallback se a resposta for HTML puro direto sem tags ou markdown
+  if (/<!doctype html|<html[\s>]/i.test(resposta)) {
+    const inicioHtml = resposta.search(/<!doctype html|<html[\s>]/i);
+    const fimHtml = resposta.lastIndexOf("</html>");
+    const code = fimHtml !== -1 ? resposta.slice(inicioHtml, fimHtml + 7) : resposta.slice(inicioHtml);
     return {
-      arquivos: { "index.html": (m2[1] ?? "").trim() },
-      texto: texto2 || "Projeto atualizado! Veja a prévia ao lado.",
+      arquivos: { "index.html": code.trim() },
+      texto: texto || "Projeto atualizado com a nova versão!",
     };
   }
 
@@ -498,11 +529,25 @@ export function enriquecerPromptImagem(descricao: string, contextoProjeto?: stri
 
   const dLower = d.toLowerCase();
 
-  // 1. Detecção de perfil / avatar / pessoa / amigo / usuário
+  // Traduções e adaptações para termos específicos pedidos pelo usuário
+  let basePrompt = d;
+  if (/\ble[aã]o\b/i.test(dLower)) {
+    basePrompt = basePrompt.replace(/\ble[aã]o\b/gi, "majestic lion");
+  }
+  if (/\bcadeira\b/i.test(dLower)) {
+    basePrompt = basePrompt.replace(/\bcadeira\b/gi, "chair");
+  }
+  if (/\bsentad[oa]\b/i.test(dLower)) {
+    basePrompt = basePrompt.replace(/\bsentad[oa]\b/gi, "sitting");
+  }
+  if (/\bpessoa\b/i.test(dLower)) {
+    basePrompt = basePrompt.replace(/\bpessoa\b/gi, "friendly person");
+  }
+
+  // 1. Detecção de perfil / avatar
   if (
-    /\b(perfil|avatar|foto de perfil|usuario|usuário|user|profile|person|pessoa|amigo|amiga|friend|membro|member|author|autor|avatar de|foto de|homem|mulher|garoto|garota)\b/i.test(
-      dLower,
-    )
+    /\b(perfil|avatar|foto de perfil|usuario|usuário|user|profile)\b/i.test(dLower) &&
+    !/\b(cadeira|le[aã]o|carro|paisagem|mesa)\b/i.test(dLower)
   ) {
     const ehMulher = /\b(mulher|garota|menina|woman|girl|amiga|female)\b/i.test(dLower);
     const ehHomem = /\b(homem|garoto|menino|man|boy|amigo|male)\b/i.test(dLower);
@@ -510,18 +555,19 @@ export function enriquecerPromptImagem(descricao: string, contextoProjeto?: stri
       ? "young brazilian woman"
       : ehHomem
         ? "young brazilian man"
-        : "smiling brazilian person";
+        : "smiling person";
     return `portrait photo of a ${sujeito}, headshot profile picture, warm friendly smile, soft natural studio lighting, neutral aesthetic background, authentic sharp photography, 8k`;
   }
 
   // 2. Detecção de rede social / Orkut / comunidade / mensagens / WhatsApp
   if (
-    /\b(orkut|comunidade|community|depoimento|scrapbook|social network|rede social)\b/i.test(dLower)
+    /\b(orkut|comunidade|community|depoimento|scrapbook|social network|rede social)\b/i.test(dLower) &&
+    !/\b(cadeira|le[aã]o|carro|mesa)\b/i.test(dLower)
   ) {
     return "early 2000s vintage social network community header banner, colorful retro aesthetic, clean digital illustration, high quality graphic design";
   }
 
-  if (/\b(whatsapp|chat|mensagem|conversa|mensagens)\b/i.test(dLower)) {
+  if (/\b(whatsapp|chat|mensagem|conversa|mensagens)\b/i.test(dLower) && !/\b(cadeira|le[aã]o)\b/i.test(dLower)) {
     return "modern messaging app interface background banner, clean aesthetic wallpaper, minimalist design";
   }
 
@@ -537,14 +583,8 @@ export function enriquecerPromptImagem(descricao: string, contextoProjeto?: stri
     return `sleek hero banner background for ${d} (${tema}), modern vibrant abstract aesthetic, high resolution web design`;
   }
 
-  // 5. Se o prompt for curto (< 4 palavras) ou em português, enriquece com o contexto
-  const palavras = d.split(/\s+/).filter(Boolean);
-  if (palavras.length < 4 || /[áàâãéêíóôõúç]/i.test(d)) {
-    const ctx = contextoProjeto ? `, contextual for ${contextoProjeto.slice(0, 60)}` : "";
-    return `high quality detailed photography of ${d}${ctx}, professional studio lighting, realistic, 8k resolution, crisp clean focus`;
-  }
-
-  return d;
+  // 5. Pedidos específicos com objetos/cenas (ex: pessoa na cadeira, leão na cadeira)
+  return `${basePrompt}, detailed photography, warm cinematic lighting, authentic realistic photo, 8k resolution, crisp focus`;
 }
 
 export type ResultadoComandoBarra = {

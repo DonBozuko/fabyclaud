@@ -1920,6 +1920,84 @@ export const enviarMensagem = createServerFn({ method: "POST" })
 
     if (ok) {
       let extraido = extrairArquivos(bruto);
+
+      // Se a IA usou a ferramenta de gerar imagem e não entregou a tag <arquivo> completa,
+      // atualizamos diretamente o src da imagem no HTML para que a nova foto apareça imediatamente.
+      if (!Object.keys(extraido.arquivos).length && (ferramentasUsadas.includes("gerar_imagem") || /image\.pollinations\.ai/i.test(bruto))) {
+        const matchUrl = /(https:\/\/image\.pollinations\.ai\/prompt\/[^\s"'<>]+)/i.exec(bruto) ||
+                         /(https:\/\/image\.pollinations\.ai\/prompt\/[^\s"'<>]+)/i.exec(promptFinal);
+        if (matchUrl && (arquivosAtuais["index.html"] || arquivosAtuais["index.htm"])) {
+          const chaveHtml = arquivosAtuais["index.html"] ? "index.html" : "index.htm";
+          let htmlAtual = arquivosAtuais[chaveHtml];
+          const novaUrl = matchUrl[1];
+          if (/<img[^>]+src=["'][^"']+["']/i.test(htmlAtual)) {
+            htmlAtual = htmlAtual.replace(/(<img[^>]+src=["'])[^"']+["']/i, `$1${novaUrl}"`);
+          } else if (/<body[^>]*>/i.test(htmlAtual)) {
+            htmlAtual = htmlAtual.replace(/(<body[^>]*>)/i, `$1\n<img src="${novaUrl}" alt="Foto" style="max-width:100%;border-radius:8px;margin-bottom:1rem;" />`);
+          }
+          extraido.arquivos[chaveHtml] = htmlAtual;
+          if (!extraido.texto || extraido.texto.length < 10) {
+            extraido.texto = "Atualizei a foto do projeto com a nova imagem gerada!";
+          }
+        }
+      }
+
+      // Se a IA respondeu sem tags para um pedido de troca de cor ou estilo básico,
+      // aplicamos a alteração diretamente no CSS ou HTML para nunca frustrar o usuário.
+      if (!Object.keys(extraido.arquivos).length && (arquivosAtuais["styles.css"] || arquivosAtuais["index.html"])) {
+        const cores: Record<string, string> = {
+          vermelho: "#dc2626",
+          red: "#dc2626",
+          azul: "#2563eb",
+          blue: "#2563eb",
+          verde: "#16a34a",
+          green: "#16a34a",
+          amarelo: "#ca8a04",
+          yellow: "#ca8a04",
+          roxo: "#9333ea",
+          purple: "#9333ea",
+          rosa: "#db2777",
+          pink: "#db2777",
+          laranja: "#ea580c",
+          orange: "#ea580c",
+          preto: "#18181b",
+          black: "#18181b",
+          cinza: "#64748b",
+          gray: "#64748b",
+        };
+        const promptLower = prompt.toLowerCase();
+        for (const [corNome, hex] of Object.entries(cores)) {
+          if (
+            new RegExp(`\\b${corNome}\\b`, "i").test(promptLower) &&
+            (promptLower.includes("cor") ||
+              promptLower.includes("mude") ||
+              promptLower.includes("troque") ||
+              promptLower.includes("fundo") ||
+              promptLower.includes("deixe") ||
+              promptLower.includes("ponha"))
+          ) {
+            if (arquivosAtuais["styles.css"]) {
+              let cssAtual = arquivosAtuais["styles.css"];
+              cssAtual += `\n\n/* Ajuste de cor aplicado pelo FabyClaud */\n:root { --primary-color: ${hex}; --cor-tema: ${hex}; --accent-color: ${hex}; }\n`;
+              extraido.arquivos["styles.css"] = cssAtual;
+              extraido.texto = extraido.texto || `Cor atualizada para ${corNome}!`;
+              break;
+            } else if (arquivosAtuais["index.html"]) {
+              let htmlAtual = arquivosAtuais["index.html"];
+              const tagStyle = `<style>\n:root { --primary-color: ${hex}; --cor-tema: ${hex}; --accent-color: ${hex}; }\n</style>`;
+              if (htmlAtual.includes("</head>")) {
+                htmlAtual = htmlAtual.replace("</head>", `${tagStyle}\n</head>`);
+              } else {
+                htmlAtual = `${tagStyle}\n${htmlAtual}`;
+              }
+              extraido.arquivos["index.html"] = htmlAtual;
+              extraido.texto = extraido.texto || `Cor atualizada para ${corNome}!`;
+              break;
+            }
+          }
+        }
+      }
+
       arquivosProduzidos = Object.keys(extraido.arquivos);
       const exigeArquivos = pedidoExigeArquivos(prompt);
       // Projeto importado de fora (Flask, FastAPI, Node, React): o certo é consertar

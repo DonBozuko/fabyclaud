@@ -74,21 +74,22 @@ export function montarPreviewHtml(arquivos: Record<string, string>) {
   // Limpa URLs duplicadas de banco que possam ter sido gravadas anteriormente
   saida = normalizarUrlsApi(saida);
 
-  // Injeta runtime de resiliência (Mock transparente de API no navegador e fallback de imagens)
+  // Injeta runtime de resiliência (Mock transparente de API no navegador, interceptação de links e fallback de imagens)
   const runtimeResiliencia = `<script id="faby-preview-runtime">
 (function() {
+  // 1. Intercepta requisições de banco e provê mock local resiliente no navegador
   var origFetch = window.fetch;
   if (typeof origFetch === "function") {
     window.fetch = async function(resource, init) {
       var urlStr = typeof resource === "string" ? resource : (resource && resource.url ? resource.url : "");
-      var isDb = /\\/api\\/public\\/dados\\/[0-9a-f-]{36}\\/([a-zA-Z0-9_-]+)/i.test(urlStr);
+      var isDb = /(?:\\/api)?\\/public\\/dados.*?\\/([a-zA-Z0-9_-]+)(?:\\?.*)?$/i.test(urlStr);
       if (isDb) {
         try {
           var resp = await origFetch.apply(window, arguments);
           if (resp && resp.ok) return resp;
         } catch(e) {}
-        var match = urlStr.match(/\\/api\\/public\\/dados\\/[0-9a-f-]{36}\\/([a-zA-Z0-9_-]+)/i);
-        var colecao = match ? match[1] : "itens";
+        var match = urlStr.match(/(?:\\/api)?\\/public\\/dados.*?\\/([a-zA-Z0-9_-]+)(?:\\?.*)?$/i);
+        var colecao = match && match[1] ? match[1].toLowerCase() : "itens";
         var key = "faby_db_" + colecao;
         var method = (init && init.method ? init.method.toUpperCase() : "GET");
         var data = [];
@@ -100,31 +101,93 @@ export function montarPreviewHtml(arquivos: Record<string, string>) {
         if (method === "POST") {
           var body = {};
           try { body = typeof init.body === "string" ? JSON.parse(init.body) : (init.body || {}); } catch(e){}
-          var item = Object.assign({ id: "item_" + Math.random().toString(36).slice(2, 9), created_at: new Date().toISOString() }, body);
+          var item = Object.assign({ id: "item_" + Math.random().toString(36).slice(2, 9), criado_em: new Date().toISOString() }, body);
           data.unshift(item);
           try { localStorage.setItem(key, JSON.stringify(data)); } catch(e){}
           return new Response(JSON.stringify(item), { status: 200, headers: { "Content-Type": "application/json" } });
         }
         if (method === "DELETE") {
-          var urlObj = new URL(urlStr, window.location.href);
-          var delId = urlObj.searchParams.get("id");
+          var urlObj = null;
+          try { urlObj = new URL(urlStr, window.location.href); } catch(e){}
+          var delId = urlObj ? urlObj.searchParams.get("id") : null;
           if (delId) {
-            data = data.filter(function(x){ return String(x.id) !== String(delId); });
+            data = data.filter(function(x){ return String(x && x.id) !== String(delId); });
             try { localStorage.setItem(key, JSON.stringify(data)); } catch(e){}
           }
           return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { "Content-Type": "application/json" } });
         }
+        if (method === "PUT") {
+          var bodyPut = {};
+          try { bodyPut = typeof init.body === "string" ? JSON.parse(init.body) : (init.body || {}); } catch(e){}
+          var urlObjPut = null;
+          try { urlObjPut = new URL(urlStr, window.location.href); } catch(e){}
+          var putId = urlObjPut ? urlObjPut.searchParams.get("id") : bodyPut.id;
+          var idx = data.findIndex(function(x){ return String(x && x.id) === String(putId); });
+          if (idx >= 0) {
+            data[idx] = Object.assign({}, data[idx], bodyPut);
+            try { localStorage.setItem(key, JSON.stringify(data)); } catch(e){}
+            return new Response(JSON.stringify(data[idx]), { status: 200, headers: { "Content-Type": "application/json" } });
+          }
+        }
+        return new Response(JSON.stringify(data), { status: 200, headers: { "Content-Type": "application/json" } });
       }
-      return origFetch.apply(window, arguments);
+      try {
+        return await origFetch.apply(window, arguments);
+      } catch (err) {
+        if (/image\.pollinations\.ai/i.test(urlStr)) {
+          return new Response("", { status: 200 });
+        }
+        throw err;
+      }
     };
   }
+
+  // 2. Intercepta cliques em <a> para nunca navegar para fora da prévia e simular abas
+  document.addEventListener("click", function(e) {
+    var link = e.target && e.target.closest ? e.target.closest("a") : null;
+    if (!link) return;
+    var href = (link.getAttribute("href") || "").trim();
+    // Bloqueia qualquer navegação direta de página que recarregaria o app principal
+    e.preventDefault();
+
+    if (!href || href === "#" || href === "#!") {
+      // Dispara evento de clique se o link tiver comportamento JS ou alterna classes ativas
+      var textoLink = (link.textContent || "").trim().toLowerCase();
+      var botoesAba = document.querySelectorAll("[data-tab], .tab, .aba, .nav-link, .menu-item, nav a");
+      for (var i = 0; i < botoesAba.length; i++) {
+        if (botoesAba[i].textContent.trim().toLowerCase() === textoLink) {
+          if (botoesAba[i] !== link && typeof botoesAba[i].click === "function") {
+            botoesAba[i].click();
+          }
+          break;
+        }
+      }
+      return;
+    }
+
+    if (href.startsWith("#")) {
+      var id = href.slice(1);
+      var el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+
+    var secao = href.replace(/^https?:\/\/[^/]+/i, "").replace(/^\//, "").replace(/\.html$/i, "");
+    var alvo = document.getElementById(secao) || document.querySelector('[data-secao="' + secao + '"]') || document.querySelector('[data-tab="' + secao + '"]');
+    if (alvo) {
+      alvo.scrollIntoView({ behavior: "smooth" });
+      if (typeof alvo.click === "function") alvo.click();
+    }
+  }, true);
+
+  // 3. Fallback inteligente para imagens quebradas
   document.addEventListener("error", function(e) {
     if (e.target && e.target.tagName === "IMG") {
       var img = e.target;
       if (!img.getAttribute("data-fallback")) {
         img.setAttribute("data-fallback", "true");
-        var alt = encodeURIComponent(img.alt || "Imagem");
-        img.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'><rect fill='%231e293b' width='600' height='400'/><text fill='%2394a3b8' font-family='sans-serif' font-size='22' x='50%' y='50%' text-anchor='middle' dominant-baseline='middle'>" + alt + "</text></svg>";
+        var alt = encodeURIComponent(img.alt || "Foto / Imagem");
+        img.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'><rect fill='%231e293b' width='600' height='400'/><text fill='%2394a3b8' font-family='sans-serif' font-size='20' x='50%' y='50%' text-anchor='middle' dominant-baseline='middle'>" + alt + "</text></svg>";
       }
     }
   }, true);
