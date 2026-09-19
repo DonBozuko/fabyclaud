@@ -38,7 +38,9 @@ export function montarContextoVFS(arquivos: Record<string, string>): VFSSnapshot
 
 /**
  * Injeta o Snapshot XML estruturado do Stateful VFS no System Prompt.
- * Garante que a IA NUNCA receba apenas histórico solto, e sim o estado real do projeto.
+ * Regra do motor: NENHUMA IA (grátis ou paga) roda às cegas. Antes de qualquer
+ * resposta, a árvore e o conteúdo integral dos arquivos do projeto do usuário
+ * são lidos pelo DirectoryReader e injetados no Context Window.
  */
 export function injetarSnapshotVFS(
   systemPromptBase: string,
@@ -92,7 +94,7 @@ export async function iniciarExecucao(
   db: Db,
   dados: { projetoId: string; userId: string; pedido: string; diagnostico: string },
 ): Promise<string> {
-  let idGerado = crypto.randomUUID();
+  let idGerado: string = crypto.randomUUID();
   try {
     const { data, error } = await db
       .from("execucoes_construcao")
