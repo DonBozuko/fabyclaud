@@ -1,19 +1,21 @@
 /**
  * Geração e edição de projetos com múltiplos arquivos.
- * A IA escreve cada arquivo dentro de <arquivo nome="...">, então uma resposta
- * pode criar/alterar vários arquivos de uma vez e os que ela não mencionar
- * continuam exatamente como estavam (edição cirúrgica).
+ * A IA escreve cada arquivo 100% completo dentro de <arquivo nome="..."> ou <file path="...">,
+ * mantendo o Stateful VFS (árvore e arquivos) perfeitamente sincronizado a cada iteração.
  */
 
 import { instrucaoNuvem, usaAutenticacaoPrivada, usaBancoHospedado } from "./nuvem";
 import { CodeModifier } from "@/agents/CodeModifier";
+import { DirectoryReader } from "@/agents/DirectoryReader";
 import type { PatchArquivo, PatchChunk } from "@/agents/types";
+
+const directoryReader = new DirectoryReader();
 
 export const INSTRUCAO_PROJETO = [
   'Você é a FabyClaud / Dev Buddy, uma IA especialista em Engenharia de Software Fullstack e Desenvolvimento Autônomo. Você constrói e evolui sistemas reais e completos: tanto o frontend (HTML/CSS/JS, React, UI moderna) quanto o backend (APIs REST, endpoints de servidor, regras de negócio, manipulação de dados, banco de dados e autenticação).',
-  'FORMAS DE ENTREGAR OU MODIFICAR CÓDIGO:\n1) ARQUIVO COMPLETO OU NOVO: use a tag <arquivo nome="caminho/do/arquivo.ext">\nconteúdo completo\n</arquivo>\n\n2) MODIFICAÇÃO CIRÚRGICA (PATCH/DIFF - PREFERENCIAL PARA EDIÇÕES EM ARQUIVOS EXISTENTES):\nQuando for alterar apenas uma função, estilo ou trecho de um arquivo existente, use:\n<modificar arquivo="caminho/do/arquivo.ext">\n<substituir>\n<de>\ntrecho exato original a ser substituído\n</de>\n<para>\nnovo trecho com a alteração aplicada\n</para>\n</substituir>\n</modificar>',
-  'DESENVOLVIMENTO FULLSTACK REAL (MOTOR + CHASSI):\n- Crie e estruture tanto a interface de usuário quanto as rotas e regras de negócio do backend.\n- Se o projeto for uma aplicação web estática/SPA, mantenha o index.html como ponto de entrada com scripts e estilos organizados.\n- Se o projeto exigir backend, crie ou edite arquivos de servidor (ex: server.js, api/rotas.js, controllers, models, schemas SQL) com lógica de programação real e completa.\n- Nunca entregue botões "fake", mocks estáticos não funcionais ou interfaces que apenas fingem que salvam dados. Implemente a lógica real de processamento, validação e persistência.',
-  'EDIÇÃO CONTÍNUA E ITERAÇÃO:\n- Preserve integralmente todas as funcionalidades existentes que não foram alvo do pedido.\n- Não apague arquivos nem resuma código existente como "// restante do código...".\n- Responda com clareza explicando: 1) O que foi alterado/adicionado; 2) Quais arquivos foram tocados; 3) Como testar a nova funcionalidade.',
+  'FORMAS DE ENTREGAR OU MODIFICAR CÓDIGO (PADRÃO LOVABLE - ARQUIVOS 100% COMPLETOS):\n1) ARQUIVO COMPLETO OU NOVO (OBRIGATÓRIO):\nSempre entregue o arquivo integralmente reescrito dentro da tag:\n<arquivo nome="caminho/do/arquivo.ext">\nconteúdo 100% completo e reescrito\n</arquivo>\n\n2) PROIBIÇÃO DE PATCHES OU TRECHOS PARCIAIS:\nNUNCA use buscas parciais, substituições parciais por regex, nem resuma o código com "// ...restante do código". Isso quebra a compilação e a formatação. Se for alterar 1 linha ou 100 linhas em um arquivo existente, SEMPRE devolva o arquivo INTEIRO.',
+  'DESENVOLVIMENTO FULLSTACK REAL E INTEGRADO:\n- Se o usuário pedir alteração de dados, persistência, mock ou nova funcionalidade, altere NO MESMO CICLO DE RESPOSTA tanto os arquivos de mock/dados/banco (ex: src/data/mockData.ts, schemas, endpoints) quanto a interface visual no frontend (.tsx, .jsx, .html).\n- Mantenha todos os contratos de dados, imports e referências de imagens (ex: assets ou URLs enviadas) 100% consistentes entre frontend e backend.\n- Nunca entregue botões "fake", mocks estáticos não funcionais ou interfaces que apenas fingem que salvam dados.',
+  'EDIÇÃO CONTÍNUA E ITERAÇÃO (STATEFUL VFS):\n- Você receberá o estado real e atual de todos os arquivos do projeto no snapshot XML do VFS.\n- Preserve integralmente todas as funcionalidades e arquivos existentes que não precisam de alteração.\n- Responda com clareza explicando: 1) O que foi alterado/adicionado; 2) Quais arquivos foram tocados; 3) Como testar a nova funcionalidade.',
   'PADRÃO DE DESIGN E QUALIDADE:\n- Tipografia moderna (Google Fonts), hierarquia visual rica, cores harmônicas e micro-interações.\n- Formulários com validações claras, tratamento de erros e feedbacks visuais imediatos.\n- Ícones SVG inline limpos, layout responsivo (mobile-first) e código limpo e modular.',
   'TROCA E GERAÇÃO DE IMAGENS:\nQuando o usuário pedir para gerar ou trocar imagens, use <img src="gerar:descrição detalhada em inglês" alt="..."> nos arquivos correspondentes.',
   'AUTONOMIA DE ENGENHARIA SÊNIOR:\nVocê atua com autonomia e rigor técnico. Se o usuário pedir para consertar, adicionar recurso ou refatorar frontend ou backend, aplique as modificações necessárias sem hesitação, entregando sempre código funcional de verdade.',
@@ -41,7 +43,7 @@ export function projetoExterno(arquivos: Record<string, string>) {
 // Fechamento tolerante: aceita </arquivo>, variações erradas que a IA às vezes
 // escreve (</arcs>, </file>), o início do próximo arquivo, ou o fim do texto.
 const PADRAO_ARQUIVO =
-  /<arquivo\s+nome=(["'])(.*?)\1\s*>\n?([\s\S]*?)(?:<\/\s*(?:arquivos?|arqs?|arcs?|files?)\s*>|(?=<arquivo\s+nome=)|$)/gi;
+  /<(?:arquivo\s+nome|file\s+path)=(["'])(.*?)\1\s*>\n?([\s\S]*?)(?:<\/\s*(?:arquivos?|arqs?|arcs?|files?)\s*>|(?=<(?:arquivo\s+nome|file\s+path)=)|$)/gi;
 const PADRAO_CODIGO_ANTIGO = /```(?:html|HTML)?\s*\n([\s\S]*?)```/;
 const PADRAO_IMG_GERAR = /src=(["'])\s*gerar:\s*(.*?)\1/gi;
 const PADRAO_CONSULTA = /\{\{\s*consultar:\s*(.*?)\s*\}\}/gi;
@@ -120,28 +122,22 @@ export function montarPrompt(
         )}\nPara usar uma delas, escreva exatamente src="CAMINHO" (ex: src="${enviados[0]}") no HTML/CSS/JS. Nunca diga que trocou uma imagem sem ter alterado o src no arquivo entregue.`,
     );
   }
-  const nomes = selecionarArquivosParaPedido(
-    pedido,
-    arquivosAtuais,
-    todos.filter((n) => !n.startsWith("enviados/") && !n.startsWith("originais/")),
-  );
-  if (nomes.length) {
+
+  // Stateful VFS Snapshot completo: injeta a árvore e todos os arquivos do projeto no prompt
+  const nomesReais = todos.filter((n) => !n.startsWith("enviados/") && !n.startsWith("originais/"));
+  if (nomesReais.length) {
+    const vfsXml = directoryReader.gerarSnapshotXml(arquivosAtuais, {
+      limiteBytesPorArquivo: intencao === "analisar" ? 30_000 : 25_000,
+    });
     partes.push(
-      `--- Mapa completo do projeto (todos os arquivos foram considerados) ---\n${montarMapaProjeto(arquivosAtuais)}`,
+      [
+        "--- STATEFUL VFS SNAPSHOT (ÁRVORE COMPLETA E ARQUIVOS ATUAIS DO PROJETO) ---",
+        "Abaixo está o estado real e atual de todos os arquivos. Ao modificar qualquer arquivo, devolva-o 100% completo.",
+        vfsXml,
+      ].join("\n"),
     );
-    const LIMITE_PROJETO = intencao === "analisar" ? 52_000 : 40_000;
-    let restante = LIMITE_PROJETO;
-    const blocos = nomes
-      .map((nome) => {
-        if (restante <= 0) return `<arquivo nome="${nome}">[conteúdo omitido por limite]</arquivo>`;
-        const conteudo = arquivosAtuais[nome] ?? "";
-        const trecho = conteudo.slice(0, Math.min(12_000, restante));
-        restante -= trecho.length;
-        return `<arquivo nome="${nome}">\n${trecho}${trecho.length < conteudo.length ? "\n[restante omitido por limite]" : ""}\n</arquivo>`;
-      })
-      .join("\n\n");
-    partes.push(`--- Arquivos atuais do projeto ---\n${blocos}`);
   }
+
   if (intencao === "analisar") {
     partes.push(
       [
@@ -463,7 +459,10 @@ export function extrairArquivos(
   texto: string;
   patches?: PatchArquivo[];
 } {
-  const arquivos: Record<string, string> = {};
+  const modifier = new CodeModifier();
+  const arquivosExtraidos = modifier.extrairArquivosCompletos(resposta);
+
+  // Extrai tags para limpar o texto de resposta
   const partes: string[] = [];
   let ultimoFim = 0;
 
@@ -473,7 +472,9 @@ export function extrairArquivos(
     partes.push(resposta.slice(ultimoFim, m.index));
     const nome = (m[2] ?? "").trim();
     const conteudo = (m[3] ?? "").trim();
-    if (nome && conteudo) arquivos[nome] = conteudo;
+    if (nome && conteudo && !arquivosExtraidos[nome]) {
+      arquivosExtraidos[nome] = conteudo;
+    }
     ultimoFim = m.index + m[0].length;
   }
   partes.push(resposta.slice(ultimoFim));
@@ -482,23 +483,22 @@ export function extrairArquivos(
   const { patches, textoLimpo } = extrairModificacoesPatches(textoSemArquivos);
   const texto = limparPensamento(textoLimpo);
 
-  // Se houver patches cirúrgicos e arquivosBase foi fornecido, aplica os patches
+  // Se houver patches cirúrgicos e arquivosBase foi fornecido, aplica os patches (compatibilidade)
   if (patches.length && arquivosBase) {
-    const modifier = new CodeModifier();
     for (const patch of patches) {
-      const baseContent = arquivos[patch.caminho] ?? arquivosBase[patch.caminho];
+      const baseContent = arquivosExtraidos[patch.caminho] ?? arquivosBase[patch.caminho];
       if (baseContent !== undefined) {
         const res = modifier.aplicarPatchEmTexto(baseContent, patch.chunks);
-        arquivos[patch.caminho] = res.conteudo;
+        arquivosExtraidos[patch.caminho] = res.conteudo;
       }
     }
   }
 
-  if (Object.keys(arquivos).length || patches.length) {
+  if (Object.keys(arquivosExtraidos).length || patches.length) {
     return {
-      arquivos,
+      arquivos: arquivosExtraidos,
       texto: texto || "Projeto atualizado com sucesso! Alterações aplicadas.",
-      patches: patches.length ? patches : undefined,
+      ...(patches.length ? { patches } : {}),
     };
   }
 

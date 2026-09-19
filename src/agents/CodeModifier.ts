@@ -2,11 +2,160 @@ import type {
   AlteracaoProjeto,
   CodeEdit,
   ModificacaoArquivo,
-  PatchArquivo,
   PatchChunk,
 } from "./types";
 
 export class CodeModifier {
+  /**
+   * Extrai arquivos completos da resposta da IA.
+   * Suporta:
+   * 1. Tags XML: <arquivo nome="...">...</arquivo> e <file path="...">...</file>
+   * 2. JSON estruturado: { "files": [{ "path": "...", "content": "..." }] } ou [{ "caminho": "...", "conteudo": "..." }]
+   * 3. Blocos de código markdown com indicação de caminho.
+   */
+  public extrairArquivosCompletos(resposta: string): Record<string, string> {
+    const arquivos: Record<string, string> = {};
+
+    if (!resposta || !resposta.trim()) return arquivos;
+
+    // 1. Extração via tags XML <arquivo nome="..."> ou <file path="...">
+    const padraoArquivoXml =
+      /<(?:arquivo\s+nome|file\s+path)=(["'])(.*?)\1\s*>\n?([\s\S]*?)(?:<\/\s*(?:arquivo|file|arquivos|files)\s*>|(?=<(?:arquivo\s+nome|file\s+path)=)|$)/gi;
+
+    let mXml: RegExpExecArray | null;
+    while ((mXml = padraoArquivoXml.exec(resposta)) !== null) {
+      const nome = (mXml[2] ?? "").trim();
+      const conteudo = (mXml[3] ?? "").trim();
+      if (nome && conteudo) {
+        arquivos[nome] = conteudo;
+      }
+    }
+
+    if (Object.keys(arquivos).length > 0) {
+      return arquivos;
+    }
+
+    // 2. Extração via JSON estruturado
+    const padraoJson = /```(?:json)?\s*\n([\s\S]*?)\n```/gi;
+    let mJson: RegExpExecArray | null;
+    while ((mJson = padraoJson.exec(resposta)) !== null) {
+      try {
+        const parsed = JSON.parse(mJson[1] ?? "");
+        if (parsed && typeof parsed === "object") {
+          if (Array.isArray(parsed)) {
+            for (const item of parsed) {
+              const caminho = item.path || item.caminho || item.filePath || item.file;
+              const conteudo = item.content || item.conteudo || item.code;
+              if (caminho && typeof conteudo === "string") {
+                arquivos[caminho] = conteudo;
+              }
+            }
+          } else if (Array.isArray((parsed as any).files)) {
+            for (const item of (parsed as any).files) {
+              const caminho = item.path || item.caminho || item.filePath || item.file;
+              const conteudo = item.content || item.conteudo || item.code;
+              if (caminho && typeof conteudo === "string") {
+                arquivos[caminho] = conteudo;
+              }
+            }
+          } else {
+            // Objeto do tipo { "src/App.tsx": "código..." }
+            for (const [caminho, conteudo] of Object.entries(parsed)) {
+              if (
+                typeof conteudo === "string" &&
+                (caminho.includes("/") || caminho.includes("."))
+              ) {
+                arquivos[caminho] = conteudo;
+              }
+            }
+          }
+        }
+      } catch {
+        // Ignora blocos json que não sejam de arquivos
+      }
+    }
+
+    if (Object.keys(arquivos).length > 0) {
+      return arquivos;
+    }
+
+    // 3. Extração via blocos markdown com anotação de arquivo
+    const padraoMarkdownBloco =
+      /```(?:[a-zA-Z0-9_-]+)?\s*(?:file=["']?([^\s\n"']+)["']?|\/\/\s*(?:file|path|filepath):\s*([^\s\n]+))\n([\s\S]*?)```/gi;
+
+    let mMd: RegExpExecArray | null;
+    while ((mMd = padraoMarkdownBloco.exec(resposta)) !== null) {
+      const caminho = (mMd[1] || mMd[2] || "").trim();
+      const conteudo = (mMd[3] ?? "").trim();
+      if (caminho && conteudo) {
+        arquivos[caminho] = conteudo;
+      }
+    }
+
+    return arquivos;
+  }
+
+  /**
+   * Substitui inteiramente os arquivos antigos pelos novos (100% reescritos, sem regex/patches parciais).
+   */
+  public aplicarArquivosCompletos(
+    arquivosAtuais: Record<string, string>,
+    novosArquivos: Record<string, string>,
+  ): Record<string, string> {
+    return {
+      ...arquivosAtuais,
+      ...novosArquivos,
+    };
+  }
+
+  /**
+   * Escreve fisicamente os arquivos em disco usando Bun.write (ou node:fs/promises em fallback),
+   * garantindo a criação de subpastas e a substituição integral do arquivo.
+   */
+  public async gravarEmDisco(
+    diretorioRaiz: string,
+    arquivos: Record<string, string>,
+  ): Promise<{ sucesso: boolean; gravados: string[]; erros: string[] }> {
+    const gravados: string[] = [];
+    const erros: string[] = [];
+
+    const isBun = typeof (globalThis as any).Bun !== "undefined" && typeof (globalThis as any).Bun.write === "function";
+
+    for (const [caminhoRelativo, conteudo] of Object.entries(arquivos)) {
+      try {
+        const pathNormalizado = caminhoRelativo.replace(/\\/g, "/");
+        const caminhoCompleto = `${diretorioRaiz.replace(/[\\/]$/, "")}/${pathNormalizado}`;
+
+        // Assegura criação do diretório pai
+        const partes = caminhoCompleto.split("/");
+        partes.pop();
+        const pastaPai = partes.join("/");
+
+        if (pastaPai) {
+          const fs = await import("node:fs/promises");
+          await fs.mkdir(pastaPai, { recursive: true }).catch(() => {});
+        }
+
+        if (isBun) {
+          await (globalThis as any).Bun.write(caminhoCompleto, conteudo);
+        } else {
+          const fs = await import("node:fs/promises");
+          await fs.writeFile(caminhoCompleto, conteudo, "utf8");
+        }
+
+        gravados.push(caminhoRelativo);
+      } catch (err: any) {
+        erros.push(`Falha ao gravar ${caminhoRelativo}: ${err?.message || String(err)}`);
+      }
+    }
+
+    return {
+      sucesso: erros.length === 0,
+      gravados,
+      erros,
+    };
+  }
+
   /**
    * Aplica uma alteração de código ou cria um novo arquivo dentro do mapa de arquivos do projeto.
    */
@@ -65,7 +214,7 @@ export class CodeModifier {
 
   /**
    * Aplica um patch cirúrgico (substituição de trecho de/para) em um arquivo de texto.
-   * Suporta normalização de quebras de linha e tolerância a espaçamento.
+   * Mantido para compatibilidade retroativa.
    */
   public aplicarPatchEmTexto(
     conteudoOriginal: string,
@@ -106,7 +255,6 @@ export class CodeModifier {
         continue;
       }
 
-      // 4. Se não encontrou o bloco exato, busca por proximidade ou marca falha
       falhas += 1;
     }
 
@@ -114,7 +262,7 @@ export class CodeModifier {
   }
 
   /**
-   * Aplica uma alteração completa no projeto (arquivos novos, patches cirúrgicos e remoções).
+   * Aplica uma alteração completa no projeto (arquivos novos e sobrescrições completas).
    */
   public aplicarAlteracaoProjeto(
     arquivosAtuais: Record<string, string>,
@@ -135,7 +283,7 @@ export class CodeModifier {
     let patchesFalhados = 0;
 
     // 1. Arquivos completos novos ou sobrescritos
-    for (const [caminho, conteudo] of Object.entries(alteracao.arquivosNovosOuCompletos)) {
+    for (const [caminho, conteudo] of Object.entries(alteracao.arquivosNovosOuCompletos || {})) {
       if (copia[caminho] !== undefined) {
         if (!modificados.includes(caminho)) modificados.push(caminho);
       } else {
@@ -144,8 +292,8 @@ export class CodeModifier {
       copia[caminho] = conteudo;
     }
 
-    // 2. Patches cirúrgicos em arquivos existentes
-    for (const patch of alteracao.patches) {
+    // 2. Patches em arquivos existentes (se fornecidos)
+    for (const patch of alteracao.patches || []) {
       const conteudoExistente = copia[patch.caminho];
       if (conteudoExistente !== undefined) {
         const patchRes = this.aplicarPatchEmTexto(conteudoExistente, patch.chunks);
@@ -154,7 +302,6 @@ export class CodeModifier {
         patchesFalhados += patchRes.falhas;
         if (!modificados.includes(patch.caminho)) modificados.push(patch.caminho);
       } else {
-        // Se o arquivo não existia, junta os blocos 'para' como novo arquivo
         const conteudoNovo = patch.chunks.map((c) => c.para).join("\n");
         copia[patch.caminho] = conteudoNovo;
         if (!criados.includes(patch.caminho)) criados.push(patch.caminho);
@@ -162,7 +309,7 @@ export class CodeModifier {
     }
 
     // 3. Arquivos removidos
-    for (const caminho of alteracao.arquivosRemovidos) {
+    for (const caminho of alteracao.arquivosRemovidos || []) {
       if (copia[caminho] !== undefined) {
         delete copia[caminho];
         if (!removidos.includes(caminho)) removidos.push(caminho);

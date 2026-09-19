@@ -68,3 +68,17 @@ export interface ArquivoItem {
   conteudo: string;
   tamanho: number;
 }
+
+export interface VFSSnapshot {
+  totalArquivos: number;
+  tamanhoTotal: number;
+  arvoreTexto: string;
+  arvoreNodos: FileNode[];
+  arquivos: Record<string, string>;
+  snapshotXml: string;
+}
+
+export interface ArquivoCompleto {
+  caminho: string;
+  conteudo: string;
+}

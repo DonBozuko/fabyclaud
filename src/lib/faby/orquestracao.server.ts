@@ -1,3 +1,6 @@
+import { DirectoryReader } from "@/agents/DirectoryReader";
+import type { VFSSnapshot } from "@/agents/types";
+
 type Db = {
   from: (tabela: string) => {
     insert: (valor: unknown) => {
@@ -23,6 +26,50 @@ export type EtapaConstrucao =
   | "teste"
   | "correcao"
   | "entrega";
+
+const directoryReader = new DirectoryReader();
+
+/**
+ * Monta o Snapshot VFS em memória para ser injetado em prompts do sistema.
+ */
+export function montarContextoVFS(arquivos: Record<string, string>): VFSSnapshot {
+  return directoryReader.gerarSnapshotCompleto(arquivos);
+}
+
+/**
+ * Injeta o Snapshot XML estruturado do Stateful VFS no System Prompt.
+ * Garante que a IA NUNCA receba apenas histórico solto, e sim o estado real do projeto.
+ */
+export function injetarSnapshotVFS(
+  systemPromptBase: string,
+  arquivos: Record<string, string>,
+  opcoes?: {
+    limiteBytesPorArquivo?: number;
+    ignorarCaminhos?: string[];
+  },
+): string {
+  const totalArquivos = Object.keys(arquivos).filter(
+    (c) => !c.startsWith("enviados/") && !c.startsWith("originais/"),
+  ).length;
+
+  if (totalArquivos === 0) {
+    return `${systemPromptBase}\n\n<!-- [STATEFUL VFS: Nenhum arquivo criado ainda no projeto. Inicie criando os arquivos fundamentais] -->`;
+  }
+
+  const snapshotXml = directoryReader.gerarSnapshotXml(arquivos, opcoes);
+
+  return [
+    systemPromptBase,
+    "",
+    "================================================================================",
+    "STATEFUL VFS SNAPSHOT (ESTADO REAL E ATUAL DO PROJETO - LEITURA OBRIGATÓRIA):",
+    "Abaixo está a representação viva e integral de todos os arquivos existentes.",
+    "Para qualquer alteração, SEMPRE devolva o arquivo 100% COMPLETO e REESCRITO.",
+    "================================================================================",
+    snapshotXml,
+    "================================================================================",
+  ].join("\n");
+}
 
 export async function iniciarExecucao(
   db: Db,

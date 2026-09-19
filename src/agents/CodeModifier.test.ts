@@ -1,87 +1,107 @@
 import { describe, expect, it } from "bun:test";
 import { CodeModifier } from "./CodeModifier";
-import { extrairArquivos, extrairModificacoesPatches } from "@/lib/faby/builder.server";
+import { DirectoryReader } from "./DirectoryReader";
+import { extrairArquivos } from "@/lib/faby/builder.server";
+import { injetarSnapshotVFS } from "@/lib/faby/orquestracao.server";
 
-describe("CodeModifier e Sistema de Patches Cirúrgicos", () => {
+describe("CodeModifier - Motor de Arquivos 100% Completos e Stateful VFS", () => {
   const modifier = new CodeModifier();
+  const reader = new DirectoryReader();
 
-  it("deve aplicar substituição cirúrgica em texto existente", () => {
-    const original = `
-function saudar(nome) {
-  return "Ola, " + nome;
-}
-`;
-    const patch = [
-      {
-        de: 'return "Ola, " + nome;',
-        para: 'return `Olá, ${nome}! Seja bem-vindo ao sistema.`;',
-      },
-    ];
-
-    const resultado = modifier.aplicarPatchEmTexto(original, patch);
-    expect(resultado.sucessos).toBe(1);
-    expect(resultado.falhas).toBe(0);
-    expect(resultado.conteudo).toContain("Seja bem-vindo ao sistema.");
-  });
-
-  it("deve extrair e aplicar patches cirúrgicos com tags <modificar>", () => {
+  it("deve extrair arquivo 100% completo com tag <arquivo nome=...>", () => {
     const respostaIA = `
-Aqui está a alteração solicitada na rota de backend:
+Aqui está o componente atualizado com novos campos:
 
-<modificar arquivo="server.js">
-<substituir>
-<de>
-app.get('/api/status', (req, res) => res.send('ok'));
-</de>
-<para>
-app.get('/api/status', (req, res) => res.json({ status: 'online', versao: '2.0.0' }));
-</para>
-</substituir>
-</modificar>
+<arquivo nome="src/components/UserList.tsx">
+import React from "react";
+
+export function UserList() {
+  return <div>Lista de Usuários Atualizada</div>;
+}
+</arquivo>
 `;
-
-    const arquivosBase = {
-      "server.js": `
-const express = require('express');
-const app = express();
-app.get('/api/status', (req, res) => res.send('ok'));
-app.listen(3000);
-`,
-    };
-
-    const extraido = extrairArquivos(respostaIA, arquivosBase);
-    expect(extraido.arquivos["server.js"]).toBeDefined();
-    expect(extraido.arquivos["server.js"]).toContain("versao: '2.0.0'");
-    expect(extraido.arquivos["server.js"]).toContain("app.listen(3000);");
+    const extraido = modifier.extrairArquivosCompletos(respostaIA);
+    expect(extraido["src/components/UserList.tsx"]).toBeDefined();
+    expect(extraido["src/components/UserList.tsx"]).toContain("Lista de Usuários Atualizada");
   });
 
-  it("deve aplicar alteração mista (arquivos novos + patches) sem perder o restante do projeto", () => {
+  it("deve extrair múltiplos arquivos 100% completos com tags <file path=...>", () => {
+    const respostaIA = `
+<file path="src/data/mockUsers.ts">
+export const mockUsers = [{ id: 1, name: "Alice" }];
+</file>
+
+<file path="src/App.tsx">
+import { mockUsers } from "./data/mockUsers";
+export function App() { return <h1>{mockUsers[0].name}</h1>; }
+</file>
+`;
+    const extraido = modifier.extrairArquivosCompletos(respostaIA);
+    expect(extraido["src/data/mockUsers.ts"]).toContain("mockUsers");
+    expect(extraido["src/App.tsx"]).toContain("mockUsers[0].name");
+  });
+
+  it("deve extrair arquivos completos a partir de JSON estruturado", () => {
+    const respostaJson = `
+\`\`\`json
+{
+  "files": [
+    {
+      "path": "src/types/client.ts",
+      "content": "export interface Client { id: string; phone: string; }"
+    }
+  ]
+}
+\`\`\`
+`;
+    const extraido = modifier.extrairArquivosCompletos(respostaJson);
+    expect(extraido["src/types/client.ts"]).toBeDefined();
+    expect(extraido["src/types/client.ts"]).toContain("phone: string;");
+  });
+
+  it("deve substituir integralmente o arquivo no VFS sem deixar resíduos", () => {
     const arquivosAtuais = {
-      "index.html": "<html><body><h1>App</h1></body></html>",
-      "style.css": "body { margin: 0; }",
+      "src/App.tsx": "function OldApp() { return null; }",
+      "src/index.css": "body { margin: 0; }",
     };
 
-    const alteracao = {
-      arquivosNovosOuCompletos: {
-        "api/auth.js": "export function login() { return true; }",
-      },
-      patches: [
-        {
-          caminho: "index.html",
-          chunks: [
-            {
-              de: "<h1>App</h1>",
-              para: "<h1>App Fullstack</h1><button id='btnLogin'>Entrar</button>",
-            },
-          ],
-        },
-      ],
-      arquivosRemovidos: [],
+    const novos = {
+      "src/App.tsx": "export function App() { return <h1>Nova Versão</h1>; }",
     };
 
-    const res = modifier.aplicarAlteracaoProjeto(arquivosAtuais, alteracao);
-    expect(res.arquivos["style.css"]).toBe("body { margin: 0; }"); // Preservado intacto
-    expect(res.arquivos["api/auth.js"]).toBe("export function login() { return true; }"); // Criado novo
-    expect(res.arquivos["index.html"]).toContain("App Fullstack"); // Modificado cirurgicamente
+    const atualizados = modifier.aplicarArquivosCompletos(arquivosAtuais, novos);
+    expect(atualizados["src/App.tsx"]).toBe("export function App() { return <h1>Nova Versão</h1>; }");
+    expect(atualizados["src/index.css"]).toBe("body { margin: 0; }");
+  });
+
+  it("deve gerar árvore estruturada e Snapshot XML com o DirectoryReader", () => {
+    const arquivos = {
+      "src/components/Header.tsx": "export const Header = () => <header />;",
+      "src/data/db.ts": "export const db = {};",
+      "src/App.tsx": "export const App = () => <div />;",
+    };
+
+    const arvore = reader.gerarArvoreTexto(arquivos);
+    expect(arvore).toContain("src/");
+    expect(arvore).toContain("components/");
+    expect(arvore).toContain("Header.tsx");
+
+    const xml = reader.gerarSnapshotXml(arquivos);
+    expect(xml).toContain("<project_vfs>");
+    expect(xml).toContain('<file path="src/components/Header.tsx">');
+    expect(xml).toContain('<file path="src/data/db.ts">');
+    expect(xml).toContain("</project_vfs>");
+  });
+
+  it("deve injetar Stateful VFS Snapshot no prompt através da orquestração", () => {
+    const promptBase = "Você é uma IA de desenvolvimento.";
+    const arquivos = {
+      "src/main.ts": "console.log('iniciado');",
+    };
+
+    const promptInjetado = injetarSnapshotVFS(promptBase, arquivos);
+    expect(promptInjetado).toContain("STATEFUL VFS SNAPSHOT");
+    expect(promptInjetado).toContain('<file path="src/main.ts">');
+    expect(promptInjetado).toContain("console.log('iniciado');");
   });
 });
