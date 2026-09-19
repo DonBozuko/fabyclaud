@@ -39,7 +39,8 @@ export function normalizarUrlsApi(codigo: string): string {
     .replace(/\$\{API\}\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?\//gi, "${API}/")
     .replace(/\$\{API\}\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?/gi, "${API}")
     .replace(/API\s*\+\s*["']\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?\//gi, 'API + "/')
-    .replace(/API\s*\+\s*["']\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?["']/gi, "API");
+    .replace(/API\s*\+\s*["']\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?["']/gi, "API")
+    .replace(/\bAPI\s*=\s*["']https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?\/api\/public\/dados\/([0-9a-f-]{36})["']/gi, 'API = "/api/public/dados/$1"');
 
   // 2. Colapsa segmentos duplicados de URL absoluta ou relativa
   // Ex: http://localhost:8080/api/public/dados/UUID/public/dados/UUID/recados -> /api/public/dados/UUID/recados
@@ -66,6 +67,12 @@ export function normalizarUrlsApi(codigo: string): string {
   res = res.replace(
     /https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?\/api\/public\/dados\/([0-9a-f-]{36})/gi,
     "/api/public/dados/$1",
+  );
+
+  // 5. Normaliza casos onde a IA concatenou /public/dados/:colecao em cima de /api/public/dados/:id
+  res = res.replace(
+    /\/api\/public\/dados\/([0-9a-f-]{36})\/public\/dados\/([a-zA-Z0-9_-]+)/gi,
+    "/api/public/dados/$1/$2",
   );
 
   return res;

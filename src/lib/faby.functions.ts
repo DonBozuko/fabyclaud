@@ -1360,6 +1360,48 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       // ignore
     }
 
+    // Slash Commands estilo Claude Code / Lovable (/ajuda, /imagem, /arvore, /revisar, /banco)
+    const { processarComandoBarra } = await import("./faby/builder.server");
+    const resultadoCmd = processarComandoBarra(prompt, arquivosAtuais, {
+      projetoId: projetoId!,
+      apiUrl: urlDadosProjeto(data.origem ?? "", projetoId!),
+    });
+    if (resultadoCmd && resultadoCmd.executou) {
+      const novaMsgAssistente: MensagemArmazenada = {
+        id: crypto.randomUUID(),
+        projeto_id: projetoId!,
+        user_id: context.userId,
+        role: "assistant",
+        conteudo: resultadoCmd.resposta,
+        modelo: "plugins-faby",
+        ok: true,
+        anexos: [],
+        created_at: new Date().toISOString(),
+      };
+      cacheMensagens.get(projetoId!)!.push(novaMsgAssistente);
+
+      try {
+        await context.supabase.from("mensagens").insert({
+          projeto_id: projetoId,
+          user_id: context.userId,
+          role: "assistant",
+          conteudo: resultadoCmd.resposta,
+          modelo: "plugins-faby",
+          ok: true,
+        });
+      } catch {
+        // ignore
+      }
+
+      return {
+        projeto_id: projetoId,
+        texto: resultadoCmd.resposta,
+        ok: true,
+        mudou_arquivos: false,
+        projetoNovo,
+      };
+    }
+
     if (aplicativoLocal && !candidatos.length) {
       const problemas = auditarArquivos(aplicativoLocal.arquivos);
       const criticos = problemasCriticos(problemas);

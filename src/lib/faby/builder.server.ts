@@ -549,6 +549,93 @@ export function enriquecerPromptImagem(descricao: string, contextoProjeto?: stri
   return d;
 }
 
+export type ResultadoComandoBarra = {
+  executou: boolean;
+  resposta: string;
+  arquivos?: Record<string, string>;
+};
+
+/**
+ * Processador de Slash Commands estilo Claude Code / Lovable:
+ * /ajuda, /imagem, /arvore, /revisar, /banco, /limpar
+ */
+export function processarComandoBarra(
+  mensagem: string,
+  arquivos: Record<string, string>,
+  opcoes?: { projetoId?: string; apiUrl?: string },
+): ResultadoComandoBarra | null {
+  const comando = mensagem.trim();
+  if (!comando.startsWith("/")) return null;
+
+  const partes = comando.slice(1).split(" ");
+  const cmd = (partes[0] || "").toLowerCase();
+  const args = partes.slice(1).join(" ").trim();
+
+  if (cmd === "ajuda" || cmd === "help" || cmd === "comandos" || cmd === "plugins") {
+    const resposta = [
+      "⚡ **FabyCloud Plugins & Slash Commands (estilo Claude Code):**",
+      "",
+      "- `/ajuda` ou `/help`: Exibe esta central de plugins e comandos.",
+      "- `/imagem <descrição>`: Gera uma imagem de alta definição para o projeto.",
+      "- `/arvore` ou `/graphify`: Mostra a árvore viva do VFS e tamanho dos arquivos.",
+      "- `/revisar`: Executa a auditoria em tempo real de links, botões e integridade.",
+      "- `/banco [coleção]`: Inspeciona os dados da coleção no banco hospedado.",
+      "- `/limpar`: Instrução de limpeza de conversa mantendo os arquivos intactos.",
+      "",
+      "💡 *Dica: Você também pode digitar qualquer pedido livre de desenvolvimento full-stack.*",
+    ].join("\n");
+    return { executou: true, resposta };
+  }
+
+  if (cmd === "imagem" || cmd === "image" || cmd === "foto") {
+    if (!args) {
+      return {
+        executou: true,
+        resposta: "⚠️ Especifique o que deseja na imagem. Exemplo: `/imagem pessoa sorrindo estilo retro`",
+      };
+    }
+    const promptEnriquecido = enriquecerPromptImagem(args);
+    const seed = crc32(promptEnriquecido) % 1_000_000;
+    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptEnriquecido)}?width=1024&height=768&seed=${seed}&nologo=true`;
+    return {
+      executou: true,
+      resposta: `🖼️ **Imagem gerada com sucesso!**\n\n![${args}](${url})\n\nURL direta para uso no código:\n\`${url}\``,
+    };
+  }
+
+  if (cmd === "arvore" || cmd === "tree" || cmd === "graphify" || cmd === "arquivos") {
+    const arvore = directoryReader.gerarArvoreTexto(arquivos);
+    const stats = directoryReader.obterEstatisticas(arquivos);
+    const resposta = [
+      "🌳 **Estrutura Viva do Projeto (Stateful VFS):**",
+      `Total de arquivos: ${stats.totalArquivos} (${(stats.tamanhoTotal / 1024).toFixed(1)} KB)`,
+      "```",
+      arvore || "(projeto vazio)",
+      "```",
+    ].join("\n");
+    return { executou: true, resposta };
+  }
+
+  if (cmd === "revisar" || cmd === "auditar" || cmd === "check") {
+    const auditoria = auditarArquivos(arquivos);
+    const resposta =
+      auditoria.length === 0
+        ? "✅ **Auditoria Concluída:** Nenhum problema detectado! Todos os arquivos, links e scripts estão íntegros."
+        : `🔍 **Resultado da Auditoria (${auditoria.length} ponto(s) encontrado(s)):**\n${auditoria.map((p, i) => `${i + 1}. ${p}`).join("\n")}`;
+    return { executou: true, resposta };
+  }
+
+  if (cmd === "banco" || cmd === "db" || cmd === "dados") {
+    const colecao = args || "itens";
+    return {
+      executou: true,
+      resposta: `🗄️ **Banco de Dados Hospedado:**\nEndpoint: \`${opcoes?.apiUrl || "/api/public/dados"}/${colecao}\`\nOperações: GET (listar), POST (criar), PUT (editar), DELETE (apagar).\nPersistência automática no banco de dados e no preview.`,
+    };
+  }
+
+  return null;
+}
+
 /** Troca <img src="gerar:descrição"> por uma imagem real da Pollinations.ai (grátis, sem chave). */
 export function substituirGeradoresDeImagem(
   codigo: string,
