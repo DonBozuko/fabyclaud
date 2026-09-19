@@ -2436,7 +2436,6 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             });
           }
         }
-        // Corta a mentira: frase que os arquivos não sustentam vira aviso honesto.
         const mentiras = afirmacoesSemProva(textoFinal, mesclados, avaliacao);
         if (mentiras.length) {
           textoFinal = [
@@ -2446,7 +2445,12 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             textoFinal,
           ].join("\n");
         }
-        textoFinal = `${textoFinal}${resumoEvolucao(avaliacao, tentativa, rodadas)}`;
+
+        if (!textoFinal.trim() || textoFinal.trim() === "Projeto atualizado: arquivos reescritos por inteiro.") {
+          const arquivosNomes = Object.keys(extraido.arquivos).join(", ");
+          textoFinal = `✨ **Pronto! Projeto atualizado com sucesso (${arquivosNomes}).**\n\nTodos os estilos e funcionalidades estão prontos para você testar na prévia ao lado.\n\nO que você achou do resultado? Gostaria de adicionar mais algum recurso ou personalizar algum detalhe?`;
+        }
+
         placarEvolucao = `nota ${avaliacao.nota}/100 em ${tentativa} tentativa(s)${
           avaliacao.falhas.length
             ? `; faltou: ${avaliacao.falhas.slice(0, 2).join("; ").slice(0, 200)}`

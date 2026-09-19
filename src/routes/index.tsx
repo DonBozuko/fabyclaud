@@ -208,7 +208,12 @@ function FabyClaud() {
   const guardarArquivoFn = useServerFn(salvarArquivo);
   const apagarArquivoFn = useServerFn(apagarArquivo);
 
-  const [projetoId, setProjetoId] = useState<string | null>(null);
+  const [projetoId, setProjetoId] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("faby_active_project_id");
+    }
+    return null;
+  });
   const [modelo, setModelo] = useState("google");
   const [texto, setTexto] = useState("");
   const [anexos, setAnexos] = useState<Anexo[]>([]);
@@ -255,26 +260,20 @@ function FabyClaud() {
     enabled: logado,
   });
 
-  const inicializadoRef = useRef(false);
   useEffect(() => {
-    if (!inicializadoRef.current && projetos.data && projetos.data.length > 0) {
-      inicializadoRef.current = true;
-      const salvo =
-        typeof window !== "undefined" ? localStorage.getItem("faby_active_project_id") : null;
-      const existe = salvo && projetos.data.some((p: any) => p.id === salvo);
-      if (existe) {
-        setProjetoId(salvo);
+    if (projetos.data && projetos.data.length > 0) {
+      const salvo = typeof window !== "undefined" ? localStorage.getItem("faby_active_project_id") : null;
+      if (salvo && projetos.data.some((p: any) => p.id === salvo)) {
+        if (projetoId !== salvo) setProjetoId(salvo);
+      } else if (!projetoId) {
+        setProjetoId(projetos.data[0].id);
       }
     }
   }, [projetos.data]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (projetoId) {
-        localStorage.setItem("faby_active_project_id", projetoId);
-      } else {
-        localStorage.removeItem("faby_active_project_id");
-      }
+    if (typeof window !== "undefined" && projetoId) {
+      localStorage.setItem("faby_active_project_id", projetoId);
     }
   }, [projetoId]);
 
