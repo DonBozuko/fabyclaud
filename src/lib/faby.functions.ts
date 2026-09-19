@@ -102,7 +102,7 @@ export const listarProjetos = createServerFn({ method: "GET" })
 /** Projeto completo: arquivos + histórico do chat. */
 export const obterProjeto = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
+  .inputValidator((input: { id: string }) => z.object({ id: z.string().min(1) }).parse(input))
   .handler(async ({ data, context }) => {
     let projeto: any = null;
     try {

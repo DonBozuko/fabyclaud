@@ -297,10 +297,14 @@ function FabyClaud() {
       setPendente(null);
       setPendenteAnexos([]);
     },
-    onSuccess: (r) => {
+    onSuccess: async (r) => {
       setProjetoId(r.projeto_id);
-      void queryClient.invalidateQueries({ queryKey: ["projetos"] });
-      void queryClient.invalidateQueries({ queryKey: ["projeto", r.projeto_id] });
+      if (typeof window !== "undefined") {
+        localStorage.setItem("faby_active_project_id", r.projeto_id);
+      }
+      await queryClient.invalidateQueries({ queryKey: ["projetos"] });
+      await queryClient.invalidateQueries({ queryKey: ["projeto", r.projeto_id] });
+      await queryClient.refetchQueries({ queryKey: ["projeto", r.projeto_id] });
       campoTexto.current?.focus();
     },
     onError: (e) => {
