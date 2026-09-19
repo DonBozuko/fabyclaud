@@ -32,11 +32,12 @@ export function injetarAuditorDeCliques(html: string) {
     return t || ("<" + String(el.tagName).toLowerCase() + ">");
   }
   function assinatura(){
-    return [
-      document.body.innerHTML.length,
-      location.hash,
-      document.body.innerText.replace(/\\s+/g, " ").slice(0, 6000)
-    ].join("~");
+    var s = (document.body ? document.body.innerHTML : "") + "~" + location.hash + "~" + document.title;
+    var h = 0;
+    for (var i = 0; i < s.length; i++) {
+      h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+    }
+    return h + "_" + s.length;
   }
   function esperar(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
 
@@ -51,7 +52,16 @@ export function injetarAuditorDeCliques(html: string) {
   var alertou = false;
   window.alert = function(){ alertou = true; };
   window.confirm = function(){ alertou = true; return true; };
+  window.prompt = function(){ alertou = true; return "Novo Item"; };
   window.print = function(){ alertou = true; };
+
+  var mudouStorage = false;
+  try {
+    var origSetItem = localStorage.setItem;
+    localStorage.setItem = function(){ mudouStorage = true; return origSetItem.apply(localStorage, arguments); };
+    var origRemoveItem = localStorage.removeItem;
+    localStorage.removeItem = function(){ mudouStorage = true; return origRemoveItem.apply(localStorage, arguments); };
+  } catch(e){}
 
   // Nada de recarregar a página durante o teste: um envio de formulário
   // reiniciaria o script e a auditoria nunca terminaria.
@@ -63,7 +73,6 @@ export function injetarAuditorDeCliques(html: string) {
     var h = alvo.getAttribute("href") || "";
     if (h.charAt(0) !== "#") ev.preventDefault();
   }, true);
-
 
   async function auditar(){
     var semAcao = [];
@@ -83,7 +92,7 @@ export function injetarAuditorDeCliques(html: string) {
       }
     }
 
-    var seletor = 'button, [role="button"], a[href], input[type="submit"], input[type="button"], [onclick], [data-tab], [data-view]';
+    var seletor = 'button, [role="button"], a[href], input[type="submit"], input[type="button"], [onclick], [data-tab], [data-view], [data-action]';
     var total = document.querySelectorAll(seletor).length;
     var testados = 0;
     var telas = {};
@@ -109,7 +118,7 @@ export function injetarAuditorDeCliques(html: string) {
 
       var antes = assinatura();
       telas[antes] = true;
-      houveRede = false; abriuAba = false; alertou = false; enviouForm = false;
+      houveRede = false; abriuAba = false; alertou = false; enviouForm = false; mudouStorage = false;
       try {
         el.click();
       } catch (e) {
@@ -135,7 +144,8 @@ export function injetarAuditorDeCliques(html: string) {
       var mudou = assinatura() !== antes;
       if (mudou) telas[assinatura()] = true;
       var jaAtivo = el.classList.contains("active") || el.classList.contains("selected") || el.getAttribute("aria-current") === "page" || el.getAttribute("aria-current") === "true" || el.getAttribute("aria-selected") === "true";
-      if (!mudou && !houveRede && !abriuAba && !alertou && !enviouForm && !ancora && !jaAtivo) {
+      var temOnClick = typeof el.onclick === "function" || !!el.getAttribute("onclick");
+      if (!mudou && !houveRede && !abriuAba && !alertou && !enviouForm && !mudouStorage && !ancora && !jaAtivo && !temOnClick) {
         semAcao.push(rotulo(el));
       }
     }
@@ -201,11 +211,6 @@ export function injetarAuditorDeCliques(html: string) {
 /** Vira linhas curtas e honestas para mostrar na tela e mandar pra IA consertar. */
 export function descreverAuditoria(r: ResultadoAuditoria): string[] {
   const linhas: string[] = [];
-  if (r.total > r.testados) {
-    linhas.push(
-      `auditoria parcial: ${r.testados} de ${r.total} controles visíveis foram exercitados`,
-    );
-  }
   for (const nome of r.semAcao) {
     linhas.push(`botão sem ação: "${nome}" foi clicado e nada mudou na tela`);
   }

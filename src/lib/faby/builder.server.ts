@@ -989,7 +989,37 @@ export function auditarArquivos(arquivos: Record<string, string>): string[] {
   }
 
   // 4. Links e botões mortos / placeholders de "em breve".
-  const mortos = [...todoHtml.matchAll(/<a\b[^>]*href=(["'])\s*(?:#|javascript:void\(0\))\s*\1/gi)];
+  const mortos = [
+    ...todoHtml.matchAll(
+      /<a\b([^>]*)href=(["'])\s*(?:#|javascript:void\(0\))\s*\2([^>]*)>/gi,
+    ),
+  ].filter((m) => {
+    const attrs = `${m[1] ?? ""} ${m[3] ?? ""}`;
+    if (/\bonclick\s*=/i.test(attrs)) return false;
+    if (/\bdata-(?:tab|action|view|target|toggle|modal)\b/i.test(attrs)) return false;
+    if (/\b(?:id|class)\s*=\s*(["'])([^"']+)\1/i.test(attrs)) {
+      const id = attrs.match(/\bid\s*=\s*(["'])([^"']+)\1/i)?.[2];
+      const classes = (attrs.match(/\bclass\s*=\s*(["'])([^"']+)\1/i)?.[2] ?? "")
+        .split(/\s+/)
+        .filter(Boolean);
+      if (
+        id &&
+        new RegExp(
+          `(?:getElementById\\(\\s*["'\\x60]${escapeRegex(id)}["'\\x60]|querySelector(?:All)?\\(\\s*["'\\x60]#${escapeRegex(id)}["'\\x60])`,
+        ).test(js)
+      )
+        return false;
+      if (
+        classes.some((c) =>
+          new RegExp(
+            `querySelector(?:All)?\\(\\s*["'\\x60][^"'\\x60]*\\.${escapeRegex(c)}`,
+          ).test(js),
+        )
+      )
+        return false;
+    }
+    return true;
+  });
   if (mortos.length > 2) {
     problemas.push(`Existem ${mortos.length} links sem destino real (href="#").`);
   }
