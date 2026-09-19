@@ -7,7 +7,6 @@
 import { instrucaoNuvem, usaAutenticacaoPrivada, usaBancoHospedado } from "./nuvem";
 import { CodeModifier } from "@/agents/CodeModifier";
 import { DirectoryReader } from "@/agents/DirectoryReader";
-import type { PatchArquivo, PatchChunk } from "@/agents/types";
 
 const directoryReader = new DirectoryReader();
 
@@ -48,10 +47,9 @@ const PADRAO_CODIGO_ANTIGO = /```(?:html|HTML)?\s*\n([\s\S]*?)```/;
 const PADRAO_IMG_GERAR = /src=(["'])\s*gerar:\s*(.*?)\1/gi;
 const PADRAO_CONSULTA = /\{\{\s*consultar:\s*(.*?)\s*\}\}/gi;
 
-export const PADRAO_MODIFICAR =
+// Blocos de patch parcial que o motor NÃO aceita mais: são apenas removidos do texto.
+const PADRAO_PATCH_PARCIAL =
   /<modificar\s+arquivo=(["'])(.*?)\1\s*>([\s\S]*?)(?:<\/\s*modificar\s*>|(?=<modificar\s+arquivo=)|(?=<arquivo\s+nome=)|$)/gi;
-export const PADRAO_SUBSTITUIR =
-  /<substituir>[\s\S]*?<de>([\s\S]*?)<\/de>[\s\S]*?<para>([\s\S]*?)<\/para>[\s\S]*?<\/substituir>/gi;
 
 // Raciocínio interno: nunca aparece pro usuário (aceita variações de fechamento).
 const PADRAO_PENSANDO =
@@ -412,52 +410,30 @@ function selecionarArquivosParaPedido(
   return [...nomes].sort((a, b) => pontuar(b) - pontuar(a) || a.localeCompare(b)).slice(0, 45);
 }
 
-export function extrairModificacoesPatches(resposta: string): {
-  patches: PatchArquivo[];
+/**
+ * Patches parciais (<modificar>/<substituir>) NÃO são mais aplicados.
+ * Se a IA insistir nesse formato, o bloco é descartado do texto e nenhum
+ * arquivo é alterado: o motor só aceita arquivo 100% reescrito.
+ */
+export function descartarPatchesParciais(resposta: string): {
+  tinhaPatchParcial: boolean;
   textoLimpo: string;
 } {
-  const patches: PatchArquivo[] = [];
-  const partes: string[] = [];
-  let ultimoFim = 0;
-
-  PADRAO_MODIFICAR.lastIndex = 0;
-  let m: RegExpExecArray | null;
-  while ((m = PADRAO_MODIFICAR.exec(resposta)) !== null) {
-    partes.push(resposta.slice(ultimoFim, m.index));
-    const caminho = (m[2] ?? "").trim();
-    const bloco = m[3] ?? "";
-    const chunks: PatchChunk[] = [];
-
-    PADRAO_SUBSTITUIR.lastIndex = 0;
-    let s: RegExpExecArray | null;
-    while ((s = PADRAO_SUBSTITUIR.exec(bloco)) !== null) {
-      const de = (s[1] ?? "").trim();
-      const para = (s[2] ?? "").trim();
-      if (de) {
-        chunks.push({ de, para });
-      }
-    }
-
-    if (caminho && chunks.length) {
-      patches.push({ caminho, chunks });
-    }
-    ultimoFim = m.index + m[0].length;
-  }
-  partes.push(resposta.slice(ultimoFim));
-
+  PADRAO_PATCH_PARCIAL.lastIndex = 0;
+  const tinhaPatchParcial = PADRAO_PATCH_PARCIAL.test(resposta);
+  PADRAO_PATCH_PARCIAL.lastIndex = 0;
   return {
-    patches,
-    textoLimpo: partes.join(""),
+    tinhaPatchParcial,
+    textoLimpo: resposta.replace(PADRAO_PATCH_PARCIAL, "").replace(/\n{3,}/g, "\n\n"),
   };
 }
 
 export function extrairArquivos(
   resposta: string,
-  arquivosBase?: Record<string, string>,
 ): {
   arquivos: Record<string, string>;
   texto: string;
-  patches?: PatchArquivo[];
+  patchParcialIgnorado?: boolean;
 } {
   const modifier = new CodeModifier();
   const arquivosExtraidos = modifier.extrairArquivosCompletos(resposta);
@@ -480,25 +456,14 @@ export function extrairArquivos(
   partes.push(resposta.slice(ultimoFim));
   const textoSemArquivos = partes.join("");
 
-  const { patches, textoLimpo } = extrairModificacoesPatches(textoSemArquivos);
+  const { tinhaPatchParcial, textoLimpo } = descartarPatchesParciais(textoSemArquivos);
   const texto = limparPensamento(textoLimpo);
 
-  // Se houver patches cirúrgicos e arquivosBase foi fornecido, aplica os patches (compatibilidade)
-  if (patches.length && arquivosBase) {
-    for (const patch of patches) {
-      const baseContent = arquivosExtraidos[patch.caminho] ?? arquivosBase[patch.caminho];
-      if (baseContent !== undefined) {
-        const res = modifier.aplicarPatchEmTexto(baseContent, patch.chunks);
-        arquivosExtraidos[patch.caminho] = res.conteudo;
-      }
-    }
-  }
-
-  if (Object.keys(arquivosExtraidos).length || patches.length) {
+  if (Object.keys(arquivosExtraidos).length) {
     return {
       arquivos: arquivosExtraidos,
-      texto: texto || "Projeto atualizado com sucesso! Alterações aplicadas.",
-      ...(patches.length ? { patches } : {}),
+      texto: texto || "Projeto atualizado: arquivos reescritos por inteiro.",
+      ...(tinhaPatchParcial ? { patchParcialIgnorado: true } : {}),
     };
   }
 

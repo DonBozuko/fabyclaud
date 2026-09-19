@@ -40,19 +40,12 @@ export type CodeEdit = {
   originalContent?: string;
 };
 
-export interface PatchChunk {
-  de: string;
-  para: string;
-}
-
-export interface PatchArquivo {
-  caminho: string;
-  chunks: PatchChunk[];
-}
-
+/**
+ * Alteração do projeto: SOMENTE escrita destrutiva completa.
+ * Patches parciais/regex foram removidos do motor de propósito.
+ */
 export interface AlteracaoProjeto {
   arquivosNovosOuCompletos: Record<string, string>;
-  patches: PatchArquivo[];
   arquivosRemovidos: string[];
   resumoAlteracoes?: string;
 }

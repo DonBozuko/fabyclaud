@@ -281,7 +281,7 @@ async function chamarGoogleComFallback(
   modeloPreferido?: string,
 ): Promise<ResultadoIA> {
   const principal = modeloPreferido || MODELS.google;
-  const lista = MODELOS_ALTERNATIVOS.google ?? [];
+  const lista = MODELOS_ALTERNATIVOS['google'] ?? [];
   let modelosGoogle = [...new Set([principal, ...lista].filter(Boolean))];
 
   let ultimo: ResultadoIA = { ok: false, texto: "provedor Google indisponível" };
@@ -416,16 +416,16 @@ async function chamarAntigravity(
 
     const respostaObj = json as Record<string, unknown> | null;
     const saidaSincrona =
-      (respostaObj?.output as { text?: string } | undefined)?.text ??
-      (respostaObj?.result as { text?: string } | undefined)?.text ??
-      (respostaObj?.response as { text?: string } | undefined)?.text ??
-      (typeof respostaObj?.output === "string" ? respostaObj.output : null);
+      (respostaObj?.['output'] as { text?: string } | undefined)?.text ??
+      (respostaObj?.['result'] as { text?: string } | undefined)?.text ??
+      (respostaObj?.['response'] as { text?: string } | undefined)?.text ??
+      (typeof respostaObj?.['output'] === "string" ? (respostaObj['output'] as string) : null);
 
     if (saidaSincrona && typeof saidaSincrona === "string" && saidaSincrona.trim()) {
       return { ok: true, texto: saidaSincrona.trim() };
     }
 
-    const interactionId = (respostaObj?.id ?? respostaObj?.name) as string | undefined;
+    const interactionId = (respostaObj?.['id'] ?? respostaObj?.['name']) as string | undefined;
     if (!interactionId) {
       if (texto && texto.length > 50) {
         return { ok: true, texto };

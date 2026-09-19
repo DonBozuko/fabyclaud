@@ -1834,7 +1834,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     let arquivosProduzidos: string[] = [];
 
     if (ok) {
-      let extraido = extrairArquivos(bruto, arquivosAtuais);
+      let extraido = extrairArquivos(bruto);
       arquivosProduzidos = Object.keys(extraido.arquivos);
       const exigeArquivos = pedidoExigeArquivos(prompt);
       // Projeto importado de fora (Flask, FastAPI, Node, React): o certo é consertar
@@ -1942,7 +1942,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             reparador.apiUrl,
           );
           if (recuperacao.ok) {
-            extraido = extrairArquivos(recuperacao.texto, arquivosAtuais);
+            extraido = extrairArquivos(recuperacao.texto);
             arquivosProduzidos = Object.keys(extraido.arquivos);
             provedorUsado = reparador.pid;
           }
@@ -2010,7 +2010,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
               especialistaRevisao?.modeloDesejado,
             );
             if (revisao.ok && !/^\s*ok\b/i.test(revisao.texto.trim())) {
-              const corrigidos = extrairArquivos(revisao.texto, mesclados);
+              const corrigidos = extrairArquivos(revisao.texto);
               const nomes = Object.keys(corrigidos.arquivos);
               if (nomes.length && nomes.length <= Object.keys(mesclados).length + 1) {
                 const tentativa = {
@@ -2110,7 +2110,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
               especialistaConserto?.modeloDesejado,
             );
             if (conserto.ok) {
-              const arrumados = extrairArquivos(conserto.texto, mesclados);
+              const arrumados = extrairArquivos(conserto.texto);
               if (Object.keys(arrumados.arquivos).length) {
                 const tentativa = {
                   ...mesclados,
@@ -2193,7 +2193,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             rodadas.push(`${nomeDe(proximo.pid)} (falhou)`);
             continue;
           }
-          const entregues = extrairArquivos(nova.texto, mesclados);
+          const entregues = extrairArquivos(nova.texto);
           if (!Object.keys(entregues.arquivos).length) {
             rodadas.push(`${nomeDe(proximo.pid)} (sem arquivos)`);
             continue;
@@ -2356,14 +2356,14 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         partesEquipe.push(`corrigido por ${equipeUtilizada.conserto}`);
       }
 
-      if (partesEquipe.length > 0 && intencao !== "conversar") {
+      if (partesEquipe.length > 0 && (intencao as string) !== "conversar") {
         const infoEquipe = `\n\n*(equipe de IAs: ${partesEquipe.join(" · ")})*`;
         if (!textoFinal.includes("equipe de IAs:")) {
           textoFinal = `${textoFinal}${infoEquipe}`;
         }
       }
 
-      if (especialistaConstrucao?.ehFallbackFraco && intencao !== "conversar") {
+      if (especialistaConstrucao?.ehFallbackFraco && (intencao as string) !== "conversar") {
         const dicaChave = `\n\n> 💡 **Dica de qualidade:** Cadastre uma chave gratuita do **Groq** ou **OpenRouter** nas Configurações para ativar os modelos especialistas em código (**Qwen 2.5 Coder 32B** e **DeepSeek R1**) na construção dos seus projetos.`;
         if (!textoFinal.includes("Dica de qualidade:")) {
           textoFinal = `${textoFinal}${dicaChave}`;
