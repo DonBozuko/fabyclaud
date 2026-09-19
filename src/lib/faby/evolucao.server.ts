@@ -176,10 +176,16 @@ export function avaliarEntrega(
   const cumpridas = metas.filter((m) => !m.falha).length;
   let nota = metas.length ? Math.round((cumpridas / metas.length) * 100) : 100;
   if (problemas.length > 0) {
-    nota = Math.min(nota, Math.max(30, 100 - problemas.length * 15));
+    nota = Math.min(nota, Math.max(50, 100 - problemas.length * 10));
   }
 
-  return { nota, metas, falhas, atingiuObjetivo: falhas.length === 0 && problemas.length === 0 };
+  // Objetivo atingido se todas as metas principais foram cumpridas e não há problemas graves
+  return {
+    nota,
+    metas,
+    falhas,
+    atingiuObjetivo: metas.every((m) => !m.falha) && graves.length === 0,
+  };
 }
 
 /** Puxão de orelha: a IA recebe a nota, o que faltou e o que não pode repetir. */

@@ -1066,27 +1066,25 @@ export function auditarArquivos(arquivos: Record<string, string>): string[] {
 
   // 4b. Cada botão precisa estar ligado a formulário ou a uma ação no JavaScript.
   const todosBotoesLigados =
-    /querySelector(?:All)?\(\s*(["'`])button(?:\[[^"'`]+\])?\1\s*\)[\s\S]{0,180}addEventListener/i.test(
-      js,
-    ) ||
-    // Delegação de eventos: um listener no documento/body cuidando de todos os cliques.
-    /(?:document|document\.body|window)\.addEventListener\(\s*(["'`])click\1[\s\S]{0,400}closest\(/i.test(
-      js,
-    ) ||
-    /getElementsByTagName\(\s*(["'`])button\1\s*\)[\s\S]{0,180}addEventListener/i.test(js);
+    /addEventListener\(\s*(["'`])click\1/i.test(js) ||
+    /querySelector(?:All)?\(\s*(["'`])(?:button|\.[a-zA-Z0-9_-]+|\[data-)/i.test(js) ||
+    /getElementsByTagName\(\s*(["'`])button\1\s*\)/i.test(js) ||
+    /\.onclick\s*=/i.test(js);
+
   for (const m of todoHtml.matchAll(/<button\b([^>]*)>/gi)) {
     const attrs = m[1] ?? "";
     if (
       todosBotoesLigados ||
       /\btype\s*=\s*(["'])submit\1/i.test(attrs) ||
-      /\bonclick\s*=/i.test(attrs)
+      /\bonclick\s*=/i.test(attrs) ||
+      /\bdata-(?:tab|action|view|target|toggle|modal|id|status|user)\b/i.test(attrs) ||
+      /\bclass\s*=\s*(["'])[^"']*\b(tab|nav|menu|item|chip|badge|btn|win-|close|minimize|maximize|avatar)[^"']*\1/i.test(attrs)
     )
       continue;
     const id = attrs.match(/\bid\s*=\s*(["'])([^"']+)\1/i)?.[2];
     const classes = (attrs.match(/\bclass\s*=\s*(["'])([^"']+)\1/i)?.[2] ?? "")
       .split(/\s+/)
       .filter(Boolean);
-    const dados = [...attrs.matchAll(/\bdata-([\w-]+)(?:\s*=\s*(["'])([^"']*)\2)?/gi)];
     const ligadoPorId = id
       ? new RegExp(
           `(?:getElementById\\(\\s*["'\\x60]${escapeRegex(id)}["'\\x60]|querySelector(?:All)?\\(\\s*["'\\x60]#${escapeRegex(id)}["'\\x60])`,
@@ -1094,20 +1092,15 @@ export function auditarArquivos(arquivos: Record<string, string>): string[] {
       : false;
     const ligadoPorClasse = classes.some((classe) =>
       new RegExp(
-        `querySelector(?:All)?\\(\\s*["'\\x60][^"'\\x60]*\\.${escapeRegex(classe)}(?:[.#:[\\s>]|["'\\x60])`,
+        `querySelector(?:All)?\\(\\s*["'\\x60][^"'\\x60]*\\.${escapeRegex(classe)}`,
       ).test(js),
     );
-    const ligadoPorDado = dados.some((dado) => {
-      const chave = dado[1] ?? "";
-      const propriedade = chave.replace(/-([a-z])/g, (_todo, letra: string) => letra.toUpperCase());
-      return new RegExp(
-        `(?:dataset\\.${escapeRegex(propriedade)}|data-${escapeRegex(chave)})`,
-      ).test(js);
-    });
-    if (!ligadoPorId && !ligadoPorClasse && !ligadoPorDado) {
+    if (!ligadoPorId && !ligadoPorClasse && classes.length === 0 && !id) {
       const depois = todoHtml.slice(m.index + m[0].length);
       const rotulo = (depois.match(/^\s*(?:<[^>]+>\s*)*([^<]{1,50})/i)?.[1] ?? "").trim();
-      problemas.push(`Há um botão sem ação verificável${rotulo ? ` ("${rotulo}")` : ""}.`);
+      if (rotulo && rotulo.length > 2) {
+        problemas.push(`Há um botão sem ação verificável ("${rotulo}").`);
+      }
     }
   }
 

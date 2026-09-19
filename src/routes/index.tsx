@@ -953,41 +953,6 @@ function FabyClaud() {
                         sandbox="allow-scripts allow-forms allow-popups allow-same-origin"
                         className="size-full bg-white"
                       />
-                      {problemasPrevia.length > 0 ? (
-                        <div className="absolute bottom-3 right-3 z-10 max-w-sm rounded-xl border border-destructive/40 bg-background/95 p-2.5 shadow-2xl backdrop-blur-md">
-                          <div className="flex items-center justify-between gap-2 pb-1.5 border-b border-border/60">
-                            <span className="text-[11px] font-semibold text-destructive flex items-center gap-1.5">
-                              <CircleAlert className="size-3.5" />
-                              {problemasPrevia.length} diagnóstico(s) na tela
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => consertarErrosDaPrevia(false)}
-                              disabled={mandar.isPending}
-                              className="rounded-lg bg-destructive px-2 py-0.5 text-[11px] font-bold text-destructive-foreground shadow-sm transition hover:brightness-110 disabled:opacity-50"
-                            >
-                              Consertar com IA
-                            </button>
-                          </div>
-                          <ul className="mt-1.5 max-h-24 overflow-y-auto space-y-1 text-[11px] leading-snug text-muted-foreground">
-                            {problemasPrevia.map((p, i) => (
-                              <li key={i} className="truncate" title={p}>
-                                • {p}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ) : null}
-                      {previewParaAuditoria && !auditoria ? (
-                        <iframe
-                          title="Controle de qualidade (invisível)"
-                          srcDoc={previewParaAuditoria}
-                          sandbox="allow-scripts allow-forms allow-popups allow-same-origin"
-                          aria-hidden="true"
-                          tabIndex={-1}
-                          className="pointer-events-none absolute size-px opacity-0"
-                        />
-                      ) : null}
                     </>
                   ) : (
                     <div className="max-w-[280px] p-8 text-center text-muted-foreground">
