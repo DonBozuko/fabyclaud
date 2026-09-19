@@ -4,9 +4,12 @@ import { useServerFn } from "@tanstack/react-start";
 import {
   Bot,
   Cloud,
+  Code2,
   Download,
   ExternalLink,
+  Eye,
   FileArchive,
+  FileCode,
   FileText,
   FolderOpen,
   GitBranch,
@@ -17,12 +20,15 @@ import {
   MessageSquare,
   Paperclip,
   Plus,
+  Save,
   Send,
   Settings,
   GraduationCap,
   Sparkle,
   Swords,
   Trash2,
+  Wifi,
+  WifiOff,
   Wrench,
   Zap,
   CheckCircle2,
@@ -37,11 +43,13 @@ import { SettingsDialog } from "@/components/faby/SettingsDialog";
 import { supabase } from "@/integrations/supabase/client";
 import {
   apagarProjeto,
+  apagarArquivo,
   enviarMensagem,
   obterCapacidades,
   listarProjetos,
   listarProvedoresCustom,
   obterProjeto,
+  salvarArquivo,
 } from "@/lib/faby.functions";
 import { MODELS, PROVIDER_LABELS, type Anexo } from "@/lib/faby/config";
 import {
@@ -125,6 +133,26 @@ function FabyClaud() {
   const queryClient = useQueryClient();
   const [pronto, setPronto] = useState(false);
   const [logado, setLogado] = useState(false);
+  const [isOnline, setIsOnline] = useState(
+    typeof window !== "undefined" ? navigator.onLine : true,
+  );
+
+  useEffect(() => {
+    function aoFicarOnline() {
+      setIsOnline(true);
+      toast.success("Conexão com a internet restabelecida.");
+    }
+    function aoFicarOffline() {
+      setIsOnline(false);
+      toast.warning("Você está sem conexão com a internet. O modo offline está ativo.");
+    }
+    window.addEventListener("online", aoFicarOnline);
+    window.addEventListener("offline", aoFicarOffline);
+    return () => {
+      window.removeEventListener("online", aoFicarOnline);
+      window.removeEventListener("offline", aoFicarOffline);
+    };
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined" && localStorage.getItem("faby_user_session")) {
@@ -136,21 +164,35 @@ function FabyClaud() {
     const { data } = supabase.auth.onAuthStateChange((_e: any, sessao: any) => {
       if (sessao) {
         setLogado(true);
-      } else if (typeof window !== "undefined" && !localStorage.getItem("faby_user_session")) {
-        setLogado(false);
-        void navigate({ to: "/auth" });
+      } else if (typeof window !== "undefined") {
+        if (!localStorage.getItem("faby_user_session") && navigator.onLine) {
+          setLogado(false);
+          void navigate({ to: "/auth" });
+        } else {
+          setLogado(true);
+        }
       }
     });
 
-    void supabase.auth.getSession().then(({ data }: { data: { session: any } }) => {
-      if (data?.session) {
+    void supabase.auth
+      .getSession()
+      .then(({ data }: { data: { session: any } }) => {
+        if (data?.session) {
+          setLogado(true);
+        } else if (typeof window !== "undefined") {
+          if (!localStorage.getItem("faby_user_session") && navigator.onLine) {
+            setLogado(false);
+            void navigate({ to: "/auth" });
+          } else {
+            setLogado(true);
+          }
+        }
+        setPronto(true);
+      })
+      .catch(() => {
         setLogado(true);
-      } else if (typeof window !== "undefined" && !localStorage.getItem("faby_user_session")) {
-        setLogado(false);
-        void navigate({ to: "/auth" });
-      }
-      setPronto(true);
-    });
+        setPronto(true);
+      });
 
     return () => data.subscription.unsubscribe();
   }, [navigate]);
@@ -163,6 +205,8 @@ function FabyClaud() {
   const enviar = useServerFn(enviarMensagem);
   const importarZip = useServerFn(importarArquivosZip);
   const publicar = useServerFn(publicarProjeto);
+  const guardarArquivoFn = useServerFn(salvarArquivo);
+  const apagarArquivoFn = useServerFn(apagarArquivo);
 
   const [projetoId, setProjetoId] = useState<string | null>(null);
   const [modelo, setModelo] = useState("google");
@@ -174,6 +218,13 @@ function FabyClaud() {
   const [painel, setPainel] = useState<PainelNome | null>(null);
   const [agente, setAgente] = useState<string | null>(null);
   const [publicando, setPublicando] = useState(false);
+
+  // Controle de abas da tela principal: Prévia ou Código/Editor
+  const [abaPrincipal, setAbaPrincipal] = useState<"previa" | "codigo">("previa");
+  const [arquivoAtivo, setArquivoAtivo] = useState<string>("");
+  const [codigoEditando, setCodigoEditando] = useState<string>("");
+  const [salvandoArquivo, setSalvandoArquivo] = useState(false);
+
   const inputArquivo = useRef<HTMLInputElement>(null);
   const inputPasta = useRef<HTMLInputElement>(null);
   const inputZip = useRef<HTMLInputElement>(null);
@@ -252,10 +303,15 @@ function FabyClaud() {
       setProjetoId(r.projeto_id);
       void queryClient.invalidateQueries({ queryKey: ["projetos"] });
       void queryClient.invalidateQueries({ queryKey: ["projeto", r.projeto_id] });
-      // A resposta já aparece dentro do chat; nada de aviso flutuante por cima do sistema.
       campoTexto.current?.focus();
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Não conseguimos enviar agora."),
+    onError: (e) => {
+      if (typeof window !== "undefined" && !navigator.onLine) {
+        toast.error("Sem conexão com a internet. Verifique sua rede e tente novamente.");
+      } else {
+        toast.error(e instanceof Error ? e.message : "Não conseguimos enviar agora.");
+      }
+    },
   });
 
   function enviarAgora() {
@@ -305,6 +361,44 @@ function FabyClaud() {
     setErrosPreview([]);
     setAuditoria(null);
   }, [previewHtml, projetoId]);
+
+  const nomesArquivos = useMemo(() => Object.keys(arquivos), [arquivos]);
+
+  useEffect(() => {
+    if (nomesArquivos.length > 0) {
+      if (!arquivoAtivo || !nomesArquivos.includes(arquivoAtivo)) {
+        const principal = nomesArquivos.includes("index.html") ? "index.html" : nomesArquivos[0]!;
+        setArquivoAtivo(principal);
+        setCodigoEditando(arquivos[principal] ?? "");
+      } else {
+        setCodigoEditando(arquivos[arquivoAtivo] ?? "");
+      }
+    } else {
+      setArquivoAtivo("");
+      setCodigoEditando("");
+    }
+  }, [nomesArquivos, arquivos, arquivoAtivo]);
+
+  async function salvarCodigoManual() {
+    if (!projetoId || !arquivoAtivo) return;
+    setSalvandoArquivo(true);
+    const aviso = toast.loading(`Salvando ${arquivoAtivo}...`);
+    try {
+      const res = (await guardarArquivoFn({
+        data: { projeto_id: projetoId, nome: arquivoAtivo, conteudo: codigoEditando },
+      })) as any;
+      if (!res?.ok) {
+        toast.error(res?.msg ?? "Erro ao salvar arquivo.", { id: aviso });
+      } else {
+        toast.success(`${arquivoAtivo} salvo com sucesso!`, { id: aviso });
+        void queryClient.invalidateQueries({ queryKey: ["projeto", projetoId] });
+      }
+    } catch {
+      toast.error("Não foi possível salvar o arquivo.", { id: aviso });
+    } finally {
+      setSalvandoArquivo(false);
+    }
+  }
 
   useEffect(() => {
     function ouvir(ev: MessageEvent) {
@@ -729,6 +823,15 @@ function FabyClaud() {
             </div>
           </header>
 
+          {!isOnline ? (
+            <div className="flex items-center gap-2.5 rounded-xl border border-amber-500/40 bg-amber-500/15 px-4 py-2 text-xs font-medium text-amber-200 backdrop-blur-md">
+              <WifiOff className="size-4 shrink-0 text-amber-400 animate-pulse" />
+              <span>
+                <strong>Modo Offline Ativo:</strong> Você está sem conexão com a internet. Seus projetos locais estão preservados e prontos para edição.
+              </span>
+            </div>
+          ) : null}
+
           <section
             className="panel-glass flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl px-4 py-2 text-[11px]"
             aria-label="Capacidades disponíveis"
@@ -784,67 +887,164 @@ function FabyClaud() {
           </section>
 
           <div className="flex min-h-0 flex-1 gap-4">
-            {/* prévia */}
-            <section className="panel-glass relative flex min-w-[260px] flex-1 flex-col items-center justify-center overflow-hidden rounded-2xl border-[1.5px] border-dashed">
-              {previewComSonda ? (
-                <>
-                  <iframe
-                    title="Prévia do projeto"
-                    srcDoc={previewComSonda}
-                    sandbox="allow-scripts allow-forms allow-popups allow-same-origin"
-                    className="size-full rounded-2xl bg-white"
-                  />
-                  {problemasPrevia.length > 0 ? (
-                    <div className="absolute bottom-3 right-3 z-10 max-w-sm rounded-xl border border-destructive/40 bg-background/95 p-2.5 shadow-2xl backdrop-blur-md">
-                      <div className="flex items-center justify-between gap-2 pb-1.5 border-b border-border/60">
-                        <span className="text-[11px] font-semibold text-destructive flex items-center gap-1.5">
-                          <CircleAlert className="size-3.5" />
-                          {problemasPrevia.length} diagnóstico(s) na tela
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => consertarErrosDaPrevia(false)}
-                          disabled={mandar.isPending}
-                          className="rounded-lg bg-destructive px-2 py-0.5 text-[11px] font-bold text-destructive-foreground shadow-sm transition hover:brightness-110 disabled:opacity-50"
-                        >
-                          Consertar com IA
-                        </button>
-                      </div>
-                      <ul className="mt-1.5 max-h-24 overflow-y-auto space-y-1 text-[11px] leading-snug text-muted-foreground">
-                        {problemasPrevia.map((p, i) => (
-                          <li key={i} className="truncate" title={p}>
-                            • {p}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ) : null}
-                  {previewParaAuditoria && !auditoria ? (
-                    <iframe
-                      title="Controle de qualidade (invisível)"
-                      srcDoc={previewParaAuditoria}
-                      sandbox="allow-scripts allow-forms allow-same-origin"
-                      aria-hidden="true"
-                      tabIndex={-1}
-                      className="pointer-events-none absolute size-px opacity-0"
-                    />
-                  ) : null}
-                </>
-              ) : (
-                <div className="max-w-[280px] p-8 text-center text-muted-foreground">
-                  <Wrench className="mx-auto mb-3 size-8" />
-                  <h2 className="mb-2 text-base text-foreground">
-                    {Object.keys(arquivos).length ? "Arquivos importados" : "Prévia do projeto"}
-                  </h2>
-                  {Object.keys(arquivos).length ? (
-                    <p className="text-[13px] leading-relaxed">
-                      {Object.keys(arquivos).length} arquivo(s) foram importados.{" "}
-                      {estadoPreview.motivo}
-                    </p>
+            {/* área de prévia ou código */}
+            <section className="panel-glass relative flex min-w-[300px] flex-1 flex-col overflow-hidden rounded-2xl border border-border">
+              {/* Barra de controle de abas (Estilo Lovable) */}
+              <div className="flex items-center justify-between border-b border-border/70 bg-secondary/50 px-3 py-2">
+                <div className="flex items-center gap-1 rounded-xl bg-background/50 p-1 border border-border/50">
+                  <button
+                    type="button"
+                    onClick={() => setAbaPrincipal("previa")}
+                    className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                      abaPrincipal === "previa"
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Eye className="size-3.5" /> Prévia
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAbaPrincipal("codigo")}
+                    className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                      abaPrincipal === "codigo"
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Code2 className="size-3.5" /> Código ({nomesArquivos.length})
+                  </button>
+                </div>
+
+                {abaPrincipal === "codigo" && nomesArquivos.length > 0 ? (
+                  <button
+                    type="button"
+                    disabled={salvandoArquivo || !arquivoAtivo}
+                    onClick={() => void salvarCodigoManual()}
+                    className="flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-glow transition hover:brightness-110 disabled:opacity-50"
+                  >
+                    <Save className="size-3.5" /> {salvandoArquivo ? "Salvando..." : "Salvar alterações"}
+                  </button>
+                ) : null}
+              </div>
+
+              {/* Conteúdo da Aba */}
+              {abaPrincipal === "previa" ? (
+                <div className="relative flex flex-1 items-center justify-center overflow-hidden">
+                  {previewComSonda ? (
+                    <>
+                      <iframe
+                        title="Prévia do projeto"
+                        srcDoc={previewComSonda}
+                        sandbox="allow-scripts allow-forms allow-popups allow-same-origin"
+                        className="size-full bg-white"
+                      />
+                      {problemasPrevia.length > 0 ? (
+                        <div className="absolute bottom-3 right-3 z-10 max-w-sm rounded-xl border border-destructive/40 bg-background/95 p-2.5 shadow-2xl backdrop-blur-md">
+                          <div className="flex items-center justify-between gap-2 pb-1.5 border-b border-border/60">
+                            <span className="text-[11px] font-semibold text-destructive flex items-center gap-1.5">
+                              <CircleAlert className="size-3.5" />
+                              {problemasPrevia.length} diagnóstico(s) na tela
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => consertarErrosDaPrevia(false)}
+                              disabled={mandar.isPending}
+                              className="rounded-lg bg-destructive px-2 py-0.5 text-[11px] font-bold text-destructive-foreground shadow-sm transition hover:brightness-110 disabled:opacity-50"
+                            >
+                              Consertar com IA
+                            </button>
+                          </div>
+                          <ul className="mt-1.5 max-h-24 overflow-y-auto space-y-1 text-[11px] leading-snug text-muted-foreground">
+                            {problemasPrevia.map((p, i) => (
+                              <li key={i} className="truncate" title={p}>
+                                • {p}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : null}
+                      {previewParaAuditoria && !auditoria ? (
+                        <iframe
+                          title="Controle de qualidade (invisível)"
+                          srcDoc={previewParaAuditoria}
+                          sandbox="allow-scripts allow-forms allow-popups allow-same-origin"
+                          aria-hidden="true"
+                          tabIndex={-1}
+                          className="pointer-events-none absolute size-px opacity-0"
+                        />
+                      ) : null}
+                    </>
                   ) : (
-                    <p className="text-[13px] leading-relaxed">
-                      Abra uma pasta, envie um ZIP ou peça um site para começar.
-                    </p>
+                    <div className="max-w-[280px] p-8 text-center text-muted-foreground">
+                      <Wrench className="mx-auto mb-3 size-8" />
+                      <h2 className="mb-2 text-base text-foreground font-semibold">
+                        {Object.keys(arquivos).length ? "Arquivos importados" : "Prévia do projeto"}
+                      </h2>
+                      {Object.keys(arquivos).length ? (
+                        <p className="text-[13px] leading-relaxed">
+                          {Object.keys(arquivos).length} arquivo(s) disponíveis. Clique na aba <strong>Código</strong> para inspecionar e editar.
+                        </p>
+                      ) : (
+                        <p className="text-[13px] leading-relaxed">
+                          Abra uma pasta, envie um ZIP ou peça um site no chat para começar.
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                /* Aba de Código / Editor integrado */
+                <div className="flex flex-1 flex-col overflow-hidden bg-secondary/15">
+                  {nomesArquivos.length > 0 ? (
+                    <>
+                      {/* Abas dos Arquivos */}
+                      <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border/50 bg-secondary/40 px-3 py-2 scrollbar-none">
+                        {nomesArquivos.map((nome) => (
+                          <button
+                            key={nome}
+                            type="button"
+                            onClick={() => {
+                              setArquivoAtivo(nome);
+                              setCodigoEditando(arquivos[nome] ?? "");
+                            }}
+                            className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-mono transition ${
+                              arquivoAtivo === nome
+                                ? "bg-accent font-bold text-primary border border-border"
+                                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                            }`}
+                          >
+                            <FileCode className="size-3.5" />
+                            {nome}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Editor Monospace */}
+                      <div className="relative flex flex-1 flex-col p-3 overflow-hidden">
+                        <textarea
+                          value={codigoEditando}
+                          onChange={(e) => setCodigoEditando(e.target.value)}
+                          spellCheck={false}
+                          className="size-full resize-none rounded-xl border border-border/80 bg-background/95 p-4 font-mono text-xs leading-relaxed text-foreground outline-none focus:ring-2 focus:ring-primary shadow-inner"
+                          placeholder="Selecione um arquivo para editar seu código..."
+                        />
+                        <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground px-1">
+                          <span>Arquivo ativo: <strong>{arquivoAtivo}</strong> ({(codigoEditando || "").length} caracteres)</span>
+                          <span>Você pode editar e clicar em <strong>Salvar alterações</strong> para atualizar a prévia na hora.</span>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex flex-1 items-center justify-center p-8 text-center text-muted-foreground">
+                      <div>
+                        <FileCode className="mx-auto mb-3 size-8 text-muted-foreground/60" />
+                        <h2 className="mb-2 text-base text-foreground font-semibold">Nenhum arquivo ainda</h2>
+                        <p className="text-xs max-w-xs">
+                          Peça para a IA criar o projeto ou envie seus arquivos pelo chat para começar a editar o código.
+                        </p>
+                      </div>
+                    </div>
                   )}
                 </div>
               )}

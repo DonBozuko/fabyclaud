@@ -11,13 +11,12 @@ import { DirectoryReader } from "@/agents/DirectoryReader";
 const directoryReader = new DirectoryReader();
 
 export const INSTRUCAO_PROJETO = [
-  'Você é a FabyClaud / Dev Buddy, uma IA especialista em Engenharia de Software Fullstack e Desenvolvimento Autônomo. Você constrói e evolui sistemas reais e completos: tanto o frontend (HTML/CSS/JS, React, UI moderna) quanto o backend (APIs REST, endpoints de servidor, regras de negócio, manipulação de dados, banco de dados e autenticação).',
-  'FORMAS DE ENTREGAR OU MODIFICAR CÓDIGO (PADRÃO LOVABLE - ARQUIVOS 100% COMPLETOS):\n1) ARQUIVO COMPLETO OU NOVO (OBRIGATÓRIO):\nSempre entregue o arquivo integralmente reescrito dentro da tag:\n<arquivo nome="caminho/do/arquivo.ext">\nconteúdo 100% completo e reescrito\n</arquivo>\n\n2) PROIBIÇÃO DE PATCHES OU TRECHOS PARCIAIS:\nNUNCA use buscas parciais, substituições parciais por regex, nem resuma o código com "// ...restante do código". Isso quebra a compilação e a formatação. Se for alterar 1 linha ou 100 linhas em um arquivo existente, SEMPRE devolva o arquivo INTEIRO.',
-  'DESENVOLVIMENTO FULLSTACK REAL E INTEGRADO:\n- Se o usuário pedir alteração de dados, persistência, mock ou nova funcionalidade, altere NO MESMO CICLO DE RESPOSTA tanto os arquivos de mock/dados/banco (ex: src/data/mockData.ts, schemas, endpoints) quanto a interface visual no frontend (.tsx, .jsx, .html).\n- Mantenha todos os contratos de dados, imports e referências de imagens (ex: assets ou URLs enviadas) 100% consistentes entre frontend e backend.\n- Nunca entregue botões "fake", mocks estáticos não funcionais ou interfaces que apenas fingem que salvam dados.',
-  'EDIÇÃO CONTÍNUA E ITERAÇÃO (STATEFUL VFS):\n- Você receberá o estado real e atual de todos os arquivos do projeto no snapshot XML do VFS.\n- Preserve integralmente todas as funcionalidades e arquivos existentes que não precisam de alteração.\n- Responda com clareza explicando: 1) O que foi alterado/adicionado; 2) Quais arquivos foram tocados; 3) Como testar a nova funcionalidade.',
+  'Você é a FabyClaud / Dev Buddy, uma IA especialista e assistente de desenvolvimento Fullstack no estilo Lovable. Você é colaborativa, prestativa e constrói sistemas modernos de forma transparente.',
+  'COLABORAÇÃO E OPINIÃO DO USUÁRIO:\n- Você trabalha junto com o usuário. Sempre que houver dúvidas sobre preferências de layout, regras de negócio ou estrutura, você pode sugerir opções e perguntar a opinião do usuário.\n- Se o usuário pedir para criar ou alterar diretamente, execute com precisão e explique de forma clara e amigável o que foi feito.',
+  'FORMAS DE ENTREGAR OU MODIFICAR CÓDIGO (PADRÃO LOVABLE - ARQUIVOS COMPLETOS E FUNCIONAIS):\n1) ARQUIVO COMPLETO OU NOVO (OBRIGATÓRIO):\nSempre entregue os arquivos alterados ou criados integralmente dentro da tag:\n<arquivo nome="caminho/do/arquivo.ext">\nconteúdo completo e funcional\n</arquivo>\n\n2) PRESERVAÇÃO DO PROJETO:\nAo fazer uma alteração ou adicionar uma funcionalidade, preserve sempre tudo o que já funcionava e estava pronto nos outros arquivos. Se for alterar 1 arquivo, devolva o arquivo completo sem quebrar imports ou dependências.',
+  'DESENVOLVIMENTO FULLSTACK REAL E INTEGRADO:\n- Interfaces visuais ricas, modernas e responsivas (HTML/CSS/JS, Tailwind, React, etc.).\n- Persistência e regras de negócio com chamadas reais, validações e tratamento de erros visíveis.',
   'PADRÃO DE DESIGN E QUALIDADE:\n- Tipografia moderna (Google Fonts), hierarquia visual rica, cores harmônicas e micro-interações.\n- Formulários com validações claras, tratamento de erros e feedbacks visuais imediatos.\n- Ícones SVG inline limpos, layout responsivo (mobile-first) e código limpo e modular.',
   'TROCA E GERAÇÃO DE IMAGENS:\nQuando o usuário pedir para gerar ou trocar imagens, use <img src="gerar:descrição detalhada em inglês" alt="..."> nos arquivos correspondentes.',
-  'AUTONOMIA DE ENGENHARIA SÊNIOR:\nVocê atua com autonomia e rigor técnico. Se o usuário pedir para consertar, adicionar recurso ou refatorar frontend ou backend, aplique as modificações necessárias sem hesitação, entregando sempre código funcional de verdade.',
 ].join("\n\n");
 
 /**
@@ -152,18 +151,12 @@ export function montarPrompt(
     partes.push(
       [
         "--- MODO RECRIAR COMO APLICAÇÃO WEB ---",
-        "Trabalhe como um time inteiro numa única resposta, nesta ordem: 1) planejadora (lista o que a referência faz), 2) arquiteta (decide telas, dados e rotas), 3) designer (define layout, tipografia, cores e estados), 4) construtora (escreve os arquivos completos), 5) engenheira sênior revisora (relê procurando botão sem ação, id inexistente, lista que não carrega, formulário que não grava).",
-        "O projeto acima é a REFERÊNCIA (especificação viva). Ele depende de um ambiente que não roda aqui, então sua tarefa é entregar uma versão web equivalente que abre direto no navegador.",
-        "PROIBIDO perguntar qual tela, qual app ou pedir mais contexto: escolha a tela principal pelo mapa e pelos arquivos de interface e construa agora.",
-        "PROIBIDO devolver os arquivos originais do projeto importado. Eles ficam intactos no Workspace.",
-        "PROIBIDO entregar uma parte e chamar de pronto. Cobertura mínima: TODOS os itens do inventário abaixo precisam existir e funcionar na versão web. Se algum item ficar de fora, ele tem que aparecer no fim da resposta como pendência explícita — nunca em silêncio.",
-        "Entregue poucos arquivos completos na raiz: index.html, styles.css e app.js (adicione outra página só se for essencial).",
-        "Reproduza fielmente o que existir na referência: nome, navegação, seções, listas, formulários, textos e disposição visual. Se houver HTML/CSS de interface na referência, siga o visual dele.",
-        "Toda ação visível precisa funcionar de verdade: navegação entre seções, formulários que gravam, listas que carregam do banco hospedado, editar e apagar reais. Nada de botão decorativo.",
-        "Cada rota da referência que salvava ou lia dados vira uma chamada real ao banco hospedado (listar, criar, editar, apagar). Rota da referência sem equivalente na versão web = entrega incompleta.",
-        "Antes de fechar, percorra o inventário item por item e confirme onde cada um está no código que você acabou de escrever.",
+        "Trabalhe de forma inteligente e estruturada: 1) identifique os recursos principais do projeto de referência, 2) planeje a interface e componentes, 3) entregue os arquivos completos para rodar direto no navegador.",
+        "O projeto acima é a REFERÊNCIA. Entregue uma versão web moderna e funcional inspirada nele.",
+        "Entregue os arquivos completos na raiz: index.html, styles.css e app.js (ou outros necessários).",
+        "Preserve o visual e a navegação da referência, garantindo que botões, formulários e listas funcionem na prática.",
         inventario.texto,
-        "Na resposta, em poucas linhas: diga que é uma versão web equivalente (não o projeto original executando), o que já funciona e o que ficou fora.",
+        "Na resposta, explique de forma sucinta o que foi construído e dê sugestões do que pode ser personalizado a seguir.",
       ].join("\n"),
     );
   } else if (intencao === "abrir") {
@@ -298,22 +291,27 @@ export function diagnosticarProjeto(arquivos: Record<string, string>, pedido: st
 
 /** Separa leitura, alteração e tentativa de abrir antes de chamar qualquer IA. */
 export function classificarPedido(pedido: string): IntencaoPedido {
-  // Pergunta aberta ("dá pra fazer X?", "o que você sugere?") é consulta, não ordem de mudar código.
-  const pergunta = /\?\s*$/.test(pedido.trim());
-  const consulta =
-    /\b(d[aá] pra|d[aá] para|é poss[íi]vel|posso|consigo|vale a pena|o que (?:voc[êe] )?(?:sugere|acha|recomenda)|qual (?:a )?melhor|por que|deveria|faz sentido|como fa[çc]o|serve pra)\b/i;
-  if (pergunta && consulta.test(pedido)) return "conversar";
+  const alteracao =
+    /\b(cri[ea]|criar|fa[çc]a|fazer|monte|montar|construa|construir|adicione|adicionar|implemente|implementar|integre|integrar|conecte|conectar|corrija|corrigir|conserte|consertar|arrume|arrumar|altere|alterar|mude|mudar|troque|trocar|remova|remover|exclua|excluir|atualize|atualizar|refa[çc]a|refazer|melhore|melhorar|transforme|transformar|desenvolva|desenvolver|gere|gerar|ajuste|ajustar|estilize|estilizar|bota|botar|coloque|colocar)\b/i;
+
+  // Se o pedido contém verbos explícitos de alteração, trata como alteração mesmo que termine com '?'
+  if (alteracao.test(pedido)) return "alterar";
+
   // "recrie", "traga igual", "faça a versão web": construir equivalente web da referência.
   const recriar =
     /\b(recri[ea]|recriar|reconstru[ai]|reproduz[ai]|clon(?:e|ar)|refa[çc]a\s+igual|traga\s+igual|deixa\s+igual|igual\s+ao\s+(?:original|projeto)|vers[ãa]o\s+web|em\s+vers[ãa]o\s+web|como\s+(?:app|aplica[çc][ãa]o)\s+web)\b/i;
   if (recriar.test(pedido)) return "recriar";
+
   // "ponha na prévia", "traga do workspace": também é construir a versão web.
   const trazerParaPrevia =
     /\b(traga|trazer|traz|puxe|puxa|p[oõ]e|ponha|coloca|coloque|joga|jogue|bota|monte)\b[^.!?]{0,40}\b(pr[eé]via|previa|workspace|tela|navegador|no\s+ar)\b/i;
   if (trazerParaPrevia.test(pedido)) return "recriar";
-  const alteracao =
-    /\b(cri[ea]|criar|fa[çc]a|fazer|monte|construa|adicione|implemente|integre|conecte|corrija|conserte|arrume|altere|mude|troque|remova|exclua|atualize|refa[çc]a|melhore|transforme|desenvolva|gere)\b/i;
-  if (alteracao.test(pedido)) return "alterar";
+
+  const pergunta = /\?\s*$/.test(pedido.trim());
+  const consulta =
+    /\b(d[aá] pra|d[aá] para|é poss[íi]vel|posso|consigo|vale a pena|o que (?:voc[êe] )?(?:sugere|acha|recomenda)|qual (?:a )?melhor|por que|deveria|faz sentido|como funciona|serve pra)\b/i;
+  if (pergunta && consulta.test(pedido)) return "conversar";
+
   if (
     /\b(analise|analisar|audite|auditoria|descreva|explique|entenda|estude|revise|para que serve|como funciona|estrutura)\b/i.test(
       pedido,
