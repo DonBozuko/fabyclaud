@@ -630,12 +630,26 @@ function FabyClaud() {
                     aria-label={`Apagar ${p.nome}`}
                     onClick={async (e) => {
                       e.stopPropagation();
+                      const idParaApagar = p.id;
                       try {
-                        await removerProjeto({ data: { id: p.id } });
-                        if (projetoId === p.id) setProjetoId(null);
+                        // 1. Atualização otimista imediata na lista visual
+                        queryClient.setQueryData(["projetos"], (old: any) =>
+                          Array.isArray(old) ? old.filter((item: any) => item.id !== idParaApagar) : []
+                        );
+                        if (projetoId === idParaApagar) {
+                          setProjetoId(null);
+                          if (typeof window !== "undefined") {
+                            localStorage.removeItem("faby_active_project_id");
+                          }
+                        }
+                        queryClient.removeQueries({ queryKey: ["projeto", idParaApagar] });
+
+                        // 2. Exclusão no backend
+                        await removerProjeto({ data: { id: idParaApagar } });
                         await queryClient.invalidateQueries({ queryKey: ["projetos"] });
                         toast.success("Conversa excluída com sucesso.");
                       } catch (err) {
+                        await queryClient.invalidateQueries({ queryKey: ["projetos"] });
                         toast.error("Não foi possível excluir a conversa agora.");
                       }
                     }}

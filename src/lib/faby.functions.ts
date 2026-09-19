@@ -175,7 +175,20 @@ export const apagarProjeto = createServerFn({ method: "POST" })
     cacheMensagens.delete(data.id);
     try {
       await context.supabase.from("mensagens").delete().eq("projeto_id", data.id);
+      await context.supabase.from("app_dados").delete().eq("projeto_id", data.id);
+      await context.supabase.from("app_dados_privados").delete().eq("projeto_id", data.id);
+      await context.supabase.from("app_perfis").delete().eq("projeto_id", data.id);
       await context.supabase.from("projetos").delete().eq("id", data.id);
+    } catch {
+      // ignore
+    }
+    try {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      await supabaseAdmin.from("mensagens").delete().eq("projeto_id", data.id);
+      await supabaseAdmin.from("app_dados").delete().eq("projeto_id", data.id);
+      await supabaseAdmin.from("app_dados_privados").delete().eq("projeto_id", data.id);
+      await supabaseAdmin.from("app_perfis").delete().eq("projeto_id", data.id);
+      await supabaseAdmin.from("projetos").delete().eq("id", data.id);
     } catch {
       // ignore
     }
