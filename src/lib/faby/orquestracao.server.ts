@@ -1,5 +1,9 @@
 import { DirectoryReader } from "@/agents/DirectoryReader";
+import { OpenManusReActAgent } from "@/agents/OpenManusEngine";
 import type { VFSSnapshot } from "@/agents/types";
+
+const directoryReader = new DirectoryReader();
+const openManusAgent = new OpenManusReActAgent();
 
 type Db = {
   from: (tabela: string) => {
@@ -26,8 +30,6 @@ export type EtapaConstrucao =
   | "teste"
   | "correcao"
   | "entrega";
-
-const directoryReader = new DirectoryReader();
 
 /**
  * Monta o Snapshot VFS em memória para ser injetado em prompts do sistema.
@@ -212,4 +214,28 @@ export async function finalizarExecucao(
   } catch {
     // preserva fluxo de execução
   }
+}
+
+/**
+ * Processa a resposta da IA com o motor OpenManus ReAct:
+ * Extrai raciocínio (Thought), tool calls de escrita de arquivos e limpa o texto para exibição.
+ */
+export async function processarRespostaOpenManus(
+  respostaIA: string,
+  vfs: Record<string, string>,
+  stepIndex = 1,
+) {
+  const passo = await openManusAgent.executarPassoReAct(stepIndex, respostaIA, vfs);
+  const parsed = openManusAgent.parseAgentResponse(respostaIA);
+  return {
+    passo,
+    arquivosExtraidos: parsed.arquivosCompletos,
+    textoFormatado: parsed.respostaFinal,
+    pensamento: parsed.thought,
+    totalFerramentas: passo.toolCalls?.length ?? 0,
+  };
+}
+
+export function obterInstrucoesOpenManus(): string {
+  return openManusAgent.gerarPromptInstrucoesOpenManus();
 }

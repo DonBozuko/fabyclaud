@@ -75,3 +75,54 @@ export interface ArquivoCompleto {
   caminho: string;
   conteudo: string;
 }
+
+export interface ToolDefinition {
+  name: string;
+  description: string;
+  parameters: Record<string, { type: string; description: string; required?: boolean }>;
+}
+
+export interface ToolCall {
+  id: string;
+  tool: string;
+  arguments: Record<string, unknown>;
+}
+
+export interface ToolResult {
+  toolCallId: string;
+  tool: string;
+  success: boolean;
+  output: string;
+  data?: unknown;
+}
+
+export interface ReActStep {
+  stepIndex: number;
+  thought: string;
+  toolCalls?: ToolCall[];
+  observations?: ToolResult[];
+  timestamp: string;
+}
+
+export interface ManusPlanItem {
+  id: string;
+  titulo: string;
+  status: "pendente" | "em_andamento" | "concluido" | "falhou";
+  detalhes?: string;
+}
+
+export interface ManusPlan {
+  metaPrincipal: string;
+  itens: ManusPlanItem[];
+}
+
+export interface ManusExecutionState {
+  projetoId: string;
+  pedido: string;
+  passos: ReActStep[];
+  plano?: ManusPlan;
+  arquivosVFS: Record<string, string>;
+  ferramentasUsadas: string[];
+  concluido: boolean;
+  respostaFinal?: string;
+}
