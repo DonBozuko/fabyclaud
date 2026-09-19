@@ -133,9 +133,7 @@ function FabyClaud() {
   const queryClient = useQueryClient();
   const [pronto, setPronto] = useState(false);
   const [logado, setLogado] = useState(false);
-  const [isOnline, setIsOnline] = useState(
-    typeof window !== "undefined" ? navigator.onLine : true,
-  );
+  const [isOnline, setIsOnline] = useState(typeof window !== "undefined" ? navigator.onLine : true);
 
   useEffect(() => {
     function aoFicarOnline() {
@@ -262,10 +260,11 @@ function FabyClaud() {
 
   useEffect(() => {
     if (projetos.data && projetos.data.length > 0) {
-      const salvo = typeof window !== "undefined" ? localStorage.getItem("faby_active_project_id") : null;
+      const salvo =
+        typeof window !== "undefined" ? localStorage.getItem("faby_active_project_id") : null;
       if (salvo && projetos.data.some((p: any) => p.id === salvo)) {
         if (projetoId !== salvo) setProjetoId(salvo);
-      } else if (!projetoId) {
+      } else if (!projetoId && projetos.data[0]) {
         setProjetoId(projetos.data[0].id);
       }
     }
@@ -633,7 +632,9 @@ function FabyClaud() {
                       try {
                         // 1. Atualização otimista imediata na lista visual
                         queryClient.setQueryData(["projetos"], (old: any) =>
-                          Array.isArray(old) ? old.filter((item: any) => item.id !== idParaApagar) : []
+                          Array.isArray(old)
+                            ? old.filter((item: any) => item.id !== idParaApagar)
+                            : [],
                         );
                         if (projetoId === idParaApagar) {
                           setProjetoId(null);
@@ -840,7 +841,8 @@ function FabyClaud() {
             <div className="flex items-center gap-2.5 rounded-xl border border-amber-500/40 bg-amber-500/15 px-4 py-2 text-xs font-medium text-amber-200 backdrop-blur-md">
               <WifiOff className="size-4 shrink-0 text-amber-400 animate-pulse" />
               <span>
-                <strong>Modo Offline Ativo:</strong> Você está sem conexão com a internet. Seus projetos locais estão preservados e prontos para edição.
+                <strong>Modo Offline Ativo:</strong> Você está sem conexão com a internet. Seus
+                projetos locais estão preservados e prontos para edição.
               </span>
             </div>
           ) : null}
@@ -936,7 +938,8 @@ function FabyClaud() {
                     onClick={() => void salvarCodigoManual()}
                     className="flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-glow transition hover:brightness-110 disabled:opacity-50"
                   >
-                    <Save className="size-3.5" /> {salvandoArquivo ? "Salvando..." : "Salvar alterações"}
+                    <Save className="size-3.5" />{" "}
+                    {salvandoArquivo ? "Salvando..." : "Salvar alterações"}
                   </button>
                 ) : null}
               </div>
@@ -961,7 +964,8 @@ function FabyClaud() {
                       </h2>
                       {Object.keys(arquivos).length ? (
                         <p className="text-[13px] leading-relaxed">
-                          {Object.keys(arquivos).length} arquivo(s) disponíveis. Clique na aba <strong>Código</strong> para inspecionar e editar.
+                          {Object.keys(arquivos).length} arquivo(s) disponíveis. Clique na aba{" "}
+                          <strong>Código</strong> para inspecionar e editar.
                         </p>
                       ) : (
                         <p className="text-[13px] leading-relaxed">
@@ -1008,8 +1012,14 @@ function FabyClaud() {
                           placeholder="Selecione um arquivo para editar seu código..."
                         />
                         <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground px-1">
-                          <span>Arquivo ativo: <strong>{arquivoAtivo}</strong> ({(codigoEditando || "").length} caracteres)</span>
-                          <span>Você pode editar e clicar em <strong>Salvar alterações</strong> para atualizar a prévia na hora.</span>
+                          <span>
+                            Arquivo ativo: <strong>{arquivoAtivo}</strong> (
+                            {(codigoEditando || "").length} caracteres)
+                          </span>
+                          <span>
+                            Você pode editar e clicar em <strong>Salvar alterações</strong> para
+                            atualizar a prévia na hora.
+                          </span>
                         </div>
                       </div>
                     </>
@@ -1017,9 +1027,12 @@ function FabyClaud() {
                     <div className="flex flex-1 items-center justify-center p-8 text-center text-muted-foreground">
                       <div>
                         <FileCode className="mx-auto mb-3 size-8 text-muted-foreground/60" />
-                        <h2 className="mb-2 text-base text-foreground font-semibold">Nenhum arquivo ainda</h2>
+                        <h2 className="mb-2 text-base text-foreground font-semibold">
+                          Nenhum arquivo ainda
+                        </h2>
                         <p className="text-xs max-w-xs">
-                          Peça para a IA criar o projeto ou envie seus arquivos pelo chat para começar a editar o código.
+                          Peça para a IA criar o projeto ou envie seus arquivos pelo chat para
+                          começar a editar o código.
                         </p>
                       </div>
                     </div>
