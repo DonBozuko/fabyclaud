@@ -239,20 +239,20 @@ async function chamarGoogle(
   }
   contents.push({ role: "user", parts: partesAtuais as { text: string }[] });
 
-  // Retry com espera em caso de 503 (alta demanda / sobrecarga temporária)
+  // Retry rápido com espera curta em caso de 503
   let tentativas = 0;
-  const maxTentativas = 3;
+  const maxTentativas = 2;
   while (tentativas < maxTentativas) {
     tentativas++;
     const { ok, status, json, texto } = await postJson(
       `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent`,
       { "x-goog-api-key": key },
       { contents },
-      timeoutMs,
+      Math.min(timeoutMs, 35_000),
     );
 
     if (status === 503 && tentativas < maxTentativas) {
-      await new Promise((resolve) => setTimeout(resolve, 1500 * tentativas));
+      await new Promise((resolve) => setTimeout(resolve, 800));
       continue;
     }
 
