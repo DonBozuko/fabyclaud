@@ -408,9 +408,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/builder.server.ts": {
-    "mtime": 1789934363.3997374,
-    "seen": 1789934795.891642,
-    "ast_hash": "92d68c08c8e1d3c5b4dd9c13cc34c8c0",
+    "mtime": 1789934957.9421604,
+    "seen": 1789934990.1005712,
+    "ast_hash": "8f869426a81909b212f8f4b0c001186a",
     "semantic_hash": ""
   },
   "src/lib/faby/config.ts": {
@@ -819,6 +819,12 @@
     "mtime": 1789934410.4846056,
     "seen": 1789934795.8934925,
     "ast_hash": "8163e159c0a6f2fcc1c8a48bd59db3ed",
+    "semantic_hash": ""
+  },
+  "src/lib/faby/provas-reais.test.ts": {
+    "mtime": 1789934931.4691,
+    "seen": 1789934990.1023068,
+    "ast_hash": "9152b38e3696cab929063527feb9a2cc",
     "semantic_hash": ""
   }
 }

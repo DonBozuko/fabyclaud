@@ -5,7 +5,7 @@
   "3": "cn",
   "4": "sidebar.tsx",
   "5": "preview.ts",
-  "6": "github.server.ts",
+  "6": "GithubSecao.tsx",
   "7": "react",
   "8": "routeTree.gen.ts",
   "9": "faby.functions.ts",
@@ -33,7 +33,7 @@
   "31": "dados.$projeto.$colecao.ts",
   "32": "agents/types.ts",
   "33": "opencode.json",
-  "34": "VideoPipeline.ts",
+  "34": "provas-reais.test.ts",
   "35": "app-private.$projeto.$colecao.ts",
   "36": "Implementação",
   "37": "execucao-isolada.ts",
@@ -58,7 +58,7 @@
   "56": "@tanstack/react-router",
   "57": "overrides",
   "58": "@lovable.dev/vite-tanstack-config",
-  "59": "drawer.tsx",
+  "59": "github.server.ts",
   "60": "roadmap.md",
   "61": "clsx.d.ts",
   "62": "arquiteto.md",
@@ -66,7 +66,9 @@
   "64": "revisor.md",
   "65": "@radix-ui/react-aspect-ratio",
   "66": "@radix-ui/react-collapsible",
-  "67": "PainelRecursos.tsx",
+  "67": "client.server.ts",
   "68": "index.tsx",
-  "69": "breadcrumb.tsx"
+  "69": "FabyClaud",
+  "70": "zip.ts",
+  "71": "select.tsx"
 }

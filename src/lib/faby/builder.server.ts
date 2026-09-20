@@ -55,7 +55,7 @@ export function classificarPedidoLovable(pedido: string): TipoPedidoLovable {
   }
 
   if (
-    /\b(publicar|publica[çc][ãa]o|deploy|colocar no ar|subir site|gerar link publico)\b/i.test(
+    /\b(publiqu[ea]|publicar|publica[çc][ãa]o|deploy|colocar no ar|subir site|gerar link publico)\b/i.test(
       limpo,
     )
   ) {
@@ -79,7 +79,7 @@ export function classificarPedidoLovable(pedido: string): TipoPedidoLovable {
   }
 
   if (
-    /^(?:oi|ol[aá]|bom dia|boa tarde|boa noite|opa|e a[ií]|hello|hi|hey|eai|fala|tudo bem|tudo bom|salve)[!.\s]*$/i.test(
+    /^(?:oi|ol[aá]|bom dia|boa tarde|boa noite|opa|e a[ií]|hello|hi|hey|eai|fala|tudo bem|tudo bom|salve)[!.,?\s]*(?:tudo bem|tudo bom|como vai|beleza|bom dia|boa tarde|boa noite)?[!.,?\s]*$/i.test(
       limpo,
     ) ||
     /^(?:quem [eé] voc[eê]|o que [eé]|qual a diferen[çc]a|me explique o que [eé]|para que serve o|como funciona o javascript|o que significa)[^?]*\?*$/i.test(

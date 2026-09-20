@@ -18,7 +18,7 @@
   "16": "providers.server.ts",
   "17": "command.tsx",
   "18": "components.json",
-  "19": "index.tsx",
+  "19": "config.ts",
   "20": "devDependencies",
   "21": "menubar.tsx",
   "22": "form.tsx",
@@ -33,7 +33,7 @@
   "31": "dados.$projeto.$colecao.ts",
   "32": "agents/types.ts",
   "33": "opencode.json",
-  "34": "select.tsx",
+  "34": "VideoPipeline.ts",
   "35": "app-private.$projeto.$colecao.ts",
   "36": "Implementação",
   "37": "execucao-isolada.ts",
@@ -66,5 +66,7 @@
   "64": "revisor.md",
   "65": "@radix-ui/react-aspect-ratio",
   "66": "@radix-ui/react-collapsible",
-  "67": "PainelRecursos.tsx"
+  "67": "PainelRecursos.tsx",
+  "68": "index.tsx",
+  "69": "breadcrumb.tsx"
 }
