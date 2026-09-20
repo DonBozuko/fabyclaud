@@ -52,13 +52,12 @@ export class CodeModifier {
           if (lista) {
             for (const bruto of lista) {
               const item = bruto as Record<string, unknown>;
-              const caminho = (item['path'] ||
-                item['caminho'] ||
-                item['filePath'] ||
-                item['file']) as string | undefined;
-              const conteudo = (item['content'] || item['conteudo'] || item['code']) as
-                | string
-                | undefined;
+              const caminho = (item["path"] ||
+                item["caminho"] ||
+                item["filePath"] ||
+                item["file"]) as string | undefined;
+              const conteudo = (item["content"] || item["conteudo"] || item["code"]) as
+                string | undefined;
               if (caminho && typeof conteudo === "string") {
                 arquivos[caminho] = conteudo;
               }

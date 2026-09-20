@@ -4,11 +4,5 @@ import { CodeModifier } from "./CodeModifier";
 import { OpenManusToolRegistry, OpenManusReActAgent } from "./OpenManusEngine";
 
 export * from "./types";
-export {
-  AgentManager,
-  DirectoryReader,
-  CodeModifier,
-  OpenManusToolRegistry,
-  OpenManusReActAgent,
-};
+export { AgentManager, DirectoryReader, CodeModifier, OpenManusToolRegistry, OpenManusReActAgent };
 export default AgentManager;

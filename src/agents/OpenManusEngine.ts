@@ -23,15 +23,24 @@ export class OpenManusToolRegistry {
         name: "vfs_read_file",
         description: "Lê o conteúdo completo de um arquivo existente no projeto virtual.",
         parameters: {
-          path: { type: "string", description: "Caminho relativo do arquivo (ex: index.html, app.js)", required: true },
+          path: {
+            type: "string",
+            description: "Caminho relativo do arquivo (ex: index.html, app.js)",
+            required: true,
+          },
         },
       },
       {
         name: "vfs_write_file",
-        description: "Grava ou substitui integralmente um arquivo no projeto virtual (escrita 100% completa).",
+        description:
+          "Grava ou substitui integralmente um arquivo no projeto virtual (escrita 100% completa).",
         parameters: {
           path: { type: "string", description: "Caminho do arquivo a ser gravado", required: true },
-          content: { type: "string", description: "Conteúdo 100% completo do arquivo", required: true },
+          content: {
+            type: "string",
+            description: "Conteúdo 100% completo do arquivo",
+            required: true,
+          },
         },
       },
       {
@@ -43,7 +52,11 @@ export class OpenManusToolRegistry {
         name: "vfs_delete_file",
         description: "Exclui um arquivo do projeto virtual.",
         parameters: {
-          path: { type: "string", description: "Caminho do arquivo a ser removido", required: true },
+          path: {
+            type: "string",
+            description: "Caminho do arquivo a ser removido",
+            required: true,
+          },
         },
       },
       {
@@ -51,21 +64,23 @@ export class OpenManusToolRegistry {
         description: "Cria e estrutura o plano de execução em etapas sequenciais para o objetivo.",
         parameters: {
           goal: { type: "string", description: "Meta principal do usuário", required: true },
-          steps: { type: "array", description: "Lista de etapas a serem realizadas", required: true },
+          steps: {
+            type: "array",
+            description: "Lista de etapas a serem realizadas",
+            required: true,
+          },
         },
       },
       {
         name: "diagnose_project",
-        description: "Executa a validação estática de integridade nos arquivos atuais (links, botões, tags).",
+        description:
+          "Executa a validação estática de integridade nos arquivos atuais (links, botões, tags).",
         parameters: {},
       },
     ];
   }
 
-  public async executeTool(
-    toolCall: ToolCall,
-    vfs: Record<string, string>,
-  ): Promise<ToolResult> {
+  public async executeTool(toolCall: ToolCall, vfs: Record<string, string>): Promise<ToolResult> {
     const { tool, arguments: args, id } = toolCall;
 
     try {
@@ -73,7 +88,12 @@ export class OpenManusToolRegistry {
         case "vfs_read_file": {
           const path = String(args["path"] ?? "").trim();
           if (!path) {
-            return { toolCallId: id, tool, success: false, output: "Erro: parâmetro 'path' não informado." };
+            return {
+              toolCallId: id,
+              tool,
+              success: false,
+              output: "Erro: parâmetro 'path' não informado.",
+            };
           }
           if (!(path in vfs)) {
             return {
@@ -97,7 +117,12 @@ export class OpenManusToolRegistry {
           const path = String(args["path"] ?? "").trim();
           const content = String(args["content"] ?? "");
           if (!path) {
-            return { toolCallId: id, tool, success: false, output: "Erro: parâmetro 'path' não informado." };
+            return {
+              toolCallId: id,
+              tool,
+              success: false,
+              output: "Erro: parâmetro 'path' não informado.",
+            };
           }
           vfs[path] = content;
           return {
@@ -124,7 +149,12 @@ export class OpenManusToolRegistry {
         case "vfs_delete_file": {
           const path = String(args["path"] ?? "").trim();
           if (!path || !(path in vfs)) {
-            return { toolCallId: id, tool, success: false, output: `Arquivo '${path}' não encontrado para remoção.` };
+            return {
+              toolCallId: id,
+              tool,
+              success: false,
+              output: `Arquivo '${path}' não encontrado para remoção.`,
+            };
           }
           delete vfs[path];
           return {
@@ -171,7 +201,10 @@ export class OpenManusToolRegistry {
             toolCallId: id,
             tool,
             success: true,
-            output: diagnosticos.length > 0 ? diagnosticos.join("\n") : "Diagnóstico OK: Arquivos estruturais presentes.",
+            output:
+              diagnosticos.length > 0
+                ? diagnosticos.join("\n")
+                : "Diagnóstico OK: Arquivos estruturais presentes.",
             data: { diagnosticos, arquivos: files },
           };
         }
@@ -250,7 +283,9 @@ export class OpenManusReActAgent {
 
     // 3. Extração de Pensamento (Thought)
     let thought = "";
-    const thoughtMatch = respostaIA.match(/(?:<thought>|Pensamento:|Thought:)([\s\S]*?)(?:<\/thought>|Ação:|Action:|<tool_call|<arquivo|$)/i);
+    const thoughtMatch = respostaIA.match(
+      /(?:<thought>|Pensamento:|Thought:)([\s\S]*?)(?:<\/thought>|Ação:|Action:|<tool_call|<arquivo|$)/i,
+    );
     if (thoughtMatch && thoughtMatch[1]) {
       thought = thoughtMatch[1].trim();
     }

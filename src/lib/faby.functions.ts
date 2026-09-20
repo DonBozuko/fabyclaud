@@ -345,7 +345,9 @@ export const salvarChave = createServerFn({ method: "POST" })
     cacheChaves.get(context.userId)!.set(data.provider, registro);
 
     try {
-      const { error: errUpsert } = await context.supabase.from("chaves_ia").upsert(registro, { onConflict: "user_id,provider" });
+      const { error: errUpsert } = await context.supabase
+        .from("chaves_ia")
+        .upsert(registro, { onConflict: "user_id,provider" });
       if (errUpsert) {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         await supabaseAdmin.from("chaves_ia").upsert(registro, { onConflict: "user_id,provider" });
@@ -382,7 +384,11 @@ export const apagarChave = createServerFn({ method: "POST" })
     }
     try {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      await supabaseAdmin.from("chaves_ia").delete().eq("provider", data.provider).eq("user_id", context.userId);
+      await supabaseAdmin
+        .from("chaves_ia")
+        .delete()
+        .eq("provider", data.provider)
+        .eq("user_id", context.userId);
     } catch {
       // ignore
     }
@@ -630,7 +636,11 @@ export const apagarProvedorCustom = createServerFn({ method: "POST" })
     }
     try {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      await supabaseAdmin.from("provedores_custom").delete().eq("id", data.id).eq("user_id", context.userId);
+      await supabaseAdmin
+        .from("provedores_custom")
+        .delete()
+        .eq("id", data.id)
+        .eq("user_id", context.userId);
     } catch {
       // ignore
     }
@@ -930,7 +940,11 @@ export const apagarPrompt = createServerFn({ method: "POST" })
     }
     try {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      await supabaseAdmin.from("prompts_salvos").delete().eq("id", data.id).eq("user_id", context.userId);
+      await supabaseAdmin
+        .from("prompts_salvos")
+        .delete()
+        .eq("id", data.id)
+        .eq("user_id", context.userId);
     } catch {
       // ignore
     }
@@ -1091,7 +1105,10 @@ export const restaurarBackup = createServerFn({ method: "POST" })
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         await supabaseAdmin
           .from("projetos")
-          .update({ arquivos: b.arquivos as unknown as never, updated_at: new Date().toISOString() })
+          .update({
+            arquivos: b.arquivos as unknown as never,
+            updated_at: new Date().toISOString(),
+          })
           .eq("id", b.projeto_id)
           .eq("user_id", context.userId);
       }
@@ -1100,7 +1117,10 @@ export const restaurarBackup = createServerFn({ method: "POST" })
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         await supabaseAdmin
           .from("projetos")
-          .update({ arquivos: b.arquivos as unknown as never, updated_at: new Date().toISOString() })
+          .update({
+            arquivos: b.arquivos as unknown as never,
+            updated_at: new Date().toISOString(),
+          })
           .eq("id", b.projeto_id)
           .eq("user_id", context.userId);
       } catch {
@@ -1701,7 +1721,10 @@ export const enviarMensagem = createServerFn({ method: "POST" })
 
     const memH = cacheMensagens.get(projetoId!) ?? [];
     for (const msg of memH) {
-      if (msg.user_id === context.userId && !historicoRows.some((m) => m.conteudo === msg.conteudo && m.role === msg.role)) {
+      if (
+        msg.user_id === context.userId &&
+        !historicoRows.some((m) => m.conteudo === msg.conteudo && m.role === msg.role)
+      ) {
         historicoRows.push(msg);
       }
     }
@@ -2938,13 +2961,21 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           try {
             const { error: errUpd } = await context.supabase
               .from("projetos")
-              .update({ arquivos: mesclados as unknown as never, modelo: provedorUsado, updated_at: new Date().toISOString() })
+              .update({
+                arquivos: mesclados as unknown as never,
+                modelo: provedorUsado,
+                updated_at: new Date().toISOString(),
+              })
               .eq("id", projetoId);
             if (errUpd) {
               const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
               await supabaseAdmin
                 .from("projetos")
-                .update({ arquivos: mesclados as unknown as never, modelo: provedorUsado, updated_at: new Date().toISOString() })
+                .update({
+                  arquivos: mesclados as unknown as never,
+                  modelo: provedorUsado,
+                  updated_at: new Date().toISOString(),
+                })
                 .eq("id", projetoId)
                 .eq("user_id", context.userId);
             }
@@ -2953,7 +2984,11 @@ export const enviarMensagem = createServerFn({ method: "POST" })
               const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
               await supabaseAdmin
                 .from("projetos")
-                .update({ arquivos: mesclados as unknown as never, modelo: provedorUsado, updated_at: new Date().toISOString() })
+                .update({
+                  arquivos: mesclados as unknown as never,
+                  modelo: provedorUsado,
+                  updated_at: new Date().toISOString(),
+                })
                 .eq("id", projetoId)
                 .eq("user_id", context.userId);
             } catch {

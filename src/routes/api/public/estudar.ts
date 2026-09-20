@@ -16,7 +16,7 @@ async function estudar(request: Request) {
   const chave = new URL(request.url).searchParams.get("chave") ?? "";
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { rodarCicloEscola } = await import("@/lib/faby/escola.server");
-  const db = supabaseAdmin as unknown as { from: (t: string) => any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+  const db = supabaseAdmin as unknown as { from: (t: string) => any };
 
   // Só o agendador entra: senha do ambiente ou o token interno do banco.
   const { data: cron } = await db.from("escola_cron").select("token").eq("id", true).maybeSingle();

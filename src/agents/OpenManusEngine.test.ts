@@ -29,7 +29,11 @@ describe("OpenManus Engine - Autonomous ReAct Loop & Tool Registry", () => {
 
     // 2. Escrita
     const resWrite = await registry.executeTool(
-      { id: "c2", tool: "vfs_write_file", arguments: { path: "style.css", content: "body { background: #000; }" } },
+      {
+        id: "c2",
+        tool: "vfs_write_file",
+        arguments: { path: "style.css", content: "body { background: #000; }" },
+      },
       vfs,
     );
     expect(resWrite.success).toBe(true);

@@ -22,7 +22,8 @@ export function urlDadosProjeto(origem: string, projetoId: string) {
 
 export function urlsPrivadasProjeto(origem: string, projetoId: string) {
   const base = (origem ?? "").trim().replace(/\/+$/, "");
-  const prefixo = !base || /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?$/i.test(base) ? "" : base;
+  const prefixo =
+    !base || /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?$/i.test(base) ? "" : base;
   return {
     auth: `${prefixo}/api/public/app-auth/${projetoId}`,
     dados: `${prefixo}/api/public/app-private/${projetoId}`,
@@ -40,7 +41,10 @@ export function normalizarUrlsApi(codigo: string): string {
     .replace(/\$\{API\}\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?/gi, "${API}")
     .replace(/API\s*\+\s*["']\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?\//gi, 'API + "/')
     .replace(/API\s*\+\s*["']\/(?:api\/)?public\/dados(?:\/[0-9a-f-]{36})?["']/gi, "API")
-    .replace(/\bAPI\s*=\s*["']https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?\/api\/public\/dados\/([0-9a-f-]{36})["']/gi, 'API = "/api/public/dados/$1"');
+    .replace(
+      /\bAPI\s*=\s*["']https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?\/api\/public\/dados\/([0-9a-f-]{36})["']/gi,
+      'API = "/api/public/dados/$1"',
+    );
 
   // 2. Colapsa segmentos duplicados de URL absoluta ou relativa
   // Ex: http://localhost:8080/api/public/dados/UUID/public/dados/UUID/recados -> /api/public/dados/UUID/recados
@@ -58,10 +62,7 @@ export function normalizarUrlsApi(codigo: string): string {
     /(?:\/api)?\/public\/dados\/([0-9a-f-]{36})\/public\/dados\/\1/gi,
     "/api/public/dados/$1",
   );
-  res = res.replace(
-    /\/public\/dados\/([0-9a-f-]{36})\/public\/dados\//gi,
-    "/public/dados/$1/",
-  );
+  res = res.replace(/\/public\/dados\/([0-9a-f-]{36})\/public\/dados\//gi, "/public/dados/$1/");
 
   // 4. Substitui hostnames de localhost hardcoded por caminho relativo
   res = res.replace(

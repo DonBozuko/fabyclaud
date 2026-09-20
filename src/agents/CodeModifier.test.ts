@@ -70,7 +70,9 @@ export function App() { return <h1>{mockUsers[0].name}</h1>; }
     };
 
     const atualizados = modifier.aplicarArquivosCompletos(arquivosAtuais, novos);
-    expect(atualizados["src/App.tsx"]).toBe("export function App() { return <h1>Nova Versão</h1>; }");
+    expect(atualizados["src/App.tsx"]).toBe(
+      "export function App() { return <h1>Nova Versão</h1>; }",
+    );
     expect(atualizados["src/index.css"]).toBe("body { margin: 0; }");
   });
 
