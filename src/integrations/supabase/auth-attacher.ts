@@ -14,15 +14,25 @@ export const attachSupabaseAuth = createMiddleware({ type: "function" }).client(
       // ignore
     }
 
-    if (!token && typeof window !== "undefined") {
+    const headers: Record<string, string> = {};
+
+    if (token && token.split(".").length === 3) {
+      headers["Authorization"] = `Bearer ${token}`;
+    } else if (typeof window !== "undefined") {
       const local = localStorage.getItem("faby_user_session");
       if (local) {
-        token = "local-session-token";
+        try {
+          const parsed = JSON.parse(local);
+          if (parsed?.id) {
+            headers["x-faby-local-user"] = parsed.id;
+            if (parsed.email) headers["x-faby-local-email"] = parsed.email;
+          }
+        } catch {
+          // ignore
+        }
       }
     }
 
-    return next({
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    });
+    return next({ headers });
   },
 );

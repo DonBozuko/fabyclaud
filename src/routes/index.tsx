@@ -264,15 +264,30 @@ function FabyClaud() {
         typeof window !== "undefined" ? localStorage.getItem("faby_active_project_id") : null;
       if (salvo && projetos.data.some((p: any) => p.id === salvo)) {
         if (projetoId !== salvo) setProjetoId(salvo);
-      } else if (!projetoId && projetos.data[0]) {
-        setProjetoId(projetos.data[0].id);
+      } else if (!projetoId || !projetos.data.some((p: any) => p.id === projetoId)) {
+        const primeiro = projetos.data[0]?.id;
+        if (primeiro) {
+          setProjetoId(primeiro);
+          if (typeof window !== "undefined") {
+            localStorage.setItem("faby_active_project_id", primeiro);
+          }
+        }
+      }
+    } else if (projetos.data && projetos.data.length === 0) {
+      setProjetoId(null);
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("faby_active_project_id");
       }
     }
   }, [projetos.data]);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && projetoId) {
-      localStorage.setItem("faby_active_project_id", projetoId);
+    if (typeof window !== "undefined") {
+      if (projetoId) {
+        localStorage.setItem("faby_active_project_id", projetoId);
+      } else {
+        localStorage.removeItem("faby_active_project_id");
+      }
     }
   }, [projetoId]);
 
@@ -303,6 +318,7 @@ function FabyClaud() {
         localStorage.setItem("faby_active_project_id", r.projeto_id);
       }
       await queryClient.invalidateQueries({ queryKey: ["projetos"] });
+      await queryClient.refetchQueries({ queryKey: ["projetos"] });
       await queryClient.invalidateQueries({ queryKey: ["projeto", r.projeto_id] });
       await queryClient.refetchQueries({ queryKey: ["projeto", r.projeto_id] });
       campoTexto.current?.focus();

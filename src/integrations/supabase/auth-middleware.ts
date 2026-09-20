@@ -66,8 +66,12 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
       },
     });
 
-    let userId = "00000000-0000-0000-0000-000000000001";
-    let claims: Record<string, any> = { email: "usuario@fabyclaud.local" };
+    const localUserIdHeader = request?.headers?.get("x-faby-local-user")?.trim();
+    const localEmailHeader = request?.headers?.get("x-faby-local-email")?.trim();
+
+    let userId = localUserIdHeader || "00000000-0000-0000-0000-000000000001";
+    let claims: Record<string, any> = { email: localEmailHeader || "usuario@fabyclaud.local" };
+    let isAutenticadoSupabase = false;
 
     if (isValidJwt) {
       try {
@@ -75,6 +79,7 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
         if (!error && data?.user?.id) {
           userId = data.user.id;
           claims = (data.user.app_metadata as Record<string, any>) ?? {};
+          isAutenticadoSupabase = true;
         }
       } catch {
         // fallback to local userId
@@ -86,6 +91,7 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
         supabase: supabase as any,
         userId,
         claims,
+        isAutenticadoSupabase,
       },
     });
   },

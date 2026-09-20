@@ -34,31 +34,56 @@ function AuthPage() {
   const [carregando, setCarregando] = useState(false);
   const [confirmar, setConfirmar] = useState(false);
 
+  function obterOuCriarIdLocal(): string {
+    if (typeof window === "undefined") return "00000000-0000-0000-0000-000000000001";
+    try {
+      const salvo = localStorage.getItem("faby_user_session");
+      if (salvo) {
+        const parsed = JSON.parse(salvo);
+        if (parsed?.id && parsed.id !== "00000000-0000-0000-0000-000000000001") {
+          return parsed.id;
+        }
+      }
+    } catch {
+      // ignore
+    }
+    return typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : "local_" + Math.random().toString(36).slice(2);
+  }
+
   function autenticarLocalmente(emailInformado: string) {
     if (typeof window !== "undefined") {
       const sessao = {
         email: emailInformado || "usuario@fabyclaud.local",
-        id: "00000000-0000-0000-0000-000000000001",
+        id: obterOuCriarIdLocal(),
         created_at: new Date().toISOString(),
       };
       localStorage.setItem("faby_user_session", JSON.stringify(sessao));
-      toast.success("Acesso liberado com sucesso!");
+      toast.success("Acesso liberado (modo local / chaves próprias)!");
       void navigate({ to: "/" });
     }
   }
 
   useEffect(() => {
-    if (typeof window !== "undefined" && localStorage.getItem("faby_user_session")) {
-      void navigate({ to: "/" });
-      return;
-    }
+    void supabase.auth.getSession().then(({ data }: { data: { session: any } }) => {
+      if (data?.session) {
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("faby_user_session");
+        }
+        void navigate({ to: "/" });
+      } else if (typeof window !== "undefined" && localStorage.getItem("faby_user_session")) {
+        void navigate({ to: "/" });
+      }
+    });
 
     const { data } = supabase.auth.onAuthStateChange((_evento: any, sessao: any) => {
-      if (sessao) void navigate({ to: "/" });
+      if (sessao) {
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("faby_user_session");
+        }
+        void navigate({ to: "/" });
+      }
     });
-    void supabase.auth.getSession().then(({ data }: { data: { session: any } }) => {
-      if (data?.session) void navigate({ to: "/" });
-    });
+
     return () => data.subscription.unsubscribe();
   }, [navigate]);
 
@@ -72,25 +97,44 @@ function AuthPage() {
           password: senha,
           options: { emailRedirectTo: window.location.origin },
         });
-        if (error) throw error;
-        if (!data?.session) {
-          // Se o servidor de email do supabase não estiver configurado, libera direto
-          autenticarLocalmente(email);
-          return;
-        }
-        autenticarLocalmente(email);
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
         if (error) {
-          // Se falhou por falta de nuvem/rede do Supabase Lovable, autentica com a senha localmente
-          autenticarLocalmente(email);
+          // Se for erro de rede / placeholder, oferece fallback local
+          if (error.message.includes("fetch") || error.message.includes("network") || error.message.includes("placeholder")) {
+            autenticarLocalmente(email);
+            return;
+          }
+          toast.error(error.message);
           return;
         }
-        autenticarLocalmente(email);
+        if (!data?.session) {
+          setConfirmar(true);
+          return;
+        }
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("faby_user_session");
+        }
+        toast.success("Conta criada com sucesso!");
+        void navigate({ to: "/" });
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha });
+        if (error) {
+          if (error.message.includes("fetch") || error.message.includes("network") || error.message.includes("placeholder")) {
+            autenticarLocalmente(email);
+            return;
+          }
+          toast.error(error.message);
+          return;
+        }
+        if (data?.session) {
+          if (typeof window !== "undefined") {
+            localStorage.removeItem("faby_user_session");
+          }
+          toast.success("Login realizado com sucesso!");
+          void navigate({ to: "/" });
+        }
       }
-    } catch {
-      // Fallback seguro: permite login/cadastro direto
-      autenticarLocalmente(email);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erro ao autenticar.");
     } finally {
       setCarregando(false);
     }
