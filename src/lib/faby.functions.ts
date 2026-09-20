@@ -535,7 +535,8 @@ export const testarChave = createServerFn({ method: "POST" })
     let chave = data.key.trim();
     let apiUrl = data.api_url?.trim() ?? "";
     if (chave.length < 8) {
-      const doCache = cacheChaves.get(context.userId)?.get(data.provider);
+      const chavesArmazenadas = obterChavesArmazenadas(extrairUserIds(context));
+      const doCache = chavesArmazenadas.find((k) => k.provider === data.provider);
       if (doCache?.api_key) {
         chave = doCache.api_key;
         if (!apiUrl && doCache.api_url) apiUrl = doCache.api_url;
@@ -1116,7 +1117,7 @@ export const criarBackup = createServerFn({ method: "POST" })
         .maybeSingle();
       const arquivos =
         (p?.arquivos as Record<string, string>) ??
-        cacheProjetos.get(data.projeto_id)?.arquivos ??
+        obterProjetoArmazenado(data.projeto_id, extrairUserIds(context))?.arquivos ??
         {};
       if (!Object.keys(arquivos).length) {
         return { ok: false, msg: "Esse projeto ainda não tem arquivos pra salvar." };
@@ -1195,12 +1196,11 @@ export const restaurarBackup = createServerFn({ method: "POST" })
       }
     }
 
-    if (cacheProjetos.has(b.projeto_id)) {
-      const cached = cacheProjetos.get(b.projeto_id)!;
-      if (cached.user_id === context.userId) {
-        cached.arquivos = b.arquivos as Record<string, string>;
-        cached.updated_at = new Date().toISOString();
-      }
+    const pExistente = obterProjetoArmazenado(b.projeto_id, extrairUserIds(context));
+    if (pExistente) {
+      pExistente.arquivos = b.arquivos as Record<string, string>;
+      pExistente.updated_at = new Date().toISOString();
+      salvarProjetoArmazenado(pExistente);
     }
 
     try {
@@ -1859,11 +1859,11 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       // ignore
     }
 
-    const memH = cacheMensagens.get(projetoId!) ?? [];
-    for (const msg of memH) {
+    const diskH = listarMensagensArmazenadas(projetoId!);
+    for (const msg of diskH) {
       if (
-        msg.user_id === context.userId &&
-        !historicoRows.some((m) => m.conteudo === msg.conteudo && m.role === msg.role)
+        (msg.user_id === context.userId || targetUserIds.includes(msg.user_id)) &&
+        !historicoRows.some((m) => m.id === msg.id || (m.conteudo === msg.conteudo && m.role === msg.role))
       ) {
         historicoRows.push(msg);
       }
@@ -1947,7 +1947,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         anexos: [],
         created_at: new Date().toISOString(),
       };
-      cacheMensagens.get(projetoId!)!.push(novaMsgAssistente);
+      salvarMensagemArmazenada(novaMsgAssistente);
 
       try {
         const { error: errCmd } = await context.supabase.from("mensagens").insert({
@@ -2029,7 +2029,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         anexos: [],
         created_at: new Date().toISOString(),
       };
-      cacheMensagens.get(projetoId!)!.push(novaMsgLocal);
+      salvarMensagemArmazenada(novaMsgLocal);
 
       try {
         await context.supabase.from("mensagens").insert({
@@ -2095,8 +2095,10 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         const limpo = img.nome.replace(/[^a-zA-Z0-9._-]+/g, "-").toLowerCase();
         arquivosAtuais[`enviados/${limpo}`] = `data:${img.mime};base64,${img.data}`;
       }
-      if (cacheProjetos.has(projetoId!)) {
-        cacheProjetos.get(projetoId!)!.arquivos = arquivosAtuais;
+      const p = obterProjetoArmazenado(projetoId!, targetUserIds);
+      if (p) {
+        p.arquivos = arquivosAtuais;
+        salvarProjetoArmazenado(p);
       }
       try {
         await context.supabase
@@ -2194,8 +2196,10 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     const guardarNota = async (linha: string) => {
       const registro = `- ${new Date().toISOString().slice(0, 16).replace("T", " ")} ${linha}`;
       const atualizado = `${notasProjeto ? `${notasProjeto}\n` : ""}${registro}`.slice(-6000);
-      if (cacheProjetos.has(projetoId!)) {
-        cacheProjetos.get(projetoId!)!.notas = atualizado;
+      const p = obterProjetoArmazenado(projetoId!, targetUserIds);
+      if (p) {
+        p.notas = atualizado;
+        salvarProjetoArmazenado(p);
       }
       try {
         await context.supabase
@@ -2616,13 +2620,11 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           anexos: [],
           created_at: new Date().toISOString(),
         };
-        if (!cacheMensagens.has(projetoId!)) {
-          cacheMensagens.set(projetoId!, []);
-        }
-        cacheMensagens.get(projetoId!)!.push(novaMsgAssistente);
+        salvarMensagemArmazenada(novaMsgAssistente);
 
         try {
           await context.supabase.from("mensagens").insert({
+            id: novaMsgAssistente.id,
             projeto_id: projetoId,
             user_id: context.userId,
             role: "assistant",

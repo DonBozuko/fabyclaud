@@ -384,9 +384,9 @@
     "semantic_hash": "8da0ddd7569bac2676b9a5c8edff8a36"
   },
   "src/lib/faby.functions.ts": {
-    "mtime": 1789929664.0501232,
-    "seen": 1789929815.5807836,
-    "ast_hash": "9f56c964010ce6e486b432776972d48f",
+    "mtime": 1789930380.3086507,
+    "seen": 1789930426.4567058,
+    "ast_hash": "e87795527bdef30f4b92ad1810bb1cc3",
     "semantic_hash": ""
   },
   "src/lib/faby/aplicativos-locais.server.ts": {
