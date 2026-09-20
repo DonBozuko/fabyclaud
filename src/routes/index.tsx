@@ -362,22 +362,31 @@ function FabyClaud() {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && localStorage.getItem("faby_user_session")) {
+    if (typeof window !== "undefined") {
+      let session = localStorage.getItem("faby_user_session");
+      if (!session) {
+        let stableId = localStorage.getItem("faby_stable_device_id");
+        if (!stableId) {
+          stableId =
+            typeof crypto !== "undefined" && crypto.randomUUID
+              ? crypto.randomUUID()
+              : "local_" + Math.random().toString(36).slice(2);
+          localStorage.setItem("faby_stable_device_id", stableId);
+        }
+        session = JSON.stringify({
+          id: stableId,
+          email: "usuario@fabyclaud.local",
+          created_at: new Date().toISOString(),
+        });
+        localStorage.setItem("faby_user_session", session);
+      }
       setLogado(true);
       setPronto(true);
-      return;
     }
 
     const { data } = supabase.auth.onAuthStateChange((_e: any, sessao: any) => {
       if (sessao) {
         setLogado(true);
-      } else if (typeof window !== "undefined") {
-        if (!localStorage.getItem("faby_user_session") && navigator.onLine) {
-          setLogado(false);
-          void navigate({ to: "/auth" });
-        } else {
-          setLogado(true);
-        }
       }
     });
 
@@ -386,13 +395,6 @@ function FabyClaud() {
       .then(({ data }: { data: { session: any } }) => {
         if (data?.session) {
           setLogado(true);
-        } else if (typeof window !== "undefined") {
-          if (!localStorage.getItem("faby_user_session") && navigator.onLine) {
-            setLogado(false);
-            void navigate({ to: "/auth" });
-          } else {
-            setLogado(true);
-          }
         }
         setPronto(true);
       })

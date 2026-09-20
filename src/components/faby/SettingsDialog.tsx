@@ -53,6 +53,35 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
     setOmniPronta(local.pronta);
   }, []);
 
+  // Sincronização automática resiliente: se o navegador guardou chaves localmente mas o servidor
+  // ainda não as listou, restaura-as automaticamente para o usuário nunca perder acesso
+  useEffect(() => {
+    if (typeof window !== "undefined" && chaves.data) {
+      try {
+        const salvas = JSON.parse(localStorage.getItem("faby_local_keys") || "{}");
+        for (const [prov, info] of Object.entries(salvas)) {
+          const dados = info as { key?: string; api_url?: string };
+          if (dados?.key && !chaves.data.some((k: any) => k.provider === prov)) {
+            salvar({
+              data: {
+                provider: prov,
+                key: dados.key,
+                api_url: prov === "omniroute" ? (dados.api_url || "") : "",
+              },
+            })
+              .then(() => {
+                void queryClient.invalidateQueries({ queryKey: ["chaves"] });
+                void queryClient.invalidateQueries({ queryKey: ["capacidades"] });
+              })
+              .catch(() => {});
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }, [chaves.data, queryClient, salvar]);
+
   const salvarMut = useMutation({
     mutationFn: async () => {
       if (typeof window !== "undefined") {
@@ -365,8 +394,18 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
                     type="button"
                     className="text-destructive"
                     onClick={async () => {
+                      if (typeof window !== "undefined") {
+                        try {
+                          const salvas = JSON.parse(localStorage.getItem("faby_local_keys") || "{}");
+                          delete salvas[k.provider];
+                          localStorage.setItem("faby_local_keys", JSON.stringify(salvas));
+                        } catch {
+                          // ignore
+                        }
+                      }
                       await remover({ data: { provider: k.provider } });
                       void queryClient.invalidateQueries({ queryKey: ["chaves"] });
+                      void queryClient.invalidateQueries({ queryKey: ["capacidades"] });
                     }}
                   >
                     remover

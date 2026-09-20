@@ -44,22 +44,33 @@ function AuthPage() {
           return parsed.id;
         }
       }
+      const stable = localStorage.getItem("faby_stable_device_id");
+      if (stable) return stable;
     } catch {
       // ignore
     }
-    return typeof crypto !== "undefined" && crypto.randomUUID
-      ? crypto.randomUUID()
-      : "local_" + Math.random().toString(36).slice(2);
+    const novo =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : "local_" + Math.random().toString(36).slice(2);
+    try {
+      localStorage.setItem("faby_stable_device_id", novo);
+    } catch {
+      // ignore
+    }
+    return novo;
   }
 
   function autenticarLocalmente(emailInformado: string) {
     if (typeof window !== "undefined") {
+      const id = obterOuCriarIdLocal();
       const sessao = {
         email: emailInformado || "usuario@fabyclaud.local",
-        id: obterOuCriarIdLocal(),
+        id,
         created_at: new Date().toISOString(),
       };
       localStorage.setItem("faby_user_session", JSON.stringify(sessao));
+      localStorage.setItem("faby_stable_device_id", id);
       toast.success("Acesso liberado (modo local / chaves próprias)!");
       void navigate({ to: "/" });
     }

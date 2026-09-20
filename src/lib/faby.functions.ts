@@ -60,33 +60,42 @@ const cacheMemorias = new Map<string, string>();
 const cachePrompts = new Map<string, { id: string; titulo: string; texto: string }[]>();
 const cacheAgentes = new Map<string, { id: string; nome: string; instrucoes: string }[]>();
 
+function extrairUserIds(context: { userId: string; isAutenticadoSupabase?: boolean }): string[] {
+  const ids = [context.userId];
+  if (context.userId !== "00000000-0000-0000-0000-000000000001" && !context.isAutenticadoSupabase) {
+    ids.push("00000000-0000-0000-0000-000000000001");
+  }
+  return ids;
+}
+
 /** Lista de projetos do usuário, mais recente primeiro. */
 export const listarProjetos = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     let list: any[] = [];
+    const targetUserIds = extrairUserIds(context);
     try {
       const { data, error } = await context.supabase
         .from("projetos")
         .select("id, user_id, nome, modelo, arquivos, updated_at")
         .order("updated_at", { ascending: false });
       if (!error && data && data.length > 0) {
-        list = data;
+        list = data.filter((p: any) => targetUserIds.includes(p.user_id));
       } else {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: adminData } = await supabaseAdmin
           .from("projetos")
           .select("id, user_id, nome, modelo, arquivos, updated_at")
-          .eq("user_id", context.userId)
+          .in("user_id", targetUserIds)
           .order("updated_at", { ascending: false });
-        if (adminData) list = adminData;
+        if (adminData && adminData.length > 0) list = adminData;
       }
     } catch {
       // ignore
     }
 
     for (const p of cacheProjetos.values()) {
-      if (p.user_id === context.userId && !list.some((item) => item.id === p.id)) {
+      if (targetUserIds.includes(p.user_id) && !list.some((item) => item.id === p.id)) {
         list.push(p);
       }
     }
@@ -106,6 +115,7 @@ export const obterProjeto = createServerFn({ method: "GET" })
   .inputValidator((input: { id: string }) => z.object({ id: z.string().min(1) }).parse(input))
   .handler(async ({ data, context }) => {
     let projeto: any = null;
+    const targetUserIds = extrairUserIds(context);
     try {
       const { data: p } = await context.supabase
         .from("projetos")
@@ -120,7 +130,7 @@ export const obterProjeto = createServerFn({ method: "GET" })
           .from("projetos")
           .select("id, user_id, nome, modelo, arquivos, updated_at")
           .eq("id", data.id)
-          .eq("user_id", context.userId)
+          .in("user_id", targetUserIds)
           .maybeSingle();
         if (adminP) projeto = adminP;
       }
@@ -130,7 +140,7 @@ export const obterProjeto = createServerFn({ method: "GET" })
 
     if (!projeto) {
       const cached = cacheProjetos.get(data.id);
-      if (cached && cached.user_id === context.userId) {
+      if (cached && targetUserIds.includes(cached.user_id)) {
         projeto = cached;
       }
     }
@@ -152,7 +162,7 @@ export const obterProjeto = createServerFn({ method: "GET" })
           .select("id, role, conteudo, modelo, ok, anexos, created_at")
           .eq("projeto_id", data.id)
           .order("created_at", { ascending: true });
-        if (adminM) mensagens = adminM;
+        if (adminM && adminM.length > 0) mensagens = adminM;
       }
     } catch {
       // ignore
@@ -160,7 +170,7 @@ export const obterProjeto = createServerFn({ method: "GET" })
 
     const memMsgs = cacheMensagens.get(data.id) ?? [];
     for (const msg of memMsgs) {
-      if (msg.user_id === context.userId && !mensagens.some((m) => m.id === msg.id)) {
+      if (targetUserIds.includes(msg.user_id) && !mensagens.some((m) => m.id === msg.id)) {
         mensagens.push(msg);
       }
     }
@@ -178,12 +188,12 @@ export const obterProgressoExecucao = createServerFn({ method: "GET" })
   .handler(async ({ data, context }) => {
     let execucao: any = null;
     let etapas: any[] = [];
+    const targetUserIds = extrairUserIds(context);
     try {
       const { data: ex } = await context.supabase
         .from("execucoes_construcao")
         .select("id, projeto_id, etapa_atual, estado, ultimo_erro, modelos_usados, provas, created_at, concluida_em")
         .eq("projeto_id", data.projeto_id)
-        .eq("user_id", context.userId)
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -195,7 +205,7 @@ export const obterProgressoExecucao = createServerFn({ method: "GET" })
           .from("execucoes_construcao")
           .select("id, projeto_id, etapa_atual, estado, ultimo_erro, modelos_usados, provas, created_at, concluida_em")
           .eq("projeto_id", data.projeto_id)
-          .eq("user_id", context.userId)
+          .in("user_id", targetUserIds)
           .order("created_at", { ascending: false })
           .limit(1)
           .maybeSingle();
@@ -211,7 +221,6 @@ export const obterProgressoExecucao = createServerFn({ method: "GET" })
           .from("etapas_construcao")
           .select("id, execucao_id, etapa, estado, modelo, tentativa, resultado_resumo, erro, arquivos_produzidos, concluida_em")
           .eq("execucao_id", execucao.id)
-          .eq("user_id", context.userId)
           .order("created_at", { ascending: true });
         if (et && et.length > 0) {
           etapas = et;
@@ -221,7 +230,7 @@ export const obterProgressoExecucao = createServerFn({ method: "GET" })
             .from("etapas_construcao")
             .select("id, execucao_id, etapa, estado, modelo, tentativa, resultado_resumo, erro, arquivos_produzidos, concluida_em")
             .eq("execucao_id", execucao.id)
-            .eq("user_id", context.userId)
+            .in("user_id", targetUserIds)
             .order("created_at", { ascending: true });
           if (adminEt) etapas = adminEt;
         }
@@ -240,8 +249,9 @@ export const apagarProjeto = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { id: string }) => z.object({ id: z.string().min(1) }).parse(input))
   .handler(async ({ data, context }) => {
+    const targetUserIds = extrairUserIds(context);
     const cached = cacheProjetos.get(data.id);
-    if (!cached || cached.user_id === context.userId) {
+    if (!cached || targetUserIds.includes(cached.user_id)) {
       cacheProjetos.delete(data.id);
       cacheMensagens.delete(data.id);
     }
@@ -260,7 +270,7 @@ export const apagarProjeto = createServerFn({ method: "POST" })
       await supabaseAdmin.from("app_dados").delete().eq("projeto_id", data.id);
       await supabaseAdmin.from("app_dados_privados").delete().eq("projeto_id", data.id);
       await supabaseAdmin.from("app_perfis").delete().eq("projeto_id", data.id);
-      await supabaseAdmin.from("projetos").delete().eq("id", data.id).eq("user_id", context.userId);
+      await supabaseAdmin.from("projetos").delete().eq("id", data.id).in("user_id", targetUserIds);
     } catch {
       // ignore
     }
@@ -272,32 +282,35 @@ export const listarChaves = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     let rows: any[] = [];
+    const targetUserIds = extrairUserIds(context);
     try {
       const { data, error } = await context.supabase
         .from("chaves_ia")
-        .select("provider, api_key, api_url, testada_ok, testada_em, ultimo_erro");
+        .select("provider, api_key, api_url, testada_ok, testada_em, ultimo_erro, user_id");
       if (!error && data && data.length > 0) {
-        rows = data;
+        rows = data.filter((k: any) => targetUserIds.includes(k.user_id));
       } else {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: adminChaves } = await supabaseAdmin
           .from("chaves_ia")
-          .select("provider, api_key, api_url, testada_ok, testada_em, ultimo_erro")
-          .eq("user_id", context.userId);
-        if (adminChaves) rows = adminChaves;
+          .select("provider, api_key, api_url, testada_ok, testada_em, ultimo_erro, user_id")
+          .in("user_id", targetUserIds);
+        if (adminChaves && adminChaves.length > 0) rows = adminChaves;
       }
     } catch {
       // ignore
     }
 
-    const doCache = cacheChaves.get(context.userId);
-    if (doCache) {
-      for (const [provider, val] of doCache.entries()) {
-        const idx = rows.findIndex((r) => r.provider === provider);
-        if (idx >= 0) {
-          rows[idx] = { ...rows[idx], ...val };
-        } else {
-          rows.push(val);
+    for (const uid of targetUserIds) {
+      const doCache = cacheChaves.get(uid);
+      if (doCache) {
+        for (const [provider, val] of doCache.entries()) {
+          const idx = rows.findIndex((r) => r.provider === provider);
+          if (idx >= 0) {
+            rows[idx] = { ...rows[idx], ...val };
+          } else {
+            rows.push(val);
+          }
         }
       }
     }
@@ -317,32 +330,35 @@ export const obterCapacidades = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     let rows: any[] = [];
+    const targetUserIds = extrairUserIds(context);
     try {
       const { data, error } = await context.supabase
         .from("chaves_ia")
-        .select("provider, testada_ok, testada_em, ultimo_erro");
+        .select("provider, testada_ok, testada_em, ultimo_erro, user_id");
       if (!error && data && data.length > 0) {
-        rows = data;
+        rows = data.filter((k: any) => targetUserIds.includes(k.user_id));
       } else {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: adminChaves } = await supabaseAdmin
           .from("chaves_ia")
-          .select("provider, testada_ok, testada_em, ultimo_erro")
-          .eq("user_id", context.userId);
-        if (adminChaves) rows = adminChaves;
+          .select("provider, testada_ok, testada_em, ultimo_erro, user_id")
+          .in("user_id", targetUserIds);
+        if (adminChaves && adminChaves.length > 0) rows = adminChaves;
       }
     } catch {
       // ignore
     }
 
-    const doCache = cacheChaves.get(context.userId);
-    if (doCache) {
-      for (const [provider, val] of doCache.entries()) {
-        const idx = rows.findIndex((r) => r.provider === provider);
-        if (idx >= 0) {
-          rows[idx] = { ...rows[idx], ...val };
-        } else {
-          rows.push(val);
+    for (const uid of targetUserIds) {
+      const doCache = cacheChaves.get(uid);
+      if (doCache) {
+        for (const [provider, val] of doCache.entries()) {
+          const idx = rows.findIndex((r) => r.provider === provider);
+          if (idx >= 0) {
+            rows[idx] = { ...rows[idx], ...val };
+          } else {
+            rows.push(val);
+          }
         }
       }
     }
@@ -1515,32 +1531,33 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     let chaves: any[] = [];
     let custom: any[] = [];
     let mem: any = null;
+    const targetUserIds = extrairUserIds(context);
     try {
       const [resChaves, resCustom, resMem] = await Promise.all([
-        context.supabase.from("chaves_ia").select("provider, api_key, api_url, testada_ok"),
+        context.supabase.from("chaves_ia").select("provider, api_key, api_url, testada_ok, user_id"),
         context.supabase
           .from("provedores_custom")
-          .select("id, slug, nome, url, modelo, suporta_imagem"),
-        context.supabase.from("memorias").select("conteudo").maybeSingle(),
+          .select("id, slug, nome, url, modelo, suporta_imagem, user_id"),
+        context.supabase.from("memorias").select("conteudo, user_id").maybeSingle(),
       ]);
       if (resChaves.data && resChaves.data.length > 0) {
-        chaves = resChaves.data;
+        chaves = resChaves.data.filter((k: any) => targetUserIds.includes(k.user_id));
       } else {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: adminChaves } = await supabaseAdmin
           .from("chaves_ia")
-          .select("provider, api_key, api_url, testada_ok")
-          .eq("user_id", context.userId);
+          .select("provider, api_key, api_url, testada_ok, user_id")
+          .in("user_id", targetUserIds);
         if (adminChaves && adminChaves.length > 0) chaves = adminChaves;
       }
       if (resCustom.data && resCustom.data.length > 0) {
-        custom = resCustom.data;
+        custom = resCustom.data.filter((c: any) => targetUserIds.includes(c.user_id));
       } else {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: adminCustom } = await supabaseAdmin
           .from("provedores_custom")
-          .select("id, slug, nome, url, modelo, suporta_imagem")
-          .eq("user_id", context.userId);
+          .select("id, slug, nome, url, modelo, suporta_imagem, user_id")
+          .in("user_id", targetUserIds);
         if (adminCustom && adminCustom.length > 0) custom = adminCustom;
       }
       if (resMem.data) {
@@ -1549,8 +1566,8 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: adminMem } = await supabaseAdmin
           .from("memorias")
-          .select("conteudo")
-          .eq("user_id", context.userId)
+          .select("conteudo, user_id")
+          .in("user_id", targetUserIds)
           .maybeSingle();
         if (adminMem) mem = adminMem;
       }
@@ -1558,20 +1575,31 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       // ignore
     }
 
-    const doCacheChaves = cacheChaves.get(context.userId);
-    if (doCacheChaves) {
-      for (const [provider, val] of doCacheChaves.entries()) {
-        const idx = chaves.findIndex((r: any) => r.provider === provider);
-        if (idx >= 0) {
-          chaves[idx] = { ...chaves[idx], ...val };
-        } else {
-          chaves.push(val);
+    for (const uid of targetUserIds) {
+      const doCacheChaves = cacheChaves.get(uid);
+      if (doCacheChaves) {
+        for (const [provider, val] of doCacheChaves.entries()) {
+          const idx = chaves.findIndex((r: any) => r.provider === provider);
+          if (idx >= 0) {
+            chaves[idx] = { ...chaves[idx], ...val };
+          } else {
+            chaves.push(val);
+          }
         }
       }
     }
 
     const provedoresCustom = (custom ?? []) as ProvedorCustom[];
-    const memoria = mem?.conteudo ?? cacheMemorias.get(context.userId) ?? "";
+    let memoria = mem?.conteudo ?? "";
+    if (!memoria) {
+      for (const uid of targetUserIds) {
+        const m = cacheMemorias.get(uid);
+        if (m) {
+          memoria = m;
+          break;
+        }
+      }
+    }
 
     // Instruções do agente escolhido (pronto ou criado pelo usuário).
     let instrucoesAgente = "";
@@ -1592,7 +1620,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             .from("agentes")
             .select("instrucoes")
             .eq("id", agenteId)
-            .eq("user_id", context.userId)
+            .in("user_id", targetUserIds)
             .maybeSingle();
           if (adminAg?.instrucoes) instrucoesAgente = adminAg.instrucoes;
         }
@@ -1600,8 +1628,13 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         // ignore
       }
       if (!instrucoesAgente) {
-        const agCache = cacheAgentes.get(context.userId)?.find((a) => a.id === agenteId);
-        instrucoesAgente = agCache?.instrucoes ?? "";
+        for (const uid of targetUserIds) {
+          const agCache = cacheAgentes.get(uid)?.find((a) => a.id === agenteId);
+          if (agCache?.instrucoes) {
+            instrucoesAgente = agCache.instrucoes;
+            break;
+          }
+        }
       }
     }
 
@@ -1688,14 +1721,14 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             .from("projetos")
             .select("id, user_id, arquivos, notas")
             .eq("id", projetoId)
-            .eq("user_id", context.userId)
+            .in("user_id", targetUserIds)
             .maybeSingle();
           if (adminP) {
             arquivosAtuais = (adminP.arquivos as Record<string, string>) ?? {};
             notasProjeto = ((adminP as { notas?: string | null }).notas ?? "").trim();
           } else {
             const cached = cacheProjetos.get(projetoId);
-            if (cached && cached.user_id === context.userId) {
+            if (cached && targetUserIds.includes(cached.user_id)) {
               arquivosAtuais = cached.arquivos ?? {};
               notasProjeto = cached.notas ?? "";
             }
@@ -1703,7 +1736,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         }
       } catch {
         const cached = cacheProjetos.get(projetoId);
-        if (cached && cached.user_id === context.userId) {
+        if (cached && targetUserIds.includes(cached.user_id)) {
           arquivosAtuais = cached.arquivos ?? {};
           notasProjeto = cached.notas ?? "";
         }

@@ -2,6 +2,7 @@
 import { createMiddleware } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { createClient } from "@supabase/supabase-js";
+import { supabase as clientSupabase } from "./client";
 
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith("sb_publishable_") || value.startsWith("sb_secret_");
@@ -30,8 +31,58 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
   };
 }
 
-export const requireSupabaseAuth = createMiddleware({ type: "function" }).server(
-  async ({ next }) => {
+export const requireSupabaseAuth = createMiddleware({ type: "function" })
+  .client(async ({ next }) => {
+    let token: string | undefined;
+    try {
+      const { data } = await clientSupabase.auth.getSession();
+      token = data?.session?.access_token;
+    } catch {
+      // ignore
+    }
+
+    const headers: Record<string, string> = {};
+
+    if (token && token.split(".").length === 3) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    if (typeof window !== "undefined") {
+      let localSession = localStorage.getItem("faby_user_session");
+      if (!localSession) {
+        let stableId = localStorage.getItem("faby_stable_device_id");
+        if (!stableId) {
+          stableId =
+            typeof crypto !== "undefined" && crypto.randomUUID
+              ? crypto.randomUUID()
+              : "local_" + Math.random().toString(36).slice(2);
+          localStorage.setItem("faby_stable_device_id", stableId);
+        }
+        const novaSessao = {
+          id: stableId,
+          email: "usuario@fabyclaud.local",
+          created_at: new Date().toISOString(),
+        };
+        localSession = JSON.stringify(novaSessao);
+        localStorage.setItem("faby_user_session", localSession);
+      }
+
+      if (localSession) {
+        try {
+          const parsed = JSON.parse(localSession);
+          if (parsed?.id) {
+            headers["x-faby-local-user"] = parsed.id;
+            if (parsed.email) headers["x-faby-local-email"] = parsed.email;
+          }
+        } catch {
+          // ignore
+        }
+      }
+    }
+
+    return next({ headers });
+  })
+  .server(async ({ next }) => {
     const SUPABASE_URL = process.env["SUPABASE_URL"] || "https://placeholder-project.supabase.co";
     const SUPABASE_PUBLISHABLE_KEY =
       process.env["SUPABASE_PUBLISHABLE_KEY"] || "placeholder-anon-key";
@@ -45,9 +96,9 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
 
     const isValidJwt = Boolean(
       token &&
-      token !== "local-session-token" &&
-      token.split(".").length === 3 &&
-      !token.includes("local"),
+        token !== "local-session-token" &&
+        token.split(".").length === 3 &&
+        !token.includes("local"),
     );
 
     const globalConfig: { fetch: typeof fetch; headers?: Record<string, string> } = {
@@ -94,5 +145,4 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
         isAutenticadoSupabase,
       },
     });
-  },
-);
+  });
