@@ -208,7 +208,7 @@ export function resolverPedidoContextual(
   const limpo = pedido.trim();
   let intencao = classificarPedido(limpo);
   const confirmacao =
-    /^(?:sim|isso|pode|pode sim|pode fazer|fa[çc]a|manda|vamos|beleza|ok|claro|quero|bora|continue|continua|crie|vai|criar|execute)[.!\s]*$/i.test(
+    /^(?:sim|s|yes|isso|exato|exatamente|pode|pode sim|pode ser|pode fazer|pode aplicar|fa[çc]a|manda|vamos|beleza|ok|claro|quero|bora|continue|continua|crie|vai|criar|execute|aplique|aplicar)\b/i.test(
       limpo,
     );
   const queixaPrevia =
@@ -240,9 +240,13 @@ export function resolverPedidoContextual(
     };
   }
 
-  if (confirmacao && intencao === "conversar") {
-    if (!ofereceuAcao && !queixaPrevia) {
-      return { pedidoEfetivo: limpo, intencao, continuacao: false };
+  if (confirmacao) {
+    if (!ofereceuAcao) {
+      return {
+        pedidoEfetivo: limpo,
+        intencao: intencao === "recriar" ? "recriar" : "conversar",
+        continuacao: false,
+      };
     }
     intencao = /vers[ãa]o web|recri(?:ar|o)|reconstruir|aplica[çc][ãa]o web/i.test(ultimaResposta)
       ? "recriar"
@@ -303,42 +307,70 @@ export function diagnosticarProjeto(arquivos: Record<string, string>, pedido: st
     .join("\n");
 }
 
-/** Separa leitura, alteração e tentativa de abrir antes de chamar qualquer IA. */
+/** Separa leitura, alteração e tentativa de abrir antes de chamar qualquer IA (Padrão Lovable). */
 export function classificarPedido(pedido: string): IntencaoPedido {
-  const alteracao =
-    /\b(cri[ea]|criar|fa[çc]a|fazer|monte|montar|construa|construir|adicione|adicionar|implemente|implementar|integre|integrar|conecte|conectar|corrija|corrigir|conserte|consertar|arrume|arrumar|altere|alterar|mude|mudar|troque|trocar|remova|remover|exclua|excluir|atualize|atualizar|refa[çc]a|refazer|melhore|melhorar|transforme|transformar|desenvolva|desenvolver|gere|gerar|ajuste|ajustar|estilize|estilizar|bota|botar|coloque|colocar)\b/i;
+  const limpo = pedido.trim();
 
-  // Se o pedido contém verbos explícitos de alteração, trata como alteração mesmo que termine com '?'
-  if (alteracao.test(pedido)) return "alterar";
-
-  // "recrie", "traga igual", "faça a versão web": construir equivalente web da referência.
-  const recriar =
-    /\b(recri[ea]|recriar|reconstru[ai]|reproduz[ai]|clon(?:e|ar)|refa[çc]a\s+igual|traga\s+igual|deixa\s+igual|igual\s+ao\s+(?:original|projeto)|vers[ãa]o\s+web|em\s+vers[ãa]o\s+web|como\s+(?:app|aplica[çc][ãa]o)\s+web)\b/i;
-  if (recriar.test(pedido)) return "recriar";
-
-  // "ponha na prévia", "traga do workspace": também é construir a versão web.
-  const trazerParaPrevia =
-    /\b(traga|trazer|traz|puxe|puxa|p[oõ]e|ponha|coloca|coloque|joga|jogue|bota|monte)\b[^.!?]{0,40}\b(pr[eé]via|previa|workspace|tela|navegador|no\s+ar)\b/i;
-  if (trazerParaPrevia.test(pedido)) return "recriar";
-
-  const pergunta = /\?\s*$/.test(pedido.trim());
-  const consulta =
-    /\b(d[aá] pra|d[aá] para|é poss[íi]vel|posso|consigo|vale a pena|o que (?:voc[êe] )?(?:sugere|acha|recomenda)|qual (?:a )?melhor|por que|deveria|faz sentido|como funciona|serve pra)\b/i;
-  if (pergunta && consulta.test(pedido)) return "conversar";
-
+  // Saudações puras -> conversar
   if (
-    /\b(analise|analisar|audite|auditoria|descreva|explique|entenda|estude|revise|para que serve|como funciona|estrutura)\b/i.test(
-      pedido,
+    /^(?:oi|ol[aá]|bom dia|boa tarde|boa noite|opa|e a[ií]|hello|hi|hey|eai|fala|tudo bem|tudo bom|salve)[!.\s]*$/i.test(
+      limpo,
+    )
+  ) {
+    return "conversar";
+  }
+
+  // Dúvidas conceituais puras sem pedido de código -> conversar
+  if (
+    /^(?:quem [eé] voc[eê]|o que [eé]|qual a diferen[çc]a|me explique o que [eé]|para que serve o|como funciona o javascript|o que significa)[^?]*\?*$/i.test(
+      limpo,
+    )
+  ) {
+    return "conversar";
+  }
+
+  // Confirmações curtas e agradecimentos / elogios puros sem ordem de edição -> conversar
+  if (
+    /^(?:sim|s|yes|isso|exato|exatamente|pode|pode sim|pode ser|pode fazer|ok|beleza|blz|valeu|obrigad[oa]|show|perfeito|muito bom|gostei|adorei|entendi|compreendi|legal|top|otimo|ótimo)[.!,\s]*(?:gostei do resultado|ficou bom|ficou otimo|ficou ótimo|muito bom|valeu)?$/i.test(
+      limpo,
+    ) ||
+    (/^(?:obrigad[oa]|valeu|show|perfeito|muito bom|parab[eé]ns)[\s\S]*$/i.test(limpo) &&
+      !/\b(cri[ea]|fa[çc]a|mud[ea]|alter[ea]|adicion[ea]|coloqu[ea]|bot[ea]|remov[ea]|tir[ea]|corrij[ea]|arrum[ea]|consert[ea]|troqu[ea]|ger[ea])\b/i.test(
+        limpo,
+      ))
+  ) {
+    return "conversar";
+  }
+
+  // Pedidos explícitos de análise / auditoria somente leitura -> analisar
+  if (
+    /\b(analise|analisar|audite|auditoria|descreva os arquivos|explique a arquitetura|revise o c[oó]digo|fa[çc]a uma auditoria)\b/i.test(
+      limpo,
     )
   ) {
     return "analisar";
   }
+
+  // Pedidos de importação / abertura de projeto existente -> abrir
   if (
-    /\b(abra|abrir|rode|rodar|execute|executar|teste|testar|pr[eé]via|visualize)\b/i.test(pedido)
+    /\b(abra|abrir|carregue|carregar|importe|importar)\b[\s\S]{0,40}\b(pasta|zip|projeto|arquivo|c[oó]digo)\b/i.test(
+      limpo,
+    )
   ) {
     return "abrir";
   }
-  return "conversar";
+
+  // Recriação de projeto de referência / trazer do workspace para prévia -> recriar
+  if (
+    /\b(recri[ea]|recriar|reconstru[ai]|reproduz[ai]|clon(?:e|ar)|refa[çc]a\s+igual|traga\s+igual|deixa\s+igual|vers[ãa]o\s+web|em\s+vers[ãa]o\s+web|como\s+(?:app|aplica[çc][ãa]o)\s+web|traga\s+(?:do\s+workspace|para\s+a\s+pr[eé]via)|ponha\s+na\s+pr[eé]via|workspace)\b/i.test(
+      limpo,
+    )
+  ) {
+    return "recriar";
+  }
+
+  // Por padrão: Qualquer pedido de construção, tela, jogo, site, app, componente, ajuste, cor ou funcionalidade gera código!
+  return "alterar";
 }
 
 /** Resumo determinístico para a IA enxergar a árvore inteira sem receber 200 arquivos às cegas. */
@@ -801,23 +833,11 @@ function ehArquivoDeServidor(caminho: string) {
   );
 }
 
-/** Distingue conversa de um pedido que obrigatoriamente precisa alterar arquivos. */
+/** Distingue conversa de um pedido que obrigatoriamente precisa alterar arquivos (Padrão Lovable). */
 export function pedidoExigeArquivos(pedido: string) {
   const intencao = classificarPedido(pedido);
-  // Recriar sempre precisa terminar em arquivos: é o pedido de "traga igual, quero ver funcionando".
-  if (intencao === "recriar") return true;
-  if (intencao !== "alterar") return false;
-  const acao =
-    /\b(cri[ea]|criar|fa[çc]a|fazer|monte|construa|adicione|implemente|integre|conecte|corrija|conserte|arrume|altere|mude|troque|remova|exclua|atualize|refa[çc]a|melhore|transforme|desenvolva|gere)\b/i;
-  const alvo =
-    /\b(site|sistema|app|aplicativo|projeto|c[oó]digo|arquivo|html|css|javascript|script|bot[aã]o|link|menu|navega[çc][aã]o|frontend|backend|servidor|api|banco|sql|login|cadastro|tela|p[aá]gina|modal|formul[aá]rio)\b/i;
-  const exigencia =
-    /\b(nenhum|nada)\b.{0,35}\b(fake|falso|quebrado|parado)|\b(precisa|tem que|deve)\b.{0,50}\b(funcionar|abrir|salvar|navegar|conectar)/i;
-  // Ordem curta e direta ("corrija", "melhore", "arrume isso") não cita alvo, mas
-  // é ordem de mexer no projeto: aceitar só texto aqui era o falso sucesso clássico.
-  const curto = pedido.trim().split(/\s+/).length <= 6;
-  if (curto && acao.test(pedido)) return true;
-  return alvo.test(pedido) && (acao.test(pedido) || exigencia.test(pedido));
+  if (intencao === "recriar" || intencao === "alterar") return true;
+  return false;
 }
 
 /** Pedidos assim não podem ser considerados completos sem servidor, conexão e SQL reais. */
