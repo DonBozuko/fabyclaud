@@ -2719,7 +2719,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         const problemasAntes = problemas.length;
         // Equipe: quem revisa é, de preferência, uma IA diferente de quem escreveu.
         const porForca = [...candidatos].sort((a, b) => forca(a.pid) - forca(b.pid));
-        if (totalChars <= 120000) {
+        if (totalChars <= 120000 && candidatos.length > 1 && problemas.length > 0) {
           const especialistaRevisao = selecionarMelhorModeloEtapa(
             "revisao",
             candidatos,
@@ -2823,7 +2823,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         // conserto recebe só a lista de problemas e devolve os arquivos corrigidos.
         const gravesPendentes = [...new Set([...problemasCriticos(problemas), ...faltasCobertura])];
 
-        if (gravesPendentes.length) {
+        if (gravesPendentes.length && candidatos.length > 1) {
           const especialistaConserto =
             selecionarMelhorModeloEtapa("construcao", candidatos, provedorUsado) ??
             selecionarMelhorModeloEtapa("revisao", candidatos, provedorUsado);
@@ -2914,7 +2914,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         const rodadas: string[] = [`${nomeDe(provedorUsado)} (${avaliacao.nota}/100)`];
         const abordagensFalhadas: string[] = [];
         let tentativa = 1;
-        while (!avaliacao.atingiuObjetivo && tentativa < TETO_TENTATIVAS) {
+        while (!avaliacao.atingiuObjetivo && tentativa < TETO_TENTATIVAS && candidatos.length > 1) {
           const jaUsados = new Set(rodadas.map((r) => r.split(" (")[0]));
           const proximo =
             porForca.find((c) => !jaUsados.has(nomeDe(c.pid))) ??
