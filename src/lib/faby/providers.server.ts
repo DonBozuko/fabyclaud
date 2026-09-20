@@ -281,7 +281,7 @@ async function chamarGoogleComFallback(
   modeloPreferido?: string,
 ): Promise<ResultadoIA> {
   const principal = modeloPreferido || MODELS.google;
-  const lista = MODELOS_ALTERNATIVOS['google'] ?? [];
+  const lista = MODELOS_ALTERNATIVOS["google"] ?? [];
   let modelosGoogle = [...new Set([principal, ...lista].filter(Boolean))];
 
   let ultimo: ResultadoIA = { ok: false, texto: "provedor Google indisponível" };
@@ -391,12 +391,7 @@ async function chamarAntigravity(
 
     while (tentativasCriacao < 3) {
       tentativasCriacao++;
-      const resCriar = await postJson(
-        urlCriar,
-        headers,
-        corpo,
-        Math.min(timeoutMs, 25_000),
-      );
+      const resCriar = await postJson(urlCriar, headers, corpo, Math.min(timeoutMs, 25_000));
       ok = resCriar.ok;
       status = resCriar.status;
       json = resCriar.json;
@@ -416,16 +411,16 @@ async function chamarAntigravity(
 
     const respostaObj = json as Record<string, unknown> | null;
     const saidaSincrona =
-      (respostaObj?.['output'] as { text?: string } | undefined)?.text ??
-      (respostaObj?.['result'] as { text?: string } | undefined)?.text ??
-      (respostaObj?.['response'] as { text?: string } | undefined)?.text ??
-      (typeof respostaObj?.['output'] === "string" ? (respostaObj['output'] as string) : null);
+      (respostaObj?.["output"] as { text?: string } | undefined)?.text ??
+      (respostaObj?.["result"] as { text?: string } | undefined)?.text ??
+      (respostaObj?.["response"] as { text?: string } | undefined)?.text ??
+      (typeof respostaObj?.["output"] === "string" ? (respostaObj["output"] as string) : null);
 
     if (saidaSincrona && typeof saidaSincrona === "string" && saidaSincrona.trim()) {
       return { ok: true, texto: saidaSincrona.trim() };
     }
 
-    const interactionId = (respostaObj?.['id'] ?? respostaObj?.['name']) as string | undefined;
+    const interactionId = (respostaObj?.["id"] ?? respostaObj?.["name"]) as string | undefined;
     if (!interactionId) {
       if (texto && texto.length > 50) {
         return { ok: true, texto };
@@ -566,14 +561,7 @@ export async function chamarProvedorComModelo(
     if (providerId === "antigravity") {
       const tentativa = await chamarAntigravity(prompt, historico, key, imagens, timeoutMs);
       if (tentativa.ok) return tentativa;
-      return await chamarGoogleComFallback(
-        prompt,
-        historico,
-        key,
-        imagens,
-        timeoutMs,
-        modelo,
-      );
+      return await chamarGoogleComFallback(prompt, historico, key, imagens, timeoutMs, modelo);
     }
     if (providerId === "google")
       return await chamarGoogleComFallback(prompt, historico, key, imagens, timeoutMs, modelo);
@@ -633,14 +621,7 @@ export async function chamarProvedor(
     }
 
     if (providerId === "google") {
-      return await chamarGoogleComFallback(
-        prompt,
-        historico,
-        key,
-        imagens,
-        timeoutMs,
-        principal,
-      );
+      return await chamarGoogleComFallback(prompt, historico, key, imagens, timeoutMs, principal);
     }
 
     const omniUrl = providerId === "omniroute" ? endpointOmniRoute(apiUrl) : null;

@@ -47,7 +47,9 @@ function AuthPage() {
     } catch {
       // ignore
     }
-    return typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : "local_" + Math.random().toString(36).slice(2);
+    return typeof crypto !== "undefined" && crypto.randomUUID
+      ? crypto.randomUUID()
+      : "local_" + Math.random().toString(36).slice(2);
   }
 
   function autenticarLocalmente(emailInformado: string) {
@@ -99,7 +101,11 @@ function AuthPage() {
         });
         if (error) {
           // Se for erro de rede / placeholder, oferece fallback local
-          if (error.message.includes("fetch") || error.message.includes("network") || error.message.includes("placeholder")) {
+          if (
+            error.message.includes("fetch") ||
+            error.message.includes("network") ||
+            error.message.includes("placeholder")
+          ) {
             autenticarLocalmente(email);
             return;
           }
@@ -118,7 +124,11 @@ function AuthPage() {
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha });
         if (error) {
-          if (error.message.includes("fetch") || error.message.includes("network") || error.message.includes("placeholder")) {
+          if (
+            error.message.includes("fetch") ||
+            error.message.includes("network") ||
+            error.message.includes("placeholder")
+          ) {
             autenticarLocalmente(email);
             return;
           }

@@ -195,7 +195,9 @@ export function montarPreviewHtml(arquivos: Record<string, string>) {
 </script>`;
 
   if (/<head[^>]*>/i.test(saida)) {
-    saida = saida.replace(/<head[^>]*>/i, function(abre) { return abre + "\n" + runtimeResiliencia; });
+    saida = saida.replace(/<head[^>]*>/i, function (abre) {
+      return abre + "\n" + runtimeResiliencia;
+    });
   } else {
     saida = runtimeResiliencia + "\n" + saida;
   }

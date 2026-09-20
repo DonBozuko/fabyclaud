@@ -53,7 +53,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">
           {isOffline
             ? "Verifique sua conexão com a rede. Seus projetos e dados locais continuam seguros."
-            : error?.message || "Ocorreu uma instabilidade temporária. Você pode tentar recarregar."}
+            : error?.message ||
+              "Ocorreu uma instabilidade temporária. Você pode tentar recarregar."}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2.5">
           <button

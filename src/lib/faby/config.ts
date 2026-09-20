@@ -15,9 +15,7 @@ export const MODELS = {
  * sem perder qualidade — todos são modelos fortes pra programar.
  */
 export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
-  antigravity: [
-    "antigravity-preview-05-2026",
-  ],
+  antigravity: ["antigravity-preview-05-2026"],
   google: [
     "gemini-2.5-flash",
     "gemini-2.5-pro",
@@ -71,29 +69,69 @@ export interface PreferenciaModeloEtapa {
  */
 export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa[]> = {
   planejamento: [
-    { provedor: "antigravity", modelo: "antigravity-preview-05-2026", nomeLegivel: "Antigravity Agent (Google)" },
-    { provedor: "openrouter", modelo: "deepseek/deepseek-r1:free", nomeLegivel: "DeepSeek R1 (OpenRouter)" },
+    {
+      provedor: "antigravity",
+      modelo: "antigravity-preview-05-2026",
+      nomeLegivel: "Antigravity Agent (Google)",
+    },
+    {
+      provedor: "openrouter",
+      modelo: "deepseek/deepseek-r1:free",
+      nomeLegivel: "DeepSeek R1 (OpenRouter)",
+    },
     { provedor: "deepseek", modelo: "deepseek-reasoner", nomeLegivel: "DeepSeek Reasoner" },
     { provedor: "google", modelo: "gemini-2.5-pro", nomeLegivel: "Gemini 2.5 Pro" },
-    { provedor: "groq", modelo: "deepseek-r1-distill-llama-70b", nomeLegivel: "DeepSeek R1 70B (Groq)" },
+    {
+      provedor: "groq",
+      modelo: "deepseek-r1-distill-llama-70b",
+      nomeLegivel: "DeepSeek R1 70B (Groq)",
+    },
     { provedor: "groq", modelo: "llama-3.3-70b-versatile", nomeLegivel: "Llama 3.3 70B (Groq)" },
     { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
     { provedor: "huggingface", modelo: "deepseek-ai/DeepSeek-R1", nomeLegivel: "DeepSeek R1 (HF)" },
   ],
   construcao: [
-    { provedor: "antigravity", modelo: "antigravity-preview-05-2026", nomeLegivel: "Antigravity Agent (Google)" },
-    { provedor: "groq", modelo: "qwen/qwen-2.5-coder-32b", nomeLegivel: "Qwen 2.5 Coder 32B (Groq)" },
-    { provedor: "openrouter", modelo: "qwen/qwen-2.5-coder-32b-instruct:free", nomeLegivel: "Qwen 2.5 Coder 32B (OpenRouter)" },
-    { provedor: "openrouter", modelo: "deepseek/deepseek-chat:free", nomeLegivel: "DeepSeek V3 (OpenRouter)" },
-    { provedor: "huggingface", modelo: "Qwen/Qwen2.5-Coder-32B-Instruct", nomeLegivel: "Qwen 2.5 Coder (HF)" },
+    {
+      provedor: "antigravity",
+      modelo: "antigravity-preview-05-2026",
+      nomeLegivel: "Antigravity Agent (Google)",
+    },
+    {
+      provedor: "groq",
+      modelo: "qwen/qwen-2.5-coder-32b",
+      nomeLegivel: "Qwen 2.5 Coder 32B (Groq)",
+    },
+    {
+      provedor: "openrouter",
+      modelo: "qwen/qwen-2.5-coder-32b-instruct:free",
+      nomeLegivel: "Qwen 2.5 Coder 32B (OpenRouter)",
+    },
+    {
+      provedor: "openrouter",
+      modelo: "deepseek/deepseek-chat:free",
+      nomeLegivel: "DeepSeek V3 (OpenRouter)",
+    },
+    {
+      provedor: "huggingface",
+      modelo: "Qwen/Qwen2.5-Coder-32B-Instruct",
+      nomeLegivel: "Qwen 2.5 Coder (HF)",
+    },
     { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
     { provedor: "google", modelo: "gemini-2.5-pro", nomeLegivel: "Gemini 2.5 Pro" },
     { provedor: "deepseek", modelo: "deepseek-chat", nomeLegivel: "DeepSeek V3" },
     { provedor: "groq", modelo: "llama-3.3-70b-versatile", nomeLegivel: "Llama 3.3 70B (Groq)" },
   ],
   revisao: [
-    { provedor: "antigravity", modelo: "antigravity-preview-05-2026", nomeLegivel: "Antigravity Agent (Google)" },
-    { provedor: "openrouter", modelo: "deepseek/deepseek-r1:free", nomeLegivel: "DeepSeek R1 (OpenRouter)" },
+    {
+      provedor: "antigravity",
+      modelo: "antigravity-preview-05-2026",
+      nomeLegivel: "Antigravity Agent (Google)",
+    },
+    {
+      provedor: "openrouter",
+      modelo: "deepseek/deepseek-r1:free",
+      nomeLegivel: "DeepSeek R1 (OpenRouter)",
+    },
     { provedor: "groq", modelo: "openai/gpt-oss-120b", nomeLegivel: "GPT-OSS 120B (Groq)" },
     { provedor: "groq", modelo: "llama-3.3-70b-versatile", nomeLegivel: "Llama 3.3 70B (Groq)" },
     { provedor: "google", modelo: "gemini-2.5-pro", nomeLegivel: "Gemini 2.5 Pro" },
@@ -106,14 +144,23 @@ export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa
     { provedor: "groq", modelo: "llama-3.1-8b-instant", nomeLegivel: "Llama 3.1 8B Instant" },
     { provedor: "zai", modelo: "glm-4-flash", nomeLegivel: "GLM-4 Flash" },
     { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
-    { provedor: "openrouter", modelo: "meta-llama/llama-3.3-70b-instruct:free", nomeLegivel: "Llama 3.3 (OpenRouter)" },
+    {
+      provedor: "openrouter",
+      modelo: "meta-llama/llama-3.3-70b-instruct:free",
+      nomeLegivel: "Llama 3.3 (OpenRouter)",
+    },
   ],
 };
 
 /** Seleciona a melhor IA configurada para uma etapa específica de engenharia. */
 export function selecionarMelhorModeloEtapa(
   etapa: EtapaOrquestracao,
-  candidatos: { pid: string; key: string; apiUrl?: string | undefined; testada?: boolean | undefined }[],
+  candidatos: {
+    pid: string;
+    key: string;
+    apiUrl?: string | undefined;
+    testada?: boolean | undefined;
+  }[],
   excluirProvedor?: string,
 ): {
   pid: string;
@@ -149,7 +196,9 @@ export function selecionarMelhorModeloEtapa(
 
   const ehFraco =
     escolhido.pid === "zai" ||
-    (escolhido.pid === "google" && etapa === "construcao" && !candidatos.some((c) => c.pid === "groq" || c.pid === "openrouter"));
+    (escolhido.pid === "google" &&
+      etapa === "construcao" &&
+      !candidatos.some((c) => c.pid === "groq" || c.pid === "openrouter"));
 
   return {
     pid: escolhido.pid,

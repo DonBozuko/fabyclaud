@@ -13,7 +13,7 @@
  *  - freio automático: sem crédito/permissão o estudo entra em pausa e só volta
  *    depois de uma sondagem bem-sucedida ou de uma ordem do usuário.
  */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { chamarProvedor } from "./providers.server";
 import type { ProvedorCustom } from "./config";
 
