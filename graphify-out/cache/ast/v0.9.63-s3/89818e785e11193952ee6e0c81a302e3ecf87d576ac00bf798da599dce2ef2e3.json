@@ -1,1 +1,32 @@
-{"nodes": [{"id": "$graphify-root$_claude_agents_revisor_md", "label": "revisor.md", "file_type": "document", "node_kind": "page", "source_file": ".claude/agents/revisor.md", "source_location": "L1", "frontmatter": {"name": "revisor-ia", "description": "Auditor T\u00e9cnico de C\u00f3digo e Integridade Fullstack movido por IA.", "model": "openai/gpt-4o-mini", "permissionMode": "auto"}}], "edges": [], "raw_calls": [{"caller_nid": "$graphify-root$_claude_agents_revisor_md", "callee": "OK", "is_member_call": false, "language": "markdown", "context": "OK", "source_file": ".claude/agents/revisor.md", "source_location": "L20"}], "input_tokens": 0, "output_tokens": 0}
+{
+  "nodes": [
+    {
+      "id": "$graphify-root$_claude_agents_revisor_md",
+      "label": "revisor.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "source_file": ".claude/agents/revisor.md",
+      "source_location": "L1",
+      "frontmatter": {
+        "name": "revisor-ia",
+        "description": "Auditor T\u00e9cnico de C\u00f3digo e Integridade Fullstack movido por IA.",
+        "model": "openai/gpt-4o-mini",
+        "permissionMode": "auto"
+      }
+    }
+  ],
+  "edges": [],
+  "raw_calls": [
+    {
+      "caller_nid": "$graphify-root$_claude_agents_revisor_md",
+      "callee": "OK",
+      "is_member_call": false,
+      "language": "markdown",
+      "context": "OK",
+      "source_file": ".claude/agents/revisor.md",
+      "source_location": "L20"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

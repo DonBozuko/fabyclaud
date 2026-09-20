@@ -23,7 +23,14 @@ type Db = {
 };
 
 export type EtapaConstrucao =
-  "diagnostico" | "planejamento" | "construcao" | "revisao" | "teste" | "correcao" | "entrega";
+  | "diagnostico"
+  | "planejamento"
+  | "arquitetura"
+  | "construcao"
+  | "revisao"
+  | "teste"
+  | "correcao"
+  | "entrega";
 
 /**
  * Monta o Snapshot VFS em memória para ser injetado em prompts do sistema.

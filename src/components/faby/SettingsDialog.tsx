@@ -66,7 +66,7 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
               data: {
                 provider: prov,
                 key: dados.key,
-                api_url: prov === "omniroute" ? (dados.api_url || "") : "",
+                api_url: prov === "omniroute" ? dados.api_url || "" : "",
               },
             })
               .then(() => {
@@ -396,7 +396,9 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
                     onClick={async () => {
                       if (typeof window !== "undefined") {
                         try {
-                          const salvas = JSON.parse(localStorage.getItem("faby_local_keys") || "{}");
+                          const salvas = JSON.parse(
+                            localStorage.getItem("faby_local_keys") || "{}",
+                          );
                           delete salvas[k.provider];
                           localStorage.setItem("faby_local_keys", JSON.stringify(salvas));
                         } catch {

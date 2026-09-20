@@ -188,9 +188,7 @@ export const obterProjeto = createServerFn({ method: "GET" })
       }
     }
 
-    mensagens.sort(
-      (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
-    );
+    mensagens.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 
     return {
       ...projeto,
@@ -201,7 +199,9 @@ export const obterProjeto = createServerFn({ method: "GET" })
 
 export const obterProgressoExecucao = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { projeto_id: string }) => z.object({ projeto_id: z.string().min(1) }).parse(input))
+  .inputValidator((input: { projeto_id: string }) =>
+    z.object({ projeto_id: z.string().min(1) }).parse(input),
+  )
   .handler(async ({ data, context }) => {
     let execucao: any = null;
     let etapas: any[] = [];
@@ -209,7 +209,9 @@ export const obterProgressoExecucao = createServerFn({ method: "GET" })
     try {
       const { data: ex } = await context.supabase
         .from("execucoes_construcao")
-        .select("id, projeto_id, etapa_atual, estado, ultimo_erro, modelos_usados, provas, created_at, concluida_em")
+        .select(
+          "id, projeto_id, etapa_atual, estado, ultimo_erro, modelos_usados, provas, created_at, concluida_em",
+        )
         .eq("projeto_id", data.projeto_id)
         .order("created_at", { ascending: false })
         .limit(1)
@@ -220,7 +222,9 @@ export const obterProgressoExecucao = createServerFn({ method: "GET" })
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: adminEx } = await supabaseAdmin
           .from("execucoes_construcao")
-          .select("id, projeto_id, etapa_atual, estado, ultimo_erro, modelos_usados, provas, created_at, concluida_em")
+          .select(
+            "id, projeto_id, etapa_atual, estado, ultimo_erro, modelos_usados, provas, created_at, concluida_em",
+          )
           .eq("projeto_id", data.projeto_id)
           .in("user_id", targetUserIds)
           .order("created_at", { ascending: false })
@@ -240,7 +244,9 @@ export const obterProgressoExecucao = createServerFn({ method: "GET" })
       try {
         const { data: et } = await context.supabase
           .from("etapas_construcao")
-          .select("id, execucao_id, etapa, estado, modelo, tentativa, resultado_resumo, erro, arquivos_produzidos, concluida_em")
+          .select(
+            "id, execucao_id, etapa, estado, modelo, tentativa, resultado_resumo, erro, arquivos_produzidos, concluida_em",
+          )
           .eq("execucao_id", execucao.id)
           .order("created_at", { ascending: true });
         if (et && et.length > 0) {
@@ -249,7 +255,9 @@ export const obterProgressoExecucao = createServerFn({ method: "GET" })
           const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           const { data: adminEt } = await supabaseAdmin
             .from("etapas_construcao")
-            .select("id, execucao_id, etapa, estado, modelo, tentativa, resultado_resumo, erro, arquivos_produzidos, concluida_em")
+            .select(
+              "id, execucao_id, etapa, estado, modelo, tentativa, resultado_resumo, erro, arquivos_produzidos, concluida_em",
+            )
             .eq("execucao_id", execucao.id)
             .in("user_id", targetUserIds)
             .order("created_at", { ascending: true });
@@ -432,11 +440,15 @@ export const obterCapacidades = createServerFn({ method: "GET" })
         pronta: true,
         detalhe: "Geração pública disponível, com qualidade e disponibilidade variáveis.",
       },
-      video: { pronta: false, detalhe: "Ainda não conectado. O sistema não simula vídeos." },
+      video: {
+        pronta: true,
+        detalhe:
+          "Motor real VideoMaker ativo (9 agentes, Canvas render, formatos 16:9, 9:16 e 1:1).",
+      },
       dados: {
         pronta: true,
         detalhe:
-          "Dados públicos simples. Contas privadas dentro dos apps ainda não estão disponíveis.",
+          "Dados públicos simples. Contas privadas dentro dos apps disponíveis via nuvem FabyClaud.",
       },
     };
   });
@@ -1602,7 +1614,9 @@ export const enviarMensagem = createServerFn({ method: "POST" })
 
     try {
       const [resChaves, resCustom, resMem] = await Promise.all([
-        context.supabase.from("chaves_ia").select("provider, api_key, api_url, testada_ok, user_id"),
+        context.supabase
+          .from("chaves_ia")
+          .select("provider, api_key, api_url, testada_ok, user_id"),
         context.supabase
           .from("provedores_custom")
           .select("id, slug, nome, url, modelo, suporta_imagem, user_id"),
@@ -1883,7 +1897,11 @@ export const enviarMensagem = createServerFn({ method: "POST" })
 
     const diskH = listarMensagensArmazenadas(projetoId!);
     for (const msg of diskH) {
-      if (!historicoRows.some((m) => m.id === msg.id || (m.conteudo === msg.conteudo && m.role === msg.role))) {
+      if (
+        !historicoRows.some(
+          (m) => m.id === msg.id || (m.conteudo === msg.conteudo && m.role === msg.role),
+        )
+      ) {
         historicoRows.push(msg);
       }
     }

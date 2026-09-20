@@ -408,9 +408,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/builder.server.ts": {
-    "mtime": 1789850115.839709,
-    "seen": 1789874564.7051349,
-    "ast_hash": "fb69558a957177a721545d9cf42f6ced",
+    "mtime": 1789933445.3038545,
+    "seen": 1789933477.8344588,
+    "ast_hash": "cac1f810dd4ad1480a59ce91ceac6db1",
     "semantic_hash": ""
   },
   "src/lib/faby/config.ts": {

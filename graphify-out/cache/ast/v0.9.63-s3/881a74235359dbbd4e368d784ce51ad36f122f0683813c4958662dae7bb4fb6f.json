@@ -1,1 +1,22 @@
-{"nodes": [{"id": "$graphify-root$_claude_agents_arquiteto_md", "label": "arquiteto.md", "file_type": "document", "node_kind": "page", "source_file": ".claude/agents/arquiteto.md", "source_location": "L1", "frontmatter": {"name": "arquiteto-ia", "description": "Arquiteto de Software e Planejador Fullstack com foco em Stateful VFS e sincroniza\u00e7\u00e3o de dados/UI.", "model": "openrouter/free", "permissionMode": "auto"}}], "edges": [], "raw_calls": [], "input_tokens": 0, "output_tokens": 0}
+{
+  "nodes": [
+    {
+      "id": "$graphify-root$_claude_agents_arquiteto_md",
+      "label": "arquiteto.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "source_file": ".claude/agents/arquiteto.md",
+      "source_location": "L1",
+      "frontmatter": {
+        "name": "arquiteto-ia",
+        "description": "Arquiteto de Software e Planejador Fullstack com foco em Stateful VFS e sincroniza\u00e7\u00e3o de dados/UI.",
+        "model": "openrouter/free",
+        "permissionMode": "auto"
+      }
+    }
+  ],
+  "edges": [],
+  "raw_calls": [],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

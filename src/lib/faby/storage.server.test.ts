@@ -57,7 +57,10 @@ describe("Persistência e Continuidade FabyClaud (Estilo Lovable)", () => {
     assert.ok(projeto?.arquivos["index.html"]);
 
     const lista = listarProjetosArmazenados([testUserId]);
-    assert.ok(lista.some((p) => p.id === testProjectId), "Projeto deve constar na lista");
+    assert.ok(
+      lista.some((p) => p.id === testProjectId),
+      "Projeto deve constar na lista",
+    );
   });
 
   test("3. Multi-turn chat (continuidade sem amnésia entre turnos)", () => {
@@ -113,14 +116,20 @@ describe("Persistência e Continuidade FabyClaud (Estilo Lovable)", () => {
   test("4. Resolução contextual de comandos de continuação", () => {
     const historico = [
       { role: "user" as const, conteudo: "crie um app de notas" },
-      { role: "assistant" as const, conteudo: "Posso adicionar login com senha? Deseja que eu aplique?" },
+      {
+        role: "assistant" as const,
+        conteudo: "Posso adicionar login com senha? Deseja que eu aplique?",
+      },
     ];
 
     const ctxSim = resolverPedidoContextual("sim, por favor", historico);
     assert.equal(ctxSim.intencao, "alterar");
     assert.equal(ctxSim.continuacao, true);
 
-    const ctxMudeCor = resolverPedidoContextual("agora mude a cor do cabeçalho para verde", historico);
+    const ctxMudeCor = resolverPedidoContextual(
+      "agora mude a cor do cabeçalho para verde",
+      historico,
+    );
     assert.equal(ctxMudeCor.intencao, "alterar");
 
     const intencaoAlterar = classificarPedido("troque o fundo para preto");

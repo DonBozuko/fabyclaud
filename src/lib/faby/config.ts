@@ -57,7 +57,16 @@ export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
   omniroute: ["auto/coding", "auto/smart", "auto/fast"],
 };
 
-export type EtapaOrquestracao = "planejamento" | "construcao" | "revisao" | "conversa";
+export type EtapaOrquestracao =
+  | "diagnostico"
+  | "planejamento"
+  | "arquitetura"
+  | "construcao"
+  | "revisao"
+  | "teste"
+  | "correcao"
+  | "entrega"
+  | "conversa";
 
 export interface PreferenciaModeloEtapa {
   provedor: string;
@@ -65,14 +74,36 @@ export interface PreferenciaModeloEtapa {
   nomeLegivel: string;
 }
 
+export interface ContratoEntrega {
+  nomeProduto: string;
+  publico: string;
+  objetivo: string;
+  telas: string[];
+  entidades: string[];
+  acoes: string[];
+  integracoes: string[];
+  criteriosAceite: string[];
+  limitacoesAmbiente: string[];
+  recursosExternos: string[];
+}
+
 /**
  * Especialização de modelos por etapa (o batalhão de IAs trabalhando nas suas forças):
- * - Planejamento/Arquitetura: modelos de raciocínio profundo.
- * - Construção: modelos especializados em geração de código.
- * - Revisão/Inspeção: modelos críticos e minuciosos.
+ * - Diagnóstico / Planejamento / Arquitetura: modelos de raciocínio profundo.
+ * - Construção / Correção: modelos especializados em geração de código.
+ * - Revisão / Teste / Entrega: modelos críticos e minuciosos.
  * - Conversa: modelos rápidos e leves.
  */
 export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa[]> = {
+  diagnostico: [
+    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
+    { provedor: "groq", modelo: "llama-3.3-70b-versatile", nomeLegivel: "Llama 3.3 70B (Groq)" },
+    {
+      provedor: "openrouter",
+      modelo: "deepseek/deepseek-chat:free",
+      nomeLegivel: "DeepSeek V3 (OpenRouter)",
+    },
+  ],
   planejamento: [
     { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
     {
@@ -89,6 +120,20 @@ export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa
     },
     { provedor: "groq", modelo: "llama-3.3-70b-versatile", nomeLegivel: "Llama 3.3 70B (Groq)" },
     { provedor: "huggingface", modelo: "deepseek-ai/DeepSeek-R1", nomeLegivel: "DeepSeek R1 (HF)" },
+  ],
+  arquitetura: [
+    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
+    {
+      provedor: "openrouter",
+      modelo: "deepseek/deepseek-r1:free",
+      nomeLegivel: "DeepSeek R1 (OpenRouter)",
+    },
+    {
+      provedor: "groq",
+      modelo: "deepseek-r1-distill-llama-70b",
+      nomeLegivel: "DeepSeek R1 70B (Groq)",
+    },
+    { provedor: "google", modelo: "gemini-2.5-pro", nomeLegivel: "Gemini 2.5 Pro" },
   ],
   construcao: [
     { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
@@ -130,6 +175,23 @@ export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa
     { provedor: "deepseek", modelo: "deepseek-reasoner", nomeLegivel: "DeepSeek Reasoner" },
     { provedor: "huggingface", modelo: "deepseek-ai/DeepSeek-V3", nomeLegivel: "DeepSeek V3 (HF)" },
   ],
+  teste: [
+    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
+    {
+      provedor: "groq",
+      modelo: "qwen/qwen-2.5-coder-32b",
+      nomeLegivel: "Qwen 2.5 Coder 32B (Groq)",
+    },
+  ],
+  correcao: [
+    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
+    {
+      provedor: "groq",
+      modelo: "qwen/qwen-2.5-coder-32b",
+      nomeLegivel: "Qwen 2.5 Coder 32B (Groq)",
+    },
+  ],
+  entrega: [{ provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" }],
   conversa: [
     { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
     { provedor: "groq", modelo: "llama-3.1-8b-instant", nomeLegivel: "Llama 3.1 8B Instant" },

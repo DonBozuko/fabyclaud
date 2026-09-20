@@ -195,7 +195,9 @@ export function listarProjetosArmazenados(userIds?: string[]): ProjetoArmazenado
   carregarDoDisco();
   const list: ProjetoArmazenado[] = Object.values(memoryState.projetos);
   return list.sort(
-    (a, b) => new Date(b.updated_at || b.created_at).getTime() - new Date(a.updated_at || a.created_at).getTime(),
+    (a, b) =>
+      new Date(b.updated_at || b.created_at).getTime() -
+      new Date(a.updated_at || a.created_at).getTime(),
   );
 }
 
@@ -226,9 +228,7 @@ export function apagarProjetoArmazenado(id: string): void {
 export function listarMensagensArmazenadas(projetoId: string): MensagemArmazenada[] {
   carregarDoDisco();
   const msgs = memoryState.mensagens[projetoId] || [];
-  return msgs.sort(
-    (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
-  );
+  return msgs.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 }
 
 export function salvarMensagemArmazenada(msg: MensagemArmazenada): void {

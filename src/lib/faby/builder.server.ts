@@ -7,6 +7,7 @@
 import { instrucaoNuvem, usaAutenticacaoPrivada, usaBancoHospedado } from "./nuvem";
 import { CodeModifier } from "@/agents/CodeModifier";
 import { DirectoryReader } from "@/agents/DirectoryReader";
+import type { ContratoEntrega } from "./config";
 import {
   instrucoesImgToHtml,
   pedidoUsaReferenciaVisual,
@@ -14,6 +15,193 @@ import {
 } from "./img-to-html.server";
 
 const directoryReader = new DirectoryReader();
+
+export type TipoPedidoLovable =
+  | "conversa"
+  | "pesquisa"
+  | "criacao"
+  | "edicao"
+  | "correcao"
+  | "imagem"
+  | "video"
+  | "importacao"
+  | "publicacao";
+
+export function classificarPedidoLovable(pedido: string): TipoPedidoLovable {
+  const limpo = pedido.trim();
+
+  if (
+    /\b(v[ií]deo|anima[çc][ãa]o|filme|video-maker|videomaker|criar v[ií]deo|gerar v[ií]deo|video sobre)\b/i.test(
+      limpo,
+    )
+  ) {
+    return "video";
+  }
+
+  if (
+    /\b(gerar imagem|criar imagem|desenho|desenhe|foto de|ilustra[çc][ãa]o|wallpaper|avatar|imagem de|gerar:\s*)\b/i.test(
+      limpo,
+    )
+  ) {
+    return "imagem";
+  }
+
+  if (
+    /\b(pesquis[ea]|busqu[ea]\s+na\s+web|procure\s+informa[çc][õo]es|not[íi]cias?|google|web search)\b/i.test(
+      limpo,
+    )
+  ) {
+    return "pesquisa";
+  }
+
+  if (
+    /\b(publicar|publica[çc][ãa]o|deploy|colocar no ar|subir site|gerar link publico)\b/i.test(
+      limpo,
+    )
+  ) {
+    return "publicacao";
+  }
+
+  if (
+    /\b(abra|abrir|carregue|carregar|importe|importar)\b[\s\S]{0,40}\b(pasta|zip|projeto|arquivo|c[oó]digo)\b/i.test(
+      limpo,
+    )
+  ) {
+    return "importacao";
+  }
+
+  if (
+    /\b(corrij[ea]|arrum[ea]|consert[ea]|resolv[ea]|bug|erro|falha|uncaught|typeerror|quebrou|n[aã]o est[aá] funcionando)\b/i.test(
+      limpo,
+    )
+  ) {
+    return "correcao";
+  }
+
+  if (
+    /^(?:oi|ol[aá]|bom dia|boa tarde|boa noite|opa|e a[ií]|hello|hi|hey|eai|fala|tudo bem|tudo bom|salve)[!.\s]*$/i.test(
+      limpo,
+    ) ||
+    /^(?:quem [eé] voc[eê]|o que [eé]|qual a diferen[çc]a|me explique o que [eé]|para que serve o|como funciona o javascript|o que significa)[^?]*\?*$/i.test(
+      limpo,
+    ) ||
+    /^(?:sim|s|yes|isso|exato|exatamente|pode|pode sim|pode ser|pode fazer|ok|beleza|blz|valeu|obrigad[oa]|show|perfeito|muito bom|gostei|adorei|entendi|compreendi|legal|top|otimo|ótimo)[.!,\s]*(?:gostei do resultado|ficou bom|ficou otimo|ficou ótimo|muito bom|valeu)?$/i.test(
+      limpo,
+    )
+  ) {
+    return "conversa";
+  }
+
+  if (
+    /\b(mud[ea]|alter[ea]|troqu[ea]|adicion[ea]|coloqu[ea]|bot[ea]|remov[ea]|tir[ea]|estiliz[ea]|redesenhe|ajust[ea])\b/i.test(
+      limpo,
+    )
+  ) {
+    return "edicao";
+  }
+
+  return "criacao";
+}
+
+export function gerarContratoEntrega(
+  pedido: string,
+  arquivosAtuais: Record<string, string> = {},
+  tipo: TipoPedidoLovable = "criacao",
+): ContratoEntrega {
+  const limpo = pedido.trim();
+  const nomesArquivos = Object.keys(arquivosAtuais).filter(
+    (n) => !n.startsWith("enviados/") && !n.startsWith("originais/"),
+  );
+  const temArquivos = nomesArquivos.length > 0;
+
+  let nomeProduto = "Aplicação Web Interativa";
+  const matchNome = limpo.match(
+    /(?:app|clone|jogo|site|sistema|painel|dashboard|calculadora|saas)\s+(?:d[eao]\s+)?([a-zA-Z0-9À-ÿ\s-]{3,30})/i,
+  );
+  if (matchNome?.[1]) {
+    nomeProduto = matchNome[0].trim();
+  } else if (limpo.length < 40) {
+    nomeProduto = limpo;
+  }
+
+  const telas = ["Tela Principal (Visão Geral / Interface Interativa)"];
+  if (/login|perfil|conta|auth/i.test(limpo)) telas.push("Tela de Autenticação / Perfil");
+  if (/config|ajustes|configura/i.test(limpo)) telas.push("Painel de Configurações");
+  if (/detalhes?|detalhe|item/i.test(limpo)) telas.push("Visão Detalhada / Modal");
+
+  const entidades: string[] = [];
+  if (/usuario|usuário|cliente|membro/i.test(limpo)) entidades.push("Usuário / Perfil");
+  if (/produto|item|tarefa|todo|post|mensagem|registro/i.test(limpo))
+    entidades.push("Registros / Itens Principais");
+  if (/categoria|tag|grupo/i.test(limpo)) entidades.push("Categorias / Metadados");
+  if (entidades.length === 0) entidades.push("Estado da Aplicação / Itens em Memória");
+
+  const acoes = [
+    "Renderizar interface rica e responsiva com micro-interações",
+    "Manipulação completa de dados (criar, visualizar, editar ou filtrar)",
+    "Feedback visual imediato para todas as ações do usuário",
+  ];
+
+  const criteriosAceite = [
+    "Interface 100% funcional diretamente no navegador sem dependências quebradas",
+    "Visual moderno, refinado, com tipografia Google Fonts, cores e animações",
+    "Código modular e limpo dividido entre index.html, styles.css e app.js",
+    "Preservação integral de funcionalidades e arquivos pré-existentes",
+  ];
+
+  const limitacoesAmbiente = [
+    "Ambiente de execução estático/SPA no navegador (HTML5, CSS3, JavaScript ES6+)",
+    "Não executar binários nativos no cliente sem WebAssembly",
+  ];
+
+  const recursosExternos: string[] = [];
+  if (/banco|api|nuvem|supabase|sql/i.test(limpo)) {
+    recursosExternos.push("API REST FabyCloud / %%FABY_API%% para persistência");
+  }
+  if (/imagem|foto|avatar/i.test(limpo)) {
+    recursosExternos.push("Gerador de imagens embutido (gerar:prompt)");
+  }
+
+  return {
+    nomeProduto,
+    publico: "Usuários finais e desenvolvedores buscando experiência fluida estilo Lovable",
+    objetivo: temArquivos
+      ? `Evoluir o projeto existente atendendo a solicitação: "${limpo.slice(0, 150)}"`
+      : `Construir uma solução completa do zero para: "${limpo.slice(0, 150)}"`,
+    telas,
+    entidades,
+    acoes,
+    integracoes: recursosExternos.length
+      ? recursosExternos
+      : ["Nenhuma integração externa obrigatória"],
+    criteriosAceite,
+    limitacoesAmbiente,
+    recursosExternos,
+  };
+}
+
+export function formatarContratoEntrega(contrato: ContratoEntrega): string {
+  return [
+    "--- CONTRATO DE ENTREGA DA APLICAÇÃO (ESPECIFICAÇÃO TÉCNICA) ---",
+    `• Produto: ${contrato.nomeProduto}`,
+    `• Público: ${contrato.publico}`,
+    `• Objetivo: ${contrato.objetivo}`,
+    `• Telas planejadas: ${contrato.telas.join(", ")}`,
+    `• Entidades do sistema: ${contrato.entidades.join(", ")}`,
+    `• Ações principais: ${contrato.acoes.join("; ")}`,
+    `• Critérios de aceite: ${contrato.criteriosAceite.join("; ")}`,
+    `• Limitações do ambiente: ${contrato.limitacoesAmbiente.join("; ")}`,
+    `• Recursos externos / Chaves: ${contrato.recursosExternos.join(", ") || "Nenhum"}`,
+  ].join("\n");
+}
+
+export function salvarBackupProjeto(arquivos: Record<string, string>): Record<string, string> {
+  return { ...arquivos };
+}
+
+export function restaurarBackupProjeto(backup: Record<string, string>): Record<string, string> {
+  return { ...backup };
+}
 
 export const INSTRUCAO_PROJETO = [
   "Você é a FabyClaud / Dev Buddy, uma IA especialista e assistente de desenvolvimento Fullstack no estilo Lovable. Você é colaborativa, calorosa, prestativa e constrói sistemas modernos, elegantes e completos de forma transparente.",
@@ -77,6 +265,9 @@ export function montarPrompt(
     privado?: string;
     notas?: string;
     licoes?: string;
+    contrato?: ContratoEntrega;
+    previewErros?: string[];
+    testesAnteriores?: string;
   },
 ) {
   const partes = [INSTRUCAO_PROJETO];
@@ -190,6 +381,10 @@ export function montarPrompt(
         "Termine com uma sugestão prática do que vale fazer em seguida.",
       ].join("\n"),
     );
+  } else if (intencao === "alterar") {
+    const tipoLovable = classificarPedidoLovable(pedido);
+    const contrato = extras?.contrato ?? gerarContratoEntrega(pedido, arquivosAtuais, tipoLovable);
+    partes.push(formatarContratoEntrega(contrato));
   }
   partes.push(`--- Pedido do usuário ---\n${pedido}`);
   return partes.join("\n\n");

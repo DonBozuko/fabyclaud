@@ -103,9 +103,9 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" })
 
     const isValidJwt = Boolean(
       token &&
-        token !== "local-session-token" &&
-        token.split(".").length === 3 &&
-        !token.includes("local"),
+      token !== "local-session-token" &&
+      token.split(".").length === 3 &&
+      !token.includes("local"),
     );
 
     const globalConfig: { fetch: typeof fetch; headers?: Record<string, string> } = {
