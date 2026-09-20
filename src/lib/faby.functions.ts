@@ -172,6 +172,70 @@ export const obterProjeto = createServerFn({ method: "GET" })
     };
   });
 
+export const obterProgressoExecucao = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { projeto_id: string }) => z.object({ projeto_id: z.string().min(1) }).parse(input))
+  .handler(async ({ data, context }) => {
+    let execucao: any = null;
+    let etapas: any[] = [];
+    try {
+      const { data: ex } = await context.supabase
+        .from("execucoes_construcao")
+        .select("id, projeto_id, etapa_atual, estado, ultimo_erro, modelos_usados, provas, created_at, concluida_em")
+        .eq("projeto_id", data.projeto_id)
+        .eq("user_id", context.userId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (ex) {
+        execucao = ex;
+      } else {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { data: adminEx } = await supabaseAdmin
+          .from("execucoes_construcao")
+          .select("id, projeto_id, etapa_atual, estado, ultimo_erro, modelos_usados, provas, created_at, concluida_em")
+          .eq("projeto_id", data.projeto_id)
+          .eq("user_id", context.userId)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (adminEx) execucao = adminEx;
+      }
+    } catch {
+      // ignore
+    }
+
+    if (execucao?.id) {
+      try {
+        const { data: et } = await context.supabase
+          .from("etapas_construcao")
+          .select("id, execucao_id, etapa, estado, modelo, tentativa, resultado_resumo, erro, arquivos_produzidos, concluida_em")
+          .eq("execucao_id", execucao.id)
+          .eq("user_id", context.userId)
+          .order("created_at", { ascending: true });
+        if (et && et.length > 0) {
+          etapas = et;
+        } else {
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+          const { data: adminEt } = await supabaseAdmin
+            .from("etapas_construcao")
+            .select("id, execucao_id, etapa, estado, modelo, tentativa, resultado_resumo, erro, arquivos_produzidos, concluida_em")
+            .eq("execucao_id", execucao.id)
+            .eq("user_id", context.userId)
+            .order("created_at", { ascending: true });
+          if (adminEt) etapas = adminEt;
+        }
+      } catch {
+        // ignore
+      }
+    }
+
+    return {
+      execucao,
+      etapas,
+    };
+  });
+
 export const apagarProjeto = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { id: string }) => z.object({ id: z.string().min(1) }).parse(input))

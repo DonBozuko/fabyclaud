@@ -3,8 +3,13 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import {
   Bot,
+  Check,
+  CheckCircle2,
+  CircleAlert,
+  Clock,
   Cloud,
   Code2,
+  Compass,
   Download,
   ExternalLink,
   Eye,
@@ -14,25 +19,27 @@ import {
   FolderOpen,
   GitBranch,
   Globe,
+  GraduationCap,
   Hand,
   LayoutGrid,
+  Loader2,
   LogOut,
   MessageSquare,
   Paperclip,
   Plus,
   Save,
+  Search,
   Send,
   Settings,
-  GraduationCap,
+  ShieldCheck,
   Sparkle,
+  Sparkles,
   Swords,
   Trash2,
   Wifi,
   WifiOff,
   Wrench,
   Zap,
-  CheckCircle2,
-  CircleAlert,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -49,6 +56,7 @@ import {
   listarProjetos,
   listarProvedoresCustom,
   obterProjeto,
+  obterProgressoExecucao,
   salvarArquivo,
 } from "@/lib/faby.functions";
 import { MODELS, PROVIDER_LABELS, type Anexo } from "@/lib/faby/config";
@@ -100,30 +108,231 @@ const ITENS_MENU: { nome: string; Icone: typeof Bot; painel: PainelNome }[] = [
   { nome: "GitHub", Icone: GitBranch, painel: "github" },
 ];
 
-function IndicadorPensando() {
+interface IndicadorProgressoConstrucaoProps {
+  projetoId: string | null;
+  modelo: string;
+}
+
+const ETAPAS_PROGRESSO: {
+  id: string;
+  rotulo: string;
+  subtitulo: string;
+  icone: typeof Bot;
+  duracaoEstimadaSegundos: number;
+}[] = [
+  {
+    id: "diagnostico",
+    rotulo: "Diagnóstico",
+    subtitulo: "Analisando pedido e contexto do VFS",
+    icone: Search,
+    duracaoEstimadaSegundos: 6,
+  },
+  {
+    id: "planejamento",
+    rotulo: "Planejamento",
+    subtitulo: "Desenhando estrutura de arquivos e lógica",
+    icone: Compass,
+    duracaoEstimadaSegundos: 14,
+  },
+  {
+    id: "construcao",
+    rotulo: "Construção",
+    subtitulo: "Escrevendo HTML, CSS e JavaScript",
+    icone: Code2,
+    duracaoEstimadaSegundos: 45,
+  },
+  {
+    id: "revisao",
+    rotulo: "Revisão",
+    subtitulo: "Verificando integridade e sintaxe",
+    icone: ShieldCheck,
+    duracaoEstimadaSegundos: 20,
+  },
+  {
+    id: "teste",
+    rotulo: "Testes",
+    subtitulo: "Validando componentes e preview",
+    icone: Wrench,
+    duracaoEstimadaSegundos: 15,
+  },
+  {
+    id: "entrega",
+    rotulo: "Entrega",
+    subtitulo: "Sincronizando no VFS e preparando preview",
+    icone: Sparkles,
+    duracaoEstimadaSegundos: 10,
+  },
+];
+
+function IndicadorProgressoConstrucao({ projetoId, modelo }: IndicadorProgressoConstrucaoProps) {
+  const [segundosDecorridos, setSegundosDecorridos] = useState(0);
+  const buscarProgresso = useServerFn(obterProgressoExecucao);
+
+  const { data: progresso } = useQuery({
+    queryKey: ["progresso_execucao", projetoId],
+    queryFn: () => (projetoId ? buscarProgresso({ data: { projeto_id: projetoId } }) : Promise.resolve(null)),
+    enabled: !!projetoId,
+    refetchInterval: 1500,
+  });
+
+  useEffect(() => {
+    const t0 = Date.now();
+    const interval = setInterval(() => {
+      setSegundosDecorridos(Math.floor((Date.now() - t0) / 1000));
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
+
+  const etapasComStatus = useMemo(() => {
+    const etapasDb = progresso?.etapas ?? [];
+    const etapaAtualDb = progresso?.execucao?.etapa_atual;
+
+    let idxEstimado = 0;
+    if (segundosDecorridos < 5) idxEstimado = 0;
+    else if (segundosDecorridos < 15) idxEstimado = 1;
+    else if (segundosDecorridos < 65) idxEstimado = 2;
+    else if (segundosDecorridos < 90) idxEstimado = 3;
+    else if (segundosDecorridos < 110) idxEstimado = 4;
+    else idxEstimado = 5;
+
+    return ETAPAS_PROGRESSO.map((item, index) => {
+      const encontradaDb = etapasDb.find((e: any) => e.etapa === item.id);
+      let estado: "concluida" | "em_andamento" | "pendente" = "pendente";
+      let resumo = item.subtitulo;
+
+      if (encontradaDb) {
+        if (encontradaDb.estado === "concluida") estado = "concluida";
+        else if (encontradaDb.estado === "em_andamento") estado = "em_andamento";
+        if (encontradaDb.resultado_resumo) {
+          resumo = encontradaDb.resultado_resumo.slice(0, 100);
+        }
+      } else if (etapaAtualDb) {
+        const idxAtualDb = ETAPAS_PROGRESSO.findIndex((e) => e.id === etapaAtualDb);
+        if (idxAtualDb > index) estado = "concluida";
+        else if (idxAtualDb === index) estado = "em_andamento";
+        else estado = "pendente";
+      } else {
+        if (index < idxEstimado) estado = "concluida";
+        else if (index === idxEstimado) estado = "em_andamento";
+        else estado = "pendente";
+      }
+
+      return {
+        ...item,
+        estado,
+        resumo,
+      };
+    });
+  }, [progresso, segundosDecorridos]);
+
+  const etapaAtiva =
+    etapasComStatus.find((e) => e.estado === "em_andamento") || etapasComStatus[etapasComStatus.length - 1];
+  const concluidasCount = etapasComStatus.filter((e) => e.estado === "concluida").length;
+  const porcentagemGeral = Math.min(95, Math.round(((concluidasCount + 0.5) / ETAPAS_PROGRESSO.length) * 100));
+
+  const modeloLabel = (modelo && PROVIDER_LABELS[modelo]) ? PROVIDER_LABELS[modelo] : (modelo || "IA");
+
+  function formatarTempo(s: number) {
+    if (s < 60) return `${s}s`;
+    const min = Math.floor(s / 60);
+    const resto = s % 60;
+    return `${min}m ${resto}s`;
+  }
+
   return (
     <div
       role="status"
       aria-live="polite"
-      className="thinking-status mr-auto flex max-w-[85%] items-center gap-3 rounded-2xl border border-border bg-secondary px-4 py-3"
+      className="mr-auto w-full max-w-xl rounded-2xl border border-border/80 bg-secondary/80 p-4 shadow-glow backdrop-blur-md transition-all duration-300"
     >
-      <span className="thinking-people" aria-hidden="true">
-        <span className="thinking-orbit" />
-        <span className="thinking-person thinking-person-green">
-          <span className="thinking-head" />
-          <span className="thinking-body" />
-        </span>
-        <span className="thinking-person thinking-person-cyan">
-          <span className="thinking-head" />
-          <span className="thinking-body" />
-        </span>
-      </span>
-      <span className="thinking-label text-lg font-bold text-foreground">Pensando</span>
-      <span className="thinking-dots flex gap-1" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </span>
+      <div className="flex items-center justify-between border-b border-border/50 pb-3">
+        <div className="flex items-center gap-3">
+          <span className="thinking-people" aria-hidden="true">
+            <span className="thinking-orbit" />
+            <span className="thinking-person thinking-person-green">
+              <span className="thinking-head" />
+              <span className="thinking-body" />
+            </span>
+            <span className="thinking-person thinking-person-cyan">
+              <span className="thinking-head" />
+              <span className="thinking-body" />
+            </span>
+          </span>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-foreground">Orquestrando Criação</span>
+              <span className="inline-flex items-center rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-medium text-primary">
+                {modeloLabel}
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {etapaAtiva?.rotulo}: <span className="text-foreground/90 font-medium">{etapaAtiva?.resumo}</span>
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-end">
+          <span className="flex items-center gap-1 font-mono text-xs font-semibold text-primary">
+            <Clock className="size-3.5 animate-pulse" />
+            {formatarTempo(segundosDecorridos)}
+          </span>
+          <span className="text-[10px] text-muted-foreground">{porcentagemGeral}% concluído</span>
+        </div>
+      </div>
+
+      <div className="my-3 h-1.5 w-full overflow-hidden rounded-full bg-background/60">
+        <div
+          className="h-full rounded-full bg-primary transition-all duration-500 shadow-[0_0_12px_rgba(57,255,156,0.8)]"
+          style={{ width: `${porcentagemGeral}%` }}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {etapasComStatus.map((etapa) => {
+          const Icone = etapa.icone;
+          const isConcluida = etapa.estado === "concluida";
+          const isAtiva = etapa.estado === "em_andamento";
+
+          return (
+            <div
+              key={etapa.id}
+              className={`flex items-center gap-2 rounded-xl border p-2 transition-all duration-300 ${
+                isAtiva
+                  ? "border-primary bg-primary/10 shadow-[0_0_8px_rgba(57,255,156,0.25)]"
+                  : isConcluida
+                    ? "border-border/60 bg-background/40 opacity-90"
+                    : "border-border/30 bg-background/20 opacity-40"
+              }`}
+            >
+              <div
+                className={`flex size-6 shrink-0 items-center justify-center rounded-lg ${
+                  isConcluida
+                    ? "bg-primary text-primary-foreground font-bold"
+                    : isAtiva
+                      ? "bg-primary/20 text-primary"
+                      : "bg-muted text-muted-foreground"
+                }`}
+              >
+                {isConcluida ? (
+                  <Check className="size-3.5 stroke-[3]" />
+                ) : isAtiva ? (
+                  <Loader2 className="size-3.5 animate-spin text-primary" />
+                ) : (
+                  <Icone className="size-3.5" />
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className={`truncate text-xs font-semibold ${isAtiva ? "text-primary" : "text-foreground"}`}>
+                  {etapa.rotulo}
+                </p>
+                <p className="truncate text-[10px] text-muted-foreground">
+                  {isConcluida ? "Concluído" : isAtiva ? "Executando..." : "Aguardando"}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -1144,7 +1353,9 @@ function FabyClaud() {
                   </div>
                 ) : null}
 
-                {mandar.isPending ? <IndicadorPensando /> : null}
+                {mandar.isPending ? (
+                  <IndicadorProgressoConstrucao projetoId={projetoId} modelo={modelo} />
+                ) : null}
               </div>
 
               {anexos.length ? (
