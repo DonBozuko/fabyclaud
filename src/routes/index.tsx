@@ -58,6 +58,8 @@ import {
   obterProjeto,
   obterProgressoExecucao,
   salvarArquivo,
+  listarChaves,
+  salvarChave,
 } from "@/lib/faby.functions";
 import { MODELS, PROVIDER_LABELS, type Anexo } from "@/lib/faby/config";
 import {
@@ -410,6 +412,8 @@ function FabyClaud() {
   const buscarProjeto = useServerFn(obterProjeto);
   const buscarCustom = useServerFn(listarProvedoresCustom);
   const buscarCapacidades = useServerFn(obterCapacidades);
+  const buscarChavesFn = useServerFn(listarChaves);
+  const salvarChaveFn = useServerFn(salvarChave);
   const removerProjeto = useServerFn(apagarProjeto);
   const enviar = useServerFn(enviarMensagem);
   const importarZip = useServerFn(importarArquivosZip);
@@ -469,8 +473,52 @@ function FabyClaud() {
     enabled: logado,
   });
 
+  const chaves = useQuery({
+    queryKey: ["chaves"],
+    queryFn: () => buscarChavesFn(),
+    enabled: logado,
+  });
+
+  // Auto-sincronização de chaves locais do navegador com o backend logo no início
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const salvas = JSON.parse(localStorage.getItem("faby_local_keys") || "{}");
+        const entries = Object.entries(salvas);
+        if (entries.length > 0 && chaves.data) {
+          for (const [prov, info] of entries) {
+            const dados = info as { key?: string; api_url?: string };
+            if (dados?.key && !chaves.data.some((k: any) => k.provider === prov)) {
+              salvarChaveFn({
+                data: {
+                  provider: prov,
+                  key: dados.key,
+                  api_url: prov === "omniroute" ? (dados.api_url || "") : "",
+                },
+              })
+                .then(() => {
+                  void queryClient.invalidateQueries({ queryKey: ["chaves"] });
+                  void queryClient.invalidateQueries({ queryKey: ["capacidades"] });
+                })
+                .catch(() => {});
+            }
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }, [chaves.data, queryClient, salvarChaveFn]);
+
   useEffect(() => {
     if (projetos.data && projetos.data.length > 0) {
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("faby_projects_backup", JSON.stringify(projetos.data));
+        } catch {
+          // ignore
+        }
+      }
       const salvo =
         typeof window !== "undefined" ? localStorage.getItem("faby_active_project_id") : null;
       if (salvo && projetos.data.some((p: any) => p.id === salvo)) {
@@ -483,11 +531,6 @@ function FabyClaud() {
             localStorage.setItem("faby_active_project_id", primeiro);
           }
         }
-      }
-    } else if (projetos.data && projetos.data.length === 0) {
-      setProjetoId(null);
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("faby_active_project_id");
       }
     }
   }, [projetos.data]);

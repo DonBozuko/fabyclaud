@@ -12,6 +12,29 @@ import {
   type EtapaOrquestracao,
   type ProvedorCustom,
 } from "./faby/config";
+import {
+  type ChaveArmazenada,
+  type ProjetoArmazenado,
+  type MensagemArmazenada,
+  obterChavesArmazenadas,
+  salvarChaveArmazenada,
+  apagarChaveArmazenada,
+  listarProjetosArmazenados,
+  obterProjetoArmazenado,
+  salvarProjetoArmazenado,
+  apagarProjetoArmazenado,
+  listarMensagensArmazenadas,
+  salvarMensagemArmazenada,
+  obterMemoriaArmazenada,
+  salvarMemoriaArmazenada,
+  listarProvedoresCustomArmazenados,
+  salvarProvedorCustomArmazenado,
+  apagarProvedorCustomArmazenado,
+  obterExecucaoArmazenada,
+  salvarExecucaoArmazenada,
+  listarEtapasArmazenadas,
+  salvarEtapaArmazenada,
+} from "./faby/storage.server";
 
 const anexoSchema = z.array(z.record(z.string(), z.unknown())).default([]);
 
@@ -21,51 +44,21 @@ export function parseDuelChoice(texto: string, quantidade: number) {
   return escolha >= 1 && escolha <= quantidade ? escolha : 0;
 }
 
-interface ChaveArmazenada {
-  user_id: string;
-  provider: string;
-  api_key: string;
-  api_url: string | null;
-  testada_ok: boolean;
-  testada_em: string | null;
-  ultimo_erro: string | null;
-}
-interface ProjetoArmazenado {
-  id: string;
-  user_id: string;
-  nome: string;
-  modelo: string;
-  arquivos: Record<string, string>;
-  notas?: string;
-  created_at: string;
-  updated_at: string;
-}
-interface MensagemArmazenada {
-  id: string;
-  projeto_id: string;
-  user_id: string;
-  role: "user" | "assistant";
-  conteudo: string;
-  modelo: string;
-  ok: boolean;
-  anexos: any[];
-  created_at: string;
-}
-
-const cacheChaves = new Map<string, Map<string, ChaveArmazenada>>();
-const cacheProjetos = new Map<string, ProjetoArmazenado>();
-const cacheMensagens = new Map<string, MensagemArmazenada[]>();
-const cacheCustom = new Map<string, ProvedorCustom[]>();
-const cacheMemorias = new Map<string, string>();
 const cachePrompts = new Map<string, { id: string; titulo: string; texto: string }[]>();
 const cacheAgentes = new Map<string, { id: string; nome: string; instrucoes: string }[]>();
 
-function extrairUserIds(context: { userId: string; isAutenticadoSupabase?: boolean }): string[] {
-  const ids = [context.userId];
-  if (context.userId !== "00000000-0000-0000-0000-000000000001" && !context.isAutenticadoSupabase) {
-    ids.push("00000000-0000-0000-0000-000000000001");
-  }
-  return ids;
+function extrairUserIds(context: {
+  userId: string;
+  deviceId?: string | null;
+  localUserId?: string | null;
+  isAutenticadoSupabase?: boolean;
+}): string[] {
+  const ids = new Set<string>();
+  if (context.userId) ids.add(context.userId);
+  if (context.deviceId) ids.add(context.deviceId);
+  if (context.localUserId) ids.add(context.localUserId);
+  ids.add("00000000-0000-0000-0000-000000000001");
+  return Array.from(ids);
 }
 
 /** Lista de projetos do usuário, mais recente primeiro. */
@@ -94,10 +87,15 @@ export const listarProjetos = createServerFn({ method: "GET" })
       // ignore
     }
 
-    for (const p of cacheProjetos.values()) {
-      if (targetUserIds.includes(p.user_id) && !list.some((item) => item.id === p.id)) {
+    const diskProjetos = listarProjetosArmazenados(targetUserIds);
+    for (const p of diskProjetos) {
+      if (!list.some((item) => item.id === p.id)) {
         list.push(p);
       }
+    }
+
+    for (const p of list) {
+      salvarProjetoArmazenado(p);
     }
 
     return list.map((p: any) => ({
@@ -139,10 +137,7 @@ export const obterProjeto = createServerFn({ method: "GET" })
     }
 
     if (!projeto) {
-      const cached = cacheProjetos.get(data.id);
-      if (cached && targetUserIds.includes(cached.user_id)) {
-        projeto = cached;
-      }
+      projeto = obterProjetoArmazenado(data.id, targetUserIds);
     }
     if (!projeto) throw new Error("Projeto não encontrado");
 
@@ -168,9 +163,9 @@ export const obterProjeto = createServerFn({ method: "GET" })
       // ignore
     }
 
-    const memMsgs = cacheMensagens.get(data.id) ?? [];
-    for (const msg of memMsgs) {
-      if (targetUserIds.includes(msg.user_id) && !mensagens.some((m) => m.id === msg.id)) {
+    const diskMsgs = listarMensagensArmazenadas(data.id);
+    for (const msg of diskMsgs) {
+      if (!mensagens.some((m) => m.id === msg.id)) {
         mensagens.push(msg);
       }
     }
@@ -215,6 +210,10 @@ export const obterProgressoExecucao = createServerFn({ method: "GET" })
       // ignore
     }
 
+    if (!execucao) {
+      execucao = obterExecucaoArmazenada(data.projeto_id);
+    }
+
     if (execucao?.id) {
       try {
         const { data: et } = await context.supabase
@@ -237,6 +236,13 @@ export const obterProgressoExecucao = createServerFn({ method: "GET" })
       } catch {
         // ignore
       }
+
+      const diskEtapas = listarEtapasArmazenadas(execucao.id);
+      for (const et of diskEtapas) {
+        if (!etapas.some((item) => item.id === et.id)) {
+          etapas.push(et);
+        }
+      }
     }
 
     return {
@@ -250,11 +256,7 @@ export const apagarProjeto = createServerFn({ method: "POST" })
   .inputValidator((input: { id: string }) => z.object({ id: z.string().min(1) }).parse(input))
   .handler(async ({ data, context }) => {
     const targetUserIds = extrairUserIds(context);
-    const cached = cacheProjetos.get(data.id);
-    if (!cached || targetUserIds.includes(cached.user_id)) {
-      cacheProjetos.delete(data.id);
-      cacheMensagens.delete(data.id);
-    }
+    apagarProjetoArmazenado(data.id);
     try {
       await context.supabase.from("mensagens").delete().eq("projeto_id", data.id);
       await context.supabase.from("app_dados").delete().eq("projeto_id", data.id);
@@ -283,6 +285,25 @@ export const listarChaves = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     let rows: any[] = [];
     const targetUserIds = extrairUserIds(context);
+
+    // Auto-hidratação: se o cliente enviou chaves locais nos headers, salva e persiste
+    if (context.localKeys && typeof context.localKeys === "object") {
+      for (const [prov, info] of Object.entries(context.localKeys)) {
+        const dados = info as { key?: string; api_url?: string };
+        if (dados?.key?.trim()) {
+          salvarChaveArmazenada({
+            user_id: context.userId,
+            provider: prov,
+            api_key: dados.key.trim(),
+            api_url: dados.api_url || null,
+            testada_ok: true,
+            testada_em: new Date().toISOString(),
+            ultimo_erro: null,
+          });
+        }
+      }
+    }
+
     try {
       const { data, error } = await context.supabase
         .from("chaves_ia")
@@ -301,17 +322,13 @@ export const listarChaves = createServerFn({ method: "GET" })
       // ignore
     }
 
-    for (const uid of targetUserIds) {
-      const doCache = cacheChaves.get(uid);
-      if (doCache) {
-        for (const [provider, val] of doCache.entries()) {
-          const idx = rows.findIndex((r) => r.provider === provider);
-          if (idx >= 0) {
-            rows[idx] = { ...rows[idx], ...val };
-          } else {
-            rows.push(val);
-          }
-        }
+    const diskChaves = obterChavesArmazenadas(targetUserIds);
+    for (const k of diskChaves) {
+      const idx = rows.findIndex((r) => r.provider === k.provider);
+      if (idx >= 0) {
+        rows[idx] = { ...rows[idx], ...k };
+      } else {
+        rows.push(k);
       }
     }
 
@@ -331,6 +348,24 @@ export const obterCapacidades = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     let rows: any[] = [];
     const targetUserIds = extrairUserIds(context);
+
+    if (context.localKeys && typeof context.localKeys === "object") {
+      for (const [prov, info] of Object.entries(context.localKeys)) {
+        const dados = info as { key?: string; api_url?: string };
+        if (dados?.key?.trim()) {
+          salvarChaveArmazenada({
+            user_id: context.userId,
+            provider: prov,
+            api_key: dados.key.trim(),
+            api_url: dados.api_url || null,
+            testada_ok: true,
+            testada_em: new Date().toISOString(),
+            ultimo_erro: null,
+          });
+        }
+      }
+    }
+
     try {
       const { data, error } = await context.supabase
         .from("chaves_ia")
@@ -349,17 +384,13 @@ export const obterCapacidades = createServerFn({ method: "GET" })
       // ignore
     }
 
-    for (const uid of targetUserIds) {
-      const doCache = cacheChaves.get(uid);
-      if (doCache) {
-        for (const [provider, val] of doCache.entries()) {
-          const idx = rows.findIndex((r) => r.provider === provider);
-          if (idx >= 0) {
-            rows[idx] = { ...rows[idx], ...val };
-          } else {
-            rows.push(val);
-          }
-        }
+    const diskChaves = obterChavesArmazenadas(targetUserIds);
+    for (const k of diskChaves) {
+      const idx = rows.findIndex((r) => r.provider === k.provider);
+      if (idx >= 0) {
+        rows[idx] = { ...rows[idx], ...k };
+      } else {
+        rows.push(k);
       }
     }
 
@@ -414,15 +445,15 @@ export const salvarChave = createServerFn({ method: "POST" })
       provider: data.provider,
       api_key: chave,
       api_url: data.provider === "omniroute" ? apiUrlValida : null,
-      testada_ok: true, // Quando o usuário salva uma chave válida testada, salva como pronta
+      testada_ok: true,
       testada_em: new Date().toISOString(),
       ultimo_erro: null,
     };
 
-    if (!cacheChaves.has(context.userId)) {
-      cacheChaves.set(context.userId, new Map());
+    salvarChaveArmazenada(registro);
+    if (context.deviceId && context.deviceId !== context.userId) {
+      salvarChaveArmazenada({ ...registro, user_id: context.deviceId });
     }
-    cacheChaves.get(context.userId)!.set(data.provider, registro);
 
     try {
       const { error: errUpsert } = await context.supabase
@@ -456,7 +487,10 @@ export const apagarChave = createServerFn({ method: "POST" })
     z.object({ provider: z.string().min(1) }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    cacheChaves.get(context.userId)?.delete(data.provider);
+    const targetUserIds = extrairUserIds(context);
+    for (const uid of targetUserIds) {
+      apagarChaveArmazenada(uid, data.provider);
+    }
     try {
       await context.supabase.from("chaves_ia").delete().eq("provider", data.provider);
     } catch {
@@ -468,7 +502,7 @@ export const apagarChave = createServerFn({ method: "POST" })
         .from("chaves_ia")
         .delete()
         .eq("provider", data.provider)
-        .eq("user_id", context.userId);
+        .in("user_id", targetUserIds);
     } catch {
       // ignore
     }
@@ -560,16 +594,11 @@ export const testarChave = createServerFn({ method: "POST" })
         ? "A conexão respondeu, mas o modelo não conseguiu seguir uma instrução mínima de construção. Não foi marcado como pronto."
         : resultado.texto;
 
-    if (!cacheChaves.has(context.userId)) {
-      cacheChaves.set(context.userId, new Map());
-    }
-    const existente = cacheChaves.get(context.userId)!.get(data.provider);
-    cacheChaves.get(context.userId)!.set(data.provider, {
+    salvarChaveArmazenada({
       user_id: context.userId,
       provider: data.provider,
       api_key: chave,
       api_url: apiUrl || null,
-      ...existente,
       testada_ok: capacidadeConfirmada,
       testada_em: new Date().toISOString(),
       ultimo_erro: capacidadeConfirmada ? null : erroCapacidade.slice(0, 500),
@@ -599,6 +628,7 @@ export function respostaComprovaCapacidade(texto: string) {
 export const listarProvedoresCustom = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const targetUserIds = extrairUserIds(context);
     try {
       const { data, error } = await context.supabase
         .from("provedores_custom")
@@ -609,14 +639,13 @@ export const listarProvedoresCustom = createServerFn({ method: "GET" })
       const { data: adminData } = await supabaseAdmin
         .from("provedores_custom")
         .select("id, slug, nome, url, modelo, suporta_imagem")
-        .eq("user_id", context.userId)
+        .in("user_id", targetUserIds)
         .order("created_at", { ascending: true });
       if (adminData && adminData.length > 0) return adminData as ProvedorCustom[];
     } catch {
       // ignore
     }
-    const mem = cacheCustom.get(context.userId) ?? [];
-    return mem as ProvedorCustom[];
+    return listarProvedoresCustomArmazenados(targetUserIds);
   });
 
 export const criarProvedorCustom = createServerFn({ method: "POST" })
@@ -649,7 +678,7 @@ export const criarProvedorCustom = createServerFn({ method: "POST" })
     let slug = (base || "custom").slice(0, 30);
     if (slug in MODELS) slug = `${slug}_custom`;
 
-    const novoObj = {
+    const novoObj: ProvedorCustom = {
       id: crypto.randomUUID(),
       slug,
       nome: data.nome,
@@ -658,8 +687,7 @@ export const criarProvedorCustom = createServerFn({ method: "POST" })
       suporta_imagem: data.suporta_imagem,
     };
 
-    if (!cacheCustom.has(context.userId)) cacheCustom.set(context.userId, []);
-    cacheCustom.get(context.userId)!.push(novoObj);
+    salvarProvedorCustomArmazenado(context.userId, novoObj);
 
     try {
       const { error } = await context.supabase.from("provedores_custom").insert({
@@ -701,13 +729,11 @@ export const criarProvedorCustom = createServerFn({ method: "POST" })
 
 export const apagarProvedorCustom = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
+  .inputValidator((input: { id: string }) => z.object({ id: z.string().min(1) }).parse(input))
   .handler(async ({ data, context }) => {
-    if (cacheCustom.has(context.userId)) {
-      cacheCustom.set(
-        context.userId,
-        cacheCustom.get(context.userId)!.filter((p) => p.id !== data.id),
-      );
+    const targetUserIds = extrairUserIds(context);
+    for (const uid of targetUserIds) {
+      apagarProvedorCustomArmazenado(uid, data.id);
     }
     try {
       await context.supabase.from("provedores_custom").delete().eq("id", data.id);
@@ -720,7 +746,7 @@ export const apagarProvedorCustom = createServerFn({ method: "POST" })
         .from("provedores_custom")
         .delete()
         .eq("id", data.id)
-        .eq("user_id", context.userId);
+        .in("user_id", targetUserIds);
     } catch {
       // ignore
     }
@@ -732,6 +758,7 @@ export const apagarProvedorCustom = createServerFn({ method: "POST" })
 export const obterMemoria = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const targetUserIds = extrairUserIds(context);
     try {
       const { data } = await context.supabase.from("memorias").select("conteudo").maybeSingle();
       if (data?.conteudo) return { conteudo: data.conteudo };
@@ -739,13 +766,13 @@ export const obterMemoria = createServerFn({ method: "GET" })
       const { data: adminData } = await supabaseAdmin
         .from("memorias")
         .select("conteudo")
-        .eq("user_id", context.userId)
+        .in("user_id", targetUserIds)
         .maybeSingle();
       if (adminData?.conteudo) return { conteudo: adminData.conteudo };
     } catch {
       // ignore
     }
-    return { conteudo: cacheMemorias.get(context.userId) ?? "" };
+    return { conteudo: obterMemoriaArmazenada(targetUserIds) };
   });
 
 export const salvarMemoria = createServerFn({ method: "POST" })
@@ -754,7 +781,7 @@ export const salvarMemoria = createServerFn({ method: "POST" })
     z.object({ conteudo: z.string().max(8000) }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    cacheMemorias.set(context.userId, data.conteudo);
+    salvarMemoriaArmazenada(context.userId, data.conteudo);
     try {
       const { error } = await context.supabase
         .from("memorias")
@@ -1235,7 +1262,7 @@ export const salvarArquivo = createServerFn({ method: "POST" })
   .inputValidator((input: { projeto_id: string; nome: string; conteudo: string }) =>
     z
       .object({
-        projeto_id: z.string().uuid(),
+        projeto_id: z.string().min(1),
         nome: z.string().min(1).max(80),
         conteudo: z.string().max(400000),
       })
@@ -1243,6 +1270,7 @@ export const salvarArquivo = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     let arquivos: Record<string, string> = {};
+    const targetUserIds = extrairUserIds(context);
     try {
       const { data: p } = await context.supabase
         .from("projetos")
@@ -1257,7 +1285,7 @@ export const salvarArquivo = createServerFn({ method: "POST" })
           .from("projetos")
           .select("arquivos")
           .eq("id", data.projeto_id)
-          .eq("user_id", context.userId)
+          .in("user_id", targetUserIds)
           .maybeSingle();
         if (adminP?.arquivos) {
           arquivos = { ...((adminP.arquivos as Record<string, string>) ?? {}) };
@@ -1267,21 +1295,20 @@ export const salvarArquivo = createServerFn({ method: "POST" })
       // offline / supabase error fallback
     }
 
-    if (!Object.keys(arquivos).length && cacheProjetos.has(data.projeto_id)) {
-      const cached = cacheProjetos.get(data.projeto_id);
-      if (cached && cached.user_id === context.userId) {
+    if (!Object.keys(arquivos).length) {
+      const cached = obterProjetoArmazenado(data.projeto_id, targetUserIds);
+      if (cached) {
         arquivos = { ...(cached.arquivos ?? {}) };
       }
     }
 
     arquivos[data.nome.trim()] = data.conteudo;
 
-    if (cacheProjetos.has(data.projeto_id)) {
-      const cached = cacheProjetos.get(data.projeto_id)!;
-      if (cached.user_id === context.userId) {
-        cached.arquivos = arquivos;
-        cached.updated_at = new Date().toISOString();
-      }
+    const pExistente = obterProjetoArmazenado(data.projeto_id, targetUserIds);
+    if (pExistente) {
+      pExistente.arquivos = arquivos;
+      pExistente.updated_at = new Date().toISOString();
+      salvarProjetoArmazenado(pExistente);
     }
 
     let salvou = false;
@@ -1302,7 +1329,7 @@ export const salvarArquivo = createServerFn({ method: "POST" })
           .from("projetos")
           .update({ arquivos: arquivos as unknown as never, updated_at: new Date().toISOString() })
           .eq("id", data.projeto_id)
-          .eq("user_id", context.userId);
+          .in("user_id", targetUserIds);
         if (!adminErr) salvou = true;
       } catch {
         // ignore
@@ -1315,10 +1342,11 @@ export const salvarArquivo = createServerFn({ method: "POST" })
 export const apagarArquivo = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { projeto_id: string; nome: string }) =>
-    z.object({ projeto_id: z.string().uuid(), nome: z.string().min(1) }).parse(input),
+    z.object({ projeto_id: z.string().min(1), nome: z.string().min(1) }).parse(input),
   )
   .handler(async ({ data, context }) => {
     let arquivos: Record<string, string> = {};
+    const targetUserIds = extrairUserIds(context);
     try {
       const { data: p } = await context.supabase
         .from("projetos")
@@ -1333,7 +1361,7 @@ export const apagarArquivo = createServerFn({ method: "POST" })
           .from("projetos")
           .select("arquivos")
           .eq("id", data.projeto_id)
-          .eq("user_id", context.userId)
+          .in("user_id", targetUserIds)
           .maybeSingle();
         if (adminP?.arquivos) {
           arquivos = { ...((adminP.arquivos as Record<string, string>) ?? {}) };
@@ -1343,21 +1371,20 @@ export const apagarArquivo = createServerFn({ method: "POST" })
       // offline fallback
     }
 
-    if (!Object.keys(arquivos).length && cacheProjetos.has(data.projeto_id)) {
-      const cached = cacheProjetos.get(data.projeto_id);
-      if (cached && cached.user_id === context.userId) {
+    if (!Object.keys(arquivos).length) {
+      const cached = obterProjetoArmazenado(data.projeto_id, targetUserIds);
+      if (cached) {
         arquivos = { ...(cached.arquivos ?? {}) };
       }
     }
 
     delete arquivos[data.nome];
 
-    if (cacheProjetos.has(data.projeto_id)) {
-      const cached = cacheProjetos.get(data.projeto_id)!;
-      if (cached.user_id === context.userId) {
-        cached.arquivos = arquivos;
-        cached.updated_at = new Date().toISOString();
-      }
+    const pExistente = obterProjetoArmazenado(data.projeto_id, targetUserIds);
+    if (pExistente) {
+      pExistente.arquivos = arquivos;
+      pExistente.updated_at = new Date().toISOString();
+      salvarProjetoArmazenado(pExistente);
     }
 
     try {
@@ -1371,7 +1398,7 @@ export const apagarArquivo = createServerFn({ method: "POST" })
           .from("projetos")
           .update({ arquivos: arquivos as unknown as never, updated_at: new Date().toISOString() })
           .eq("id", data.projeto_id)
-          .eq("user_id", context.userId);
+          .in("user_id", targetUserIds);
       }
     } catch {
       try {
@@ -1380,7 +1407,7 @@ export const apagarArquivo = createServerFn({ method: "POST" })
           .from("projetos")
           .update({ arquivos: arquivos as unknown as never, updated_at: new Date().toISOString() })
           .eq("id", data.projeto_id)
-          .eq("user_id", context.userId);
+          .in("user_id", targetUserIds);
       } catch {
         // ignore
       }
@@ -1532,6 +1559,25 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     let custom: any[] = [];
     let mem: any = null;
     const targetUserIds = extrairUserIds(context);
+
+    // Auto-hidratação de chaves enviadas pelo cliente
+    if (context.localKeys && typeof context.localKeys === "object") {
+      for (const [prov, info] of Object.entries(context.localKeys)) {
+        const dados = info as { key?: string; api_url?: string };
+        if (dados?.key?.trim()) {
+          salvarChaveArmazenada({
+            user_id: context.userId,
+            provider: prov,
+            api_key: dados.key.trim(),
+            api_url: dados.api_url || null,
+            testada_ok: true,
+            testada_em: new Date().toISOString(),
+            ultimo_erro: null,
+          });
+        }
+      }
+    }
+
     try {
       const [resChaves, resCustom, resMem] = await Promise.all([
         context.supabase.from("chaves_ia").select("provider, api_key, api_url, testada_ok, user_id"),
@@ -1575,30 +1621,27 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       // ignore
     }
 
-    for (const uid of targetUserIds) {
-      const doCacheChaves = cacheChaves.get(uid);
-      if (doCacheChaves) {
-        for (const [provider, val] of doCacheChaves.entries()) {
-          const idx = chaves.findIndex((r: any) => r.provider === provider);
-          if (idx >= 0) {
-            chaves[idx] = { ...chaves[idx], ...val };
-          } else {
-            chaves.push(val);
-          }
-        }
+    const diskChaves = obterChavesArmazenadas(targetUserIds);
+    for (const k of diskChaves) {
+      const idx = chaves.findIndex((r: any) => r.provider === k.provider);
+      if (idx >= 0) {
+        chaves[idx] = { ...chaves[idx], ...k };
+      } else {
+        chaves.push(k);
+      }
+    }
+
+    const diskCustom = listarProvedoresCustomArmazenados(targetUserIds);
+    for (const c of diskCustom) {
+      if (!custom.some((item: any) => item.slug === c.slug)) {
+        custom.push(c);
       }
     }
 
     const provedoresCustom = (custom ?? []) as ProvedorCustom[];
     let memoria = mem?.conteudo ?? "";
     if (!memoria) {
-      for (const uid of targetUserIds) {
-        const m = cacheMemorias.get(uid);
-        if (m) {
-          memoria = m;
-          break;
-        }
-      }
+      memoria = obterMemoriaArmazenada(targetUserIds);
     }
 
     // Instruções do agente escolhido (pronto ou criado pelo usuário).
@@ -1727,16 +1770,16 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             arquivosAtuais = (adminP.arquivos as Record<string, string>) ?? {};
             notasProjeto = ((adminP as { notas?: string | null }).notas ?? "").trim();
           } else {
-            const cached = cacheProjetos.get(projetoId);
-            if (cached && targetUserIds.includes(cached.user_id)) {
+            const cached = obterProjetoArmazenado(projetoId, targetUserIds);
+            if (cached) {
               arquivosAtuais = cached.arquivos ?? {};
               notasProjeto = cached.notas ?? "";
             }
           }
         }
       } catch {
-        const cached = cacheProjetos.get(projetoId);
-        if (cached && targetUserIds.includes(cached.user_id)) {
+        const cached = obterProjetoArmazenado(projetoId, targetUserIds);
+        if (cached) {
           arquivosAtuais = cached.arquivos ?? {};
           notasProjeto = cached.notas ?? "";
         }
@@ -1782,7 +1825,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         projetoId = novoId;
       }
 
-      cacheProjetos.set(projetoId!, {
+      salvarProjetoArmazenado({
         id: projetoId!,
         user_id: context.userId,
         nome,
@@ -1848,10 +1891,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       anexos: anexos,
       created_at: new Date().toISOString(),
     };
-    if (!cacheMensagens.has(projetoId!)) {
-      cacheMensagens.set(projetoId!, []);
-    }
-    cacheMensagens.get(projetoId!)!.push(novaMsgUsuario);
+    salvarMensagemArmazenada(novaMsgUsuario);
 
     try {
       const { error: errInsMsg } = await context.supabase.from("mensagens").insert({
@@ -3046,13 +3086,12 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           }
         }
         if (ok) {
-          if (cacheProjetos.has(projetoId!)) {
-            const p = cacheProjetos.get(projetoId!)!;
-            if (p.user_id === context.userId) {
-              p.arquivos = mesclados;
-              p.modelo = provedorUsado;
-              p.updated_at = new Date().toISOString();
-            }
+          const p = obterProjetoArmazenado(projetoId!, targetUserIds);
+          if (p) {
+            p.arquivos = mesclados;
+            p.modelo = provedorUsado;
+            p.updated_at = new Date().toISOString();
+            salvarProjetoArmazenado(p);
           }
           mudouArquivos = true;
           try {
@@ -3074,7 +3113,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
                   updated_at: new Date().toISOString(),
                 })
                 .eq("id", projetoId)
-                .eq("user_id", context.userId);
+                .in("user_id", targetUserIds);
             }
           } catch {
             try {
@@ -3087,7 +3126,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
                   updated_at: new Date().toISOString(),
                 })
                 .eq("id", projetoId)
-                .eq("user_id", context.userId);
+                .in("user_id", targetUserIds);
             } catch {
               // ignore
             }
@@ -3110,7 +3149,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
                 .from("projetos")
                 .update({ modelo: data.model, updated_at: new Date().toISOString() })
                 .eq("id", projetoId)
-                .eq("user_id", context.userId);
+                .in("user_id", targetUserIds);
             }
           } catch {
             // ignore
@@ -3166,10 +3205,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       anexos: [],
       created_at: new Date().toISOString(),
     };
-    if (!cacheMensagens.has(projetoId!)) {
-      cacheMensagens.set(projetoId!, []);
-    }
-    cacheMensagens.get(projetoId!)!.push(novaMsgAssistente);
+    salvarMensagemArmazenada(novaMsgAssistente);
 
     try {
       const { error: errAss } = await context.supabase.from("mensagens").insert({

@@ -48,16 +48,18 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" })
     }
 
     if (typeof window !== "undefined") {
+      let stableId = localStorage.getItem("faby_stable_device_id");
+      if (!stableId) {
+        stableId =
+          typeof crypto !== "undefined" && crypto.randomUUID
+            ? crypto.randomUUID()
+            : "local_" + Math.random().toString(36).slice(2);
+        localStorage.setItem("faby_stable_device_id", stableId);
+      }
+      headers["x-faby-device-id"] = stableId;
+
       let localSession = localStorage.getItem("faby_user_session");
       if (!localSession) {
-        let stableId = localStorage.getItem("faby_stable_device_id");
-        if (!stableId) {
-          stableId =
-            typeof crypto !== "undefined" && crypto.randomUUID
-              ? crypto.randomUUID()
-              : "local_" + Math.random().toString(36).slice(2);
-          localStorage.setItem("faby_stable_device_id", stableId);
-        }
         const novaSessao = {
           id: stableId,
           email: "usuario@fabyclaud.local",
@@ -77,6 +79,11 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" })
         } catch {
           // ignore
         }
+      }
+
+      const localKeys = localStorage.getItem("faby_local_keys");
+      if (localKeys && localKeys !== "{}") {
+        headers["x-faby-local-keys"] = encodeURIComponent(localKeys);
       }
     }
 
@@ -119,8 +126,19 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" })
 
     const localUserIdHeader = request?.headers?.get("x-faby-local-user")?.trim();
     const localEmailHeader = request?.headers?.get("x-faby-local-email")?.trim();
+    const deviceIdHeader = request?.headers?.get("x-faby-device-id")?.trim();
+    const localKeysHeader = request?.headers?.get("x-faby-local-keys")?.trim();
 
-    let userId = localUserIdHeader || "00000000-0000-0000-0000-000000000001";
+    let localKeysData: Record<string, { key?: string; api_url?: string }> = {};
+    if (localKeysHeader) {
+      try {
+        localKeysData = JSON.parse(decodeURIComponent(localKeysHeader));
+      } catch {
+        // ignore
+      }
+    }
+
+    let userId = localUserIdHeader || deviceIdHeader || "00000000-0000-0000-0000-000000000001";
     let claims: Record<string, any> = { email: localEmailHeader || "usuario@fabyclaud.local" };
     let isAutenticadoSupabase = false;
 
@@ -141,6 +159,9 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" })
       context: {
         supabase: supabase as any,
         userId,
+        deviceId: deviceIdHeader || null,
+        localUserId: localUserIdHeader || null,
+        localKeys: localKeysData,
         claims,
         isAutenticadoSupabase,
       },

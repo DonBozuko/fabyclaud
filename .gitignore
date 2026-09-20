@@ -32,3 +32,4 @@ dist-ssr
 *.sw?
 .aider*
 .env
+.faby_storage.json*
