@@ -523,13 +523,12 @@ function FabyClaud() {
         typeof window !== "undefined" ? localStorage.getItem("faby_active_project_id") : null;
       if (salvo && projetos.data.some((p: any) => p.id === salvo)) {
         if (projetoId !== salvo) setProjetoId(salvo);
-      } else if (!projetoId || !projetos.data.some((p: any) => p.id === projetoId)) {
-        const primeiro = projetos.data[0]?.id;
-        if (primeiro) {
-          setProjetoId(primeiro);
-          if (typeof window !== "undefined") {
-            localStorage.setItem("faby_active_project_id", primeiro);
-          }
+      } else if (projetoId && !projetos.data.some((p: any) => p.id === projetoId)) {
+        const primeiro = projetos.data[0]?.id || null;
+        setProjetoId(primeiro);
+        if (typeof window !== "undefined") {
+          if (primeiro) localStorage.setItem("faby_active_project_id", primeiro);
+          else localStorage.removeItem("faby_active_project_id");
         }
       }
     }

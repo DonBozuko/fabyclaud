@@ -85,26 +85,27 @@ let memoryState: FabyStorageData = {
   etapas: {},
 };
 
-let initialized = false;
-let pendingSaveTimeout: NodeJS.Timeout | null = null;
+let lastMtime = 0;
 
 function carregarDoDisco(): void {
-  if (initialized) return;
-  initialized = true;
   try {
     if (fs.existsSync(STORAGE_FILE)) {
-      const conteudo = fs.readFileSync(STORAGE_FILE, "utf-8");
-      if (conteudo.trim()) {
-        const dados = JSON.parse(conteudo);
-        memoryState = {
-          chaves: dados.chaves || {},
-          projetos: dados.projetos || {},
-          mensagens: dados.mensagens || {},
-          custom: dados.custom || {},
-          memorias: dados.memorias || {},
-          execucoes: dados.execucoes || {},
-          etapas: dados.etapas || {},
-        };
+      const stat = fs.statSync(STORAGE_FILE);
+      if (stat.mtimeMs !== lastMtime || lastMtime === 0) {
+        lastMtime = stat.mtimeMs;
+        const conteudo = fs.readFileSync(STORAGE_FILE, "utf-8");
+        if (conteudo.trim()) {
+          const dados = JSON.parse(conteudo);
+          memoryState = {
+            chaves: dados.chaves || {},
+            projetos: dados.projetos || {},
+            mensagens: dados.mensagens || {},
+            custom: dados.custom || {},
+            memorias: dados.memorias || {},
+            execucoes: dados.execucoes || {},
+            etapas: dados.etapas || {},
+          };
+        }
       }
     }
   } catch (err) {
@@ -113,32 +114,24 @@ function carregarDoDisco(): void {
 }
 
 function persistirNoDisco(): void {
-  if (pendingSaveTimeout) return;
-  pendingSaveTimeout = setTimeout(() => {
-    pendingSaveTimeout = null;
+  try {
+    const json = JSON.stringify(memoryState, null, 2);
+    fs.writeFileSync(STORAGE_FILE, json, "utf-8");
     try {
-      const json = JSON.stringify(memoryState, null, 2);
-      const tmpFile = `${STORAGE_FILE}.tmp`;
-      fs.writeFileSync(tmpFile, json, "utf-8");
-      fs.renameSync(tmpFile, STORAGE_FILE);
-    } catch (err) {
-      try {
-        fs.writeFileSync(STORAGE_FILE, JSON.stringify(memoryState), "utf-8");
-      } catch (e) {
-        console.error("[FabyStorage] Erro ao gravar dados em disco:", e);
-      }
+      const stat = fs.statSync(STORAGE_FILE);
+      lastMtime = stat.mtimeMs;
+    } catch {
+      // ignore
     }
-  }, 100);
+  } catch (e) {
+    console.error("[FabyStorage] Erro ao gravar dados em disco:", e);
+  }
 }
 
 /** Força gravação síncrona/imediata em operações críticas */
 export function flushStorageSync(): void {
   carregarDoDisco();
-  try {
-    fs.writeFileSync(STORAGE_FILE, JSON.stringify(memoryState, null, 2), "utf-8");
-  } catch (e) {
-    console.error("[FabyStorage] Erro ao gravar storage imediatamente:", e);
-  }
+  persistirNoDisco();
 }
 
 // =================== CHAVES ===================
@@ -148,6 +141,7 @@ export function obterChavesArmazenadas(userIds: string[]): ChaveArmazenada[] {
   const res: ChaveArmazenada[] = [];
   const vistas = new Set<string>();
 
+  // 1. Procura primeiro nos userIds especificados
   for (const uid of userIds) {
     const userChaves = memoryState.chaves[uid];
     if (userChaves) {
@@ -159,6 +153,17 @@ export function obterChavesArmazenadas(userIds: string[]): ChaveArmazenada[] {
       }
     }
   }
+
+  // 2. Se houver chaves de qualquer outro usuário no armazenamento local, reaproveita para não perder
+  for (const userChaves of Object.values(memoryState.chaves)) {
+    for (const [provider, chave] of Object.entries(userChaves)) {
+      if (!vistas.has(provider)) {
+        vistas.add(provider);
+        res.push(chave);
+      }
+    }
+  }
+
   return res;
 }
 
@@ -173,22 +178,22 @@ export function salvarChaveArmazenada(chave: ChaveArmazenada): void {
 
 export function apagarChaveArmazenada(userId: string, provider: string): void {
   carregarDoDisco();
+  for (const userChaves of Object.values(memoryState.chaves)) {
+    if (userChaves[provider]) {
+      delete userChaves[provider];
+    }
+  }
   if (memoryState.chaves[userId]?.[provider]) {
     delete memoryState.chaves[userId][provider];
-    persistirNoDisco();
   }
+  persistirNoDisco();
 }
 
 // =================== PROJETOS ===================
 
-export function listarProjetosArmazenados(userIds: string[]): ProjetoArmazenado[] {
+export function listarProjetosArmazenados(userIds?: string[]): ProjetoArmazenado[] {
   carregarDoDisco();
-  const list: ProjetoArmazenado[] = [];
-  for (const p of Object.values(memoryState.projetos)) {
-    if (userIds.includes(p.user_id) || userIds.includes("00000000-0000-0000-0000-000000000001")) {
-      list.push(p);
-    }
-  }
+  const list: ProjetoArmazenado[] = Object.values(memoryState.projetos);
   return list.sort(
     (a, b) => new Date(b.updated_at || b.created_at).getTime() - new Date(a.updated_at || a.created_at).getTime(),
   );
@@ -196,13 +201,7 @@ export function listarProjetosArmazenados(userIds: string[]): ProjetoArmazenado[
 
 export function obterProjetoArmazenado(id: string, userIds?: string[]): ProjetoArmazenado | null {
   carregarDoDisco();
-  const p = memoryState.projetos[id];
-  if (!p) return null;
-  if (!userIds || userIds.length === 0) return p;
-  if (userIds.includes(p.user_id) || userIds.includes("00000000-0000-0000-0000-000000000001")) {
-    return p;
-  }
-  return p; // Retorna para resiliência de modo offline/local
+  return memoryState.projetos[id] || null;
 }
 
 export function salvarProjetoArmazenado(projeto: ProjetoArmazenado): void {
@@ -226,7 +225,10 @@ export function apagarProjetoArmazenado(id: string): void {
 
 export function listarMensagensArmazenadas(projetoId: string): MensagemArmazenada[] {
   carregarDoDisco();
-  return memoryState.mensagens[projetoId] || [];
+  const msgs = memoryState.mensagens[projetoId] || [];
+  return msgs.sort(
+    (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+  );
 }
 
 export function salvarMensagemArmazenada(msg: MensagemArmazenada): void {
@@ -253,6 +255,9 @@ export function obterMemoriaArmazenada(userIds: string[]): string {
       return memoryState.memorias[uid];
     }
   }
+  for (const mem of Object.values(memoryState.memorias)) {
+    if (mem) return mem;
+  }
   return "";
 }
 
@@ -266,8 +271,7 @@ export function listarProvedoresCustomArmazenados(userIds: string[]): ProvedorCu
   carregarDoDisco();
   const list: ProvedorCustom[] = [];
   const slugs = new Set<string>();
-  for (const uid of userIds) {
-    const arr = memoryState.custom[uid] || [];
+  for (const arr of Object.values(memoryState.custom)) {
     for (const item of arr) {
       if (!slugs.has(item.slug)) {
         slugs.add(item.slug);
@@ -295,12 +299,10 @@ export function salvarProvedorCustomArmazenado(userId: string, item: ProvedorCus
 
 export function apagarProvedorCustomArmazenado(userId: string, idOuSlug: string): void {
   carregarDoDisco();
-  if (memoryState.custom[userId]) {
-    memoryState.custom[userId] = memoryState.custom[userId].filter(
-      (c) => c.id !== idOuSlug && c.slug !== idOuSlug,
-    );
-    persistirNoDisco();
+  for (const [uid, arr] of Object.entries(memoryState.custom)) {
+    memoryState.custom[uid] = arr.filter((c) => c.id !== idOuSlug && c.slug !== idOuSlug);
   }
+  persistirNoDisco();
 }
 
 // =================== EXECUÇÕES & ETAPAS ===================

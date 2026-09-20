@@ -74,7 +74,13 @@ export const listarProjetos = createServerFn({ method: "GET" })
         .order("updated_at", { ascending: false });
       if (!error && data && data.length > 0) {
         list = data.filter((p: any) => targetUserIds.includes(p.user_id));
-      } else {
+      }
+    } catch {
+      // ignore
+    }
+
+    if (list.length === 0) {
+      try {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: adminData } = await supabaseAdmin
           .from("projetos")
@@ -82,9 +88,9 @@ export const listarProjetos = createServerFn({ method: "GET" })
           .in("user_id", targetUserIds)
           .order("updated_at", { ascending: false });
         if (adminData && adminData.length > 0) list = adminData;
+      } catch {
+        // ignore
       }
-    } catch {
-      // ignore
     }
 
     const diskProjetos = listarProjetosArmazenados(targetUserIds);
@@ -122,7 +128,13 @@ export const obterProjeto = createServerFn({ method: "GET" })
         .maybeSingle();
       if (p) {
         projeto = p;
-      } else {
+      }
+    } catch {
+      // ignore
+    }
+
+    if (!projeto) {
+      try {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: adminP } = await supabaseAdmin
           .from("projetos")
@@ -131,9 +143,9 @@ export const obterProjeto = createServerFn({ method: "GET" })
           .in("user_id", targetUserIds)
           .maybeSingle();
         if (adminP) projeto = adminP;
+      } catch {
+        // ignore
       }
-    } catch {
-      // ignore
     }
 
     if (!projeto) {
@@ -150,7 +162,13 @@ export const obterProjeto = createServerFn({ method: "GET" })
         .order("created_at", { ascending: true });
       if (m && m.length > 0) {
         mensagens = m;
-      } else {
+      }
+    } catch {
+      // ignore
+    }
+
+    if (mensagens.length === 0) {
+      try {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: adminM } = await supabaseAdmin
           .from("mensagens")
@@ -158,9 +176,9 @@ export const obterProjeto = createServerFn({ method: "GET" })
           .eq("projeto_id", data.id)
           .order("created_at", { ascending: true });
         if (adminM && adminM.length > 0) mensagens = adminM;
+      } catch {
+        // ignore
       }
-    } catch {
-      // ignore
     }
 
     const diskMsgs = listarMensagensArmazenadas(data.id);
@@ -169,6 +187,10 @@ export const obterProjeto = createServerFn({ method: "GET" })
         mensagens.push(msg);
       }
     }
+
+    mensagens.sort(
+      (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+    );
 
     return {
       ...projeto,
