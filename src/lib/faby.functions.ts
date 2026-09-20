@@ -1883,10 +1883,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
 
     const diskH = listarMensagensArmazenadas(projetoId!);
     for (const msg of diskH) {
-      if (
-        (msg.user_id === context.userId || targetUserIds.includes(msg.user_id)) &&
-        !historicoRows.some((m) => m.id === msg.id || (m.conteudo === msg.conteudo && m.role === msg.role))
-      ) {
+      if (!historicoRows.some((m) => m.id === msg.id || (m.conteudo === msg.conteudo && m.role === msg.role))) {
         historicoRows.push(msg);
       }
     }
