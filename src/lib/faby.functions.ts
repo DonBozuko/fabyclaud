@@ -53,12 +53,15 @@ function extrairUserIds(context: {
   localUserId?: string | null;
   isAutenticadoSupabase?: boolean;
 }): string[] {
-  const ids = new Set<string>();
-  if (context.userId) ids.add(context.userId);
-  if (context.deviceId) ids.add(context.deviceId);
-  if (context.localUserId) ids.add(context.localUserId);
-  ids.add("00000000-0000-0000-0000-000000000001");
-  return Array.from(ids);
+  const id =
+    context.userId && context.userId !== "00000000-0000-0000-0000-000000000001"
+      ? context.userId
+      : context.deviceId && context.deviceId !== "00000000-0000-0000-0000-000000000001"
+        ? context.deviceId
+        : context.localUserId && context.localUserId !== "00000000-0000-0000-0000-000000000001"
+          ? context.localUserId
+          : context.userId || "anon-user";
+  return [id];
 }
 
 /** Lista de projetos do usuário, mais recente primeiro. */
@@ -72,24 +75,30 @@ export const listarProjetos = createServerFn({ method: "GET" })
         .from("projetos")
         .select("id, user_id, nome, modelo, arquivos, updated_at")
         .order("updated_at", { ascending: false });
-      if (!error && data && data.length > 0) {
+      if (error) {
+        console.warn("[listarProjetos] Erro Supabase context:", error.message);
+      } else if (data && data.length > 0) {
         list = data.filter((p: any) => targetUserIds.includes(p.user_id));
       }
-    } catch {
-      // ignore
+    } catch (err: any) {
+      console.warn("[listarProjetos] Falha de conexão Supabase:", err?.message);
     }
 
     if (list.length === 0) {
       try {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const { data: adminData } = await supabaseAdmin
+        const { data: adminData, error: adminError } = await supabaseAdmin
           .from("projetos")
           .select("id, user_id, nome, modelo, arquivos, updated_at")
           .in("user_id", targetUserIds)
           .order("updated_at", { ascending: false });
-        if (adminData && adminData.length > 0) list = adminData;
-      } catch {
-        // ignore
+        if (adminError) {
+          console.warn("[listarProjetos] Erro Supabase Admin:", adminError.message);
+        } else if (adminData && adminData.length > 0) {
+          list = adminData;
+        }
+      } catch (err: any) {
+        console.warn("[listarProjetos] Falha de conexão Supabase Admin:", err?.message);
       }
     }
 
@@ -474,14 +483,34 @@ export const salvarChave = createServerFn({ method: "POST" })
         ? urlInformada
         : null;
 
+    const { chamarProvedor } = await import("./faby/providers.server");
+    let testadaOk = false;
+    let ultimoErro: string | null = null;
+
+    try {
+      const teste = await chamarProvedor(data.provider, chave, "Responda apenas com o número 1", {
+        apiUrl: data.provider === "omniroute" ? apiUrlValida || undefined : undefined,
+      });
+      if (teste.ok) {
+        testadaOk = true;
+        ultimoErro = null;
+      } else {
+        testadaOk = false;
+        ultimoErro = teste.texto || "Chave rejeitada pelo provedor de IA.";
+      }
+    } catch (err: any) {
+      testadaOk = false;
+      ultimoErro = err?.message || "Erro de conexão ao testar a chave com o provedor.";
+    }
+
     const registro: ChaveArmazenada = {
       user_id: context.userId,
       provider: data.provider,
       api_key: chave,
       api_url: data.provider === "omniroute" ? apiUrlValida : null,
-      testada_ok: true,
+      testada_ok: testadaOk,
       testada_em: new Date().toISOString(),
-      ultimo_erro: null,
+      ultimo_erro: ultimoErro,
     };
 
     salvarChaveArmazenada(registro);
@@ -497,21 +526,21 @@ export const salvarChave = createServerFn({ method: "POST" })
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         await supabaseAdmin.from("chaves_ia").upsert(registro, { onConflict: "user_id,provider" });
       }
-    } catch {
+    } catch (err: any) {
+      console.warn("[salvarChave] Aviso de gravação Supabase:", err?.message);
       try {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         await supabaseAdmin.from("chaves_ia").upsert(registro, { onConflict: "user_id,provider" });
-      } catch {
-        // ignore
+      } catch (errAdmin: any) {
+        console.warn("[salvarChave] Aviso de gravação Supabase Admin:", errAdmin?.message);
       }
     }
 
     return {
-      ok: true,
-      msg:
-        data.provider === "omniroute" && !apiUrlValida
-          ? "Chave salva. O endereço público pode ser configurado depois."
-          : "Chave salva com sucesso.",
+      ok: testadaOk,
+      msg: testadaOk
+        ? "Chave testada e validada com sucesso com o provedor de IA!"
+        : `Chave salva, porém o teste com o provedor falhou: ${ultimoErro}`,
     };
   });
 
@@ -2513,93 +2542,6 @@ export const enviarMensagem = createServerFn({ method: "POST" })
 
     if (ok) {
       let extraido = extrairArquivos(bruto);
-
-      // Se a IA usou a ferramenta de gerar imagem e não entregou a tag <arquivo> completa,
-      // atualizamos diretamente o src da imagem no HTML para que a nova foto apareça imediatamente.
-      if (
-        !Object.keys(extraido.arquivos).length &&
-        (ferramentasUsadas.includes("gerar_imagem") || /image\.pollinations\.ai/i.test(bruto))
-      ) {
-        const matchUrl =
-          /(https:\/\/image\.pollinations\.ai\/prompt\/[^\s"'<>]+)/i.exec(bruto) ||
-          /(https:\/\/image\.pollinations\.ai\/prompt\/[^\s"'<>]+)/i.exec(promptFinal);
-        if (matchUrl && (arquivosAtuais["index.html"] || arquivosAtuais["index.htm"])) {
-          const chaveHtml = arquivosAtuais["index.html"] ? "index.html" : "index.htm";
-          let htmlAtual = arquivosAtuais[chaveHtml] ?? "";
-          const novaUrl = matchUrl[1];
-          if (/<img[^>]+src=["'][^"']+["']/i.test(htmlAtual)) {
-            htmlAtual = htmlAtual.replace(/(<img[^>]+src=["'])[^"']+["']/i, `$1${novaUrl}"`);
-          } else if (/<body[^>]*>/i.test(htmlAtual)) {
-            htmlAtual = htmlAtual.replace(
-              /(<body[^>]*>)/i,
-              `$1\n<img src="${novaUrl}" alt="Foto" style="max-width:100%;border-radius:8px;margin-bottom:1rem;" />`,
-            );
-          }
-          extraido.arquivos[chaveHtml] = htmlAtual;
-          if (!extraido.texto || extraido.texto.length < 10) {
-            extraido.texto = "Atualizei a foto do projeto com a nova imagem gerada!";
-          }
-        }
-      }
-
-      // Se a IA respondeu sem tags para um pedido de troca de cor ou estilo básico,
-      // aplicamos a alteração diretamente no CSS ou HTML para nunca frustrar o usuário.
-      if (
-        !Object.keys(extraido.arquivos).length &&
-        (arquivosAtuais["styles.css"] || arquivosAtuais["index.html"])
-      ) {
-        const cores: Record<string, string> = {
-          vermelho: "#dc2626",
-          red: "#dc2626",
-          azul: "#2563eb",
-          blue: "#2563eb",
-          verde: "#16a34a",
-          green: "#16a34a",
-          amarelo: "#ca8a04",
-          yellow: "#ca8a04",
-          roxo: "#9333ea",
-          purple: "#9333ea",
-          rosa: "#db2777",
-          pink: "#db2777",
-          laranja: "#ea580c",
-          orange: "#ea580c",
-          preto: "#18181b",
-          black: "#18181b",
-          cinza: "#64748b",
-          gray: "#64748b",
-        };
-        const promptLower = prompt.toLowerCase();
-        for (const [corNome, hex] of Object.entries(cores)) {
-          if (
-            new RegExp(`\\b${corNome}\\b`, "i").test(promptLower) &&
-            (promptLower.includes("cor") ||
-              promptLower.includes("mude") ||
-              promptLower.includes("troque") ||
-              promptLower.includes("fundo") ||
-              promptLower.includes("deixe") ||
-              promptLower.includes("ponha"))
-          ) {
-            if (arquivosAtuais["styles.css"]) {
-              let cssAtual = arquivosAtuais["styles.css"];
-              cssAtual += `\n\n/* Ajuste de cor aplicado pelo FabyClaud */\n:root { --primary-color: ${hex}; --cor-tema: ${hex}; --accent-color: ${hex}; }\n`;
-              extraido.arquivos["styles.css"] = cssAtual;
-              extraido.texto = extraido.texto || `Cor atualizada para ${corNome}!`;
-              break;
-            } else if (arquivosAtuais["index.html"]) {
-              let htmlAtual = arquivosAtuais["index.html"];
-              const tagStyle = `<style>\n:root { --primary-color: ${hex}; --cor-tema: ${hex}; --accent-color: ${hex}; }\n</style>`;
-              if (htmlAtual.includes("</head>")) {
-                htmlAtual = htmlAtual.replace("</head>", `${tagStyle}\n</head>`);
-              } else {
-                htmlAtual = `${tagStyle}\n${htmlAtual}`;
-              }
-              extraido.arquivos["index.html"] = htmlAtual;
-              extraido.texto = extraido.texto || `Cor atualizada para ${corNome}!`;
-              break;
-            }
-          }
-        }
-      }
 
       arquivosProduzidos = Object.keys(extraido.arquivos);
       const exigeArquivos = pedidoExigeArquivos(prompt);

@@ -5719,7 +5719,7 @@
       "file_type": "code",
       "norm_label": "abrirpasta()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L839"
+      "source_location": "L853"
     },
     {
       "id": "src_routes_index_fabyclaud_anexararquivo",
@@ -5731,7 +5731,7 @@
       "file_type": "code",
       "norm_label": "anexararquivo()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L786"
+      "source_location": "L800"
     },
     {
       "id": "src_routes_index_fabyclaud_aoficaroffline",
@@ -5767,7 +5767,7 @@
       "file_type": "code",
       "norm_label": "consertarerrosdaprevia()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L722"
+      "source_location": "L736"
     },
     {
       "id": "src_routes_index_fabyclaud_enviaragora",
@@ -5779,7 +5779,7 @@
       "file_type": "code",
       "norm_label": "enviaragora()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L598"
+      "source_location": "L612"
     },
     {
       "id": "src_routes_index_fabyclaud_importarprojetolido",
@@ -5791,7 +5791,7 @@
       "file_type": "code",
       "norm_label": "importarprojetolido()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L811"
+      "source_location": "L825"
     },
     {
       "id": "src_routes_index_fabyclaud_ouvir",
@@ -5803,7 +5803,7 @@
       "file_type": "code",
       "norm_label": "ouvir()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L685"
+      "source_location": "L699"
     },
     {
       "id": "src_routes_index_fabyclaud_publicarsite",
@@ -5815,7 +5815,7 @@
       "file_type": "code",
       "norm_label": "publicarsite()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L762"
+      "source_location": "L776"
     },
     {
       "id": "src_routes_index_fabyclaud_salvarcodigomanual",
@@ -5827,7 +5827,7 @@
       "file_type": "code",
       "norm_label": "salvarcodigomanual()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L663"
+      "source_location": "L677"
     },
     {
       "id": "src_lib_faby_zip_caminhoaceito",
@@ -19788,7 +19788,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L1061",
+      "source_location": "L1075",
       "weight": 1.0
     },
     {
@@ -19800,7 +19800,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L1071",
+      "source_location": "L1085",
       "weight": 1.0
     },
     {
@@ -19812,7 +19812,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L621",
+      "source_location": "L635",
       "weight": 1.0
     },
     {
@@ -19824,7 +19824,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L623",
+      "source_location": "L637",
       "weight": 1.0
     },
     {
@@ -19836,7 +19836,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L628",
+      "source_location": "L642",
       "weight": 1.0
     },
     {
@@ -19848,7 +19848,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L631",
+      "source_location": "L645",
       "weight": 1.0
     },
     {
@@ -19860,7 +19860,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L714",
+      "source_location": "L728",
       "weight": 1.0
     },
     {
@@ -19872,7 +19872,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L791",
+      "source_location": "L805",
       "weight": 1.0
     },
     {
@@ -19884,7 +19884,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L803",
+      "source_location": "L817",
       "weight": 1.0
     },
     {
@@ -19896,7 +19896,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L842",
+      "source_location": "L856",
       "weight": 1.0
     },
     {
@@ -19908,7 +19908,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L842",
+      "source_location": "L856",
       "weight": 1.0
     },
     {
@@ -19920,7 +19920,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L847",
+      "source_location": "L861",
       "weight": 1.0
     },
     {
@@ -19932,7 +19932,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L791",
+      "source_location": "L805",
       "weight": 1.0
     },
     {
@@ -19944,7 +19944,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L796",
+      "source_location": "L810",
       "weight": 1.0
     },
     {
@@ -19956,7 +19956,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L803",
+      "source_location": "L817",
       "weight": 1.0
     },
     {
@@ -19968,7 +19968,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L823",
+      "source_location": "L837",
       "weight": 1.0
     },
     {
@@ -20148,7 +20148,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L598",
+      "source_location": "L612",
       "weight": 1.0
     },
     {
@@ -20160,7 +20160,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L663",
+      "source_location": "L677",
       "weight": 1.0
     },
     {
@@ -20172,7 +20172,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L762",
+      "source_location": "L776",
       "weight": 1.0
     },
     {
@@ -20184,7 +20184,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L786",
+      "source_location": "L800",
       "weight": 1.0
     },
     {
@@ -20196,7 +20196,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L839",
+      "source_location": "L853",
       "weight": 1.0
     },
     {
@@ -39940,7 +39940,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/index.tsx",
-      "source_location": "L722",
+      "source_location": "L736",
       "weight": 1.0
     },
     {
@@ -39951,7 +39951,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/index.tsx",
-      "source_location": "L811",
+      "source_location": "L825",
       "weight": 1.0
     },
     {
@@ -41624,7 +41624,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L709",
+      "source_location": "L723",
       "weight": 1.0
     },
     {
@@ -41725,5 +41725,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "1a4c5eedf60e2f0d8f0b7822d0989d68892d1915"
+  "built_at_commit": "c788936434e4dd2b798b4e6bac9d3a00d8653318"
 }
