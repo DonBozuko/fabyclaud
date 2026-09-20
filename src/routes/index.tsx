@@ -453,6 +453,20 @@ function FabyClaud() {
   const [codigoEditando, setCodigoEditando] = useState<string>("");
   const [salvandoArquivo, setSalvandoArquivo] = useState(false);
 
+  const usuarioId = useMemo(() => {
+    if (typeof window === "undefined") return "local-user";
+    try {
+      const session = localStorage.getItem("faby_user_session");
+      if (session) {
+        const parsed = JSON.parse(session);
+        if (parsed?.id) return String(parsed.id);
+      }
+      const stable = localStorage.getItem("faby_stable_device_id");
+      if (stable) return String(stable);
+    } catch {}
+    return "local-user";
+  }, []);
+
   const inputArquivo = useRef<HTMLInputElement>(null);
   const inputPasta = useRef<HTMLInputElement>(null);
   const inputZip = useRef<HTMLInputElement>(null);
