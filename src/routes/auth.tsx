@@ -4,7 +4,11 @@ import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
 import heroAsset from "@/assets/hero-matrix.png.asset.json";
-import { CHAVE_SESSAO_LOCAL, garantirSessaoLocal, limparSessaoLocal } from "@/lib/faby/sessao-local";
+import {
+  CHAVE_SESSAO_LOCAL,
+  garantirSessaoLocal,
+  limparSessaoLocal,
+} from "@/lib/faby/sessao-local";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
