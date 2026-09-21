@@ -8,6 +8,15 @@ export type ResultadoIA = { ok: boolean; texto: string; status?: number; bruto?:
 
 const TIMEOUT_MS = 120_000;
 
+/**
+ * Teto de tempo total (em ms) para toda a cadeia de tentativas de um mesmo pedido,
+ * somando o modelo principal + todos os alternativos. Sem isso, se o provedor
+ * estiver degradado, o sistema tentava cada um dos ~6 modelos alternativos com até
+ * 120s de timeout cada — no pior caso, minutos de espera silenciosa no navegador,
+ * que parece travado porque o cliente não tem timeout próprio.
+ */
+const ORCAMENTO_TOTAL_MS = 65_000;
+
 /** Bloqueia endpoints que poderiam apontar o servidor para a rede interna. */
 export function ehUrlPublicaSegura(valor: string) {
   try {
@@ -285,14 +294,21 @@ async function chamarGoogleComFallback(
   let modelosGoogle = [...new Set([principal, ...lista].filter(Boolean))];
 
   let ultimo: ResultadoIA = { ok: false, texto: "provedor Google indisponível" };
+  const inicio = Date.now();
   for (let i = 0; i < modelosGoogle.length; i++) {
+    if (Date.now() - inicio > ORCAMENTO_TOTAL_MS) {
+      return {
+        ...ultimo,
+        texto: `${ultimo.texto} (parei de tentar outros modelos após ${Math.round((Date.now() - inicio) / 1000)}s para não deixar a pessoa esperando; tente novamente ou troque de modelo)`,
+      };
+    }
     const modelo = modelosGoogle[i];
     if (!modelo) continue;
     const r = await chamarGoogle(prompt, historico, key, imagens, timeoutMs, modelo);
     if (r.ok) return r;
     ultimo = r;
     if (!ehErroDeModelo(r.status ?? 0, r.bruto ?? r.texto)) return r;
-    if (i === modelosGoogle.length - 1) {
+    if (i === modelosGoogle.length - 1 && Date.now() - inicio <= ORCAMENTO_TOTAL_MS) {
       const descobertos = await descobrirModelosGoogle(key);
       const novos = descobertos.filter((m) => !modelosGoogle.includes(m));
       if (novos.length) {
@@ -485,7 +501,14 @@ export async function chamarProvedor(
     if (fixo) {
       let ultimo: ResultadoIA = { ok: false, texto: "provedor desconhecido" };
       let modelosParaTentar = modelos;
+      const inicio = Date.now();
       for (let indice = 0; indice < modelosParaTentar.length; indice += 1) {
+        if (Date.now() - inicio > ORCAMENTO_TOTAL_MS) {
+          return {
+            ...ultimo,
+            texto: `${ultimo.texto} (parei de tentar outros modelos após ${Math.round((Date.now() - inicio) / 1000)}s para não deixar a pessoa esperando; tente novamente ou troque de modelo)`,
+          };
+        }
         const modelo = modelosParaTentar[indice];
         if (!modelo) continue;
         const r = await chamarOpenAICompat(
@@ -501,7 +524,7 @@ export async function chamarProvedor(
         if (r.ok) return r;
         ultimo = r;
         if (!ehFalhaDeModelo(r.status ?? 0, r.bruto ?? r.texto)) return r;
-        if (indice === modelos.length - 1) {
+        if (indice === modelos.length - 1 && Date.now() - inicio <= ORCAMENTO_TOTAL_MS) {
           const descobertos = await descobrirModelos(fixo.url, key);
           modelosParaTentar = [...new Set([...modelosParaTentar, ...descobertos])];
         }

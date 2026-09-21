@@ -571,7 +571,12 @@ function FabyClaud() {
 
   const mandar = useMutation({
     mutationFn: async (vars: { prompt: string; anexos: Anexo[] }) => {
-      return enviar({
+      // Timeout no cliente: o servidor já limita cada tentativa de modelo, mas o modo
+      // Duelo pode encadear várias rodadas de correção. Sem um limite aqui, uma falha
+      // de rede ou uma resposta que nunca chega deixa o botão "Enviar" girando pra
+      // sempre, sem nenhum erro visível para a pessoa tentar de novo.
+      const TEMPO_LIMITE_CLIENTE_MS = 4 * 60_000;
+      const pedido = enviar({
         data: {
           prompt: vars.prompt,
           model: modelo,
@@ -582,6 +587,16 @@ function FabyClaud() {
           origem: typeof window !== "undefined" ? window.location.origin : "",
         },
       });
+      const limite = new Promise<never>((_, reject) => {
+        setTimeout(() => {
+          reject(
+            new Error(
+              "A geração demorou demais e foi cancelada por aqui. Ela pode ainda terminar em segundo plano — dê um tempo e clique em Nova conversa ou tente de novo com outro modelo.",
+            ),
+          );
+        }, TEMPO_LIMITE_CLIENTE_MS);
+      });
+      return Promise.race([pedido, limite]);
     },
     onSettled: () => {
       setPendente(null);
