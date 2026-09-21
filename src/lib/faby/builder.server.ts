@@ -390,9 +390,9 @@ export function resolverPedidoContextual(
   pedido: string,
   historico: ItemHistorico[],
   arquivosAtuais: Record<string, string> = {},
-) {
+): { pedidoEfetivo: string; intencao: IntencaoPedido; continuacao: boolean } {
   const limpo = pedido.trim();
-  let intencao = classificarPedido(limpo);
+  let intencao: IntencaoPedido = classificarPedido(limpo);
   const confirmacao =
     /^(?:sim|s|yes|isso|exato|exatamente|pode|pode sim|pode ser|pode fazer|pode aplicar|fa[çc]a|manda|vamos|beleza|ok|claro|quero|bora|continue|continua|crie|vai|criar|execute|aplique|aplicar)\b/i.test(
       limpo,

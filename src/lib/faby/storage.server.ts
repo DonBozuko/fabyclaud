@@ -63,6 +63,14 @@ export interface EtapaArmazenada {
   created_at: string;
 }
 
+export interface GithubContaArmazenada {
+  user_id: string;
+  token: string;
+  login: string;
+  repo?: string;
+  branch?: string;
+}
+
 interface FabyStorageData {
   chaves: Record<string, Record<string, ChaveArmazenada>>; // userId -> provider -> ChaveArmazenada
   projetos: Record<string, ProjetoArmazenado>; // projetoId -> ProjetoArmazenado
@@ -71,6 +79,7 @@ interface FabyStorageData {
   memorias: Record<string, string>; // userId -> conteudo
   execucoes: Record<string, ExecucaoArmazenada>; // projetoId -> ExecucaoArmazenada
   etapas: Record<string, EtapaArmazenada[]>; // execucaoId -> EtapaArmazenada[]
+  contasGithub: Record<string, GithubContaArmazenada>; // userId -> GithubContaArmazenada
 }
 
 const STORAGE_FILE = path.resolve(process.cwd(), ".faby_storage.json");
@@ -83,6 +92,7 @@ let memoryState: FabyStorageData = {
   memorias: {},
   execucoes: {},
   etapas: {},
+  contasGithub: {},
 };
 
 let lastMtime = 0;
@@ -104,6 +114,7 @@ function carregarDoDisco(): void {
             memorias: dados.memorias || {},
             execucoes: dados.execucoes || {},
             etapas: dados.etapas || {},
+            contasGithub: dados.contasGithub || {},
           };
         }
       }
@@ -156,10 +167,12 @@ export function obterChavesArmazenadas(userIds: string[]): ChaveArmazenada[] {
 
   // 2. Se houver chaves de qualquer outro usuário no armazenamento local, reaproveita para não perder
   for (const userChaves of Object.values(memoryState.chaves)) {
-    for (const [provider, chave] of Object.entries(userChaves)) {
-      if (!vistas.has(provider)) {
-        vistas.add(provider);
-        res.push(chave);
+    if (userChaves) {
+      for (const [provider, chave] of Object.entries(userChaves)) {
+        if (!vistas.has(provider)) {
+          vistas.add(provider);
+          res.push(chave);
+        }
       }
     }
   }
@@ -172,14 +185,17 @@ export function salvarChaveArmazenada(chave: ChaveArmazenada): void {
   if (!memoryState.chaves[chave.user_id]) {
     memoryState.chaves[chave.user_id] = {};
   }
-  memoryState.chaves[chave.user_id][chave.provider] = chave;
+  const userMap = memoryState.chaves[chave.user_id];
+  if (userMap) {
+    userMap[chave.provider] = chave;
+  }
   persistirNoDisco();
 }
 
 export function apagarChaveArmazenada(userId: string, provider: string): void {
   carregarDoDisco();
   for (const userChaves of Object.values(memoryState.chaves)) {
-    if (userChaves[provider]) {
+    if (userChaves && userChaves[provider]) {
       delete userChaves[provider];
     }
   }
@@ -237,11 +253,13 @@ export function salvarMensagemArmazenada(msg: MensagemArmazenada): void {
     memoryState.mensagens[msg.projeto_id] = [];
   }
   const lista = memoryState.mensagens[msg.projeto_id];
-  const idx = lista.findIndex((m) => m.id === msg.id);
-  if (idx >= 0) {
-    lista[idx] = msg;
-  } else {
-    lista.push(msg);
+  if (lista) {
+    const idx = lista.findIndex((m) => m.id === msg.id);
+    if (idx >= 0) {
+      lista[idx] = msg;
+    } else {
+      lista.push(msg);
+    }
   }
   persistirNoDisco();
 }
@@ -288,11 +306,13 @@ export function salvarProvedorCustomArmazenado(userId: string, item: ProvedorCus
     memoryState.custom[userId] = [];
   }
   const arr = memoryState.custom[userId];
-  const idx = arr.findIndex((c) => c.slug === item.slug || c.id === item.id);
-  if (idx >= 0) {
-    arr[idx] = item;
-  } else {
-    arr.push(item);
+  if (arr) {
+    const idx = arr.findIndex((c) => c.slug === item.slug || c.id === item.id);
+    if (idx >= 0) {
+      arr[idx] = item;
+    } else {
+      arr.push(item);
+    }
   }
   persistirNoDisco();
 }
@@ -329,11 +349,41 @@ export function salvarEtapaArmazenada(etapa: EtapaArmazenada): void {
     memoryState.etapas[etapa.execucao_id] = [];
   }
   const arr = memoryState.etapas[etapa.execucao_id];
-  const idx = arr.findIndex((e) => e.id === etapa.id);
-  if (idx >= 0) {
-    arr[idx] = etapa;
-  } else {
-    arr.push(etapa);
+  if (arr) {
+    const idx = arr.findIndex((e) => e.id === etapa.id);
+    if (idx >= 0) {
+      arr[idx] = etapa;
+    } else {
+      arr.push(etapa);
+    }
+  }
+  persistirNoDisco();
+}
+
+// =================== GITHUB CONTAS ===================
+
+export function obterGithubContaArmazenada(userIds: string[]): GithubContaArmazenada | null {
+  carregarDoDisco();
+  for (const uid of userIds) {
+    if (memoryState.contasGithub[uid]) {
+      return memoryState.contasGithub[uid];
+    }
+  }
+  const todas = Object.values(memoryState.contasGithub);
+  return todas[0] || null;
+}
+
+export function salvarGithubContaArmazenada(conta: GithubContaArmazenada): void {
+  carregarDoDisco();
+  memoryState.contasGithub[conta.user_id] = conta;
+  persistirNoDisco();
+}
+
+export function apagarGithubContaArmazenada(userId: string): void {
+  carregarDoDisco();
+  delete memoryState.contasGithub[userId];
+  for (const key of Object.keys(memoryState.contasGithub)) {
+    delete memoryState.contasGithub[key];
   }
   persistirNoDisco();
 }

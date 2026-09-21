@@ -2,20 +2,56 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { verificarPublicacaoEstatica } from "./faby/preview";
+import {
+  obterGithubContaArmazenada,
+  salvarGithubContaArmazenada,
+  apagarGithubContaArmazenada,
+  salvarProjetoArmazenado,
+  obterProjetoArmazenado,
+  salvarMensagemArmazenada,
+} from "./faby/storage.server";
+
+function extrairUserIds(context: {
+  userId: string;
+  deviceId?: string | null;
+  localUserId?: string | null;
+  isAutenticadoSupabase?: boolean;
+}): string[] {
+  const id =
+    context.userId && context.userId !== "00000000-0000-0000-0000-000000000001"
+      ? context.userId
+      : context.deviceId && context.deviceId !== "00000000-0000-0000-0000-000000000001"
+        ? context.deviceId
+        : context.localUserId && context.localUserId !== "00000000-0000-0000-0000-000000000001"
+          ? context.localUserId
+          : context.userId || "anon-user";
+  return [id];
+}
+
+async function obterConta(context: any) {
+  const uids = extrairUserIds(context);
+  try {
+    const { data, error } = await context.supabase
+      .from("github_contas")
+      .select("token, repo, branch, login")
+      .maybeSingle();
+    if (!error && data?.token) return data;
+  } catch {
+    // ignore
+  }
+  return obterGithubContaArmazenada(uids);
+}
 
 /** Situação da ligação com o GitHub (nunca devolve o token). */
 export const statusGithub = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data } = await context.supabase
-      .from("github_contas")
-      .select("login, repo, branch")
-      .maybeSingle();
+    const conta = await obterConta(context);
     return {
-      conectado: Boolean(data),
-      login: data?.login ?? "",
-      repo: data?.repo ?? "",
-      branch: data?.branch ?? "main",
+      conectado: Boolean(conta?.token),
+      login: conta?.login ?? "",
+      repo: conta?.repo ?? "",
+      branch: conta?.branch ?? "main",
     };
   });
 
@@ -26,38 +62,51 @@ export const salvarTokenGithub = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { verificarToken } = await import("./faby/github.server");
-    const check = await verificarToken(data.token.trim());
+    const tokenLimpo = data.token.trim();
+    const check = await verificarToken(tokenLimpo);
     if (!check.ok) return { ok: false, msg: check.msg };
 
-    const { error } = await context.supabase
-      .from("github_contas")
-      .upsert(
-        { user_id: context.userId, token: data.token.trim(), login: check.login },
-        { onConflict: "user_id" },
-      );
-    if (error) throw new Error(error.message);
+    salvarGithubContaArmazenada({
+      user_id: context.userId,
+      token: tokenLimpo,
+      login: check.login,
+      repo: "",
+      branch: "main",
+    });
+
+    try {
+      await context.supabase
+        .from("github_contas")
+        .upsert(
+          { user_id: context.userId, token: tokenLimpo, login: check.login },
+          { onConflict: "user_id" },
+        );
+    } catch {
+      // fallback persistido no storage local
+    }
     return { ok: true, login: check.login };
   });
 
 export const desconectarGithub = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { error } = await context.supabase
-      .from("github_contas")
-      .delete()
-      .eq("user_id", context.userId);
-    if (error) throw new Error(error.message);
+    apagarGithubContaArmazenada(context.userId);
+    try {
+      await context.supabase
+        .from("github_contas")
+        .delete()
+        .eq("user_id", context.userId);
+    } catch {
+      // ignore
+    }
     return { ok: true };
   });
 
 export const listarReposGithub = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: conta } = await context.supabase
-      .from("github_contas")
-      .select("token")
-      .maybeSingle();
-    if (!conta)
+    const conta = await obterConta(context);
+    if (!conta?.token)
       return { ok: false as const, msg: "Conecte sua conta do GitHub primeiro.", repos: [] };
 
     const { listarRepositorios } = await import("./faby/github.server");
@@ -81,20 +130,30 @@ export const criarRepoGithub = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { data: conta } = await context.supabase
-      .from("github_contas")
-      .select("token")
-      .maybeSingle();
-    if (!conta) return { ok: false, msg: "Conecte sua conta do GitHub primeiro." };
+    const conta = await obterConta(context);
+    if (!conta?.token) return { ok: false, msg: "Conecte sua conta do GitHub primeiro." };
 
     const { criarRepositorio } = await import("./faby/github.server");
     const r = await criarRepositorio(conta.token, data.nome, data.privado);
     if (!r.ok) return { ok: false, msg: r.msg };
 
-    await context.supabase
-      .from("github_contas")
-      .update({ repo: r.repo, branch: r.branch })
-      .eq("user_id", context.userId);
+    salvarGithubContaArmazenada({
+      ...conta,
+      user_id: context.userId,
+      token: conta.token,
+      login: conta.login || "",
+      repo: r.repo,
+      branch: r.branch,
+    });
+
+    try {
+      await context.supabase
+        .from("github_contas")
+        .update({ repo: r.repo, branch: r.branch })
+        .eq("user_id", context.userId);
+    } catch {
+      // ignore
+    }
     return { ok: true, repo: r.repo, url: r.url };
   });
 
@@ -106,20 +165,29 @@ export const definirRepoGithub = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { data: conta } = await context.supabase
-      .from("github_contas")
-      .select("token")
-      .maybeSingle();
-    if (!conta) return { ok: false, msg: "Conecte sua conta do GitHub primeiro." };
+    const conta = await obterConta(context);
+    if (!conta?.token) return { ok: false, msg: "Conecte sua conta do GitHub primeiro." };
 
     const { branchPadrao } = await import("./faby/github.server");
     const branch = data.branch || (await branchPadrao(conta.token, data.repo)) || "main";
 
-    const { error } = await context.supabase
-      .from("github_contas")
-      .update({ repo: data.repo, branch })
-      .eq("user_id", context.userId);
-    if (error) throw new Error(error.message);
+    salvarGithubContaArmazenada({
+      ...conta,
+      user_id: context.userId,
+      token: conta.token,
+      login: conta.login || "",
+      repo: data.repo,
+      branch,
+    });
+
+    try {
+      await context.supabase
+        .from("github_contas")
+        .update({ repo: data.repo, branch })
+        .eq("user_id", context.userId);
+    } catch {
+      // ignore
+    }
     return { ok: true, repo: data.repo, branch };
   });
 
@@ -132,15 +200,24 @@ export const enviarProjetoGithub = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
-    const [{ data: conta }, { data: projeto }] = await Promise.all([
-      context.supabase.from("github_contas").select("token, repo, branch").maybeSingle(),
-      context.supabase
+    const conta = await obterConta(context);
+    let projeto: { nome?: string; arquivos?: Record<string, string> } | null = null;
+    try {
+      const { data: p } = await context.supabase
         .from("projetos")
         .select("nome, arquivos")
         .eq("id", data.projeto_id)
-        .maybeSingle(),
-    ]);
-    if (!conta) return { ok: false, msg: "Conecte sua conta do GitHub primeiro." };
+        .maybeSingle();
+      if (p) projeto = p;
+    } catch {
+      // ignore
+    }
+    if (!projeto) {
+      const localP = obterProjetoArmazenado(data.projeto_id);
+      if (localP) projeto = localP;
+    }
+
+    if (!conta?.token) return { ok: false, msg: "Conecte sua conta do GitHub primeiro." };
     if (!conta.repo) return { ok: false, msg: "Escolha (ou crie) um repositório antes de enviar." };
     if (!projeto) return { ok: false, msg: "Projeto não encontrado." };
 
@@ -151,7 +228,7 @@ export const enviarProjetoGithub = createServerFn({ method: "POST" })
 
     if (!arquivos["README.md"]) {
       arquivos["README.md"] =
-        `# ${projeto.nome}\n\n` +
+        `# ${projeto.nome || "Projeto"}\n\n` +
         "Projeto criado com o FabyClaud.\n\n" +
         "## Como abrir\n\nAbra o `index.html` no navegador.\n\n" +
         "## Como publicar de graça\n\nAtive o GitHub Pages nas configurações do repositório " +
@@ -163,7 +240,7 @@ export const enviarProjetoGithub = createServerFn({ method: "POST" })
       token: conta.token,
       repo: conta.repo,
       branch: conta.branch || "main",
-      mensagem: data.mensagem.trim() || `Atualização de ${projeto.nome} pelo FabyClaud`,
+      mensagem: data.mensagem.trim() || `Atualização de ${projeto.nome || "Projeto"} pelo FabyClaud`,
       arquivos,
     });
     if (!r.ok) return { ok: false, msg: r.msg };
@@ -177,11 +254,8 @@ export const importarDoGithub = createServerFn({ method: "POST" })
     z.object({ projeto_id: z.string().uuid().nullish() }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { data: conta } = await context.supabase
-      .from("github_contas")
-      .select("token, repo, branch")
-      .maybeSingle();
-    if (!conta) return { ok: false, msg: "Conecte sua conta do GitHub primeiro." };
+    const conta = await obterConta(context);
+    if (!conta?.token) return { ok: false, msg: "Conecte sua conta do GitHub primeiro." };
     if (!conta.repo) return { ok: false, msg: "Escolha um repositório primeiro." };
 
     const { baixarArquivos } = await import("./faby/github.server");
@@ -190,37 +264,73 @@ export const importarDoGithub = createServerFn({ method: "POST" })
 
     let projetoId = data.projeto_id ?? null;
     if (projetoId) {
-      const { data: p } = await context.supabase
-        .from("projetos")
-        .select("arquivos")
-        .eq("id", projetoId)
-        .maybeSingle();
-      const atual = (p?.arquivos as Record<string, string>) ?? {};
-      if (Object.keys(atual).length) {
-        await context.supabase.from("backups").insert({
-          user_id: context.userId,
-          projeto_id: projetoId,
-          rotulo: "Antes de trazer do GitHub",
-          arquivos: atual as unknown as never,
+      let atual: Record<string, string> = {};
+      try {
+        const { data: p } = await context.supabase
+          .from("projetos")
+          .select("arquivos")
+          .eq("id", projetoId)
+          .maybeSingle();
+        if (p?.arquivos) atual = p.arquivos as Record<string, string>;
+      } catch {
+        // ignore
+      }
+      if (!Object.keys(atual).length) {
+        const localP = obterProjetoArmazenado(projetoId);
+        if (localP?.arquivos) atual = localP.arquivos;
+      }
+
+      const novosArquivos = { ...atual, ...r.arquivos };
+      const localP = obterProjetoArmazenado(projetoId);
+      if (localP) {
+        salvarProjetoArmazenado({
+          ...localP,
+          arquivos: novosArquivos,
         });
       }
-      await context.supabase
-        .from("projetos")
-        .update({ arquivos: { ...atual, ...r.arquivos } as unknown as never })
-        .eq("id", projetoId);
+
+      try {
+        if (Object.keys(atual).length) {
+          await context.supabase.from("backups").insert({
+            user_id: context.userId,
+            projeto_id: projetoId,
+            rotulo: "Antes de trazer do GitHub",
+            arquivos: atual as unknown as never,
+          });
+        }
+        await context.supabase
+          .from("projetos")
+          .update({ arquivos: novosArquivos as unknown as never })
+          .eq("id", projetoId);
+      } catch {
+        // ignore
+      }
     } else {
-      const { data: criado, error } = await context.supabase
-        .from("projetos")
-        .insert({
-          user_id: context.userId,
-          nome: conta.repo.split("/")[1] ?? conta.repo,
-          modelo: "google",
-          arquivos: r.arquivos as unknown as never,
-        })
-        .select("id")
-        .single();
-      if (error) throw new Error(error.message);
-      projetoId = criado.id;
+      const novoId = crypto.randomUUID();
+      const nome = conta.repo.split("/")[1] ?? conta.repo;
+      salvarProjetoArmazenado({
+        id: novoId,
+        user_id: context.userId,
+        nome,
+        modelo: "google",
+        arquivos: r.arquivos as Record<string, string>,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+      try {
+        await context.supabase
+          .from("projetos")
+          .insert({
+            id: novoId,
+            user_id: context.userId,
+            nome,
+            modelo: "google",
+            arquivos: r.arquivos as unknown as never,
+          });
+      } catch {
+        // ignore
+      }
+      projetoId = novoId;
     }
 
     return { ok: true, projeto_id: projetoId, qtd: Object.keys(r.arquivos).length };
@@ -239,42 +349,70 @@ export const clonarPorLink = createServerFn({ method: "POST" })
       return { ok: false as const, msg: "Esse link não parece ser de um repositório do GitHub." };
     }
 
-    const { data: conta } = await context.supabase
-      .from("github_contas")
-      .select("token")
-      .maybeSingle();
-
+    const conta = await obterConta(context);
     const r = await clonarRepositorio(conta?.token ?? "", repo);
     if (!r.ok) return { ok: false as const, msg: r.msg };
 
     const nome = repo.split("/")[1] ?? repo;
-    const { data: criado, error } = await context.supabase
-      .from("projetos")
-      .insert({
-        user_id: context.userId,
-        nome,
-        modelo: "google",
-        arquivos: r.arquivos as unknown as never,
-      })
-      .select("id")
-      .single();
-    if (error) throw new Error(error.message);
-
-    await context.supabase.from("mensagens").insert({
-      projeto_id: criado.id,
+    const projetoId = crypto.randomUUID();
+    const novoProjeto = {
+      id: projetoId,
       user_id: context.userId,
-      role: "assistant",
+      nome,
+      modelo: "google",
+      arquivos: r.arquivos as Record<string, string>,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    salvarProjetoArmazenado(novoProjeto);
+
+    try {
+      await context.supabase
+        .from("projetos")
+        .insert({
+          id: projetoId,
+          user_id: context.userId,
+          nome,
+          modelo: "google",
+          arquivos: r.arquivos as unknown as never,
+        });
+    } catch {
+      // ignore
+    }
+
+    const msgAssistente = {
+      id: crypto.randomUUID(),
+      projeto_id: projetoId,
+      user_id: context.userId,
+      role: "assistant" as const,
       conteudo:
         `Clonei o repositório **${repo}** (${Object.keys(r.arquivos).length} arquivos, branch ${r.branch}).\n\n` +
         "Os arquivos estão no Workspace. Peça qualquer alteração no chat — por exemplo: " +
         '"explique esse projeto", "crie uma interface web pra ele" ou "corrija o arquivo X".',
       modelo: "github",
       ok: true,
-    });
+      anexos: [],
+      created_at: new Date().toISOString(),
+    };
+    salvarMensagemArmazenada(msgAssistente);
+
+    try {
+      await context.supabase.from("mensagens").insert({
+        id: msgAssistente.id,
+        projeto_id: projetoId,
+        user_id: context.userId,
+        role: "assistant",
+        conteudo: msgAssistente.conteudo,
+        modelo: "github",
+        ok: true,
+      });
+    } catch {
+      // ignore
+    }
 
     return {
       ok: true as const,
-      projeto_id: criado.id as string,
+      projeto_id: projetoId,
       qtd: Object.keys(r.arquivos).length,
     };
   });
@@ -294,39 +432,68 @@ export const importarArquivosZip = createServerFn({ method: "POST" })
     const nomes = Object.keys(data.arquivos);
     if (!nomes.length) return { ok: false as const, msg: "O zip não tinha arquivos de texto." };
 
-    const { data: criado, error } = await context.supabase
-      .from("projetos")
-      .insert({
-        user_id: context.userId,
-        nome: data.nome.slice(0, 80),
-        modelo: "google",
-        arquivos: data.arquivos as unknown as never,
-      })
-      .select("id")
-      .single();
-    if (error) throw new Error(error.message);
-
-    await context.supabase.from("mensagens").insert({
-      projeto_id: criado.id,
+    const projetoId = crypto.randomUUID();
+    const novoProjeto = {
+      id: projetoId,
       user_id: context.userId,
-      role: "assistant",
+      nome: data.nome.slice(0, 80),
+      modelo: "google",
+      arquivos: data.arquivos,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    salvarProjetoArmazenado(novoProjeto);
+
+    try {
+      await context.supabase
+        .from("projetos")
+        .insert({
+          id: projetoId,
+          user_id: context.userId,
+          nome: data.nome.slice(0, 80),
+          modelo: "google",
+          arquivos: data.arquivos as unknown as never,
+        });
+    } catch {
+      // ignore
+    }
+
+    const msgAssistente = {
+      id: crypto.randomUUID(),
+      projeto_id: projetoId,
+      user_id: context.userId,
+      role: "assistant" as const,
       conteudo:
         `Importei **${nomes.length} arquivo(s)** do seu zip para o projeto.\n\n` +
         "Eles estão no Workspace. Isso confirma a importação, não a execução do sistema. Posso analisar os arquivos ou fazer uma alteração específica.",
       modelo: "zip",
       ok: true,
-    });
+      anexos: [],
+      created_at: new Date().toISOString(),
+    };
+    salvarMensagemArmazenada(msgAssistente);
 
-    return { ok: true as const, projeto_id: criado.id as string, qtd: nomes.length };
+    try {
+      await context.supabase.from("mensagens").insert({
+        id: msgAssistente.id,
+        projeto_id: projetoId,
+        user_id: context.userId,
+        role: "assistant",
+        conteudo: msgAssistente.conteudo,
+        modelo: "zip",
+        ok: true,
+      });
+    } catch {
+      // ignore
+    }
+
+    return { ok: true as const, projeto_id: projetoId, qtd: nomes.length };
   });
 
 export const commitsGithub = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: conta } = await context.supabase
-      .from("github_contas")
-      .select("token, repo, branch")
-      .maybeSingle();
+    const conta = await obterConta(context);
     if (!conta?.repo) return { ok: false as const, msg: "", commits: [] };
 
     const { listarCommits } = await import("./faby/github.server");
@@ -356,14 +523,23 @@ export const publicarProjeto = createServerFn({ method: "POST" })
     z.object({ projeto_id: z.string().uuid() }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    const [{ data: conta }, { data: projeto }] = await Promise.all([
-      context.supabase.from("github_contas").select("token, repo, branch").maybeSingle(),
-      context.supabase
+    const conta = await obterConta(context);
+    let projeto: { nome?: string; arquivos?: Record<string, string> } | null = null;
+    try {
+      const { data: p } = await context.supabase
         .from("projetos")
         .select("nome, arquivos")
         .eq("id", data.projeto_id)
-        .maybeSingle(),
-    ]);
+        .maybeSingle();
+      if (p) projeto = p;
+    } catch {
+      // ignore
+    }
+    if (!projeto) {
+      const localP = obterProjetoArmazenado(data.projeto_id);
+      if (localP) projeto = localP;
+    }
+
     if (!conta?.token) {
       return {
         ok: false as const,
@@ -389,18 +565,30 @@ export const publicarProjeto = createServerFn({ method: "POST" })
     let repo = conta.repo ?? "";
     let branch = conta.branch || "main";
     if (!repo) {
-      const novo = await criarRepositorio(conta.token, apelidoRepo(projeto.nome), false);
+      const novo = await criarRepositorio(conta.token, apelidoRepo(projeto.nome || "projeto"), false);
       if (!novo.ok) return { ok: false as const, precisaGithub: false, msg: novo.msg };
       repo = novo.repo;
       branch = novo.branch;
-      await context.supabase
-        .from("github_contas")
-        .update({ repo, branch })
-        .eq("user_id", context.userId);
+      salvarGithubContaArmazenada({
+        ...conta,
+        user_id: context.userId,
+        token: conta.token,
+        login: conta.login || "",
+        repo,
+        branch,
+      });
+      try {
+        await context.supabase
+          .from("github_contas")
+          .update({ repo, branch })
+          .eq("user_id", context.userId);
+      } catch {
+        // ignore
+      }
     }
 
     if (!arquivos["README.md"]) {
-      arquivos["README.md"] = `# ${projeto.nome}\n\nProjeto criado com o FabyClaud.\n`;
+      arquivos["README.md"] = `# ${projeto.nome || "Projeto"}\n\nProjeto criado com o FabyClaud.\n`;
     }
     // .nojekyll garante que o GitHub sirva os arquivos exatamente como estão.
     arquivos[".nojekyll"] = "";
@@ -409,7 +597,7 @@ export const publicarProjeto = createServerFn({ method: "POST" })
       token: conta.token,
       repo,
       branch,
-      mensagem: `Publicação de ${projeto.nome} pelo FabyClaud`,
+      mensagem: `Publicação de ${projeto.nome || "Projeto"} pelo FabyClaud`,
       arquivos,
     });
     if (!envio.ok) return { ok: false as const, precisaGithub: false, msg: envio.msg };
@@ -424,10 +612,7 @@ export const publicarProjeto = createServerFn({ method: "POST" })
 export const publicarPagesGithub = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: conta } = await context.supabase
-      .from("github_contas")
-      .select("token, repo, branch")
-      .maybeSingle();
+    const conta = await obterConta(context);
     if (!conta?.repo) return { ok: false, msg: "Escolha um repositório primeiro." };
 
     const { ligarPages } = await import("./faby/github.server");

@@ -94,9 +94,9 @@ document.getElementById("btnStart").addEventListener("click", () => {
     // 3. Extrair arquivos com o CodeModifier real
     const arquivosExtraidos = codeModifier.extrairArquivosCompletos(respostaGerada);
     assert.equal(Object.keys(arquivosExtraidos).length, 3, "Devem ser extraídos exatamente 3 arquivos reais");
-    assert.ok(arquivosExtraidos["index.html"].includes("id=\"display\""), "index.html deve conter o display real");
-    assert.ok(arquivosExtraidos["styles.css"].includes("#0d1117"), "styles.css deve conter cores reais");
-    assert.ok(arquivosExtraidos["app.js"].includes("setInterval"), "app.js deve conter lógica real de cronômetro");
+    assert.ok(arquivosExtraidos["index.html"]?.includes("id=\"display\""), "index.html deve conter o display real");
+    assert.ok(arquivosExtraidos["styles.css"]?.includes("#0d1117"), "styles.css deve conter cores reais");
+    assert.ok(arquivosExtraidos["app.js"]?.includes("setInterval"), "app.js deve conter lógica real de cronômetro");
 
     // 4. Aplicar ao VFS
     vfs = codeModifier.aplicarArquivosCompletos(vfs, arquivosExtraidos);
@@ -148,6 +148,7 @@ document.getElementById("btnStart").addEventListener("click", () => {
       user_id: testUserId,
       provider: "google",
       api_key: "AIzaSyFakeKeyProofTest123456789",
+      api_url: null,
       testada_ok: true,
       testada_em: new Date().toISOString(),
       ultimo_erro: null,
@@ -155,8 +156,8 @@ document.getElementById("btnStart").addEventListener("click", () => {
 
     const chavesLidas = obterChavesArmazenadas([testUserId]);
     assert.equal(chavesLidas.length, 1, "Chave deve ser salva e lida do disco");
-    assert.equal(chavesLidas[0].provider, "google");
-    assert.equal(chavesLidas[0].api_key, "AIzaSyFakeKeyProofTest123456789");
+    assert.equal(chavesLidas[0]?.provider, "google");
+    assert.equal(chavesLidas[0]?.api_key, "AIzaSyFakeKeyProofTest123456789");
 
     // 2. Salvar Projeto com arquivos reais
     const projetoOriginal = {

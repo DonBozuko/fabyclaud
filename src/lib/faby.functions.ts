@@ -483,9 +483,16 @@ export const salvarChave = createServerFn({ method: "POST" })
     let ultimoErro: string | null = null;
 
     try {
-      const teste = await chamarProvedor(data.provider, chave, "Responda apenas com o número 1", {
-        apiUrl: data.provider === "omniroute" ? apiUrlValida || undefined : undefined,
-      });
+      const teste = await chamarProvedor(
+        data.provider,
+        "Responda apenas com o número 1",
+        [],
+        chave,
+        [],
+        [],
+        15_000,
+        data.provider === "omniroute" ? apiUrlValida || undefined : undefined,
+      );
       if (teste.ok) {
         testadaOk = true;
         ultimoErro = null;
