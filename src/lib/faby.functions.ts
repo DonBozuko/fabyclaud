@@ -419,8 +419,8 @@ export const obterCapacidades = createServerFn({ method: "GET" })
           .in("user_id", targetUserIds);
         if (adminChaves && adminChaves.length > 0) rows = adminChaves;
       }
-    } catch {
-      // ignore
+    } catch (erro) {
+      console.warn("[FabyClaud] Leitura das chaves na nuvem falhou; usando armazenamento local.", erro);
     }
 
     const diskChaves = obterChavesArmazenadas(targetUserIds);

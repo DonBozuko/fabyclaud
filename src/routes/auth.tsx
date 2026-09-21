@@ -4,6 +4,11 @@ import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
 import heroAsset from "@/assets/hero-matrix.png.asset.json";
+import {
+  CHAVE_SESSAO_LOCAL,
+  garantirSessaoLocal,
+  limparSessaoLocal,
+} from "@/lib/faby/sessao-local";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -34,54 +39,24 @@ function AuthPage() {
   const [carregando, setCarregando] = useState(false);
   const [confirmar, setConfirmar] = useState(false);
 
-  function obterOuCriarIdLocal(): string {
-    if (typeof window === "undefined") return "00000000-0000-0000-0000-000000000001";
-    try {
-      const salvo = localStorage.getItem("faby_user_session");
-      if (salvo) {
-        const parsed = JSON.parse(salvo);
-        if (parsed?.id && parsed.id !== "00000000-0000-0000-0000-000000000001") {
-          return parsed.id;
-        }
-      }
-      const stable = localStorage.getItem("faby_stable_device_id");
-      if (stable) return stable;
-    } catch {
-      // ignore
-    }
-    const novo =
-      typeof crypto !== "undefined" && crypto.randomUUID
-        ? crypto.randomUUID()
-        : "local_" + Math.random().toString(36).slice(2);
-    try {
-      localStorage.setItem("faby_stable_device_id", novo);
-    } catch {
-      // ignore
-    }
-    return novo;
-  }
-
   function autenticarLocalmente(emailInformado: string) {
-    if (typeof window !== "undefined") {
-      const id = obterOuCriarIdLocal();
-      const sessao = {
-        email: emailInformado || "usuario@fabyclaud.local",
-        id,
-        created_at: new Date().toISOString(),
-      };
-      localStorage.setItem("faby_user_session", JSON.stringify(sessao));
-      localStorage.setItem("faby_stable_device_id", id);
-      toast.success("Acesso liberado (modo local / chaves próprias)!");
-      void navigate({ to: "/" });
+    if (typeof window === "undefined") return;
+    // Usa a mesma sessão local que o servidor lê nas chamadas protegidas.
+    const sessao = garantirSessaoLocal();
+    if (emailInformado && emailInformado !== sessao.email) {
+      localStorage.setItem(
+        CHAVE_SESSAO_LOCAL,
+        JSON.stringify({ ...sessao, email: emailInformado }),
+      );
     }
+    toast.success("Acesso liberado (modo local / chaves próprias)!");
+    void navigate({ to: "/" });
   }
 
   useEffect(() => {
     void supabase.auth.getSession().then(({ data }: { data: { session: any } }) => {
       if (data?.session) {
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("faby_user_session");
-        }
+        limparSessaoLocal();
         void navigate({ to: "/" });
       } else if (typeof window !== "undefined" && localStorage.getItem("faby_user_session")) {
         void navigate({ to: "/" });
@@ -90,9 +65,7 @@ function AuthPage() {
 
     const { data } = supabase.auth.onAuthStateChange((_evento: any, sessao: any) => {
       if (sessao) {
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("faby_user_session");
-        }
+        limparSessaoLocal();
         void navigate({ to: "/" });
       }
     });
@@ -127,9 +100,7 @@ function AuthPage() {
           setConfirmar(true);
           return;
         }
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("faby_user_session");
-        }
+        limparSessaoLocal();
         toast.success("Conta criada com sucesso!");
         void navigate({ to: "/" });
       } else {
@@ -147,9 +118,7 @@ function AuthPage() {
           return;
         }
         if (data?.session) {
-          if (typeof window !== "undefined") {
-            localStorage.removeItem("faby_user_session");
-          }
+          limparSessaoLocal();
           toast.success("Login realizado com sucesso!");
           void navigate({ to: "/" });
         }

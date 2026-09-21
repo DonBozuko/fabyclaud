@@ -48,6 +48,8 @@ import heroAsset from "@/assets/hero-matrix.png.asset.json";
 import { PainelRecursos, type PainelNome } from "@/components/faby/PainelRecursos";
 import { SettingsDialog } from "@/components/faby/SettingsDialog";
 import { supabase } from "@/integrations/supabase/client";
+import { verificarAmbienteCliente } from "@/lib/faby/ambiente";
+import { garantirSessaoLocal, idUsuarioAtual, limparSessaoLocal } from "@/lib/faby/sessao-local";
 import {
   apagarProjeto,
   apagarArquivo,
@@ -373,25 +375,15 @@ function FabyClaud() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      let session = localStorage.getItem("faby_user_session");
-      if (!session) {
-        let stableId = localStorage.getItem("faby_stable_device_id");
-        if (!stableId) {
-          stableId =
-            typeof crypto !== "undefined" && crypto.randomUUID
-              ? crypto.randomUUID()
-              : "local_" + Math.random().toString(36).slice(2);
-          localStorage.setItem("faby_stable_device_id", stableId);
-        }
-        session = JSON.stringify({
-          id: stableId,
-          email: "usuario@fabyclaud.local",
-          created_at: new Date().toISOString(),
-        });
-        localStorage.setItem("faby_user_session", session);
-      }
+      // Modo local explícito: a mesma sessão que o servidor lê nas chamadas protegidas.
+      garantirSessaoLocal();
       setLogado(true);
       setPronto(true);
+
+      const ambiente = verificarAmbienteCliente();
+      if (ambiente.mensagem) {
+        toast.warning(ambiente.mensagem, { duration: 12000 });
+      }
     }
 
     const { data } = supabase.auth.onAuthStateChange((_e: any, sessao: any) => {
@@ -451,19 +443,27 @@ function FabyClaud() {
   const [codigoEditando, setCodigoEditando] = useState<string>("");
   const [salvandoArquivo, setSalvandoArquivo] = useState(false);
 
-  const usuarioId = useMemo(() => {
-    if (typeof window === "undefined") return "local-user";
-    try {
-      const session = localStorage.getItem("faby_user_session");
-      if (session) {
-        const parsed = JSON.parse(session);
-        if (parsed?.id) return String(parsed.id);
-      }
-      const stable = localStorage.getItem("faby_stable_device_id");
-      if (stable) return String(stable);
-    } catch {}
-    return "local-user";
+  const [idContaReal, setIdContaReal] = useState<string | null>(null);
+
+  useEffect(() => {
+    let ativo = true;
+    void supabase.auth
+      .getUser()
+      .then(({ data }: { data: { user: { id: string } | null } }) => {
+        if (ativo) setIdContaReal(data?.user?.id ?? null);
+      })
+      .catch((erro: unknown) => {
+        // Sem conta na nuvem o app segue em modo local; registra para diagnóstico.
+        console.warn("[FabyClaud] Não foi possível confirmar a conta na nuvem.", erro);
+      });
+    return () => {
+      ativo = false;
+    };
   }, []);
+
+  // O mesmo identificador que o servidor usa nas chamadas protegidas:
+  // conta real quando existir, senão a sessão local.
+  const usuarioId = useMemo(() => idUsuarioAtual(idContaReal), [idContaReal]);
 
   const inputArquivo = useRef<HTMLInputElement>(null);
   const inputPasta = useRef<HTMLInputElement>(null);
@@ -522,12 +522,14 @@ function FabyClaud() {
                   void queryClient.invalidateQueries({ queryKey: ["chaves"] });
                   void queryClient.invalidateQueries({ queryKey: ["capacidades"] });
                 })
-                .catch(() => {});
+                .catch((erro: unknown) => {
+                  console.warn("[FabyClaud] Não foi possível reaproveitar a chave salva.", erro);
+                });
             }
           }
         }
-      } catch {
-        // ignore
+      } catch (erro) {
+        console.warn("[FabyClaud] Chaves salvas no navegador estavam ilegíveis.", erro);
       }
     }
   }, [chaves.data, queryClient, salvarChaveFn]);
@@ -537,8 +539,8 @@ function FabyClaud() {
       if (typeof window !== "undefined") {
         try {
           localStorage.setItem("faby_projects_backup", JSON.stringify(projetos.data));
-        } catch {
-          // ignore
+        } catch (erro) {
+          console.warn("[FabyClaud] Não foi possível guardar a cópia local dos projetos.", erro);
         }
       }
       const salvo =
@@ -701,8 +703,10 @@ function FabyClaud() {
         toast.success(`${arquivoAtivo} salvo com sucesso!`, { id: aviso });
         void queryClient.invalidateQueries({ queryKey: ["projeto", projetoId] });
       }
-    } catch {
-      toast.error("Não foi possível salvar o arquivo.", { id: aviso });
+    } catch (erro) {
+      console.error("[FabyClaud] Falha ao salvar arquivo:", erro);
+      const detalhe = erro instanceof Error ? erro.message : String(erro);
+      toast.error(`Não foi possível salvar o arquivo. Motivo: ${detalhe}`, { id: aviso });
     } finally {
       setSalvandoArquivo(false);
     }
@@ -999,13 +1003,11 @@ function FabyClaud() {
             <button
               type="button"
               onClick={async () => {
-                if (typeof window !== "undefined") {
-                  localStorage.removeItem("faby_user_session");
-                }
+                limparSessaoLocal();
                 try {
                   await supabase.auth.signOut();
-                } catch {
-                  // ignore
+                } catch (erro) {
+                  console.warn("[FabyClaud] Saída da conta na nuvem falhou:", erro);
                 }
                 void navigate({ to: "/auth" });
               }}
