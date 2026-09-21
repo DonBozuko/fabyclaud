@@ -131,7 +131,7 @@
       "file_type": "code",
       "norm_label": "compositetypes",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L771"
+      "source_location": "L760"
     },
     {
       "id": "src_integrations_supabase_types_database",
@@ -144,7 +144,7 @@
       "file_type": "code",
       "norm_label": "database",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L9"
+      "source_location": "L3"
     },
     {
       "id": "src_integrations_supabase_types_databasewithoutinternals",
@@ -157,7 +157,7 @@
       "file_type": "code",
       "norm_label": "databasewithoutinternals",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L671"
+      "source_location": "L665"
     },
     {
       "id": "src_integrations_supabase_types_defaultschema",
@@ -170,7 +170,7 @@
       "file_type": "code",
       "norm_label": "defaultschema",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L673"
+      "source_location": "L667"
     },
     {
       "id": "src_integrations_supabase_types_enums",
@@ -183,7 +183,7 @@
       "file_type": "code",
       "norm_label": "enums",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L754"
+      "source_location": "L744"
     },
     {
       "id": "src_integrations_supabase_types_json",
@@ -209,7 +209,7 @@
       "file_type": "code",
       "norm_label": "tables",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L675"
+      "source_location": "L669"
     },
     {
       "id": "src_integrations_supabase_types_tablesinsert",
@@ -222,7 +222,7 @@
       "file_type": "code",
       "norm_label": "tablesinsert",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L704"
+      "source_location": "L696"
     },
     {
       "id": "src_integrations_supabase_types_tablesupdate",
@@ -235,7 +235,7 @@
       "file_type": "code",
       "norm_label": "tablesupdate",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L729"
+      "source_location": "L720"
     },
     {
       "id": "src_server_serverentry",
@@ -3916,7 +3916,7 @@
       "file_type": "code",
       "norm_label": "respostacomprovacapacidade()",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L690"
+      "source_location": "L693"
     },
     {
       "id": "src_lib_faby_storage_server_listarmensagensarmazenadas",
@@ -4540,7 +4540,7 @@
       "file_type": "code",
       "norm_label": "authpage()",
       "source_file": "src/routes/auth.tsx",
-      "source_location": "L34"
+      "source_location": "L35"
     },
     {
       "id": "src_routes_auth_authpage_autenticarlocalmente",
@@ -4552,7 +4552,7 @@
       "file_type": "code",
       "norm_label": "autenticarlocalmente()",
       "source_file": "src/routes/auth.tsx",
-      "source_location": "L42"
+      "source_location": "L43"
     },
     {
       "id": "src_routes_auth_authpage_enviar",
@@ -4564,7 +4564,7 @@
       "file_type": "code",
       "norm_label": "enviar()",
       "source_file": "src/routes/auth.tsx",
-      "source_location": "L76"
+      "source_location": "L77"
     },
     {
       "id": "src_routes_index_fabyclaud",
@@ -5164,7 +5164,7 @@
       "file_type": "code",
       "norm_label": "apelidorepo()",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L505"
+      "source_location": "L497"
     },
     {
       "id": "src_lib_github_functions_extrairuserids",
@@ -5572,7 +5572,7 @@
       "file_type": "code",
       "norm_label": "exigiradministracaonuvem()",
       "source_file": "src/lib/faby/ambiente.server.ts",
-      "source_location": "L51"
+      "source_location": "L52"
     },
     {
       "id": "src_router_getrouter",
@@ -6883,7 +6883,7 @@
       "file_type": "code",
       "norm_label": "constants",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L788"
+      "source_location": "L776"
     },
     {
       "id": "src_lib_error_capture",
@@ -7571,7 +7571,7 @@
       "file_type": "code",
       "norm_label": "gerardocumentacao",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1486"
+      "source_location": "L1489"
     },
     {
       "id": "src_lib_faby_providers_server",
@@ -10211,7 +10211,7 @@
       "file_type": "code",
       "norm_label": "apagarlicao",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L930"
+      "source_location": "L933"
     },
     {
       "id": "src_lib_faby_functions_estadoescola",
@@ -10222,7 +10222,7 @@
       "file_type": "code",
       "norm_label": "estadoescola",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L877"
+      "source_location": "L880"
     },
     {
       "id": "src_lib_faby_functions_estudaragora",
@@ -10233,7 +10233,7 @@
       "file_type": "code",
       "norm_label": "estudaragora",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L919"
+      "source_location": "L922"
     },
     {
       "id": "src_routes_api_public_app_private_projeto_colecao",
@@ -11135,7 +11135,7 @@
       "file_type": "code",
       "norm_label": "apagararquivo",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1407"
+      "source_location": "L1410"
     },
     {
       "id": "src_lib_faby_functions_cacheagentes",
@@ -11168,7 +11168,7 @@
       "file_type": "code",
       "norm_label": "criarbackup",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1169"
+      "source_location": "L1172"
     },
     {
       "id": "src_lib_faby_functions_enviarmensagem",
@@ -11179,7 +11179,7 @@
       "file_type": "code",
       "norm_label": "enviarmensagem",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1560"
+      "source_location": "L1563"
     },
     {
       "id": "src_lib_faby_functions_listarchaves",
@@ -11212,7 +11212,7 @@
       "file_type": "code",
       "norm_label": "listarprovedorescustom",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L694"
+      "source_location": "L697"
     },
     {
       "id": "src_lib_faby_functions_obtercapacidades",
@@ -11234,7 +11234,7 @@
       "file_type": "code",
       "norm_label": "obtermemoria",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L824"
+      "source_location": "L827"
     },
     {
       "id": "src_lib_faby_functions_obterprojeto",
@@ -11256,7 +11256,7 @@
       "file_type": "code",
       "norm_label": "restaurarbackup",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1211"
+      "source_location": "L1214"
     },
     {
       "id": "src_lib_faby_functions_salvararquivo",
@@ -11267,7 +11267,7 @@
       "file_type": "code",
       "norm_label": "salvararquivo",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1325"
+      "source_location": "L1328"
     },
     {
       "id": "src_lib_faby_functions_salvarchave",
@@ -11278,7 +11278,7 @@
       "file_type": "code",
       "norm_label": "salvarchave",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L460"
+      "source_location": "L463"
     },
     {
       "id": "src_lib_faby_functions_testarchave",
@@ -11289,7 +11289,7 @@
       "file_type": "code",
       "norm_label": "testarchave",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L577"
+      "source_location": "L580"
     },
     {
       "id": "src_lib_faby_storage_server_test",
@@ -12417,7 +12417,7 @@
       "file_type": "code",
       "norm_label": "clonarporlink",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L340"
+      "source_location": "L336"
     },
     {
       "id": "src_lib_github_functions_commitsgithub",
@@ -12428,7 +12428,7 @@
       "file_type": "code",
       "norm_label": "commitsgithub",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L493"
+      "source_location": "L485"
     },
     {
       "id": "src_lib_github_functions_criarrepogithub",
@@ -12439,7 +12439,7 @@
       "file_type": "code",
       "norm_label": "criarrepogithub",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L118"
+      "source_location": "L115"
     },
     {
       "id": "src_lib_github_functions_definirrepogithub",
@@ -12450,7 +12450,7 @@
       "file_type": "code",
       "norm_label": "definirrepogithub",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L160"
+      "source_location": "L157"
     },
     {
       "id": "src_lib_github_functions_desconectargithub",
@@ -12472,7 +12472,7 @@
       "file_type": "code",
       "norm_label": "enviarprojetogithub",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L195"
+      "source_location": "L192"
     },
     {
       "id": "src_lib_github_functions_importararquivoszip",
@@ -12483,7 +12483,7 @@
       "file_type": "code",
       "norm_label": "importararquivoszip",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L421"
+      "source_location": "L415"
     },
     {
       "id": "src_lib_github_functions_importardogithub",
@@ -12494,7 +12494,7 @@
       "file_type": "code",
       "norm_label": "importardogithub",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L251"
+      "source_location": "L249"
     },
     {
       "id": "src_lib_github_functions_listarreposgithub",
@@ -12505,7 +12505,7 @@
       "file_type": "code",
       "norm_label": "listarreposgithub",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L105"
+      "source_location": "L102"
     },
     {
       "id": "src_lib_github_functions_publicarpagesgithub",
@@ -12516,7 +12516,7 @@
       "file_type": "code",
       "norm_label": "publicarpagesgithub",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L612"
+      "source_location": "L608"
     },
     {
       "id": "src_lib_github_functions_publicarprojeto",
@@ -12527,7 +12527,7 @@
       "file_type": "code",
       "norm_label": "publicarprojeto",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L520"
+      "source_location": "L512"
     },
     {
       "id": "src_lib_github_functions_salvartokengithub",
@@ -12759,7 +12759,7 @@
       "file_type": "code",
       "norm_label": "apagaragente",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1009"
+      "source_location": "L1012"
     },
     {
       "id": "src_lib_faby_functions_apagarbackup",
@@ -12770,7 +12770,7 @@
       "file_type": "code",
       "norm_label": "apagarbackup",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1305"
+      "source_location": "L1308"
     },
     {
       "id": "src_lib_faby_functions_apagarchave",
@@ -12781,7 +12781,7 @@
       "file_type": "code",
       "norm_label": "apagarchave",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L549"
+      "source_location": "L552"
     },
     {
       "id": "src_lib_faby_functions_apagarprojeto",
@@ -12803,7 +12803,7 @@
       "file_type": "code",
       "norm_label": "apagarprompt",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1099"
+      "source_location": "L1102"
     },
     {
       "id": "src_lib_faby_functions_apagarprovedorcustom",
@@ -12814,7 +12814,7 @@
       "file_type": "code",
       "norm_label": "apagarprovedorcustom",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L796"
+      "source_location": "L799"
     },
     {
       "id": "src_lib_faby_functions_criaragente",
@@ -12825,7 +12825,7 @@
       "file_type": "code",
       "norm_label": "criaragente",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L975"
+      "source_location": "L978"
     },
     {
       "id": "src_lib_faby_functions_criarprompt",
@@ -12836,7 +12836,7 @@
       "file_type": "code",
       "norm_label": "criarprompt",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1065"
+      "source_location": "L1068"
     },
     {
       "id": "src_lib_faby_functions_criarprovedorcustom",
@@ -12847,7 +12847,7 @@
       "file_type": "code",
       "norm_label": "criarprovedorcustom",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L717"
+      "source_location": "L720"
     },
     {
       "id": "src_lib_faby_functions_listaragentes",
@@ -12858,7 +12858,7 @@
       "file_type": "code",
       "norm_label": "listaragentes",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L945"
+      "source_location": "L948"
     },
     {
       "id": "src_lib_faby_functions_listarbackups",
@@ -12869,7 +12869,7 @@
       "file_type": "code",
       "norm_label": "listarbackups",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1129"
+      "source_location": "L1132"
     },
     {
       "id": "src_lib_faby_functions_listarprompts",
@@ -12880,7 +12880,7 @@
       "file_type": "code",
       "norm_label": "listarprompts",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1035"
+      "source_location": "L1038"
     },
     {
       "id": "src_lib_faby_functions_salvarmemoria",
@@ -12891,7 +12891,7 @@
       "file_type": "code",
       "norm_label": "salvarmemoria",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L844"
+      "source_location": "L847"
     },
     {
       "id": "src_lib_faby_orquestracao_server",
@@ -13485,7 +13485,7 @@
       "file_type": "code",
       "norm_label": "route",
       "source_file": "src/routes/auth.tsx",
-      "source_location": "L13"
+      "source_location": "L14"
     },
     {
       "id": "src_routes_index_route",
@@ -16711,7 +16711,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/ambiente.server.ts",
-      "source_location": "L52",
+      "source_location": "L53",
       "weight": 1.0
     },
     {
@@ -17479,7 +17479,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1414",
+      "source_location": "L1417",
       "weight": 1.0
     },
     {
@@ -17491,7 +17491,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1440",
+      "source_location": "L1443",
       "weight": 1.0
     },
     {
@@ -17503,7 +17503,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1452",
+      "source_location": "L1455",
       "weight": 1.0
     },
     {
@@ -17515,7 +17515,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L555",
+      "source_location": "L558",
       "weight": 1.0
     },
     {
@@ -17527,7 +17527,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L557",
+      "source_location": "L560",
       "weight": 1.0
     },
     {
@@ -17563,7 +17563,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L800",
+      "source_location": "L803",
       "weight": 1.0
     },
     {
@@ -17575,7 +17575,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L802",
+      "source_location": "L805",
       "weight": 1.0
     },
     {
@@ -17587,7 +17587,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1185",
+      "source_location": "L1188",
       "weight": 1.0
     },
     {
@@ -17599,7 +17599,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1185",
+      "source_location": "L1188",
       "weight": 1.0
     },
     {
@@ -17611,7 +17611,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L756",
+      "source_location": "L759",
       "weight": 1.0
     },
     {
@@ -17623,7 +17623,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1626",
+      "source_location": "L1629",
       "weight": 1.0
     },
     {
@@ -17635,7 +17635,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1633",
+      "source_location": "L1636",
       "weight": 1.0
     },
     {
@@ -17647,7 +17647,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1691",
+      "source_location": "L1694",
       "weight": 1.0
     },
     {
@@ -17659,7 +17659,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1701",
+      "source_location": "L1704",
       "weight": 1.0
     },
     {
@@ -17671,7 +17671,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1711",
+      "source_location": "L1714",
       "weight": 1.0
     },
     {
@@ -17683,7 +17683,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1840",
+      "source_location": "L1843",
       "weight": 1.0
     },
     {
@@ -17695,7 +17695,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1895",
+      "source_location": "L1898",
       "weight": 1.0
     },
     {
@@ -17707,7 +17707,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1929",
+      "source_location": "L1932",
       "weight": 1.0
     },
     {
@@ -17719,7 +17719,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1962",
+      "source_location": "L1965",
       "weight": 1.0
     },
     {
@@ -17731,7 +17731,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2295",
+      "source_location": "L2298",
       "weight": 1.0
     },
     {
@@ -17743,7 +17743,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2418",
+      "source_location": "L2421",
       "weight": 1.0
     },
     {
@@ -17827,7 +17827,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L697",
+      "source_location": "L700",
       "weight": 1.0
     },
     {
@@ -17839,7 +17839,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L714",
+      "source_location": "L717",
       "weight": 1.0
     },
     {
@@ -17875,7 +17875,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L426",
+      "source_location": "L429",
       "weight": 1.0
     },
     {
@@ -17887,7 +17887,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L827",
+      "source_location": "L830",
       "weight": 1.0
     },
     {
@@ -17899,7 +17899,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L841",
+      "source_location": "L844",
       "weight": 1.0
     },
     {
@@ -17983,7 +17983,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1264",
+      "source_location": "L1267",
       "weight": 1.0
     },
     {
@@ -17995,7 +17995,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1264",
+      "source_location": "L1267",
       "weight": 1.0
     },
     {
@@ -18007,7 +18007,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1268",
+      "source_location": "L1271",
       "weight": 1.0
     },
     {
@@ -18019,7 +18019,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1338",
+      "source_location": "L1341",
       "weight": 1.0
     },
     {
@@ -18031,7 +18031,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1364",
+      "source_location": "L1367",
       "weight": 1.0
     },
     {
@@ -18043,7 +18043,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1376",
+      "source_location": "L1379",
       "weight": 1.0
     },
     {
@@ -18055,7 +18055,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L518",
+      "source_location": "L521",
       "weight": 1.0
     },
     {
@@ -18067,7 +18067,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L850",
+      "source_location": "L853",
       "weight": 1.0
     },
     {
@@ -18079,7 +18079,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L603",
+      "source_location": "L606",
       "weight": 1.0
     },
     {
@@ -18091,7 +18091,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L603",
+      "source_location": "L606",
       "weight": 1.0
     },
     {
@@ -18103,7 +18103,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L657",
+      "source_location": "L660",
       "weight": 1.0
     },
     {
@@ -18115,7 +18115,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L663",
+      "source_location": "L666",
       "weight": 1.0
     },
     {
@@ -19303,7 +19303,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L352",
+      "source_location": "L348",
       "weight": 1.0
     },
     {
@@ -19315,7 +19315,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L367",
+      "source_location": "L363",
       "weight": 1.0
     },
     {
@@ -19327,7 +19327,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L397",
+      "source_location": "L391",
       "weight": 1.0
     },
     {
@@ -19339,7 +19339,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L496",
+      "source_location": "L488",
       "weight": 1.0
     },
     {
@@ -19351,7 +19351,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L133",
+      "source_location": "L130",
       "weight": 1.0
     },
     {
@@ -19363,7 +19363,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L140",
+      "source_location": "L137",
       "weight": 1.0
     },
     {
@@ -19375,7 +19375,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L168",
+      "source_location": "L165",
       "weight": 1.0
     },
     {
@@ -19387,7 +19387,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L174",
+      "source_location": "L171",
       "weight": 1.0
     },
     {
@@ -19411,7 +19411,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L203",
+      "source_location": "L200",
       "weight": 1.0
     },
     {
@@ -19423,7 +19423,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L216",
+      "source_location": "L213",
       "weight": 1.0
     },
     {
@@ -19435,7 +19435,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L445",
+      "source_location": "L439",
       "weight": 1.0
     },
     {
@@ -19447,7 +19447,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L474",
+      "source_location": "L466",
       "weight": 1.0
     },
     {
@@ -19459,7 +19459,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L257",
+      "source_location": "L255",
       "weight": 1.0
     },
     {
@@ -19471,7 +19471,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L279",
+      "source_location": "L277",
       "weight": 1.0
     },
     {
@@ -19483,7 +19483,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L286",
+      "source_location": "L284",
       "weight": 1.0
     },
     {
@@ -19495,7 +19495,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L108",
+      "source_location": "L105",
       "weight": 1.0
     },
     {
@@ -19531,7 +19531,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L615",
+      "source_location": "L611",
       "weight": 1.0
     },
     {
@@ -19543,7 +19543,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L526",
+      "source_location": "L518",
       "weight": 1.0
     },
     {
@@ -19555,7 +19555,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L539",
+      "source_location": "L531",
       "weight": 1.0
     },
     {
@@ -19567,7 +19567,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L554",
+      "source_location": "L546",
       "weight": 1.0
     },
     {
@@ -19579,7 +19579,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L568",
+      "source_location": "L562",
       "weight": 1.0
     },
     {
@@ -19591,7 +19591,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L572",
+      "source_location": "L568",
       "weight": 1.0
     },
     {
@@ -19848,6 +19848,18 @@
     },
     {
       "source": "src_routes_auth_authpage",
+      "target": "src_lib_faby_ambiente_verificarambientecliente",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/routes/auth.tsx",
+      "source_location": "L224",
+      "weight": 1.0
+    },
+    {
+      "source": "src_routes_auth_authpage",
       "target": "src_lib_faby_sessao_local_garantirsessaolocal",
       "relation": "calls",
       "_origin": "ast",
@@ -19855,7 +19867,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/auth.tsx",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -19867,7 +19879,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/auth.tsx",
-      "source_location": "L59",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -19879,7 +19891,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/auth.tsx",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -19891,7 +19903,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/auth.tsx",
-      "source_location": "L103",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -19903,7 +19915,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/auth.tsx",
-      "source_location": "L93",
+      "source_location": "L94",
       "weight": 1.0
     },
     {
@@ -20311,7 +20323,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/auth.tsx",
-      "source_location": "L42",
+      "source_location": "L43",
       "weight": 1.0
     },
     {
@@ -20738,7 +20750,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1025",
+      "source_location": "L1028",
       "weight": 1.0
     },
     {
@@ -20751,7 +20763,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1424",
+      "source_location": "L1427",
       "weight": 1.0
     },
     {
@@ -20764,7 +20776,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1315",
+      "source_location": "L1318",
       "weight": 1.0
     },
     {
@@ -20777,7 +20789,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L565",
+      "source_location": "L568",
       "weight": 1.0
     },
     {
@@ -20790,7 +20802,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L935",
+      "source_location": "L938",
       "weight": 1.0
     },
     {
@@ -20816,7 +20828,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1115",
+      "source_location": "L1118",
       "weight": 1.0
     },
     {
@@ -20829,7 +20841,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L810",
+      "source_location": "L813",
       "weight": 1.0
     },
     {
@@ -20842,7 +20854,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L991",
+      "source_location": "L994",
       "weight": 1.0
     },
     {
@@ -20855,7 +20867,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1197",
+      "source_location": "L1200",
       "weight": 1.0
     },
     {
@@ -20868,7 +20880,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1081",
+      "source_location": "L1084",
       "weight": 1.0
     },
     {
@@ -20881,7 +20893,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L730",
+      "source_location": "L733",
       "weight": 1.0
     },
     {
@@ -20894,7 +20906,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L768",
+      "source_location": "L771",
       "weight": 1.0
     },
     {
@@ -20907,7 +20919,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1585",
+      "source_location": "L1588",
       "weight": 1.0
     },
     {
@@ -20920,7 +20932,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1601",
+      "source_location": "L1604",
       "weight": 1.0
     },
     {
@@ -20933,7 +20945,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1604",
+      "source_location": "L1607",
       "weight": 1.0
     },
     {
@@ -20946,7 +20958,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1605",
+      "source_location": "L1608",
       "weight": 1.0
     },
     {
@@ -20959,7 +20971,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1659",
+      "source_location": "L1662",
       "weight": 1.0
     },
     {
@@ -20972,7 +20984,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2124",
+      "source_location": "L2127",
       "weight": 1.0
     },
     {
@@ -20985,7 +20997,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2203",
+      "source_location": "L2206",
       "weight": 1.0
     },
     {
@@ -20998,7 +21010,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2213",
+      "source_location": "L2216",
       "weight": 1.0
     },
     {
@@ -21011,7 +21023,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2224",
+      "source_location": "L2227",
       "weight": 1.0
     },
     {
@@ -21024,7 +21036,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2870",
+      "source_location": "L2873",
       "weight": 1.0
     },
     {
@@ -21037,7 +21049,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L881",
+      "source_location": "L884",
       "weight": 1.0
     },
     {
@@ -21050,7 +21062,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L923",
+      "source_location": "L926",
       "weight": 1.0
     },
     {
@@ -21063,7 +21075,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1492",
+      "source_location": "L1495",
       "weight": 1.0
     },
     {
@@ -21076,7 +21088,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L957",
+      "source_location": "L960",
       "weight": 1.0
     },
     {
@@ -21089,7 +21101,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1150",
+      "source_location": "L1153",
       "weight": 1.0
     },
     {
@@ -21128,7 +21140,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1047",
+      "source_location": "L1050",
       "weight": 1.0
     },
     {
@@ -21141,7 +21153,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L704",
+      "source_location": "L707",
       "weight": 1.0
     },
     {
@@ -21167,7 +21179,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L831",
+      "source_location": "L834",
       "weight": 1.0
     },
     {
@@ -21206,7 +21218,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1224",
+      "source_location": "L1227",
       "weight": 1.0
     },
     {
@@ -21219,7 +21231,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1348",
+      "source_location": "L1351",
       "weight": 1.0
     },
     {
@@ -21232,7 +21244,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L481",
+      "source_location": "L484",
       "weight": 1.0
     },
     {
@@ -21245,7 +21257,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L528",
+      "source_location": "L531",
       "weight": 1.0
     },
     {
@@ -21258,7 +21270,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L856",
+      "source_location": "L859",
       "weight": 1.0
     },
     {
@@ -21271,7 +21283,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L589",
+      "source_location": "L592",
       "weight": 1.0
     },
     {
@@ -21297,7 +21309,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L346",
+      "source_location": "L342",
       "weight": 1.0
     },
     {
@@ -21310,7 +21322,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L499",
+      "source_location": "L491",
       "weight": 1.0
     },
     {
@@ -21323,7 +21335,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L136",
+      "source_location": "L133",
       "weight": 1.0
     },
     {
@@ -21336,7 +21348,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L171",
+      "source_location": "L168",
       "weight": 1.0
     },
     {
@@ -21349,7 +21361,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L238",
+      "source_location": "L235",
       "weight": 1.0
     },
     {
@@ -21362,7 +21374,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L261",
+      "source_location": "L259",
       "weight": 1.0
     },
     {
@@ -21375,7 +21387,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L112",
+      "source_location": "L109",
       "weight": 1.0
     },
     {
@@ -21388,7 +21400,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L618",
+      "source_location": "L614",
       "weight": 1.0
     },
     {
@@ -21401,7 +21413,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L563",
+      "source_location": "L555",
       "weight": 1.0
     },
     {
@@ -25605,6 +25617,18 @@
     },
     {
       "source": "src_routes_auth",
+      "target": "src_lib_faby_ambiente_verificarambientecliente",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/routes/auth.tsx",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_routes_auth",
       "target": "src_integrations_supabase_client_supabase",
       "relation": "imports",
       "_origin": "ast",
@@ -29705,6 +29729,18 @@
       "context": "import",
       "source_file": "src/routes/auth.tsx",
       "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_routes_auth",
+      "target": "src_lib_faby_ambiente",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/routes/auth.tsx",
+      "source_location": "L12",
       "weight": 1.0
     },
     {
@@ -35614,13 +35650,24 @@
     },
     {
       "source": "src_integrations_supabase_types",
+      "target": "src_integrations_supabase_types_database",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_integrations_supabase_types",
       "target": "src_integrations_supabase_types_databasewithoutinternals",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L671",
+      "source_location": "L665",
       "weight": 1.0
     },
     {
@@ -35631,7 +35678,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L673",
+      "source_location": "L667",
       "weight": 1.0
     },
     {
@@ -35642,7 +35689,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L675",
+      "source_location": "L669",
       "weight": 1.0
     },
     {
@@ -35653,7 +35700,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L704",
+      "source_location": "L696",
       "weight": 1.0
     },
     {
@@ -35664,7 +35711,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L729",
+      "source_location": "L720",
       "weight": 1.0
     },
     {
@@ -35675,7 +35722,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L754",
+      "source_location": "L744",
       "weight": 1.0
     },
     {
@@ -35686,7 +35733,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L771",
+      "source_location": "L760",
       "weight": 1.0
     },
     {
@@ -35697,18 +35744,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L788",
-      "weight": 1.0
-    },
-    {
-      "source": "src_integrations_supabase_types",
-      "target": "src_integrations_supabase_types_database",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L9",
+      "source_location": "L776",
       "weight": 1.0
     },
     {
@@ -35851,7 +35887,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/ambiente.server.ts",
-      "source_location": "L51",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -37039,7 +37075,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1009",
+      "source_location": "L1012",
       "weight": 1.0
     },
     {
@@ -37050,7 +37086,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1035",
+      "source_location": "L1038",
       "weight": 1.0
     },
     {
@@ -37061,7 +37097,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1065",
+      "source_location": "L1068",
       "weight": 1.0
     },
     {
@@ -37072,7 +37108,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1099",
+      "source_location": "L1102",
       "weight": 1.0
     },
     {
@@ -37083,7 +37119,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1129",
+      "source_location": "L1132",
       "weight": 1.0
     },
     {
@@ -37094,7 +37130,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1169",
+      "source_location": "L1172",
       "weight": 1.0
     },
     {
@@ -37105,7 +37141,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1211",
+      "source_location": "L1214",
       "weight": 1.0
     },
     {
@@ -37127,7 +37163,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1305",
+      "source_location": "L1308",
       "weight": 1.0
     },
     {
@@ -37138,7 +37174,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1325",
+      "source_location": "L1328",
       "weight": 1.0
     },
     {
@@ -37149,7 +37185,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1407",
+      "source_location": "L1410",
       "weight": 1.0
     },
     {
@@ -37160,7 +37196,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1486",
+      "source_location": "L1489",
       "weight": 1.0
     },
     {
@@ -37171,7 +37207,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1560",
+      "source_location": "L1563",
       "weight": 1.0
     },
     {
@@ -37248,7 +37284,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L460",
+      "source_location": "L463",
       "weight": 1.0
     },
     {
@@ -37292,7 +37328,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L549",
+      "source_location": "L552",
       "weight": 1.0
     },
     {
@@ -37303,7 +37339,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L577",
+      "source_location": "L580",
       "weight": 1.0
     },
     {
@@ -37325,7 +37361,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L690",
+      "source_location": "L693",
       "weight": 1.0
     },
     {
@@ -37336,7 +37372,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L694",
+      "source_location": "L697",
       "weight": 1.0
     },
     {
@@ -37347,7 +37383,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L717",
+      "source_location": "L720",
       "weight": 1.0
     },
     {
@@ -37358,7 +37394,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L796",
+      "source_location": "L799",
       "weight": 1.0
     },
     {
@@ -37369,7 +37405,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L824",
+      "source_location": "L827",
       "weight": 1.0
     },
     {
@@ -37380,7 +37416,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L844",
+      "source_location": "L847",
       "weight": 1.0
     },
     {
@@ -37391,7 +37427,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L877",
+      "source_location": "L880",
       "weight": 1.0
     },
     {
@@ -37402,7 +37438,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L919",
+      "source_location": "L922",
       "weight": 1.0
     },
     {
@@ -37413,7 +37449,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L930",
+      "source_location": "L933",
       "weight": 1.0
     },
     {
@@ -37424,7 +37460,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L945",
+      "source_location": "L948",
       "weight": 1.0
     },
     {
@@ -37435,7 +37471,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L975",
+      "source_location": "L978",
       "weight": 1.0
     },
     {
@@ -39008,7 +39044,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L105",
+      "source_location": "L102",
       "weight": 1.0
     },
     {
@@ -39019,7 +39055,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L118",
+      "source_location": "L115",
       "weight": 1.0
     },
     {
@@ -39041,7 +39077,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L160",
+      "source_location": "L157",
       "weight": 1.0
     },
     {
@@ -39052,7 +39088,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L195",
+      "source_location": "L192",
       "weight": 1.0
     },
     {
@@ -39063,7 +39099,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L251",
+      "source_location": "L249",
       "weight": 1.0
     },
     {
@@ -39085,7 +39121,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L340",
+      "source_location": "L336",
       "weight": 1.0
     },
     {
@@ -39096,7 +39132,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L421",
+      "source_location": "L415",
       "weight": 1.0
     },
     {
@@ -39118,7 +39154,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L493",
+      "source_location": "L485",
       "weight": 1.0
     },
     {
@@ -39129,7 +39165,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L505",
+      "source_location": "L497",
       "weight": 1.0
     },
     {
@@ -39140,7 +39176,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L520",
+      "source_location": "L512",
       "weight": 1.0
     },
     {
@@ -39162,7 +39198,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/github.functions.ts",
-      "source_location": "L612",
+      "source_location": "L608",
       "weight": 1.0
     },
     {
@@ -39547,7 +39583,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/auth.tsx",
-      "source_location": "L13",
+      "source_location": "L14",
       "weight": 1.0
     },
     {
@@ -39558,7 +39594,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/auth.tsx",
-      "source_location": "L76",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -41211,7 +41247,7 @@
       "confidence_score": 0.85,
       "context": "collection",
       "source_file": "src/routes/auth.tsx",
-      "source_location": "L31",
+      "source_location": "L32",
       "weight": 1.0
     },
     {

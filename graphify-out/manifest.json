@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "src/routes/index.tsx": {
-    "mtime": 1789966374.3471956,
-    "seen": 1789966414.2021828,
-    "ast_hash": "429700a1721a1d641afb2ebd6e81295b",
+    "mtime": 1789966837.008634,
+    "seen": 1789966878.3734639,
+    "ast_hash": "0efa6973e1c517fb6eb564cd8cbc4823",
     "semantic_hash": ""
   },
   "src/server.ts": {

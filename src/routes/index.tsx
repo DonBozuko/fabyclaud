@@ -48,7 +48,6 @@ import heroAsset from "@/assets/hero-matrix.png.asset.json";
 import { PainelRecursos, type PainelNome } from "@/components/faby/PainelRecursos";
 import { SettingsDialog } from "@/components/faby/SettingsDialog";
 import { supabase } from "@/integrations/supabase/client";
-import { verificarAmbienteCliente } from "@/lib/faby/ambiente";
 import { garantirSessaoLocal, idUsuarioAtual, limparSessaoLocal } from "@/lib/faby/sessao-local";
 import {
   apagarProjeto,
@@ -379,11 +378,6 @@ function FabyClaud() {
       garantirSessaoLocal();
       setLogado(true);
       setPronto(true);
-
-      const ambiente = verificarAmbienteCliente();
-      if (ambiente.mensagem) {
-        toast.warning(ambiente.mensagem, { duration: 12000 });
-      }
     }
 
     const { data } = supabase.auth.onAuthStateChange((_e: any, sessao: any) => {

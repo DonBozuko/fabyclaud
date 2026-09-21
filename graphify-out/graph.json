@@ -303,6 +303,45 @@
       "source_location": "L14"
     },
     {
+      "id": "src_lib_faby_escola_server_db",
+      "label": "Db",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "providers.server.ts",
+      "file_type": "code",
+      "norm_label": "db",
+      "source_file": "src/lib/faby/escola.server.ts",
+      "source_location": "L20"
+    },
+    {
+      "id": "src_lib_faby_escola_server_estado",
+      "label": "Estado",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "providers.server.ts",
+      "file_type": "code",
+      "norm_label": "estado",
+      "source_file": "src/lib/faby/escola.server.ts",
+      "source_location": "L41"
+    },
+    {
+      "id": "src_lib_faby_escola_server_resultadociclo",
+      "label": "ResultadoCiclo",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "providers.server.ts",
+      "file_type": "code",
+      "norm_label": "resultadociclo",
+      "source_file": "src/lib/faby/escola.server.ts",
+      "source_location": "L121"
+    },
+    {
       "id": "src_lib_faby_providers_server_historicoitem",
       "label": "HistoricoItem",
       "_callable": true,
@@ -699,7 +738,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "SettingsDialog.tsx",
+      "community_name": "omniroute-local.ts",
       "file_type": "code",
       "norm_label": "omniroutelocalconfig",
       "source_file": "src/lib/faby/omniroute-local.ts",
@@ -914,45 +953,6 @@
       "source_location": "L12"
     },
     {
-      "id": "src_lib_faby_escola_server_db",
-      "label": "Db",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "escola.server.ts",
-      "file_type": "code",
-      "norm_label": "db",
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L20"
-    },
-    {
-      "id": "src_lib_faby_escola_server_estado",
-      "label": "Estado",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "escola.server.ts",
-      "file_type": "code",
-      "norm_label": "estado",
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L41"
-    },
-    {
-      "id": "src_lib_faby_escola_server_resultadociclo",
-      "label": "ResultadoCiclo",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "escola.server.ts",
-      "file_type": "code",
-      "norm_label": "resultadociclo",
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L121"
-    },
-    {
       "id": "src_lib_faby_execucao_isolada_resultadoexecucaoisolada",
       "label": "ResultadoExecucaoIsolada",
       "_callable": true,
@@ -992,13 +992,26 @@
       "source_location": "L28"
     },
     {
+      "id": "src_routes_index_indicadorprogressoconstrucaoprops",
+      "label": "IndicadorProgressoConstrucaoProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 41,
+      "community_name": "index.tsx",
+      "file_type": "code",
+      "norm_label": "indicadorprogressoconstrucaoprops",
+      "source_file": "src/routes/index.tsx",
+      "source_location": "L114"
+    },
+    {
       "id": "src_lib_faby_ambiente_estadoambiente",
       "label": "EstadoAmbiente",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "estadoambiente",
       "source_file": "src/lib/faby/ambiente.ts",
@@ -1011,7 +1024,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "resultadoauditoria",
       "source_file": "src/lib/faby/auditoria.ts",
@@ -1024,7 +1037,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "estadopreview",
       "source_file": "src/lib/faby/preview.ts",
@@ -1037,7 +1050,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "sessaolocal",
       "source_file": "src/lib/faby/sessao-local.ts",
@@ -1050,24 +1063,11 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "resultadoimportacao",
       "source_file": "src/lib/faby/zip.ts",
       "source_location": "L63"
-    },
-    {
-      "id": "src_routes_index_indicadorprogressoconstrucaoprops",
-      "label": "IndicadorProgressoConstrucaoProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "index.tsx",
-      "file_type": "code",
-      "norm_label": "indicadorprogressoconstrucaoprops",
-      "source_file": "src/routes/index.tsx",
-      "source_location": "L115"
     },
     {
       "id": "src_types_jszip_d_jszip",
@@ -1245,7 +1245,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "painelnome",
       "source_file": "src/components/faby/PainelRecursos.tsx",
@@ -1258,7 +1258,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "props",
       "source_file": "src/components/faby/PainelRecursos.tsx",
@@ -2311,6 +2311,90 @@
       "source_location": "L266"
     },
     {
+      "id": "src_lib_faby_escola_server_extrairregras",
+      "label": "extrairRegras()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "providers.server.ts",
+      "file_type": "code",
+      "norm_label": "extrairregras()",
+      "source_file": "src/lib/faby/escola.server.ts",
+      "source_location": "L113"
+    },
+    {
+      "id": "src_lib_faby_escola_server_licoesparaprompt",
+      "label": "licoesParaPrompt()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "providers.server.ts",
+      "file_type": "code",
+      "norm_label": "licoesparaprompt()",
+      "source_file": "src/lib/faby/escola.server.ts",
+      "source_location": "L62"
+    },
+    {
+      "id": "src_lib_faby_escola_server_obterestadoescola",
+      "label": "obterEstadoEscola()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "providers.server.ts",
+      "file_type": "code",
+      "norm_label": "obterestadoescola()",
+      "source_file": "src/lib/faby/escola.server.ts",
+      "source_location": "L53"
+    },
+    {
+      "id": "src_lib_faby_escola_server_promptestudo",
+      "label": "promptEstudo()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "providers.server.ts",
+      "file_type": "code",
+      "norm_label": "promptestudo()",
+      "source_file": "src/lib/faby/escola.server.ts",
+      "source_location": "L94"
+    },
+    {
+      "id": "src_lib_faby_escola_server_registrarfalhascomolicoes",
+      "label": "registrarFalhasComoLicoes()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "providers.server.ts",
+      "file_type": "code",
+      "norm_label": "registrarfalhascomolicoes()",
+      "source_file": "src/lib/faby/escola.server.ts",
+      "source_location": "L75"
+    },
+    {
+      "id": "src_lib_faby_escola_server_registrarnotaescola",
+      "label": "registrarNotaEscola()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "providers.server.ts",
+      "file_type": "code",
+      "norm_label": "registrarnotaescola()",
+      "source_file": "src/lib/faby/escola.server.ts",
+      "source_location": "L85"
+    },
+    {
+      "id": "src_lib_faby_escola_server_rodarcicloescola",
+      "label": "rodarCicloEscola()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "providers.server.ts",
+      "file_type": "code",
+      "norm_label": "rodarcicloescola()",
+      "source_file": "src/lib/faby/escola.server.ts",
+      "source_location": "L133"
+    },
+    {
       "id": "src_lib_faby_providers_server_chamarantigravity",
       "label": "chamarAntigravity()",
       "_callable": true,
@@ -2575,6 +2659,18 @@
       "source_location": "L56"
     },
     {
+      "id": "src_lib_faby_config_selecionarmelhormodeloetapa",
+      "label": "selecionarMelhorModeloEtapa()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "config.ts",
+      "file_type": "code",
+      "norm_label": "selecionarmelhormodeloetapa()",
+      "source_file": "src/lib/faby/config.ts",
+      "source_location": "L209"
+    },
+    {
       "id": "src_components_ui_menubar_menubargroup",
       "label": "MenubarGroup()",
       "_callable": true,
@@ -2815,6 +2911,30 @@
       "source_location": "L127"
     },
     {
+      "id": "src_lib_faby_functions_parseduelchoice",
+      "label": "parseDuelChoice()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "parseduelchoice()",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L41"
+    },
+    {
+      "id": "src_lib_faby_functions_respostacomprovacapacidade",
+      "label": "respostaComprovaCapacidade()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "respostacomprovacapacidade()",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L693"
+    },
+    {
       "id": "src_lib_faby_storage_server_apagarchavearmazenada",
       "label": "apagarChaveArmazenada()",
       "_callable": true,
@@ -2899,6 +3019,54 @@
       "source_location": "L341"
     },
     {
+      "id": "src_lib_faby_storage_server_listarmensagensarmazenadas",
+      "label": "listarMensagensArmazenadas()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "listarmensagensarmazenadas()",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L244"
+    },
+    {
+      "id": "src_lib_faby_storage_server_listarprojetosarmazenados",
+      "label": "listarProjetosArmazenados()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "listarprojetosarmazenados()",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L210"
+    },
+    {
+      "id": "src_lib_faby_storage_server_listarprovedorescustomarmazenados",
+      "label": "listarProvedoresCustomArmazenados()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "listarprovedorescustomarmazenados()",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L288"
+    },
+    {
+      "id": "src_lib_faby_storage_server_obterchavesarmazenadas",
+      "label": "obterChavesArmazenadas()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "obterchavesarmazenadas()",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L150"
+    },
+    {
       "id": "src_lib_faby_storage_server_obterexecucaoarmazenada",
       "label": "obterExecucaoArmazenada()",
       "_callable": true,
@@ -2911,6 +3079,18 @@
       "source_location": "L330"
     },
     {
+      "id": "src_lib_faby_storage_server_obtermemoriaarmazenada",
+      "label": "obterMemoriaArmazenada()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "obtermemoriaarmazenada()",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L269"
+    },
+    {
       "id": "src_lib_faby_storage_server_persistirnodisco",
       "label": "persistirNoDisco()",
       "_callable": true,
@@ -2921,6 +3101,18 @@
       "norm_label": "persistirnodisco()",
       "source_file": "src/lib/faby/storage.server.ts",
       "source_location": "L127"
+    },
+    {
+      "id": "src_lib_faby_storage_server_salvarchavearmazenada",
+      "label": "salvarChaveArmazenada()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "salvarchavearmazenada()",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L183"
     },
     {
       "id": "src_lib_faby_storage_server_salvaretapaarmazenada",
@@ -2957,6 +3149,18 @@
       "norm_label": "salvarmemoriaarmazenada()",
       "source_file": "src/lib/faby/storage.server.ts",
       "source_location": "L282"
+    },
+    {
+      "id": "src_lib_faby_storage_server_salvarmensagemarmazenada",
+      "label": "salvarMensagemArmazenada()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "salvarmensagemarmazenada()",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L250"
     },
     {
       "id": "src_lib_faby_storage_server_salvarprovedorcustomarmazenado",
@@ -3120,7 +3324,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "SettingsDialog.tsx",
+      "community_name": "omniroute-local.ts",
       "file_type": "code",
       "norm_label": "settingsdialog()",
       "source_file": "src/components/faby/SettingsDialog.tsx",
@@ -3132,7 +3336,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "SettingsDialog.tsx",
+      "community_name": "omniroute-local.ts",
       "file_type": "code",
       "norm_label": "selecionarprovedor()",
       "source_file": "src/components/faby/SettingsDialog.tsx",
@@ -3144,7 +3348,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "SettingsDialog.tsx",
+      "community_name": "omniroute-local.ts",
       "file_type": "code",
       "norm_label": "testaragora()",
       "source_file": "src/components/faby/SettingsDialog.tsx",
@@ -3156,7 +3360,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "SettingsDialog.tsx",
+      "community_name": "omniroute-local.ts",
       "file_type": "code",
       "norm_label": "apagaromniroutelocal()",
       "source_file": "src/lib/faby/omniroute-local.ts",
@@ -3168,7 +3372,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "SettingsDialog.tsx",
+      "community_name": "omniroute-local.ts",
       "file_type": "code",
       "norm_label": "chamaromniroutelocal()",
       "source_file": "src/lib/faby/omniroute-local.ts",
@@ -3180,7 +3384,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "SettingsDialog.tsx",
+      "community_name": "omniroute-local.ts",
       "file_type": "code",
       "norm_label": "leromniroutelocal()",
       "source_file": "src/lib/faby/omniroute-local.ts",
@@ -3192,7 +3396,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "SettingsDialog.tsx",
+      "community_name": "omniroute-local.ts",
       "file_type": "code",
       "norm_label": "lerresposta()",
       "source_file": "src/lib/faby/omniroute-local.ts",
@@ -3204,7 +3408,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "SettingsDialog.tsx",
+      "community_name": "omniroute-local.ts",
       "file_type": "code",
       "norm_label": "mensagemfalha()",
       "source_file": "src/lib/faby/omniroute-local.ts",
@@ -3216,7 +3420,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "SettingsDialog.tsx",
+      "community_name": "omniroute-local.ts",
       "file_type": "code",
       "norm_label": "normalizaromniroutelocal()",
       "source_file": "src/lib/faby/omniroute-local.ts",
@@ -3228,7 +3432,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "SettingsDialog.tsx",
+      "community_name": "omniroute-local.ts",
       "file_type": "code",
       "norm_label": "salvaromniroutelocal()",
       "source_file": "src/lib/faby/omniroute-local.ts",
@@ -3240,7 +3444,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 28,
-      "community_name": "SettingsDialog.tsx",
+      "community_name": "omniroute-local.ts",
       "file_type": "code",
       "norm_label": "testaromniroutelocal()",
       "source_file": "src/lib/faby/omniroute-local.ts",
@@ -3655,88 +3859,28 @@
       "source_location": "L81"
     },
     {
-      "id": "src_lib_faby_escola_server_extrairregras",
-      "label": "extrairRegras()",
+      "id": "src_components_faby_painelrecursos_docs",
+      "label": "Docs()",
       "_callable": true,
       "_origin": "ast",
       "community": 34,
-      "community_name": "escola.server.ts",
+      "community_name": "Docs",
       "file_type": "code",
-      "norm_label": "extrairregras()",
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L113"
+      "norm_label": "docs()",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L487"
     },
     {
-      "id": "src_lib_faby_escola_server_licoesparaprompt",
-      "label": "licoesParaPrompt()",
+      "id": "src_components_faby_painelrecursos_docs_baixar",
+      "label": "baixar()",
       "_callable": true,
       "_origin": "ast",
       "community": 34,
-      "community_name": "escola.server.ts",
+      "community_name": "Docs",
       "file_type": "code",
-      "norm_label": "licoesparaprompt()",
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L62"
-    },
-    {
-      "id": "src_lib_faby_escola_server_obterestadoescola",
-      "label": "obterEstadoEscola()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "escola.server.ts",
-      "file_type": "code",
-      "norm_label": "obterestadoescola()",
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L53"
-    },
-    {
-      "id": "src_lib_faby_escola_server_promptestudo",
-      "label": "promptEstudo()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "escola.server.ts",
-      "file_type": "code",
-      "norm_label": "promptestudo()",
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L94"
-    },
-    {
-      "id": "src_lib_faby_escola_server_registrarfalhascomolicoes",
-      "label": "registrarFalhasComoLicoes()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "escola.server.ts",
-      "file_type": "code",
-      "norm_label": "registrarfalhascomolicoes()",
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L75"
-    },
-    {
-      "id": "src_lib_faby_escola_server_registrarnotaescola",
-      "label": "registrarNotaEscola()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "escola.server.ts",
-      "file_type": "code",
-      "norm_label": "registrarnotaescola()",
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L85"
-    },
-    {
-      "id": "src_lib_faby_escola_server_rodarcicloescola",
-      "label": "rodarCicloEscola()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "escola.server.ts",
-      "file_type": "code",
-      "norm_label": "rodarcicloescola()",
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L133"
+      "norm_label": "baixar()",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L514"
     },
     {
       "id": "src_routes_api_public_app_private_projeto_colecao_contexto",
@@ -3871,148 +4015,28 @@
       "source_location": "L5"
     },
     {
-      "id": "src_lib_faby_config_selecionarmelhormodeloetapa",
-      "label": "selecionarMelhorModeloEtapa()",
+      "id": "src_routes_index_indicadorprogressoconstrucao",
+      "label": "IndicadorProgressoConstrucao()",
       "_callable": true,
       "_origin": "ast",
       "community": 41,
-      "community_name": "faby.functions.ts",
+      "community_name": "index.tsx",
       "file_type": "code",
-      "norm_label": "selecionarmelhormodeloetapa()",
-      "source_file": "src/lib/faby/config.ts",
-      "source_location": "L209"
+      "norm_label": "indicadorprogressoconstrucao()",
+      "source_file": "src/routes/index.tsx",
+      "source_location": "L170"
     },
     {
-      "id": "src_lib_faby_functions_extrairuserids",
-      "label": "extrairUserIds()",
+      "id": "src_routes_index_indicadorprogressoconstrucao_formatartempo",
+      "label": "formatarTempo()",
       "_callable": true,
       "_origin": "ast",
       "community": 41,
-      "community_name": "faby.functions.ts",
+      "community_name": "index.tsx",
       "file_type": "code",
-      "norm_label": "extrairuserids()",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L50"
-    },
-    {
-      "id": "src_lib_faby_functions_parseduelchoice",
-      "label": "parseDuelChoice()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "parseduelchoice()",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L41"
-    },
-    {
-      "id": "src_lib_faby_functions_respostacomprovacapacidade",
-      "label": "respostaComprovaCapacidade()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "respostacomprovacapacidade()",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L693"
-    },
-    {
-      "id": "src_lib_faby_storage_server_listarmensagensarmazenadas",
-      "label": "listarMensagensArmazenadas()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "listarmensagensarmazenadas()",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L244"
-    },
-    {
-      "id": "src_lib_faby_storage_server_listarprojetosarmazenados",
-      "label": "listarProjetosArmazenados()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "listarprojetosarmazenados()",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L210"
-    },
-    {
-      "id": "src_lib_faby_storage_server_listarprovedorescustomarmazenados",
-      "label": "listarProvedoresCustomArmazenados()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "listarprovedorescustomarmazenados()",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L288"
-    },
-    {
-      "id": "src_lib_faby_storage_server_obterchavesarmazenadas",
-      "label": "obterChavesArmazenadas()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "obterchavesarmazenadas()",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L150"
-    },
-    {
-      "id": "src_lib_faby_storage_server_obtermemoriaarmazenada",
-      "label": "obterMemoriaArmazenada()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "obtermemoriaarmazenada()",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L269"
-    },
-    {
-      "id": "src_lib_faby_storage_server_obterprojetoarmazenado",
-      "label": "obterProjetoArmazenado()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "obterprojetoarmazenado()",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L220"
-    },
-    {
-      "id": "src_lib_faby_storage_server_salvarchavearmazenada",
-      "label": "salvarChaveArmazenada()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "salvarchavearmazenada()",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L183"
-    },
-    {
-      "id": "src_lib_faby_storage_server_salvarprojetoarmazenado",
-      "label": "salvarProjetoArmazenado()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "salvarprojetoarmazenado()",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L225"
+      "norm_label": "formatartempo()",
+      "source_file": "src/routes/index.tsx",
+      "source_location": "L243"
     },
     {
       "id": "src_types_bun_test_d_tobe",
@@ -4188,7 +4212,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "verificarambientecliente()",
       "source_file": "src/lib/faby/ambiente.ts",
@@ -4200,7 +4224,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "descreverauditoria()",
       "source_file": "src/lib/faby/auditoria.ts",
@@ -4212,7 +4236,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "injetarauditordecliques()",
       "source_file": "src/lib/faby/auditoria.ts",
@@ -4224,7 +4248,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "normalizarurlsapi()",
       "source_file": "src/lib/faby/nuvem.ts",
@@ -4236,7 +4260,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "abrirprojetoemnovaaba()",
       "source_file": "src/lib/faby/preview.ts",
@@ -4248,7 +4272,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "baixarprojetozip()",
       "source_file": "src/lib/faby/preview.ts",
@@ -4260,7 +4284,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "classificarpreview()",
       "source_file": "src/lib/faby/preview.ts",
@@ -4272,7 +4296,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "ehtemplatedeservidor()",
       "source_file": "src/lib/faby/preview.ts",
@@ -4284,7 +4308,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "escaparregex()",
       "source_file": "src/lib/faby/preview.ts",
@@ -4296,7 +4320,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "injetarnohead()",
       "source_file": "src/lib/faby/preview.ts",
@@ -4308,7 +4332,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "injetarsondadeerros()",
       "source_file": "src/lib/faby/preview.ts",
@@ -4320,7 +4344,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "localizarpaginainicial()",
       "source_file": "src/lib/faby/preview.ts",
@@ -4332,7 +4356,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "montarpreviewhtml()",
       "source_file": "src/lib/faby/preview.ts",
@@ -4344,7 +4368,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "neutralizarrotasdoservidor()",
       "source_file": "src/lib/faby/preview.ts",
@@ -4356,7 +4380,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "pastado()",
       "source_file": "src/lib/faby/preview.ts",
@@ -4368,7 +4392,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "projetotemservidor()",
       "source_file": "src/lib/faby/preview.ts",
@@ -4380,7 +4404,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "simplificartemplateservidor()",
       "source_file": "src/lib/faby/preview.ts",
@@ -4392,7 +4416,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "verificarpublicacaoestatica()",
       "source_file": "src/lib/faby/preview.ts",
@@ -4404,7 +4428,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "garantirsessaolocal()",
       "source_file": "src/lib/faby/sessao-local.ts",
@@ -4416,7 +4440,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "iddispositivolocal()",
       "source_file": "src/lib/faby/sessao-local.ts",
@@ -4428,7 +4452,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "idusuarioatual()",
       "source_file": "src/lib/faby/sessao-local.ts",
@@ -4440,7 +4464,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "limparsessaolocal()",
       "source_file": "src/lib/faby/sessao-local.ts",
@@ -4452,7 +4476,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "novoid()",
       "source_file": "src/lib/faby/sessao-local.ts",
@@ -4464,7 +4488,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "extensao()",
       "source_file": "src/lib/faby/upload.ts",
@@ -4476,7 +4500,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "leranexo()",
       "source_file": "src/lib/faby/upload.ts",
@@ -4488,7 +4512,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "caminhoaceito()",
       "source_file": "src/lib/faby/zip.ts",
@@ -4500,7 +4524,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "lerpastadonavegador()",
       "source_file": "src/lib/faby/zip.ts",
@@ -4512,7 +4536,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "lerzipdonavegador()",
       "source_file": "src/lib/faby/zip.ts",
@@ -4524,7 +4548,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "prioridade()",
       "source_file": "src/lib/faby/zip.ts",
@@ -4536,7 +4560,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "authpage()",
       "source_file": "src/routes/auth.tsx",
@@ -4548,7 +4572,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "autenticarlocalmente()",
       "source_file": "src/routes/auth.tsx",
@@ -4560,7 +4584,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "enviar()",
       "source_file": "src/routes/auth.tsx",
@@ -4572,11 +4596,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "fabyclaud()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L352"
+      "source_location": "L351"
     },
     {
       "id": "src_routes_index_fabyclaud_abrirpasta",
@@ -4584,11 +4608,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "abrirpasta()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L870"
+      "source_location": "L864"
     },
     {
       "id": "src_routes_index_fabyclaud_anexararquivo",
@@ -4596,11 +4620,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "anexararquivo()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L817"
+      "source_location": "L811"
     },
     {
       "id": "src_routes_index_fabyclaud_aoficaroffline",
@@ -4608,11 +4632,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "aoficaroffline()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L364"
+      "source_location": "L363"
     },
     {
       "id": "src_routes_index_fabyclaud_aoficaronline",
@@ -4620,11 +4644,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "aoficaronline()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L360"
+      "source_location": "L359"
     },
     {
       "id": "src_routes_index_fabyclaud_consertarerrosdaprevia",
@@ -4632,11 +4656,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "consertarerrosdaprevia()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L753"
+      "source_location": "L747"
     },
     {
       "id": "src_routes_index_fabyclaud_enviaragora",
@@ -4644,11 +4668,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "enviaragora()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L627"
+      "source_location": "L621"
     },
     {
       "id": "src_routes_index_fabyclaud_importarprojetolido",
@@ -4656,11 +4680,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "importarprojetolido()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L842"
+      "source_location": "L836"
     },
     {
       "id": "src_routes_index_fabyclaud_ouvir",
@@ -4668,11 +4692,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "ouvir()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L716"
+      "source_location": "L710"
     },
     {
       "id": "src_routes_index_fabyclaud_publicarsite",
@@ -4680,11 +4704,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "publicarsite()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L793"
+      "source_location": "L787"
     },
     {
       "id": "src_routes_index_fabyclaud_salvarcodigomanual",
@@ -4692,35 +4716,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "salvarcodigomanual()",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L692"
-    },
-    {
-      "id": "src_routes_index_indicadorprogressoconstrucao",
-      "label": "IndicadorProgressoConstrucao()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "index.tsx",
-      "file_type": "code",
-      "norm_label": "indicadorprogressoconstrucao()",
-      "source_file": "src/routes/index.tsx",
-      "source_location": "L171"
-    },
-    {
-      "id": "src_routes_index_indicadorprogressoconstrucao_formatartempo",
-      "label": "formatarTempo()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "index.tsx",
-      "file_type": "code",
-      "norm_label": "formatartempo()",
-      "source_file": "src/routes/index.tsx",
-      "source_location": "L244"
+      "source_location": "L686"
     },
     {
       "id": "opencode_plugins_graphify_graphifyplugin",
@@ -5143,16 +5143,16 @@
       "source_location": "L376"
     },
     {
-      "id": "src_lib_faby_storage_server_salvarmensagemarmazenada",
-      "label": "salvarMensagemArmazenada()",
+      "id": "src_lib_faby_storage_server_salvarprojetoarmazenado",
+      "label": "salvarProjetoArmazenado()",
       "_callable": true,
       "_origin": "ast",
       "community": 6,
       "community_name": "github.functions.ts",
       "file_type": "code",
-      "norm_label": "salvarmensagemarmazenada()",
+      "norm_label": "salvarprojetoarmazenado()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L250"
+      "source_location": "L225"
     },
     {
       "id": "src_lib_github_functions_apelidorepo",
@@ -5196,7 +5196,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "githubsecao()",
       "source_file": "src/components/faby/GithubSecao.tsx",
@@ -5208,7 +5208,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "agentes()",
       "source_file": "src/components/faby/PainelRecursos.tsx",
@@ -5220,7 +5220,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "backups()",
       "source_file": "src/components/faby/PainelRecursos.tsx",
@@ -5232,35 +5232,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "recarregar()",
       "source_file": "src/components/faby/PainelRecursos.tsx",
       "source_location": "L576"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_docs",
-      "label": "Docs()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 67,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "docs()",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L487"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_docs_baixar",
-      "label": "baixar()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 67,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "baixar()",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L514"
     },
     {
       "id": "src_components_faby_painelrecursos_escola",
@@ -5268,7 +5244,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "escola()",
       "source_file": "src/components/faby/PainelRecursos.tsx",
@@ -5280,7 +5256,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "memoria()",
       "source_file": "src/components/faby/PainelRecursos.tsx",
@@ -5292,7 +5268,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "painelrecursos()",
       "source_file": "src/components/faby/PainelRecursos.tsx",
@@ -5304,7 +5280,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "prompts()",
       "source_file": "src/components/faby/PainelRecursos.tsx",
@@ -5316,7 +5292,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "semprojeto()",
       "source_file": "src/components/faby/PainelRecursos.tsx",
@@ -5328,7 +5304,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "workspace()",
       "source_file": "src/components/faby/PainelRecursos.tsx",
@@ -5340,7 +5316,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "createsupabaseadminclient()",
       "source_file": "src/integrations/supabase/client.server.ts",
@@ -5352,7 +5328,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "createsupabasefetch()",
       "source_file": "src/integrations/supabase/client.server.ts",
@@ -5364,11 +5340,35 @@
       "_callable": true,
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "isnewsupabaseapikey()",
       "source_file": "src/integrations/supabase/client.server.ts",
       "source_location": "L8"
+    },
+    {
+      "id": "src_lib_faby_functions_extrairuserids",
+      "label": "extrairUserIds()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "extrairuserids()",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L50"
+    },
+    {
+      "id": "src_lib_faby_storage_server_obterprojetoarmazenado",
+      "label": "obterProjetoArmazenado()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "obterprojetoarmazenado()",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L220"
     },
     {
       "id": "src_agents_openmanusengine_openmanusreactagent_gerarpromptinstrucoesopenmanus",
@@ -7552,26 +7552,37 @@
       "source_location": "L1"
     },
     {
-      "id": "src_lib_faby_config_models",
-      "label": "MODELS",
+      "id": "src_lib_faby_config_modelos_alternativos",
+      "label": "MODELOS_ALTERNATIVOS",
       "_origin": "ast",
       "community": 16,
       "community_name": "providers.server.ts",
       "file_type": "code",
-      "norm_label": "models",
+      "norm_label": "modelos_alternativos",
       "source_file": "src/lib/faby/config.ts",
+      "source_location": "L17"
+    },
+    {
+      "id": "src_lib_faby_escola_server",
+      "label": "escola.server.ts",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "providers.server.ts",
+      "file_type": "code",
+      "norm_label": "escola.server.ts",
+      "source_file": "src/lib/faby/escola.server.ts",
       "source_location": "L1"
     },
     {
-      "id": "src_lib_faby_functions_gerardocumentacao",
-      "label": "gerarDocumentacao",
+      "id": "src_lib_faby_escola_server_temas_escola",
+      "label": "TEMAS_ESCOLA",
       "_origin": "ast",
       "community": 16,
       "community_name": "providers.server.ts",
       "file_type": "code",
-      "norm_label": "gerardocumentacao",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1489"
+      "norm_label": "temas_escola",
+      "source_file": "src/lib/faby/escola.server.ts",
+      "source_location": "L22"
     },
     {
       "id": "src_lib_faby_providers_server",
@@ -8058,17 +8069,6 @@
       "source_location": "L366"
     },
     {
-      "id": "src_lib_faby_config_modelos_alternativos",
-      "label": "MODELOS_ALTERNATIVOS",
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "config.ts",
-      "file_type": "code",
-      "norm_label": "modelos_alternativos",
-      "source_file": "src/lib/faby/config.ts",
-      "source_location": "L17"
-    },
-    {
       "id": "src_lib_faby_config_modelos_por_etapa",
       "label": "MODELOS_POR_ETAPA",
       "_origin": "ast",
@@ -8122,17 +8122,6 @@
       "norm_label": "prompts_pro",
       "source_file": "src/lib/faby/config.ts",
       "source_location": "L411"
-    },
-    {
-      "id": "src_lib_faby_config_provider_labels",
-      "label": "PROVIDER_LABELS",
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "config.ts",
-      "file_type": "code",
-      "norm_label": "provider_labels",
-      "source_file": "src/lib/faby/config.ts",
-      "source_location": "L307"
     },
     {
       "id": "src_lib_faby_config_provider_links",
@@ -9059,15 +9048,26 @@
       "source_location": "L32"
     },
     {
-      "id": "src_lib_faby_functions_obterprogressoexecucao",
-      "label": "obterProgressoExecucao",
+      "id": "src_lib_faby_functions_enviarmensagem",
+      "label": "enviarMensagem",
       "_origin": "ast",
       "community": 24,
       "community_name": "storage.server.ts",
       "file_type": "code",
-      "norm_label": "obterprogressoexecucao",
+      "norm_label": "enviarmensagem",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L209"
+      "source_location": "L1563"
+    },
+    {
+      "id": "src_lib_faby_functions_testarchave",
+      "label": "testarChave",
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "testarchave",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L580"
     },
     {
       "id": "src_lib_faby_storage_server",
@@ -9101,6 +9101,17 @@
       "norm_label": "storage_file",
       "source_file": "src/lib/faby/storage.server.ts",
       "source_location": "L85"
+    },
+    {
+      "id": "src_lib_faby_storage_server_test",
+      "label": "storage.server.test.ts",
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "storage.server.test.ts",
+      "source_file": "src/lib/faby/storage.server.test.ts",
+      "source_location": "L1"
     },
     {
       "id": "src_components_ui_carousel",
@@ -9224,17 +9235,6 @@
       "source_location": "L1"
     },
     {
-      "id": "ref_sonner",
-      "label": "sonner",
-      "_origin": "ast",
-      "community": 26,
-      "community_name": "__root.tsx",
-      "file_type": "concept",
-      "norm_label": "sonner",
-      "source_file": "package.json",
-      "source_location": "L66"
-    },
-    {
       "id": "src_routes_api_public_app_auth_projeto",
       "label": "app-auth.$projeto.ts",
       "_origin": "ast",
@@ -9290,22 +9290,11 @@
       "source_location": "L92"
     },
     {
-      "id": "src_components_faby_settingsdialog",
-      "label": "SettingsDialog.tsx",
-      "_origin": "ast",
-      "community": 28,
-      "community_name": "SettingsDialog.tsx",
-      "file_type": "code",
-      "norm_label": "settingsdialog.tsx",
-      "source_file": "src/components/faby/SettingsDialog.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "src_lib_faby_omniroute_local",
       "label": "omniroute-local.ts",
       "_origin": "ast",
       "community": 28,
-      "community_name": "SettingsDialog.tsx",
+      "community_name": "omniroute-local.ts",
       "file_type": "code",
       "norm_label": "omniroute-local.ts",
       "source_file": "src/lib/faby/omniroute-local.ts",
@@ -10181,61 +10170,6 @@
       "source_location": "L17"
     },
     {
-      "id": "src_lib_faby_escola_server",
-      "label": "escola.server.ts",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "escola.server.ts",
-      "file_type": "code",
-      "norm_label": "escola.server.ts",
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_lib_faby_escola_server_temas_escola",
-      "label": "TEMAS_ESCOLA",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "escola.server.ts",
-      "file_type": "code",
-      "norm_label": "temas_escola",
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L22"
-    },
-    {
-      "id": "src_lib_faby_functions_apagarlicao",
-      "label": "apagarLicao",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "escola.server.ts",
-      "file_type": "code",
-      "norm_label": "apagarlicao",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L933"
-    },
-    {
-      "id": "src_lib_faby_functions_estadoescola",
-      "label": "estadoEscola",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "escola.server.ts",
-      "file_type": "code",
-      "norm_label": "estadoescola",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L880"
-    },
-    {
-      "id": "src_lib_faby_functions_estudaragora",
-      "label": "estudarAgora",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "escola.server.ts",
-      "file_type": "code",
-      "norm_label": "estudaragora",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L922"
-    },
-    {
       "id": "src_routes_api_public_app_private_projeto_colecao",
       "label": "app-private.$projeto.$colecao.ts",
       "_origin": "ast",
@@ -11105,213 +11039,136 @@
       "source_location": "L3"
     },
     {
-      "id": "src_lib_faby_functions",
-      "label": "faby.functions.ts",
+      "id": "src_components_faby_settingsdialog",
+      "label": "SettingsDialog.tsx",
       "_origin": "ast",
       "community": 41,
-      "community_name": "faby.functions.ts",
+      "community_name": "index.tsx",
       "file_type": "code",
-      "norm_label": "faby.functions.ts",
-      "source_file": "src/lib/faby.functions.ts",
+      "norm_label": "settingsdialog.tsx",
+      "source_file": "src/components/faby/SettingsDialog.tsx",
       "source_location": "L1"
     },
     {
-      "id": "src_lib_faby_functions_anexoschema",
-      "label": "anexoSchema",
+      "id": "src_lib_faby_config_models",
+      "label": "MODELS",
       "_origin": "ast",
       "community": 41,
-      "community_name": "faby.functions.ts",
+      "community_name": "index.tsx",
       "file_type": "code",
-      "norm_label": "anexoschema",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L39"
+      "norm_label": "models",
+      "source_file": "src/lib/faby/config.ts",
+      "source_location": "L1"
     },
     {
-      "id": "src_lib_faby_functions_apagararquivo",
-      "label": "apagarArquivo",
+      "id": "src_lib_faby_config_provider_labels",
+      "label": "PROVIDER_LABELS",
       "_origin": "ast",
       "community": 41,
-      "community_name": "faby.functions.ts",
+      "community_name": "index.tsx",
       "file_type": "code",
-      "norm_label": "apagararquivo",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1410"
-    },
-    {
-      "id": "src_lib_faby_functions_cacheagentes",
-      "label": "cacheAgentes",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "cacheagentes",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L48"
-    },
-    {
-      "id": "src_lib_faby_functions_cacheprompts",
-      "label": "cachePrompts",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "cacheprompts",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L47"
-    },
-    {
-      "id": "src_lib_faby_functions_criarbackup",
-      "label": "criarBackup",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "criarbackup",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1172"
-    },
-    {
-      "id": "src_lib_faby_functions_enviarmensagem",
-      "label": "enviarMensagem",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "enviarmensagem",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1563"
+      "norm_label": "provider_labels",
+      "source_file": "src/lib/faby/config.ts",
+      "source_location": "L307"
     },
     {
       "id": "src_lib_faby_functions_listarchaves",
       "label": "listarChaves",
       "_origin": "ast",
       "community": 41,
-      "community_name": "faby.functions.ts",
+      "community_name": "index.tsx",
       "file_type": "code",
       "norm_label": "listarchaves",
       "source_file": "src/lib/faby.functions.ts",
       "source_location": "L322"
     },
     {
-      "id": "src_lib_faby_functions_listarprojetos",
-      "label": "listarProjetos",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "listarprojetos",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L68"
-    },
-    {
       "id": "src_lib_faby_functions_listarprovedorescustom",
       "label": "listarProvedoresCustom",
       "_origin": "ast",
       "community": 41,
-      "community_name": "faby.functions.ts",
+      "community_name": "index.tsx",
       "file_type": "code",
       "norm_label": "listarprovedorescustom",
       "source_file": "src/lib/faby.functions.ts",
       "source_location": "L697"
     },
     {
-      "id": "src_lib_faby_functions_obtercapacidades",
-      "label": "obterCapacidades",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "obtercapacidades",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L385"
-    },
-    {
-      "id": "src_lib_faby_functions_obtermemoria",
-      "label": "obterMemoria",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "obtermemoria",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L827"
-    },
-    {
-      "id": "src_lib_faby_functions_obterprojeto",
-      "label": "obterProjeto",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "obterprojeto",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L126"
-    },
-    {
-      "id": "src_lib_faby_functions_restaurarbackup",
-      "label": "restaurarBackup",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "restaurarbackup",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1214"
-    },
-    {
-      "id": "src_lib_faby_functions_salvararquivo",
-      "label": "salvarArquivo",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "salvararquivo",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1328"
-    },
-    {
       "id": "src_lib_faby_functions_salvarchave",
       "label": "salvarChave",
       "_origin": "ast",
       "community": 41,
-      "community_name": "faby.functions.ts",
+      "community_name": "index.tsx",
       "file_type": "code",
       "norm_label": "salvarchave",
       "source_file": "src/lib/faby.functions.ts",
       "source_location": "L463"
     },
     {
-      "id": "src_lib_faby_functions_testarchave",
-      "label": "testarChave",
+      "id": "src_routes_index",
+      "label": "index.tsx",
       "_origin": "ast",
       "community": 41,
-      "community_name": "faby.functions.ts",
+      "community_name": "index.tsx",
       "file_type": "code",
-      "norm_label": "testarchave",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L580"
-    },
-    {
-      "id": "src_lib_faby_storage_server_test",
-      "label": "storage.server.test.ts",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "storage.server.test.ts",
-      "source_file": "src/lib/faby/storage.server.test.ts",
+      "norm_label": "index.tsx",
+      "source_file": "src/routes/index.tsx",
       "source_location": "L1"
     },
     {
-      "id": "ref_zod",
-      "label": "zod",
+      "id": "src_routes_index_etapas_progresso",
+      "label": "ETAPAS_PROGRESSO",
       "_origin": "ast",
       "community": 41,
-      "community_name": "faby.functions.ts",
+      "community_name": "index.tsx",
+      "file_type": "code",
+      "norm_label": "etapas_progresso",
+      "source_file": "src/routes/index.tsx",
+      "source_location": "L119"
+    },
+    {
+      "id": "src_routes_index_itens_menu",
+      "label": "ITENS_MENU",
+      "_origin": "ast",
+      "community": 41,
+      "community_name": "index.tsx",
+      "file_type": "code",
+      "norm_label": "itens_menu",
+      "source_file": "src/routes/index.tsx",
+      "source_location": "L103"
+    },
+    {
+      "id": "ref_sonner",
+      "label": "sonner",
+      "_origin": "ast",
+      "community": 41,
+      "community_name": "index.tsx",
       "file_type": "concept",
-      "norm_label": "zod",
+      "norm_label": "sonner",
       "source_file": "package.json",
-      "source_location": "L72"
+      "source_location": "L66"
+    },
+    {
+      "id": "ref_tanstack_react_query",
+      "label": "@tanstack/react-query",
+      "_origin": "ast",
+      "community": 41,
+      "community_name": "index.tsx",
+      "file_type": "concept",
+      "norm_label": "@tanstack/react-query",
+      "source_file": "package.json",
+      "source_location": "L48"
+    },
+    {
+      "id": "ref_tanstack_react_start",
+      "label": "@tanstack/react-start",
+      "_origin": "ast",
+      "community": 41,
+      "community_name": "index.tsx",
+      "file_type": "concept",
+      "norm_label": "@tanstack/react-start",
+      "source_file": "package.json",
+      "source_location": "L50"
     },
     {
       "id": "eslint_config",
@@ -11826,7 +11683,7 @@
       "label": "jszip",
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "confidence": "EXTRACTED",
       "file_type": "code",
       "norm_label": "jszip",
@@ -11837,7 +11694,7 @@
       "label": "ambiente.ts",
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "ambiente.ts",
       "source_file": "src/lib/faby/ambiente.ts",
@@ -11848,7 +11705,7 @@
       "label": "auditoria.ts",
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "auditoria.ts",
       "source_file": "src/lib/faby/auditoria.ts",
@@ -11859,7 +11716,7 @@
       "label": "preview.ts",
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "preview.ts",
       "source_file": "src/lib/faby/preview.ts",
@@ -11870,7 +11727,7 @@
       "label": "sessao-local.ts",
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "sessao-local.ts",
       "source_file": "src/lib/faby/sessao-local.ts",
@@ -11881,7 +11738,7 @@
       "label": "CHAVE_DISPOSITIVO_LOCAL",
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "chave_dispositivo_local",
       "source_file": "src/lib/faby/sessao-local.ts",
@@ -11892,7 +11749,7 @@
       "label": "CHAVE_SESSAO_LOCAL",
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "chave_sessao_local",
       "source_file": "src/lib/faby/sessao-local.ts",
@@ -11903,7 +11760,7 @@
       "label": "EMAIL_LOCAL",
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "email_local",
       "source_file": "src/lib/faby/sessao-local.ts",
@@ -11914,7 +11771,7 @@
       "label": "zip.ts",
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "zip.ts",
       "source_file": "src/lib/faby/zip.ts",
@@ -11925,7 +11782,7 @@
       "label": "EXT_ZIP",
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "ext_zip",
       "source_file": "src/lib/faby/zip.ts",
@@ -11936,7 +11793,7 @@
       "label": "PASTAS_IGNORADAS",
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "pastas_ignoradas",
       "source_file": "src/lib/faby/zip.ts",
@@ -11947,51 +11804,18 @@
       "label": "auth.tsx",
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "code",
       "norm_label": "auth.tsx",
       "source_file": "src/routes/auth.tsx",
       "source_location": "L1"
     },
     {
-      "id": "src_routes_index",
-      "label": "index.tsx",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "index.tsx",
-      "file_type": "code",
-      "norm_label": "index.tsx",
-      "source_file": "src/routes/index.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_routes_index_etapas_progresso",
-      "label": "ETAPAS_PROGRESSO",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "index.tsx",
-      "file_type": "code",
-      "norm_label": "etapas_progresso",
-      "source_file": "src/routes/index.tsx",
-      "source_location": "L120"
-    },
-    {
-      "id": "src_routes_index_itens_menu",
-      "label": "ITENS_MENU",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "index.tsx",
-      "file_type": "code",
-      "norm_label": "itens_menu",
-      "source_file": "src/routes/index.tsx",
-      "source_location": "L104"
-    },
-    {
       "id": "ref_jszip",
       "label": "jszip",
       "_origin": "ast",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "file_type": "concept",
       "norm_label": "jszip",
       "source_file": "package.json",
@@ -12253,17 +12077,6 @@
       "norm_label": "routetree",
       "source_file": "src/routeTree.gen.ts",
       "source_location": "L169"
-    },
-    {
-      "id": "ref_tanstack_react_query",
-      "label": "@tanstack/react-query",
-      "_origin": "ast",
-      "community": 56,
-      "community_name": "@tanstack/react-router",
-      "file_type": "concept",
-      "norm_label": "@tanstack/react-query",
-      "source_file": "package.json",
-      "source_location": "L48"
     },
     {
       "id": "ref_tanstack_react_router",
@@ -12552,15 +12365,15 @@
       "source_location": "L46"
     },
     {
-      "id": "ref_tanstack_react_start",
-      "label": "@tanstack/react-start",
+      "id": "ref_zod",
+      "label": "zod",
       "_origin": "ast",
       "community": 6,
       "community_name": "github.functions.ts",
       "file_type": "concept",
-      "norm_label": "@tanstack/react-start",
+      "norm_label": "zod",
       "source_file": "package.json",
-      "source_location": "L50"
+      "source_location": "L72"
     },
     {
       "id": "roadmap",
@@ -12711,7 +12524,7 @@
       "label": "PainelRecursos.tsx",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "painelrecursos.tsx",
       "source_file": "src/components/faby/PainelRecursos.tsx",
@@ -12722,7 +12535,7 @@
       "label": "TITULOS",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "titulos",
       "source_file": "src/components/faby/PainelRecursos.tsx",
@@ -12733,7 +12546,7 @@
       "label": "client.server.ts",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "client.server.ts",
       "source_file": "src/integrations/supabase/client.server.ts",
@@ -12744,29 +12557,62 @@
       "label": "supabaseAdmin",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "supabaseadmin",
       "source_file": "src/integrations/supabase/client.server.ts",
       "source_location": "L58"
     },
     {
+      "id": "src_lib_faby_functions",
+      "label": "faby.functions.ts",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "faby.functions.ts",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_faby_functions_anexoschema",
+      "label": "anexoSchema",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "anexoschema",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L39"
+    },
+    {
       "id": "src_lib_faby_functions_apagaragente",
       "label": "apagarAgente",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "apagaragente",
       "source_file": "src/lib/faby.functions.ts",
       "source_location": "L1012"
     },
     {
+      "id": "src_lib_faby_functions_apagararquivo",
+      "label": "apagarArquivo",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "apagararquivo",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L1410"
+    },
+    {
       "id": "src_lib_faby_functions_apagarbackup",
       "label": "apagarBackup",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "apagarbackup",
       "source_file": "src/lib/faby.functions.ts",
@@ -12777,18 +12623,29 @@
       "label": "apagarChave",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "apagarchave",
       "source_file": "src/lib/faby.functions.ts",
       "source_location": "L552"
     },
     {
+      "id": "src_lib_faby_functions_apagarlicao",
+      "label": "apagarLicao",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "apagarlicao",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L933"
+    },
+    {
       "id": "src_lib_faby_functions_apagarprojeto",
       "label": "apagarProjeto",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "apagarprojeto",
       "source_file": "src/lib/faby.functions.ts",
@@ -12799,7 +12656,7 @@
       "label": "apagarPrompt",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "apagarprompt",
       "source_file": "src/lib/faby.functions.ts",
@@ -12810,29 +12667,62 @@
       "label": "apagarProvedorCustom",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "apagarprovedorcustom",
       "source_file": "src/lib/faby.functions.ts",
       "source_location": "L799"
     },
     {
+      "id": "src_lib_faby_functions_cacheagentes",
+      "label": "cacheAgentes",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "cacheagentes",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L48"
+    },
+    {
+      "id": "src_lib_faby_functions_cacheprompts",
+      "label": "cachePrompts",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "cacheprompts",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L47"
+    },
+    {
       "id": "src_lib_faby_functions_criaragente",
       "label": "criarAgente",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "criaragente",
       "source_file": "src/lib/faby.functions.ts",
       "source_location": "L978"
     },
     {
+      "id": "src_lib_faby_functions_criarbackup",
+      "label": "criarBackup",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "criarbackup",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L1172"
+    },
+    {
       "id": "src_lib_faby_functions_criarprompt",
       "label": "criarPrompt",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "criarprompt",
       "source_file": "src/lib/faby.functions.ts",
@@ -12843,18 +12733,51 @@
       "label": "criarProvedorCustom",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "criarprovedorcustom",
       "source_file": "src/lib/faby.functions.ts",
       "source_location": "L720"
     },
     {
+      "id": "src_lib_faby_functions_estadoescola",
+      "label": "estadoEscola",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "estadoescola",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L880"
+    },
+    {
+      "id": "src_lib_faby_functions_estudaragora",
+      "label": "estudarAgora",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "estudaragora",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L922"
+    },
+    {
+      "id": "src_lib_faby_functions_gerardocumentacao",
+      "label": "gerarDocumentacao",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "gerardocumentacao",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L1489"
+    },
+    {
       "id": "src_lib_faby_functions_listaragentes",
       "label": "listarAgentes",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "listaragentes",
       "source_file": "src/lib/faby.functions.ts",
@@ -12865,29 +12788,106 @@
       "label": "listarBackups",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "listarbackups",
       "source_file": "src/lib/faby.functions.ts",
       "source_location": "L1132"
     },
     {
+      "id": "src_lib_faby_functions_listarprojetos",
+      "label": "listarProjetos",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "listarprojetos",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L68"
+    },
+    {
       "id": "src_lib_faby_functions_listarprompts",
       "label": "listarPrompts",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "listarprompts",
       "source_file": "src/lib/faby.functions.ts",
       "source_location": "L1038"
     },
     {
+      "id": "src_lib_faby_functions_obtercapacidades",
+      "label": "obterCapacidades",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "obtercapacidades",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L385"
+    },
+    {
+      "id": "src_lib_faby_functions_obtermemoria",
+      "label": "obterMemoria",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "obtermemoria",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L827"
+    },
+    {
+      "id": "src_lib_faby_functions_obterprogressoexecucao",
+      "label": "obterProgressoExecucao",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "obterprogressoexecucao",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L209"
+    },
+    {
+      "id": "src_lib_faby_functions_obterprojeto",
+      "label": "obterProjeto",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "obterprojeto",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L126"
+    },
+    {
+      "id": "src_lib_faby_functions_restaurarbackup",
+      "label": "restaurarBackup",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "restaurarbackup",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L1214"
+    },
+    {
+      "id": "src_lib_faby_functions_salvararquivo",
+      "label": "salvarArquivo",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "salvararquivo",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L1328"
+    },
+    {
       "id": "src_lib_faby_functions_salvarmemoria",
       "label": "salvarMemoria",
       "_origin": "ast",
       "community": 67,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "salvarmemoria",
       "source_file": "src/lib/faby.functions.ts",
@@ -13496,7 +13496,7 @@
       "file_type": "code",
       "norm_label": "route",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L83"
+      "source_location": "L82"
     },
     {
       "id": "src_routes_root_route",
@@ -13837,7 +13837,7 @@
       "label": "src_assets_hero_matrix_png_asset",
       "_origin": "semantic",
       "community": 5,
-      "community_name": "index.tsx",
+      "community_name": "preview.ts",
       "external": true,
       "file_type": "concept",
       "norm_label": "src_assets_hero_matrix_png_asset",
@@ -19927,7 +19927,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L1006",
+      "source_location": "L1000",
       "weight": 1.0
     },
     {
@@ -19939,7 +19939,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L1090",
+      "source_location": "L1084",
       "weight": 1.0
     },
     {
@@ -19951,7 +19951,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L1100",
+      "source_location": "L1094",
       "weight": 1.0
     },
     {
@@ -19963,19 +19963,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L379",
-      "weight": 1.0
-    },
-    {
-      "source": "src_routes_index_fabyclaud",
-      "target": "src_lib_faby_ambiente_verificarambientecliente",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/routes/index.tsx",
-      "source_location": "L383",
+      "source_location": "L378",
       "weight": 1.0
     },
     {
@@ -19987,7 +19975,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L466",
+      "source_location": "L460",
       "weight": 1.0
     },
     {
@@ -19999,7 +19987,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L650",
+      "source_location": "L644",
       "weight": 1.0
     },
     {
@@ -20011,7 +19999,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L652",
+      "source_location": "L646",
       "weight": 1.0
     },
     {
@@ -20023,7 +20011,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L657",
+      "source_location": "L651",
       "weight": 1.0
     },
     {
@@ -20035,7 +20023,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L660",
+      "source_location": "L654",
       "weight": 1.0
     },
     {
@@ -20047,7 +20035,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L745",
+      "source_location": "L739",
       "weight": 1.0
     },
     {
@@ -20059,7 +20047,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L822",
+      "source_location": "L816",
       "weight": 1.0
     },
     {
@@ -20071,7 +20059,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L834",
+      "source_location": "L828",
       "weight": 1.0
     },
     {
@@ -20083,7 +20071,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L873",
+      "source_location": "L867",
       "weight": 1.0
     },
     {
@@ -20095,7 +20083,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L873",
+      "source_location": "L867",
       "weight": 1.0
     },
     {
@@ -20107,7 +20095,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L878",
+      "source_location": "L872",
       "weight": 1.0
     },
     {
@@ -20119,7 +20107,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L822",
+      "source_location": "L816",
       "weight": 1.0
     },
     {
@@ -20131,7 +20119,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L827",
+      "source_location": "L821",
       "weight": 1.0
     },
     {
@@ -20143,7 +20131,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L834",
+      "source_location": "L828",
       "weight": 1.0
     },
     {
@@ -20155,7 +20143,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L854",
+      "source_location": "L848",
       "weight": 1.0
     },
     {
@@ -20335,7 +20323,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L627",
+      "source_location": "L621",
       "weight": 1.0
     },
     {
@@ -20347,7 +20335,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L692",
+      "source_location": "L686",
       "weight": 1.0
     },
     {
@@ -20359,7 +20347,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L793",
+      "source_location": "L787",
       "weight": 1.0
     },
     {
@@ -20371,7 +20359,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L817",
+      "source_location": "L811",
       "weight": 1.0
     },
     {
@@ -20383,7 +20371,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L870",
+      "source_location": "L864",
       "weight": 1.0
     },
     {
@@ -20395,7 +20383,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L244",
+      "source_location": "L243",
       "weight": 1.0
     },
     {
@@ -25725,7 +25713,7 @@
     },
     {
       "source": "src_routes_index",
-      "target": "src_lib_faby_ambiente_verificarambientecliente",
+      "target": "src_lib_faby_sessao_local_garantirsessaolocal",
       "relation": "imports",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -25737,18 +25725,6 @@
     },
     {
       "source": "src_routes_index",
-      "target": "src_lib_faby_sessao_local_garantirsessaolocal",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/routes/index.tsx",
-      "source_location": "L52",
-      "weight": 1.0
-    },
-    {
-      "source": "src_routes_index",
       "target": "src_lib_faby_sessao_local_idusuarioatual",
       "relation": "imports",
       "_origin": "ast",
@@ -25756,7 +25732,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L52",
+      "source_location": "L51",
       "weight": 1.0
     },
     {
@@ -25768,7 +25744,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L52",
+      "source_location": "L51",
       "weight": 1.0
     },
     {
@@ -25780,7 +25756,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L53",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -25792,7 +25768,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L53",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -25804,7 +25780,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L53",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -25816,7 +25792,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L53",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -25828,7 +25804,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L53",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -25840,7 +25816,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L53",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -25852,7 +25828,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L53",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -25864,7 +25840,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L53",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -25876,7 +25852,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L53",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -25888,7 +25864,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L53",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -25900,7 +25876,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L53",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -25912,7 +25888,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L66",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -25924,7 +25900,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L66",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -25936,7 +25912,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L66",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -25948,7 +25924,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L67",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -25960,7 +25936,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L67",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -25972,7 +25948,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L67",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -25984,7 +25960,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L67",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -25996,7 +25972,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L67",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -26008,7 +25984,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L74",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -26020,7 +25996,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L74",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -26032,7 +26008,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L74",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -26044,7 +26020,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L79",
+      "source_location": "L78",
       "weight": 1.0
     },
     {
@@ -26056,7 +26032,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L80",
+      "source_location": "L79",
       "weight": 1.0
     },
     {
@@ -26068,7 +26044,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L80",
+      "source_location": "L79",
       "weight": 1.0
     },
     {
@@ -26080,7 +26056,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L80",
+      "source_location": "L79",
       "weight": 1.0
     },
     {
@@ -26092,7 +26068,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L81",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -26104,7 +26080,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L81",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -29925,7 +29901,7 @@
     },
     {
       "source": "src_routes_index",
-      "target": "src_lib_faby_ambiente",
+      "target": "src_lib_faby_sessao_local",
       "relation": "imports_from",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -29937,7 +29913,7 @@
     },
     {
       "source": "src_routes_index",
-      "target": "src_lib_faby_sessao_local",
+      "target": "src_lib_faby_functions",
       "relation": "imports_from",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -29949,18 +29925,6 @@
     },
     {
       "source": "src_routes_index",
-      "target": "src_lib_faby_functions",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/routes/index.tsx",
-      "source_location": "L53",
-      "weight": 1.0
-    },
-    {
-      "source": "src_routes_index",
       "target": "src_lib_faby_config",
       "relation": "imports_from",
       "_origin": "ast",
@@ -29968,7 +29932,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L66",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -29980,7 +29944,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L67",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -29992,7 +29956,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L74",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -30004,7 +29968,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L79",
+      "source_location": "L78",
       "weight": 1.0
     },
     {
@@ -30016,7 +29980,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L80",
+      "source_location": "L79",
       "weight": 1.0
     },
     {
@@ -30028,7 +29992,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L81",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -39605,7 +39569,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/index.tsx",
-      "source_location": "L104",
+      "source_location": "L103",
       "weight": 1.0
     },
     {
@@ -39616,7 +39580,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/index.tsx",
-      "source_location": "L115",
+      "source_location": "L114",
       "weight": 1.0
     },
     {
@@ -39627,7 +39591,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/index.tsx",
-      "source_location": "L120",
+      "source_location": "L119",
       "weight": 1.0
     },
     {
@@ -39638,7 +39602,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/index.tsx",
-      "source_location": "L171",
+      "source_location": "L170",
       "weight": 1.0
     },
     {
@@ -39649,7 +39613,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/index.tsx",
-      "source_location": "L83",
+      "source_location": "L82",
       "weight": 1.0
     },
     {
@@ -39660,7 +39624,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/index.tsx",
-      "source_location": "L753",
+      "source_location": "L747",
       "weight": 1.0
     },
     {
@@ -39671,7 +39635,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/index.tsx",
-      "source_location": "L842",
+      "source_location": "L836",
       "weight": 1.0
     },
     {
@@ -41199,7 +41163,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L368",
+      "source_location": "L367",
       "weight": 1.0
     },
     {
@@ -41211,7 +41175,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L369",
+      "source_location": "L368",
       "weight": 1.0
     },
     {
@@ -41223,7 +41187,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L740",
+      "source_location": "L734",
       "weight": 1.0
     },
     {
@@ -41259,7 +41223,7 @@
       "confidence_score": 0.85,
       "context": "collection",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L101",
+      "source_location": "L100",
       "weight": 1.0
     },
     {
@@ -41324,5 +41288,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "24522cc50e4d4c0a5956137c20146a91a6361406"
+  "built_at_commit": "e6eeea39581ffc7058b051ed5c03810c57f58230"
 }
