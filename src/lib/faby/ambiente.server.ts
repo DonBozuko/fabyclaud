@@ -30,7 +30,8 @@ export function estadoBackendServidor(): EstadoBackend {
   const administracaoPronta = definida("SUPABASE_SERVICE_ROLE_KEY");
   if (!administracaoPronta) faltando.push("SUPABASE_SERVICE_ROLE_KEY");
 
-  const nuvemPronta = !faltando.includes("SUPABASE_URL") && !faltando.includes("SUPABASE_PUBLISHABLE_KEY");
+  const nuvemPronta =
+    !faltando.includes("SUPABASE_URL") && !faltando.includes("SUPABASE_PUBLISHABLE_KEY");
 
   let mensagem: string | null = null;
   if (!nuvemPronta) {

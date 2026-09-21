@@ -92,10 +92,7 @@ export const desconectarGithub = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     apagarGithubContaArmazenada(context.userId);
     try {
-      await context.supabase
-        .from("github_contas")
-        .delete()
-        .eq("user_id", context.userId);
+      await context.supabase.from("github_contas").delete().eq("user_id", context.userId);
     } catch {
       // ignore
     }
@@ -240,7 +237,8 @@ export const enviarProjetoGithub = createServerFn({ method: "POST" })
       token: conta.token,
       repo: conta.repo,
       branch: conta.branch || "main",
-      mensagem: data.mensagem.trim() || `Atualização de ${projeto.nome || "Projeto"} pelo FabyClaud`,
+      mensagem:
+        data.mensagem.trim() || `Atualização de ${projeto.nome || "Projeto"} pelo FabyClaud`,
       arquivos,
     });
     if (!r.ok) return { ok: false, msg: r.msg };
@@ -318,15 +316,13 @@ export const importarDoGithub = createServerFn({ method: "POST" })
         updated_at: new Date().toISOString(),
       });
       try {
-        await context.supabase
-          .from("projetos")
-          .insert({
-            id: novoId,
-            user_id: context.userId,
-            nome,
-            modelo: "google",
-            arquivos: r.arquivos as unknown as never,
-          });
+        await context.supabase.from("projetos").insert({
+          id: novoId,
+          user_id: context.userId,
+          nome,
+          modelo: "google",
+          arquivos: r.arquivos as unknown as never,
+        });
       } catch {
         // ignore
       }
@@ -367,15 +363,13 @@ export const clonarPorLink = createServerFn({ method: "POST" })
     salvarProjetoArmazenado(novoProjeto);
 
     try {
-      await context.supabase
-        .from("projetos")
-        .insert({
-          id: projetoId,
-          user_id: context.userId,
-          nome,
-          modelo: "google",
-          arquivos: r.arquivos as unknown as never,
-        });
+      await context.supabase.from("projetos").insert({
+        id: projetoId,
+        user_id: context.userId,
+        nome,
+        modelo: "google",
+        arquivos: r.arquivos as unknown as never,
+      });
     } catch {
       // ignore
     }
@@ -445,15 +439,13 @@ export const importarArquivosZip = createServerFn({ method: "POST" })
     salvarProjetoArmazenado(novoProjeto);
 
     try {
-      await context.supabase
-        .from("projetos")
-        .insert({
-          id: projetoId,
-          user_id: context.userId,
-          nome: data.nome.slice(0, 80),
-          modelo: "google",
-          arquivos: data.arquivos as unknown as never,
-        });
+      await context.supabase.from("projetos").insert({
+        id: projetoId,
+        user_id: context.userId,
+        nome: data.nome.slice(0, 80),
+        modelo: "google",
+        arquivos: data.arquivos as unknown as never,
+      });
     } catch {
       // ignore
     }
@@ -565,7 +557,11 @@ export const publicarProjeto = createServerFn({ method: "POST" })
     let repo = conta.repo ?? "";
     let branch = conta.branch || "main";
     if (!repo) {
-      const novo = await criarRepositorio(conta.token, apelidoRepo(projeto.nome || "projeto"), false);
+      const novo = await criarRepositorio(
+        conta.token,
+        apelidoRepo(projeto.nome || "projeto"),
+        false,
+      );
       if (!novo.ok) return { ok: false as const, precisaGithub: false, msg: novo.msg };
       repo = novo.repo;
       branch = novo.branch;

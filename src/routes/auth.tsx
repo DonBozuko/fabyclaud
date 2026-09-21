@@ -9,6 +9,7 @@ import {
   garantirSessaoLocal,
   limparSessaoLocal,
 } from "@/lib/faby/sessao-local";
+import { verificarAmbienteCliente } from "@/lib/faby/ambiente";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -219,6 +220,16 @@ function AuthPage() {
                 ? "Não tem conta? Criar uma grátis"
                 : "Já tenho conta — quero entrar"}
             </button>
+
+            {!verificarAmbienteCliente().ok && (
+              <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3 text-xs text-muted-foreground">
+                <p className="font-semibold text-primary">Modo Livre / Local Disponível</p>
+                <p className="mt-0.5">
+                  Você pode usar a FabyClaud livremente pelo botão{" "}
+                  <strong>⚡ Entrar sem senha</strong>.
+                </p>
+              </div>
+            )}
           </>
         )}
       </main>

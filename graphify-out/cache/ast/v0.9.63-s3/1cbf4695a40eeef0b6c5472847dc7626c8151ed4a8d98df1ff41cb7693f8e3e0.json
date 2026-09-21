@@ -1,1 +1,59 @@
-{"nodes": [{"id": "$graphify-root$_claude_agents_programador_md", "label": "programador.md", "file_type": "document", "node_kind": "page", "source_file": ".claude/agents/programador.md", "source_location": "L1", "frontmatter": {"name": "programador-ia", "description": "Desenvolvedor Fullstack S\u00eanior movido por IA com foco em protocolo de resposta estreita e arquivos 100% completos.", "model": "google/gemini-pro", "permissionMode": "auto"}}], "edges": [], "raw_calls": [{"caller_nid": "$graphify-root$_claude_agents_programador_md", "callee": "onClick", "is_member_call": false, "language": "markdown", "context": "onClick", "source_file": ".claude/agents/programador.md", "source_location": "L30"}, {"caller_nid": "$graphify-root$_claude_agents_programador_md", "callee": "onSubmit", "is_member_call": false, "language": "markdown", "context": "onSubmit", "source_file": ".claude/agents/programador.md", "source_location": "L30"}, {"caller_nid": "$graphify-root$_claude_agents_programador_md", "callee": "useState", "is_member_call": false, "language": "markdown", "context": "useState", "source_file": ".claude/agents/programador.md", "source_location": "L30"}, {"caller_nid": "$graphify-root$_claude_agents_programador_md", "callee": "useQuery", "is_member_call": false, "language": "markdown", "context": "useQuery", "source_file": ".claude/agents/programador.md", "source_location": "L30"}], "input_tokens": 0, "output_tokens": 0}
+{
+  "nodes": [
+    {
+      "id": "$graphify-root$_claude_agents_programador_md",
+      "label": "programador.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "source_file": ".claude/agents/programador.md",
+      "source_location": "L1",
+      "frontmatter": {
+        "name": "programador-ia",
+        "description": "Desenvolvedor Fullstack S\u00eanior movido por IA com foco em protocolo de resposta estreita e arquivos 100% completos.",
+        "model": "google/gemini-pro",
+        "permissionMode": "auto"
+      }
+    }
+  ],
+  "edges": [],
+  "raw_calls": [
+    {
+      "caller_nid": "$graphify-root$_claude_agents_programador_md",
+      "callee": "onClick",
+      "is_member_call": false,
+      "language": "markdown",
+      "context": "onClick",
+      "source_file": ".claude/agents/programador.md",
+      "source_location": "L30"
+    },
+    {
+      "caller_nid": "$graphify-root$_claude_agents_programador_md",
+      "callee": "onSubmit",
+      "is_member_call": false,
+      "language": "markdown",
+      "context": "onSubmit",
+      "source_file": ".claude/agents/programador.md",
+      "source_location": "L30"
+    },
+    {
+      "caller_nid": "$graphify-root$_claude_agents_programador_md",
+      "callee": "useState",
+      "is_member_call": false,
+      "language": "markdown",
+      "context": "useState",
+      "source_file": ".claude/agents/programador.md",
+      "source_location": "L30"
+    },
+    {
+      "caller_nid": "$graphify-root$_claude_agents_programador_md",
+      "callee": "useQuery",
+      "is_member_call": false,
+      "language": "markdown",
+      "context": "useQuery",
+      "source_file": ".claude/agents/programador.md",
+      "source_location": "L30"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

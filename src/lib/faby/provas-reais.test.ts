@@ -93,10 +93,23 @@ document.getElementById("btnStart").addEventListener("click", () => {
 
     // 3. Extrair arquivos com o CodeModifier real
     const arquivosExtraidos = codeModifier.extrairArquivosCompletos(respostaGerada);
-    assert.equal(Object.keys(arquivosExtraidos).length, 3, "Devem ser extraídos exatamente 3 arquivos reais");
-    assert.ok(arquivosExtraidos["index.html"]?.includes("id=\"display\""), "index.html deve conter o display real");
-    assert.ok(arquivosExtraidos["styles.css"]?.includes("#0d1117"), "styles.css deve conter cores reais");
-    assert.ok(arquivosExtraidos["app.js"]?.includes("setInterval"), "app.js deve conter lógica real de cronômetro");
+    assert.equal(
+      Object.keys(arquivosExtraidos).length,
+      3,
+      "Devem ser extraídos exatamente 3 arquivos reais",
+    );
+    assert.ok(
+      arquivosExtraidos["index.html"]?.includes('id="display"'),
+      "index.html deve conter o display real",
+    );
+    assert.ok(
+      arquivosExtraidos["styles.css"]?.includes("#0d1117"),
+      "styles.css deve conter cores reais",
+    );
+    assert.ok(
+      arquivosExtraidos["app.js"]?.includes("setInterval"),
+      "app.js deve conter lógica real de cronômetro",
+    );
 
     // 4. Aplicar ao VFS
     vfs = codeModifier.aplicarArquivosCompletos(vfs, arquivosExtraidos);
@@ -109,7 +122,11 @@ document.getElementById("btnStart").addEventListener("click", () => {
     // Se uma resposta corrompida vier da IA (ex: sem tags de arquivo)
     const respostaCorrompida = "Desculpe, ocorreu um erro e não consegui gerar arquivos.";
     const extraidosCorrompidos = codeModifier.extrairArquivosCompletos(respostaCorrompida);
-    assert.equal(Object.keys(extraidosCorrompidos).length, 0, "Resposta corrompida não gera arquivos");
+    assert.equal(
+      Object.keys(extraidosCorrompidos).length,
+      0,
+      "Resposta corrompida não gera arquivos",
+    );
 
     // O sistema preserva o backup sem corromper o projeto
     if (Object.keys(extraidosCorrompidos).length === 0) {
@@ -119,11 +136,18 @@ document.getElementById("btnStart").addEventListener("click", () => {
 
     // 6. Gerar Snapshot XML real para a próxima etapa
     const snapshotXml = directoryReader.gerarSnapshotXml(vfs);
-    assert.ok(snapshotXml.includes("<file path=\"index.html\">"), "Snapshot XML deve conter a estrutura viva do VFS");
+    assert.ok(
+      snapshotXml.includes('<file path="index.html">'),
+      "Snapshot XML deve conter a estrutura viva do VFS",
+    );
   });
 
   test("PROVA 2: Contrato de Entrega Técnico Real", () => {
-    const contrato = gerarContratoEntrega("criar um clone do spotify com player e playlist", {}, "criacao");
+    const contrato = gerarContratoEntrega(
+      "criar um clone do spotify com player e playlist",
+      {},
+      "criacao",
+    );
     assert.ok(contrato.nomeProduto.length > 0);
     assert.ok(contrato.telas.length >= 1);
     assert.ok(contrato.entidades.length >= 1);
