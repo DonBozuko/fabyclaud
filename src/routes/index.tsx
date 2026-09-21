@@ -48,6 +48,8 @@ import heroAsset from "@/assets/hero-matrix.png.asset.json";
 import { PainelRecursos, type PainelNome } from "@/components/faby/PainelRecursos";
 import { SettingsDialog } from "@/components/faby/SettingsDialog";
 import { supabase } from "@/integrations/supabase/client";
+import { verificarAmbienteCliente } from "@/lib/faby/ambiente";
+import { garantirSessaoLocal, idUsuarioAtual, limparSessaoLocal } from "@/lib/faby/sessao-local";
 import {
   apagarProjeto,
   apagarArquivo,
@@ -373,25 +375,15 @@ function FabyClaud() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      let session = localStorage.getItem("faby_user_session");
-      if (!session) {
-        let stableId = localStorage.getItem("faby_stable_device_id");
-        if (!stableId) {
-          stableId =
-            typeof crypto !== "undefined" && crypto.randomUUID
-              ? crypto.randomUUID()
-              : "local_" + Math.random().toString(36).slice(2);
-          localStorage.setItem("faby_stable_device_id", stableId);
-        }
-        session = JSON.stringify({
-          id: stableId,
-          email: "usuario@fabyclaud.local",
-          created_at: new Date().toISOString(),
-        });
-        localStorage.setItem("faby_user_session", session);
-      }
+      // Modo local explícito: a mesma sessão que o servidor lê nas chamadas protegidas.
+      garantirSessaoLocal();
       setLogado(true);
       setPronto(true);
+
+      const ambiente = verificarAmbienteCliente();
+      if (!ambiente.mensagem === false && ambiente.mensagem) {
+        toast.warning(ambiente.mensagem, { duration: 12000 });
+      }
     }
 
     const { data } = supabase.auth.onAuthStateChange((_e: any, sessao: any) => {
