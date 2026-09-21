@@ -522,7 +522,9 @@ function FabyClaud() {
                   void queryClient.invalidateQueries({ queryKey: ["chaves"] });
                   void queryClient.invalidateQueries({ queryKey: ["capacidades"] });
                 })
-                .catch(() => {});
+                .catch((erro: unknown) => {
+                  console.warn("[FabyClaud] Não foi possível reaproveitar a chave salva.", erro);
+                });
             }
           }
         }
@@ -701,8 +703,10 @@ function FabyClaud() {
         toast.success(`${arquivoAtivo} salvo com sucesso!`, { id: aviso });
         void queryClient.invalidateQueries({ queryKey: ["projeto", projetoId] });
       }
-    } catch {
-      toast.error("Não foi possível salvar o arquivo.", { id: aviso });
+    } catch (erro) {
+      console.error("[FabyClaud] Falha ao salvar arquivo:", erro);
+      const detalhe = erro instanceof Error ? erro.message : String(erro);
+      toast.error(`Não foi possível salvar o arquivo. Motivo: ${detalhe}`, { id: aviso });
     } finally {
       setSalvandoArquivo(false);
     }
@@ -999,13 +1003,11 @@ function FabyClaud() {
             <button
               type="button"
               onClick={async () => {
-                if (typeof window !== "undefined") {
-                  localStorage.removeItem("faby_user_session");
-                }
+                limparSessaoLocal();
                 try {
                   await supabase.auth.signOut();
-                } catch {
-                  // ignore
+                } catch (erro) {
+                  console.warn("[FabyClaud] Saída da conta na nuvem falhou:", erro);
                 }
                 void navigate({ to: "/auth" });
               }}
