@@ -381,7 +381,7 @@ function FabyClaud() {
       setPronto(true);
 
       const ambiente = verificarAmbienteCliente();
-      if (!ambiente.mensagem === false && ambiente.mensagem) {
+      if (ambiente.mensagem) {
         toast.warning(ambiente.mensagem, { duration: 12000 });
       }
     }
@@ -443,19 +443,27 @@ function FabyClaud() {
   const [codigoEditando, setCodigoEditando] = useState<string>("");
   const [salvandoArquivo, setSalvandoArquivo] = useState(false);
 
-  const usuarioId = useMemo(() => {
-    if (typeof window === "undefined") return "local-user";
-    try {
-      const session = localStorage.getItem("faby_user_session");
-      if (session) {
-        const parsed = JSON.parse(session);
-        if (parsed?.id) return String(parsed.id);
-      }
-      const stable = localStorage.getItem("faby_stable_device_id");
-      if (stable) return String(stable);
-    } catch {}
-    return "local-user";
+  const [idContaReal, setIdContaReal] = useState<string | null>(null);
+
+  useEffect(() => {
+    let ativo = true;
+    void supabase.auth
+      .getUser()
+      .then(({ data }: { data: { user: { id: string } | null } }) => {
+        if (ativo) setIdContaReal(data?.user?.id ?? null);
+      })
+      .catch((erro: unknown) => {
+        // Sem conta na nuvem o app segue em modo local; registra para diagnóstico.
+        console.warn("[FabyClaud] Não foi possível confirmar a conta na nuvem.", erro);
+      });
+    return () => {
+      ativo = false;
+    };
   }, []);
+
+  // O mesmo identificador que o servidor usa nas chamadas protegidas:
+  // conta real quando existir, senão a sessão local.
+  const usuarioId = useMemo(() => idUsuarioAtual(idContaReal), [idContaReal]);
 
   const inputArquivo = useRef<HTMLInputElement>(null);
   const inputPasta = useRef<HTMLInputElement>(null);
