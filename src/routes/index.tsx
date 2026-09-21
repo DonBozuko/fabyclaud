@@ -528,8 +528,8 @@ function FabyClaud() {
             }
           }
         }
-      } catch {
-        // ignore
+      } catch (erro) {
+        console.warn("[FabyClaud] Chaves salvas no navegador estavam ilegíveis.", erro);
       }
     }
   }, [chaves.data, queryClient, salvarChaveFn]);
@@ -539,8 +539,8 @@ function FabyClaud() {
       if (typeof window !== "undefined") {
         try {
           localStorage.setItem("faby_projects_backup", JSON.stringify(projetos.data));
-        } catch {
-          // ignore
+        } catch (erro) {
+          console.warn("[FabyClaud] Não foi possível guardar a cópia local dos projetos.", erro);
         }
       }
       const salvo =
