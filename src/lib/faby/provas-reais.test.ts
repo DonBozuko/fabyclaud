@@ -11,16 +11,6 @@ import {
 import { CodeModifier } from "@/agents/CodeModifier";
 import { DirectoryReader } from "@/agents/DirectoryReader";
 import {
-  VideoInputAgent,
-  VideoScriptAgent,
-  VideoStoryboardAgent,
-  VideoAssetAgent,
-  VideoVoiceAgent,
-  VideoCaptionAgent,
-  VideoQualityAgent,
-  VideoPipelineOrchestrator,
-} from "./video/VideoPipeline";
-import {
   salvarProjetoArmazenado,
   obterProjetoArmazenado,
   salvarChaveArmazenada,
@@ -149,51 +139,6 @@ document.getElementById("btnStart").addEventListener("click", () => {
     assert.match(promptMontado, /CONTRATO DE ENTREGA DA APLICAÇÃO/);
   });
 
-  test("PROVA 3: Motor Real de Vídeo (Pipeline de 9 Agentes com Validação Real)", async () => {
-    // 1. Processamento de Entrada
-    const project = VideoInputAgent.processInput({
-      userId: "user-prova",
-      prompt: "Como a computação em nuvem revolucionou o mundo",
-      aspectRatio: "16:9",
-      durationSeconds: 15,
-    });
-
-    assert.equal(project.status, "planning");
-    assert.equal(project.durationSeconds, 15);
-
-    // 2. Geração de Roteiro Estruturado
-    const script = await VideoScriptAgent.generateScript(project);
-    assert.ok(script.scenes.length >= 3, "Roteiro deve ter no mínimo 3 cenas");
-
-    // 3. Montagem do Storyboard
-    const storyboard = VideoStoryboardAgent.buildStoryboard(script);
-    assert.equal(storyboard.length, script.scenes.length);
-
-    // 4. Criação de Ativos Visuais SVG HD Reais
-    const readyScenes = await VideoAssetAgent.prepareSceneAssets(storyboard, project);
-    for (const scene of readyScenes) {
-      assert.ok(scene.imageUrl?.startsWith("data:image/svg+xml"), "Imagem deve ser SVG real com dados codificados");
-      assert.equal(scene.status, "ready");
-      // Decodificar SVG para provar que é XML gráfico válido
-      const svgDecodificado = decodeURIComponent(scene.imageUrl.replace("data:image/svg+xml;utf8,", ""));
-      assert.ok(svgDecodificado.includes("<svg"), "Ativo visual deve ser elemento SVG real");
-      assert.ok(svgDecodificado.includes(`CENA ${scene.index}`), "SVG deve conter o número da cena");
-    }
-
-    // 5. Síntese de Voz e Legendas VTT
-    const vtt = VideoCaptionAgent.generateSubtitlesVtt(readyScenes);
-    assert.ok(vtt.startsWith("WEBVTT"), "Legenda deve seguir o padrão oficial WebVTT");
-    assert.ok(vtt.includes("00:00.000 -->"), "Legenda deve ter timestamp sincronizado");
-
-    // 6. Validação de Qualidade
-    const mockRealVideoBlob = new Blob([new Uint8Array([0x1a, 0x45, 0xdf, 0xa3, 0x01, 0x02, 0x03, 0x04])], {
-      type: "video/webm",
-    });
-    const quality = VideoQualityAgent.validate(mockRealVideoBlob, project);
-    assert.equal(quality.valid, true, "Vídeo real com bytes deve passar no QualityAgent");
-    assert.ok(quality.sizeBytes > 0, "Tamanho do arquivo deve ser maior que zero bytes");
-  });
-
   test("PROVA 4: Persistência Física em Disco Sem Amnésia", () => {
     const testProjectId = "proj-prova-" + Date.now();
     const testUserId = "user-prova-" + Date.now();
@@ -243,7 +188,7 @@ document.getElementById("btnStart").addEventListener("click", () => {
   });
 
   test("PROVA 5: Classificação de Intenções Sem Erro em 9 Categorias", () => {
-    assert.equal(classificarPedidoLovable("gere um vídeo sobre o espaço"), "video");
+    assert.equal(classificarPedidoLovable("gere um vídeo sobre o espaço"), "criacao");
     assert.equal(classificarPedidoLovable("crie uma imagem de um dragão"), "imagem");
     assert.equal(classificarPedidoLovable("pesquise sobre o clima hoje"), "pesquisa");
     assert.equal(classificarPedidoLovable("publique este site"), "publicacao");

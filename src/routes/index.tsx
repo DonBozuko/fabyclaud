@@ -16,7 +16,6 @@ import {
   FileArchive,
   FileCode,
   FileText,
-  Film,
   FolderOpen,
   GitBranch,
   Globe,
@@ -47,7 +46,6 @@ import { toast } from "sonner";
 
 import heroAsset from "@/assets/hero-matrix.png.asset.json";
 import { PainelRecursos, type PainelNome } from "@/components/faby/PainelRecursos";
-import { PainelVideo } from "@/components/faby/PainelVideo";
 import { SettingsDialog } from "@/components/faby/SettingsDialog";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -447,8 +445,8 @@ function FabyClaud() {
   const [agente, setAgente] = useState<string | null>(null);
   const [publicando, setPublicando] = useState(false);
 
-  // Controle de abas da tela principal: Prévia, Código/Editor ou Vídeos (VideoMaker)
-  const [abaPrincipal, setAbaPrincipal] = useState<"previa" | "codigo" | "video">("previa");
+  // Controle de abas da tela principal: Prévia ou Código/Editor
+  const [abaPrincipal, setAbaPrincipal] = useState<"previa" | "codigo">("previa");
   const [arquivoAtivo, setArquivoAtivo] = useState<string>("");
   const [codigoEditando, setCodigoEditando] = useState<string>("");
   const [salvandoArquivo, setSalvandoArquivo] = useState(false);
@@ -1168,13 +1166,6 @@ function FabyClaud() {
                 detalhe: "qualidade variável",
               },
               {
-                nome: "Vídeo",
-                pronta: capacidades.data?.video?.pronta ?? true,
-                detalhe:
-                  capacidades.data?.video?.detalhe ??
-                  "Motor real VideoMaker (9 agentes, Canvas render, 16:9, 9:16 e 1:1)",
-              },
-              {
                 nome: "Dados",
                 pronta: capacidades.data?.dados.pronta ?? false,
                 detalhe: "públicos e privados com login",
@@ -1232,17 +1223,6 @@ function FabyClaud() {
                   >
                     <Code2 className="size-3.5" /> Código ({nomesArquivos.length})
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setAbaPrincipal("video")}
-                    className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
-                      abaPrincipal === "video"
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    <Film className="size-3.5 text-amber-400" /> Vídeos (Real Engine)
-                  </button>
                 </div>
 
                 {abaPrincipal === "codigo" && nomesArquivos.length > 0 ? (
@@ -1289,7 +1269,7 @@ function FabyClaud() {
                     </div>
                   )}
                 </div>
-              ) : abaPrincipal === "codigo" ? (
+              ) : (
                 /* Aba de Código / Editor integrado */
                 <div className="flex flex-1 flex-col overflow-hidden bg-secondary/15">
                   {nomesArquivos.length > 0 ? (
@@ -1351,11 +1331,6 @@ function FabyClaud() {
                       </div>
                     </div>
                   )}
-                </div>
-              ) : (
-                /* Aba de Vídeos (Motor Real VideoMaker) */
-                <div className="flex flex-1 flex-col overflow-hidden">
-                  <PainelVideo userId={usuarioId} />
                 </div>
               )}
             </section>

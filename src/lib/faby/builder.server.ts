@@ -23,20 +23,11 @@ export type TipoPedidoLovable =
   | "edicao"
   | "correcao"
   | "imagem"
-  | "video"
   | "importacao"
   | "publicacao";
 
 export function classificarPedidoLovable(pedido: string): TipoPedidoLovable {
   const limpo = pedido.trim();
-
-  if (
-    /\b(v[ií]deo|anima[çc][ãa]o|filme|video-maker|videomaker|criar v[ií]deo|gerar v[ií]deo|video sobre)\b/i.test(
-      limpo,
-    )
-  ) {
-    return "video";
-  }
 
   if (
     /\b(gerar imagem|criar imagem|desenho|desenhe|foto de|ilustra[çc][ãa]o|wallpaper|avatar|imagem de|gerar:\s*)\b/i.test(

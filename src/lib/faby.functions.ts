@@ -449,11 +449,6 @@ export const obterCapacidades = createServerFn({ method: "GET" })
         pronta: true,
         detalhe: "Geração pública disponível, com qualidade e disponibilidade variáveis.",
       },
-      video: {
-        pronta: true,
-        detalhe:
-          "Motor real VideoMaker ativo (9 agentes, Canvas render, formatos 16:9, 9:16 e 1:1).",
-      },
       dados: {
         pronta: true,
         detalhe:
