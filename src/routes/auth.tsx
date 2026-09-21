@@ -52,9 +52,7 @@ function AuthPage() {
   useEffect(() => {
     void supabase.auth.getSession().then(({ data }: { data: { session: any } }) => {
       if (data?.session) {
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("faby_user_session");
-        }
+        limparSessaoLocal();
         void navigate({ to: "/" });
       } else if (typeof window !== "undefined" && localStorage.getItem("faby_user_session")) {
         void navigate({ to: "/" });
@@ -63,9 +61,7 @@ function AuthPage() {
 
     const { data } = supabase.auth.onAuthStateChange((_evento: any, sessao: any) => {
       if (sessao) {
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("faby_user_session");
-        }
+        limparSessaoLocal();
         void navigate({ to: "/" });
       }
     });
@@ -100,9 +96,7 @@ function AuthPage() {
           setConfirmar(true);
           return;
         }
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("faby_user_session");
-        }
+        limparSessaoLocal();
         toast.success("Conta criada com sucesso!");
         void navigate({ to: "/" });
       } else {
@@ -120,9 +114,7 @@ function AuthPage() {
           return;
         }
         if (data?.session) {
-          if (typeof window !== "undefined") {
-            localStorage.removeItem("faby_user_session");
-          }
+          limparSessaoLocal();
           toast.success("Login realizado com sucesso!");
           void navigate({ to: "/" });
         }
