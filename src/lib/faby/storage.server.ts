@@ -145,34 +145,33 @@ export function flushStorageSync(): void {
   persistirNoDisco();
 }
 
+function userScopeSet(userIds: string[] = []): Set<string> {
+  const ids = new Set<string>();
+  for (const uid of userIds) {
+    if (uid && uid !== "00000000-0000-0000-0000-000000000001") {
+      ids.add(uid);
+    }
+  }
+  return ids;
+}
+
 // =================== CHAVES ===================
 
 export function obterChavesArmazenadas(userIds: string[]): ChaveArmazenada[] {
   carregarDoDisco();
+  const ids = userScopeSet(userIds);
+  if (ids.size === 0) return [];
+
   const res: ChaveArmazenada[] = [];
   const vistas = new Set<string>();
 
-  // 1. Procura primeiro nos userIds especificados
-  for (const uid of userIds) {
+  for (const uid of ids) {
     const userChaves = memoryState.chaves[uid];
-    if (userChaves) {
-      for (const [provider, chave] of Object.entries(userChaves)) {
-        if (!vistas.has(provider)) {
-          vistas.add(provider);
-          res.push(chave);
-        }
-      }
-    }
-  }
-
-  // 2. Se houver chaves de qualquer outro usuário no armazenamento local, reaproveita para não perder
-  for (const userChaves of Object.values(memoryState.chaves)) {
-    if (userChaves) {
-      for (const [provider, chave] of Object.entries(userChaves)) {
-        if (!vistas.has(provider)) {
-          vistas.add(provider);
-          res.push(chave);
-        }
+    if (!userChaves) continue;
+    for (const [provider, chave] of Object.entries(userChaves)) {
+      if (!vistas.has(provider)) {
+        vistas.add(provider);
+        res.push(chave);
       }
     }
   }
@@ -194,13 +193,12 @@ export function salvarChaveArmazenada(chave: ChaveArmazenada): void {
 
 export function apagarChaveArmazenada(userId: string, provider: string): void {
   carregarDoDisco();
-  for (const userChaves of Object.values(memoryState.chaves)) {
-    if (userChaves && userChaves[provider]) {
-      delete userChaves[provider];
-    }
+  const userMap = memoryState.chaves[userId];
+  if (userMap && userMap[provider]) {
+    delete userMap[provider];
   }
-  if (memoryState.chaves[userId]?.[provider]) {
-    delete memoryState.chaves[userId][provider];
+  if (Object.keys(userMap ?? {}).length === 0) {
+    delete memoryState.chaves[userId];
   }
   persistirNoDisco();
 }
@@ -209,7 +207,12 @@ export function apagarChaveArmazenada(userId: string, provider: string): void {
 
 export function listarProjetosArmazenados(userIds?: string[]): ProjetoArmazenado[] {
   carregarDoDisco();
-  const list: ProjetoArmazenado[] = Object.values(memoryState.projetos);
+  const ids = userScopeSet(userIds ?? []);
+  const list: ProjetoArmazenado[] = Object.values(memoryState.projetos).filter((p) => {
+    if (!p?.user_id) return false;
+    return ids.size === 0 ? false : ids.has(p.user_id);
+  });
+
   return list.sort(
     (a, b) =>
       new Date(b.updated_at || b.created_at).getTime() -
@@ -219,7 +222,11 @@ export function listarProjetosArmazenados(userIds?: string[]): ProjetoArmazenado
 
 export function obterProjetoArmazenado(id: string, userIds?: string[]): ProjetoArmazenado | null {
   carregarDoDisco();
-  return memoryState.projetos[id] || null;
+  const item = memoryState.projetos[id];
+  if (!item) return null;
+  const ids = userScopeSet(userIds ?? []);
+  if (ids.size === 0) return null;
+  return ids.has(item.user_id) ? item : null;
 }
 
 export function salvarProjetoArmazenado(projeto: ProjetoArmazenado): void {
@@ -268,13 +275,13 @@ export function salvarMensagemArmazenada(msg: MensagemArmazenada): void {
 
 export function obterMemoriaArmazenada(userIds: string[]): string {
   carregarDoDisco();
+  const ids = userScopeSet(userIds);
+  if (ids.size === 0) return "";
+
   for (const uid of userIds) {
-    if (memoryState.memorias[uid]) {
+    if (ids.has(uid) && memoryState.memorias[uid]) {
       return memoryState.memorias[uid];
     }
-  }
-  for (const mem of Object.values(memoryState.memorias)) {
-    if (mem) return mem;
   }
   return "";
 }
@@ -287,9 +294,14 @@ export function salvarMemoriaArmazenada(userId: string, conteudo: string): void 
 
 export function listarProvedoresCustomArmazenados(userIds: string[]): ProvedorCustom[] {
   carregarDoDisco();
+  const ids = userScopeSet(userIds);
+  if (ids.size === 0) return [];
+
   const list: ProvedorCustom[] = [];
   const slugs = new Set<string>();
-  for (const arr of Object.values(memoryState.custom)) {
+  for (const uid of userIds) {
+    const arr = memoryState.custom[uid];
+    if (!arr) continue;
     for (const item of arr) {
       if (!slugs.has(item.slug)) {
         slugs.add(item.slug);
@@ -319,8 +331,9 @@ export function salvarProvedorCustomArmazenado(userId: string, item: ProvedorCus
 
 export function apagarProvedorCustomArmazenado(userId: string, idOuSlug: string): void {
   carregarDoDisco();
-  for (const [uid, arr] of Object.entries(memoryState.custom)) {
-    memoryState.custom[uid] = arr.filter((c) => c.id !== idOuSlug && c.slug !== idOuSlug);
+  const arr = memoryState.custom[userId];
+  if (arr) {
+    memoryState.custom[userId] = arr.filter((c) => c.id !== idOuSlug && c.slug !== idOuSlug);
   }
   persistirNoDisco();
 }
@@ -364,13 +377,15 @@ export function salvarEtapaArmazenada(etapa: EtapaArmazenada): void {
 
 export function obterGithubContaArmazenada(userIds: string[]): GithubContaArmazenada | null {
   carregarDoDisco();
+  const ids = userScopeSet(userIds);
+  if (ids.size === 0) return null;
+
   for (const uid of userIds) {
-    if (memoryState.contasGithub[uid]) {
+    if (ids.has(uid) && memoryState.contasGithub[uid]) {
       return memoryState.contasGithub[uid];
     }
   }
-  const todas = Object.values(memoryState.contasGithub);
-  return todas[0] || null;
+  return null;
 }
 
 export function salvarGithubContaArmazenada(conta: GithubContaArmazenada): void {
@@ -382,8 +397,5 @@ export function salvarGithubContaArmazenada(conta: GithubContaArmazenada): void 
 export function apagarGithubContaArmazenada(userId: string): void {
   carregarDoDisco();
   delete memoryState.contasGithub[userId];
-  for (const key of Object.keys(memoryState.contasGithub)) {
-    delete memoryState.contasGithub[key];
-  }
   persistirNoDisco();
 }
