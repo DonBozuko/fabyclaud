@@ -256,7 +256,7 @@ async function chamarGoogle(
     const { ok, status, json, texto } = await postJson(
       `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent`,
       { "x-goog-api-key": key },
-      { contents },
+      { contents, generationConfig: { temperature: 0.2 } },
       Math.min(timeoutMs, 35_000),
     );
 
@@ -361,7 +361,7 @@ async function chamarOpenAICompat(
   const { ok, status, json, texto } = await postJson(
     url,
     { Authorization: `Bearer ${key}` },
-    { model: modelo, messages, temperature: 0.7 },
+    { model: modelo, messages, temperature: 0.2 },
     timeoutMs,
   );
   if (!ok) return { ok: false, texto: erroLegivel(status, json, texto), status, bruto: texto };
