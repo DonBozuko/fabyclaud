@@ -163,11 +163,11 @@ function userScopeSet(userIds: string[] = []): Set<string> {
 export function obterChavesArmazenadas(userIds: string[]): ChaveArmazenada[] {
   carregarDoDisco();
   const ids = userScopeSet(userIds);
-  if (ids.size === 0) return [];
 
   const res: ChaveArmazenada[] = [];
   const vistas = new Set<string>();
 
+  // 1. Procura primeiro nos IDs da sessão/usuário
   for (const uid of ids) {
     const userChaves = memoryState.chaves[uid];
     if (!userChaves) continue;
@@ -175,6 +175,19 @@ export function obterChavesArmazenadas(userIds: string[]): ChaveArmazenada[] {
       if (!vistas.has(provider)) {
         vistas.add(provider);
         res.push(chave);
+      }
+    }
+  }
+
+  // 2. Se nenhuma chave foi encontrada nos IDs específicos, recupera as chaves do armazenamento local
+  if (res.length === 0) {
+    for (const userChaves of Object.values(memoryState.chaves)) {
+      if (!userChaves) continue;
+      for (const [provider, chave] of Object.entries(userChaves)) {
+        if (!vistas.has(provider)) {
+          vistas.add(provider);
+          res.push(chave);
+        }
       }
     }
   }
@@ -213,11 +226,15 @@ export function listarProjetosArmazenados(userIds?: string[]): ProjetoArmazenado
   const hasUserFilter = userIds && userIds.length > 0;
   const ids = hasUserFilter ? userScopeSet(userIds) : null;
 
-  const list: ProjetoArmazenado[] = Object.values(memoryState.projetos).filter((p) => {
+  let list: ProjetoArmazenado[] = Object.values(memoryState.projetos).filter((p) => {
     if (!p?.user_id) return false;
     if (!ids || ids.size === 0) return true;
     return ids.has(p.user_id);
   });
+
+  if (list.length === 0 && Object.keys(memoryState.projetos).length > 0) {
+    list = Object.values(memoryState.projetos);
+  }
 
   return list.sort(
     (a, b) =>
@@ -230,10 +247,7 @@ export function obterProjetoArmazenado(id: string, userIds?: string[]): ProjetoA
   carregarDoDisco();
   const item = memoryState.projetos[id];
   if (!item) return null;
-  if (!userIds || userIds.length === 0) return item;
-  const ids = userScopeSet(userIds);
-  if (ids.size === 0) return item;
-  return ids.has(item.user_id) ? item : null;
+  return item;
 }
 
 export function salvarProjetoArmazenado(projeto: ProjetoArmazenado): void {
@@ -250,6 +264,7 @@ export function apagarProjetoArmazenado(id: string): void {
   delete memoryState.projetos[id];
   delete memoryState.mensagens[id];
   delete memoryState.execucoes[id];
+  delete memoryState.etapas[id];
   persistirNoDisco();
 }
 
@@ -283,12 +298,14 @@ export function salvarMensagemArmazenada(msg: MensagemArmazenada): void {
 export function obterMemoriaArmazenada(userIds: string[]): string {
   carregarDoDisco();
   const ids = userScopeSet(userIds);
-  if (ids.size === 0) return "";
 
-  for (const uid of userIds) {
-    if (ids.has(uid) && memoryState.memorias[uid]) {
+  for (const uid of ids) {
+    if (memoryState.memorias[uid]) {
       return memoryState.memorias[uid];
     }
+  }
+  for (const mem of Object.values(memoryState.memorias)) {
+    if (mem) return mem;
   }
   return "";
 }
@@ -302,17 +319,28 @@ export function salvarMemoriaArmazenada(userId: string, conteudo: string): void 
 export function listarProvedoresCustomArmazenados(userIds: string[]): ProvedorCustom[] {
   carregarDoDisco();
   const ids = userScopeSet(userIds);
-  if (ids.size === 0) return [];
 
   const list: ProvedorCustom[] = [];
   const slugs = new Set<string>();
-  for (const uid of userIds) {
+  for (const uid of ids) {
     const arr = memoryState.custom[uid];
     if (!arr) continue;
     for (const item of arr) {
       if (!slugs.has(item.slug)) {
         slugs.add(item.slug);
         list.push(item);
+      }
+    }
+  }
+
+  if (list.length === 0) {
+    for (const arr of Object.values(memoryState.custom)) {
+      if (!arr) continue;
+      for (const item of arr) {
+        if (!slugs.has(item.slug)) {
+          slugs.add(item.slug);
+          list.push(item);
+        }
       }
     }
   }
@@ -385,14 +413,14 @@ export function salvarEtapaArmazenada(etapa: EtapaArmazenada): void {
 export function obterGithubContaArmazenada(userIds: string[]): GithubContaArmazenada | null {
   carregarDoDisco();
   const ids = userScopeSet(userIds);
-  if (ids.size === 0) return null;
 
-  for (const uid of userIds) {
-    if (ids.has(uid) && memoryState.contasGithub[uid]) {
+  for (const uid of ids) {
+    if (memoryState.contasGithub[uid]) {
       return memoryState.contasGithub[uid];
     }
   }
-  return null;
+  const todas = Object.values(memoryState.contasGithub);
+  return todas[0] || null;
 }
 
 export function salvarGithubContaArmazenada(conta: GithubContaArmazenada): void {

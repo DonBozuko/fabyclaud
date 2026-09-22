@@ -768,7 +768,7 @@
       "file_type": "code",
       "norm_label": "db",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L20"
+      "source_location": "L12"
     },
     {
       "id": "src_lib_faby_escola_server_estado",
@@ -781,7 +781,7 @@
       "file_type": "code",
       "norm_label": "estado",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L41"
+      "source_location": "L33"
     },
     {
       "id": "src_lib_faby_escola_server_resultadociclo",
@@ -794,7 +794,7 @@
       "file_type": "code",
       "norm_label": "resultadociclo",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L121"
+      "source_location": "L113"
     },
     {
       "id": "src_lib_faby_execucao_isolada_resultadoexecucaoisolada",
@@ -3628,7 +3628,7 @@
       "file_type": "code",
       "norm_label": "extrairregras()",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L113"
+      "source_location": "L105"
     },
     {
       "id": "src_lib_faby_escola_server_licoesparaprompt",
@@ -3640,7 +3640,7 @@
       "file_type": "code",
       "norm_label": "licoesparaprompt()",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L62"
+      "source_location": "L54"
     },
     {
       "id": "src_lib_faby_escola_server_obterestadoescola",
@@ -3652,7 +3652,7 @@
       "file_type": "code",
       "norm_label": "obterestadoescola()",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L53"
+      "source_location": "L45"
     },
     {
       "id": "src_lib_faby_escola_server_promptestudo",
@@ -3664,7 +3664,7 @@
       "file_type": "code",
       "norm_label": "promptestudo()",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L94"
+      "source_location": "L86"
     },
     {
       "id": "src_lib_faby_escola_server_registrarfalhascomolicoes",
@@ -3676,7 +3676,7 @@
       "file_type": "code",
       "norm_label": "registrarfalhascomolicoes()",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L75"
+      "source_location": "L67"
     },
     {
       "id": "src_lib_faby_escola_server_registrarnotaescola",
@@ -3688,7 +3688,7 @@
       "file_type": "code",
       "norm_label": "registrarnotaescola()",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L85"
+      "source_location": "L77"
     },
     {
       "id": "src_lib_faby_escola_server_rodarcicloescola",
@@ -3700,7 +3700,7 @@
       "file_type": "code",
       "norm_label": "rodarcicloescola()",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L133"
+      "source_location": "L122"
     },
     {
       "id": "src_lib_faby_execucao_isolada_arquivojavascriptexecutavel",
@@ -4852,7 +4852,7 @@
       "file_type": "code",
       "norm_label": "salvargithubcontaarmazenada()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L398"
+      "source_location": "L426"
     },
     {
       "id": "src_lib_github_functions_apelidorepo",
@@ -5128,7 +5128,7 @@
       "file_type": "code",
       "norm_label": "apagarchavearmazenada()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L197"
+      "source_location": "L210"
     },
     {
       "id": "src_lib_faby_storage_server_apagargithubcontaarmazenada",
@@ -5140,7 +5140,7 @@
       "file_type": "code",
       "norm_label": "apagargithubcontaarmazenada()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L404"
+      "source_location": "L432"
     },
     {
       "id": "src_lib_faby_storage_server_apagarprojetoarmazenado",
@@ -5152,7 +5152,7 @@
       "file_type": "code",
       "norm_label": "apagarprojetoarmazenado()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L248"
+      "source_location": "L262"
     },
     {
       "id": "src_lib_faby_storage_server_apagarprovedorcustomarmazenado",
@@ -5164,7 +5164,7 @@
       "file_type": "code",
       "norm_label": "apagarprovedorcustomarmazenado()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L339"
+      "source_location": "L367"
     },
     {
       "id": "src_lib_faby_storage_server_carregardodisco",
@@ -5200,7 +5200,7 @@
       "file_type": "code",
       "norm_label": "listaretapasarmazenadas()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L361"
+      "source_location": "L389"
     },
     {
       "id": "src_lib_faby_storage_server_listarmensagensarmazenadas",
@@ -5212,7 +5212,7 @@
       "file_type": "code",
       "norm_label": "listarmensagensarmazenadas()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L258"
+      "source_location": "L273"
     },
     {
       "id": "src_lib_faby_storage_server_listarprojetosarmazenados",
@@ -5224,7 +5224,7 @@
       "file_type": "code",
       "norm_label": "listarprojetosarmazenados()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L211"
+      "source_location": "L224"
     },
     {
       "id": "src_lib_faby_storage_server_listarprovedorescustomarmazenados",
@@ -5236,7 +5236,7 @@
       "file_type": "code",
       "norm_label": "listarprovedorescustomarmazenados()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L302"
+      "source_location": "L319"
     },
     {
       "id": "src_lib_faby_storage_server_obterchavesarmazenadas",
@@ -5260,7 +5260,7 @@
       "file_type": "code",
       "norm_label": "obterexecucaoarmazenada()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L350"
+      "source_location": "L378"
     },
     {
       "id": "src_lib_faby_storage_server_obtergithubcontaarmazenada",
@@ -5272,7 +5272,7 @@
       "file_type": "code",
       "norm_label": "obtergithubcontaarmazenada()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L385"
+      "source_location": "L413"
     },
     {
       "id": "src_lib_faby_storage_server_obtermemoriaarmazenada",
@@ -5284,7 +5284,7 @@
       "file_type": "code",
       "norm_label": "obtermemoriaarmazenada()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L283"
+      "source_location": "L298"
     },
     {
       "id": "src_lib_faby_storage_server_obterprojetoarmazenado",
@@ -5296,7 +5296,7 @@
       "file_type": "code",
       "norm_label": "obterprojetoarmazenado()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L229"
+      "source_location": "L246"
     },
     {
       "id": "src_lib_faby_storage_server_persistirnodisco",
@@ -5320,7 +5320,7 @@
       "file_type": "code",
       "norm_label": "salvarchavearmazenada()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L185"
+      "source_location": "L198"
     },
     {
       "id": "src_lib_faby_storage_server_salvaretapaarmazenada",
@@ -5332,7 +5332,7 @@
       "file_type": "code",
       "norm_label": "salvaretapaarmazenada()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L366"
+      "source_location": "L394"
     },
     {
       "id": "src_lib_faby_storage_server_salvarexecucaoarmazenada",
@@ -5344,7 +5344,7 @@
       "file_type": "code",
       "norm_label": "salvarexecucaoarmazenada()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L355"
+      "source_location": "L383"
     },
     {
       "id": "src_lib_faby_storage_server_salvarmemoriaarmazenada",
@@ -5356,7 +5356,7 @@
       "file_type": "code",
       "norm_label": "salvarmemoriaarmazenada()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L296"
+      "source_location": "L313"
     },
     {
       "id": "src_lib_faby_storage_server_salvarmensagemarmazenada",
@@ -5368,7 +5368,7 @@
       "file_type": "code",
       "norm_label": "salvarmensagemarmazenada()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L264"
+      "source_location": "L279"
     },
     {
       "id": "src_lib_faby_storage_server_salvarprojetoarmazenado",
@@ -5380,7 +5380,7 @@
       "file_type": "code",
       "norm_label": "salvarprojetoarmazenado()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L239"
+      "source_location": "L253"
     },
     {
       "id": "src_lib_faby_storage_server_salvarprovedorcustomarmazenado",
@@ -5392,7 +5392,7 @@
       "file_type": "code",
       "norm_label": "salvarprovedorcustomarmazenado()",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L322"
+      "source_location": "L350"
     },
     {
       "id": "src_lib_faby_storage_server_userscopeset",
@@ -9995,7 +9995,7 @@
       "file_type": "code",
       "norm_label": "temas_escola",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L22"
+      "source_location": "L14"
     },
     {
       "id": "src_lib_faby_functions_apagarlicao",
@@ -17335,7 +17335,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L86",
+      "source_location": "L78",
       "weight": 1.0
     },
     {
@@ -17347,7 +17347,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L138",
+      "source_location": "L127",
       "weight": 1.0
     },
     {
@@ -17359,7 +17359,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L207",
+      "source_location": "L165",
       "weight": 1.0
     },
     {
@@ -17371,7 +17371,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L211",
+      "source_location": "L168",
       "weight": 1.0
     },
     {
@@ -17383,7 +17383,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L248",
+      "source_location": "L183",
       "weight": 1.0
     },
     {
@@ -18991,7 +18991,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L198",
+      "source_location": "L211",
       "weight": 1.0
     },
     {
@@ -19003,7 +19003,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L206",
+      "source_location": "L219",
       "weight": 1.0
     },
     {
@@ -19015,7 +19015,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L405",
+      "source_location": "L433",
       "weight": 1.0
     },
     {
@@ -19027,7 +19027,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L407",
+      "source_location": "L435",
       "weight": 1.0
     },
     {
@@ -19039,7 +19039,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L249",
+      "source_location": "L263",
       "weight": 1.0
     },
     {
@@ -19051,7 +19051,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L253",
+      "source_location": "L268",
       "weight": 1.0
     },
     {
@@ -19063,7 +19063,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L340",
+      "source_location": "L368",
       "weight": 1.0
     },
     {
@@ -19075,7 +19075,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L345",
+      "source_location": "L373",
       "weight": 1.0
     },
     {
@@ -19111,7 +19111,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L362",
+      "source_location": "L390",
       "weight": 1.0
     },
     {
@@ -19123,7 +19123,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L259",
+      "source_location": "L274",
       "weight": 1.0
     },
     {
@@ -19135,7 +19135,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L212",
+      "source_location": "L225",
       "weight": 1.0
     },
     {
@@ -19147,7 +19147,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L214",
+      "source_location": "L227",
       "weight": 1.0
     },
     {
@@ -19159,7 +19159,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L303",
+      "source_location": "L320",
       "weight": 1.0
     },
     {
@@ -19171,7 +19171,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L304",
+      "source_location": "L321",
       "weight": 1.0
     },
     {
@@ -19207,7 +19207,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L351",
+      "source_location": "L379",
       "weight": 1.0
     },
     {
@@ -19219,7 +19219,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L386",
+      "source_location": "L414",
       "weight": 1.0
     },
     {
@@ -19231,168 +19231,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L387",
+      "source_location": "L415",
       "weight": 1.0
     },
     {
       "source": "src_lib_faby_storage_server_obtermemoriaarmazenada",
       "target": "src_lib_faby_storage_server_carregardodisco",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L284",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server_obtermemoriaarmazenada",
-      "target": "src_lib_faby_storage_server_userscopeset",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L285",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server_obterprojetoarmazenado",
-      "target": "src_lib_faby_storage_server_carregardodisco",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L230",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server_obterprojetoarmazenado",
-      "target": "src_lib_faby_storage_server_userscopeset",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L234",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server_salvarchavearmazenada",
-      "target": "src_lib_faby_storage_server_carregardodisco",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L186",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server_salvarchavearmazenada",
-      "target": "src_lib_faby_storage_server_persistirnodisco",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L194",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server_salvaretapaarmazenada",
-      "target": "src_lib_faby_storage_server_carregardodisco",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L367",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server_salvaretapaarmazenada",
-      "target": "src_lib_faby_storage_server_persistirnodisco",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L380",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server_salvarexecucaoarmazenada",
-      "target": "src_lib_faby_storage_server_carregardodisco",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L356",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server_salvarexecucaoarmazenada",
-      "target": "src_lib_faby_storage_server_persistirnodisco",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L358",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server_salvargithubcontaarmazenada",
-      "target": "src_lib_faby_storage_server_carregardodisco",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L399",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server_salvargithubcontaarmazenada",
-      "target": "src_lib_faby_storage_server_persistirnodisco",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L401",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server_salvarmemoriaarmazenada",
-      "target": "src_lib_faby_storage_server_carregardodisco",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L297",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server_salvarmemoriaarmazenada",
-      "target": "src_lib_faby_storage_server_persistirnodisco",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -19403,6 +19247,150 @@
       "weight": 1.0
     },
     {
+      "source": "src_lib_faby_storage_server_obtermemoriaarmazenada",
+      "target": "src_lib_faby_storage_server_userscopeset",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L300",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server_obterprojetoarmazenado",
+      "target": "src_lib_faby_storage_server_carregardodisco",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L247",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server_salvarchavearmazenada",
+      "target": "src_lib_faby_storage_server_carregardodisco",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L199",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server_salvarchavearmazenada",
+      "target": "src_lib_faby_storage_server_persistirnodisco",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L207",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server_salvaretapaarmazenada",
+      "target": "src_lib_faby_storage_server_carregardodisco",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L395",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server_salvaretapaarmazenada",
+      "target": "src_lib_faby_storage_server_persistirnodisco",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L408",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server_salvarexecucaoarmazenada",
+      "target": "src_lib_faby_storage_server_carregardodisco",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L384",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server_salvarexecucaoarmazenada",
+      "target": "src_lib_faby_storage_server_persistirnodisco",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L386",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server_salvargithubcontaarmazenada",
+      "target": "src_lib_faby_storage_server_carregardodisco",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L427",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server_salvargithubcontaarmazenada",
+      "target": "src_lib_faby_storage_server_persistirnodisco",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L429",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server_salvarmemoriaarmazenada",
+      "target": "src_lib_faby_storage_server_carregardodisco",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L314",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server_salvarmemoriaarmazenada",
+      "target": "src_lib_faby_storage_server_persistirnodisco",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L316",
+      "weight": 1.0
+    },
+    {
       "source": "src_lib_faby_storage_server_salvarmensagemarmazenada",
       "target": "src_lib_faby_storage_server_carregardodisco",
       "relation": "calls",
@@ -19411,7 +19399,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L265",
+      "source_location": "L280",
       "weight": 1.0
     },
     {
@@ -19423,7 +19411,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L278",
+      "source_location": "L293",
       "weight": 1.0
     },
     {
@@ -19435,7 +19423,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L240",
+      "source_location": "L254",
       "weight": 1.0
     },
     {
@@ -19447,7 +19435,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L245",
+      "source_location": "L259",
       "weight": 1.0
     },
     {
@@ -19459,7 +19447,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L323",
+      "source_location": "L351",
       "weight": 1.0
     },
     {
@@ -19471,7 +19459,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L336",
+      "source_location": "L364",
       "weight": 1.0
     },
     {
@@ -24765,18 +24753,6 @@
     },
     {
       "source": "src_lib_faby_escola_server",
-      "target": "src_lib_faby_providers_server_chamarprovedor",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L17",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_escola_server",
       "target": "src_lib_faby_config_provedorcustom",
       "relation": "imports",
       "_origin": "ast",
@@ -24784,7 +24760,19 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L18",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_escola_server",
+      "target": "src_lib_faby_providers_server_chamarprovedor",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/lib/faby/escola.server.ts",
+      "source_location": "L9",
       "weight": 1.0
     },
     {
@@ -29344,18 +29332,6 @@
     },
     {
       "source": "src_lib_faby_escola_server",
-      "target": "src_lib_faby_providers_server",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L17",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_escola_server",
       "target": "src_lib_faby_config",
       "relation": "imports_from",
       "_origin": "ast",
@@ -29363,8 +29339,20 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L18",
+      "source_location": "L10",
       "type_only": true,
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_escola_server",
+      "target": "src_lib_faby_providers_server",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/lib/faby/escola.server.ts",
+      "source_location": "L9",
       "weight": 1.0
     },
     {
@@ -36983,7 +36971,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L113",
+      "source_location": "L105",
       "weight": 1.0
     },
     {
@@ -36994,18 +36982,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L121",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_escola_server",
-      "target": "src_lib_faby_escola_server_rodarcicloescola",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L133",
+      "source_location": "L113",
       "weight": 1.0
     },
     {
@@ -37016,7 +36993,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L20",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_escola_server",
+      "target": "src_lib_faby_escola_server_rodarcicloescola",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/faby/escola.server.ts",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -37027,7 +37015,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L22",
+      "source_location": "L14",
       "weight": 1.0
     },
     {
@@ -37038,7 +37026,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L41",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -37049,7 +37037,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L53",
+      "source_location": "L45",
       "weight": 1.0
     },
     {
@@ -37060,7 +37048,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L62",
+      "source_location": "L54",
       "weight": 1.0
     },
     {
@@ -37071,7 +37059,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L75",
+      "source_location": "L67",
       "weight": 1.0
     },
     {
@@ -37082,7 +37070,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L85",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -37093,7 +37081,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/escola.server.ts",
-      "source_location": "L94",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -38941,7 +38929,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L185",
+      "source_location": "L198",
       "weight": 1.0
     },
     {
@@ -38952,7 +38940,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L197",
+      "source_location": "L210",
       "weight": 1.0
     },
     {
@@ -38963,7 +38951,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L211",
+      "source_location": "L224",
       "weight": 1.0
     },
     {
@@ -38974,7 +38962,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L229",
+      "source_location": "L246",
       "weight": 1.0
     },
     {
@@ -38985,29 +38973,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L239",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server",
-      "target": "src_lib_faby_storage_server_apagarprojetoarmazenado",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L248",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server",
-      "target": "src_lib_faby_storage_server_listarmensagensarmazenadas",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L258",
+      "source_location": "L253",
       "weight": 1.0
     },
     {
@@ -39023,13 +38989,35 @@
     },
     {
       "source": "src_lib_faby_storage_server",
+      "target": "src_lib_faby_storage_server_apagarprojetoarmazenado",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L262",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server",
+      "target": "src_lib_faby_storage_server_listarmensagensarmazenadas",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L273",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server",
       "target": "src_lib_faby_storage_server_salvarmensagemarmazenada",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L264",
+      "source_location": "L279",
       "weight": 1.0
     },
     {
@@ -39040,7 +39028,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L283",
+      "source_location": "L298",
       "weight": 1.0
     },
     {
@@ -39051,7 +39039,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L296",
+      "source_location": "L313",
       "weight": 1.0
     },
     {
@@ -39062,7 +39050,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L302",
+      "source_location": "L319",
       "weight": 1.0
     },
     {
@@ -39073,7 +39061,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L322",
+      "source_location": "L350",
       "weight": 1.0
     },
     {
@@ -39084,7 +39072,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L339",
+      "source_location": "L367",
       "weight": 1.0
     },
     {
@@ -39095,40 +39083,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L350",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server",
-      "target": "src_lib_faby_storage_server_salvarexecucaoarmazenada",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L355",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server",
-      "target": "src_lib_faby_storage_server_listaretapasarmazenadas",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L361",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_storage_server",
-      "target": "src_lib_faby_storage_server_salvaretapaarmazenada",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L366",
+      "source_location": "L378",
       "weight": 1.0
     },
     {
@@ -39144,13 +39099,46 @@
     },
     {
       "source": "src_lib_faby_storage_server",
+      "target": "src_lib_faby_storage_server_salvarexecucaoarmazenada",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L383",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server",
+      "target": "src_lib_faby_storage_server_listaretapasarmazenadas",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L389",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server",
+      "target": "src_lib_faby_storage_server_salvaretapaarmazenada",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L394",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_storage_server",
       "target": "src_lib_faby_storage_server_obtergithubcontaarmazenada",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L385",
+      "source_location": "L413",
       "weight": 1.0
     },
     {
@@ -39161,7 +39149,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L398",
+      "source_location": "L426",
       "weight": 1.0
     },
     {
@@ -39172,7 +39160,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L404",
+      "source_location": "L432",
       "weight": 1.0
     },
     {
@@ -41639,5 +41627,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "5fdaf358175673bf299f5d7ff2be11810e4c7d89"
+  "built_at_commit": "6bbff4682dbc8c86bb53d28907520f0ffdea41a9"
 }
