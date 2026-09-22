@@ -1590,6 +1590,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     const { chamarProvedor, textoDeAnexos } = await import("./faby/providers.server");
     const {
       montarPrompt,
+      montarPromptConversa,
       extrairArquivos,
       processarArquivos,
       auditarArquivos,
@@ -2221,17 +2222,26 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     }
     // Plugins: a IA pode pedir busca na web, leitura de página, documentação,
     // consulta ao banco do projeto e geração de imagem — sozinha, sem chave.
-    const ferramentas = await import("./faby/ferramentas.server");
-    const diagnostico = diagnosticarProjeto(arquivosAtuais, pedidoBase, notasProjeto);
-    const promptFinal = `${montarPrompt(pedido, arquivosAtuais, {
-      memoria,
-      agente: instrucoesAgente,
-      api: apiUrl,
-      auth: apiPrivada.auth,
-      privado: apiPrivada.dados,
-      notas: notasProjeto,
-      licoes: licoesAprendidas,
-    })}\n\n${diagnostico}\n\n${ferramentas.INSTRUCAO_FERRAMENTAS}`;
+    const diagnostico =
+      intencao === "conversar"
+        ? ""
+        : diagnosticarProjeto(arquivosAtuais, pedidoBase, notasProjeto);
+    const promptFinal =
+      intencao === "conversar"
+        ? montarPromptConversa(pedidoBase, {
+            memoria,
+            agente: instrucoesAgente,
+            notas: notasProjeto,
+          })
+        : `${montarPrompt(pedido, arquivosAtuais, {
+            memoria,
+            agente: instrucoesAgente,
+            api: apiUrl,
+            auth: apiPrivada.auth,
+            privado: apiPrivada.dados,
+            notas: notasProjeto,
+            licoes: licoesAprendidas,
+          })}\n\n${diagnostico}\n\n${ferramentas.INSTRUCAO_FERRAMENTAS}`;
     const orquestracao = await import("./faby/orquestracao.server");
     const dbOrquestracao = context.supabase as unknown as Parameters<
       typeof orquestracao.iniciarExecucao

@@ -18,9 +18,9 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1790046455.4500768,
-    "seen": 1790092138.2380943,
-    "ast_hash": "5169f9463036c8d8c856921897087c00",
+    "mtime": 1789742974.2435966,
+    "seen": 1789841501.3482487,
+    "ast_hash": "a4f06ececea77feeeaef752f446d08e9",
     "semantic_hash": ""
   },
   "src/assets/hero-matrix.png.asset.json": {
@@ -360,14 +360,14 @@
     "semantic_hash": "d05be20476d3287ad487690a4cf98029"
   },
   "src/integrations/supabase/previewAuthStorage.ts": {
-    "mtime": 1790046976.436208,
-    "seen": 1790092138.2505112,
-    "ast_hash": "68fae7c9483a8907f0784be46c6e7b7b",
+    "mtime": 1789966517.3823738,
+    "seen": 1789966577.7329826,
+    "ast_hash": "51bfab94e67691b16733212287abdc42",
     "semantic_hash": ""
   },
   "src/integrations/supabase/types.ts": {
-    "mtime": 1790046874.3094552,
-    "seen": 1790092138.2505162,
+    "mtime": 1789966517.461061,
+    "seen": 1789966577.7329872,
     "ast_hash": "5975cbd3dd4da278afcbeb60f6cd1964",
     "semantic_hash": ""
   },
@@ -384,9 +384,9 @@
     "semantic_hash": "8da0ddd7569bac2676b9a5c8edff8a36"
   },
   "src/lib/faby.functions.ts": {
-    "mtime": 1790091674.5954695,
-    "seen": 1790092138.2508821,
-    "ast_hash": "03593f00a893c9320747f4622e2ce923",
+    "mtime": 1789966518.3384378,
+    "seen": 1789966577.733313,
+    "ast_hash": "83e529d69db82953176e0365a8a9c020",
     "semantic_hash": ""
   },
   "src/lib/faby/aplicativos-locais.server.ts": {
@@ -402,15 +402,15 @@
     "semantic_hash": ""
   },
   "src/lib/faby/builder.server.test.ts": {
-    "mtime": 1790091723.8712833,
-    "seen": 1790092138.2518115,
-    "ast_hash": "35b6145cac17b551963027f894849ae2",
+    "mtime": 1789850115.8367033,
+    "seen": 1789874564.7051322,
+    "ast_hash": "cd09a8fbd9f241218510e9918d93a932",
     "semantic_hash": ""
   },
   "src/lib/faby/builder.server.ts": {
-    "mtime": 1790091744.926402,
-    "seen": 1790092138.2518144,
-    "ast_hash": "185c2f73bfdfe65d6d1334dbf5c9d393",
+    "mtime": 1789965421.7112958,
+    "seen": 1789965520.3124144,
+    "ast_hash": "6f4b04a8c6d1711e47d35c662ff889a3",
     "semantic_hash": ""
   },
   "src/lib/faby/config.ts": {
@@ -468,9 +468,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/preview.ts": {
-    "mtime": 1790046949.3671896,
-    "seen": 1790092138.2538664,
-    "ast_hash": "f391ff26a6f23d953b49451d1635a17f",
+    "mtime": 1789875611.036057,
+    "seen": 1789929815.582449,
+    "ast_hash": "74f5cb6ba58531809caf866506093bd2",
     "semantic_hash": ""
   },
   "src/lib/faby/providers.server.ts": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "src/routes/index.tsx": {
-    "mtime": 1790048301.0954318,
-    "seen": 1790092138.2571,
-    "ast_hash": "73f8fd254fe8e13388458620845f7a06",
+    "mtime": 1789966837.008634,
+    "seen": 1789966878.3734639,
+    "ast_hash": "0efa6973e1c517fb6eb564cd8cbc4823",
     "semantic_hash": ""
   },
   "src/server.ts": {
@@ -819,12 +819,6 @@
     "mtime": 1789966374.341183,
     "seen": 1789966414.1994445,
     "ast_hash": "dafd2112a36eb5b60a2f68a9fe192e50",
-    "semantic_hash": ""
-  },
-  ".lovable/plan/recuperar-e-provar-o-funcionamento-do-fabyclaud-2026-09-22.md": {
-    "mtime": 1790046866.831976,
-    "seen": 1790092138.26056,
-    "ast_hash": "a99bb907bb8f7966b7afd28dfef9f3cd",
     "semantic_hash": ""
   }
 }

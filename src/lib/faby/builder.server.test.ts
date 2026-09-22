@@ -319,3 +319,44 @@ test("normalizarUrlsApi colapsa segmentos duplicados de API e remove localhost:8
     !jsProcessado.includes("/public/dados/c044dc49-7fe3-4fbb-87b9-780ddfd5aa60/public/dados"),
   );
 });
+
+test("classifica saudações e conversas com pontuação como conversa", () => {
+  assert.equal(classificarPedido("oi"), "conversar");
+  assert.equal(classificarPedido("oi, tudo bem?"), "conversar");
+  assert.equal(classificarPedido("olá faby!"), "conversar");
+  assert.equal(classificarPedido("bom dia, como vai?"), "conversar");
+  assert.equal(classificarPedido("boa tarde! tudo bem?"), "conversar");
+  assert.equal(classificarPedido("eai beleza?"), "conversar");
+  assert.equal(classificarPedido("quem é você?"), "conversar");
+  assert.equal(classificarPedido("o que você pode fazer?"), "conversar");
+  assert.equal(classificarPedido("muito obrigado, valeu!"), "conversar");
+});
+
+test("classifica comandos de alteração pontual e criação como alteração", () => {
+  assert.equal(classificarPedido("muda a cor para azul"), "alterar");
+  assert.equal(classificarPedido("troca a cor do fundo para preto"), "alterar");
+  assert.equal(classificarPedido("adicione um botão de salvar"), "alterar");
+  assert.equal(classificarPedido("altere o título para Dev Studio"), "alterar");
+  assert.equal(classificarPedido("crie uma calculadora científica"), "alterar");
+  assert.equal(pedidoExigeArquivos("muda a cor para azul"), true);
+  assert.equal(pedidoExigeArquivos("oi tudo bem"), false);
+});
+
+test("montarPromptConversa gera prompt leve sem tags de arquivo", async () => {
+  const { montarPromptConversa } = await import("./builder.server");
+  const promptConv = montarPromptConversa("oi, tudo bem?");
+  assert.ok(promptConv.includes("Mensagem do usuário"));
+  assert.ok(!promptConv.includes("<arquivo nome="));
+  assert.ok(!promptConv.includes("STATEFUL VFS SNAPSHOT"));
+});
+
+test("montarPrompt inclui diretrizes de preservação para projetos existentes", async () => {
+  const { montarPrompt } = await import("./builder.server");
+  const promptAlt = montarPrompt("mude a cor para azul", {
+    "index.html": "<!doctype html><html><body><h1>Teste</h1></body></html>",
+    "styles.css": "body { background: white; }",
+  });
+  assert.ok(promptAlt.includes("DIRETRIZ CRÍTICA DE MODIFICAÇÃO INCREMENTAL E PRESERVAÇÃO VISUAL"));
+  assert.ok(promptAlt.includes("PRESERVAÇÃO ESTRITA DE DESIGN E LAYOUT"));
+});
+

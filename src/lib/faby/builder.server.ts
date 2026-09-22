@@ -26,6 +26,60 @@ export type TipoPedidoLovable =
   | "importacao"
   | "publicacao";
 
+export function ehSaudacaoOuConversaCasual(pedido: string): boolean {
+  const limpo = pedido.trim().toLowerCase();
+  if (!limpo) return true;
+
+  // Se tem verbos claros de criação/edição/código, NÃO é apenas conversa
+  const temVerboAcao =
+    /\b(cri[ea]|fa[çc]a|mud[ea]|alter[ea]|adicion[ea]|coloqu[ea]|bot[ea]|remov[ea]|tir[ea]|corrij[ea]|arrum[ea]|consert[ea]|troqu[ea]|ger[ea]|estiliz[ea]|redesenh[ea]|ajust[ea]|constru[ai]|mont[ea]|implement[ea]|recri[ea]|clon[ea]|desenh[ea])\b/i.test(
+      limpo,
+    );
+
+  if (temVerboAcao) {
+    return false;
+  }
+
+  // Saudações puras ou compostas com pontuação e nomes amigáveis
+  if (
+    /^(?:oi|ol[aá]|bom\s+dia|boa\s+tarde|boa\s+noite|opa|e\s+a[ií]|hello|hi|hey|eai|fala|salve|ia[eí])(?:[\s,!?.-]+(?:tudo\s+bem|tudo\s+bom|como\s+vai|beleza|tranquilo|amigo|faby|fabyclaud|dev|buddy|parceiro|mestre))?[\s,!?.-]*$/i.test(
+      limpo,
+    )
+  ) {
+    return true;
+  }
+
+  // Perguntas sobre identidade ou capacidades do assistente
+  if (
+    /^(?:quem\s+[eé]\s+voc[eê]|o\s+que\s+voc[eê]\s+(?:faz|pode\s+fazer|[eé]|sabe\s+fazer)|qual\s+[eé]\s+o\s+seu\s+nome|qual\s+o\s+seu\s+prop[oó]sito|como\s+voc[eê]\s+funciona|apresente-se|se\s+apresente)[^?]*\??$/i.test(
+      limpo,
+    )
+  ) {
+    return true;
+  }
+
+  // Perguntas conceituais puras (sem pedir para programar/criar)
+  if (
+    /^(?:o\s+que\s+[eé]|qual\s+a\s+diferen[çc]a\s+entre|me\s+explique\s+(?:o\s+que\s+[eé]|como\s+funciona)|para\s+que\s+serve\s+o|como\s+funciona\s+o|o\s+que\s+significa)[^?]*\??$/i.test(
+      limpo,
+    )
+  ) {
+    return true;
+  }
+
+  // Confirmações curtas e agradecimentos / elogios puros
+  if (
+    /^(?:sim|s|yes|isso|exato|exatamente|pode\s+ser|ok|beleza|blz|valeu|obrigad[oa]|show|perfeito|muito\s+bom|gostei|adorei|entendi|compreendi|legal|top|[oó]timo|maravilha|obrigad[oa]\s+pela\s+ajuda|muito\s+obrigad[oa]|parab[eé]ns)[\s!.,?-]*(?:gostei\s+do\s+resultado|ficou\s+bom|ficou\s+[oó]timo|muito\s+bom|valeu|obrigad[oa]|demais)?[\s!.,?-]*$/i.test(
+      limpo,
+    ) ||
+    /^(?:muito\s+)?(?:obrigad[oa]|valeu|show|perfeito|muito\s+bom|parab[eé]ns)[\s\S]{0,100}$/i.test(limpo)
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 export function classificarPedidoLovable(pedido: string): TipoPedidoLovable {
   const limpo = pedido.trim();
 
@@ -69,17 +123,7 @@ export function classificarPedidoLovable(pedido: string): TipoPedidoLovable {
     return "correcao";
   }
 
-  if (
-    /^(?:oi|ol[aá]|bom dia|boa tarde|boa noite|opa|e a[ií]|hello|hi|hey|eai|fala|tudo bem|tudo bom|salve)[!.,?\s]*(?:tudo bem|tudo bom|como vai|beleza|bom dia|boa tarde|boa noite)?[!.,?\s]*$/i.test(
-      limpo,
-    ) ||
-    /^(?:quem [eé] voc[eê]|o que [eé]|qual a diferen[çc]a|me explique o que [eé]|para que serve o|como funciona o javascript|o que significa)[^?]*\?*$/i.test(
-      limpo,
-    ) ||
-    /^(?:sim|s|yes|isso|exato|exatamente|pode|pode sim|pode ser|pode fazer|ok|beleza|blz|valeu|obrigad[oa]|show|perfeito|muito bom|gostei|adorei|entendi|compreendi|legal|top|otimo|ótimo)[.!,\s]*(?:gostei do resultado|ficou bom|ficou otimo|ficou ótimo|muito bom|valeu)?$/i.test(
-      limpo,
-    )
-  ) {
+  if (ehSaudacaoOuConversaCasual(limpo)) {
     return "conversa";
   }
 
@@ -245,6 +289,33 @@ export function limparPensamento(texto: string) {
     .trim();
 }
 
+export function montarPromptConversa(
+  pedido: string,
+  extras?: {
+    memoria?: string;
+    agente?: string;
+    notas?: string;
+  },
+): string {
+  const partes = [
+    "Você é a FabyClaud / Dev Buddy, uma assistente de IA amigável, inteligente e colaborativa para desenvolvedores e criadores de software no estilo Lovable / Claude Code.",
+    "ESTILO DE RESPOSTA:\n- Responda em português com calor humano, clareza, empatia e objetividade.\n- Se o usuário estiver apenas saudando (oi, olá, bom dia, etc.) ou conversando casualmente, responda de forma natural, simpática e pergunte como pode ajudar no projeto ou desenvolvimento hoje.\n- Se o usuário fizer uma pergunta técnica, conceitual ou pedir uma sugestão, explique com didática e precisão técnica.\n- NÃO inclua tags <arquivo> e NÃO gere código de arquivos nesta resposta (isto é apenas uma conversa).\n- Mantenha a resposta acolhedora e direta.",
+  ];
+
+  if (extras?.memoria?.trim()) {
+    partes.push(`--- Memória do usuário ---\n${extras.memoria.trim()}`);
+  }
+  if (extras?.agente?.trim()) {
+    partes.push(`--- Modo de trabalho (agente escolhido) ---\n${extras.agente.trim()}`);
+  }
+  if (extras?.notas?.trim()) {
+    partes.push(`--- Contexto recente do projeto ---\n${extras.notas.slice(-1500).trim()}`);
+  }
+
+  partes.push(`--- Mensagem do usuário ---\n${pedido}`);
+  return partes.join("\n\n");
+}
+
 export function montarPrompt(
   pedido: string,
   arquivosAtuais: Record<string, string>,
@@ -376,6 +447,22 @@ export function montarPrompt(
     const tipoLovable = classificarPedidoLovable(pedido);
     const contrato = extras?.contrato ?? gerarContratoEntrega(pedido, arquivosAtuais, tipoLovable);
     partes.push(formatarContratoEntrega(contrato));
+
+    const nomesExistentes = Object.keys(arquivosAtuais).filter(
+      (n) => !n.startsWith("enviados/") && !n.startsWith("originais/"),
+    );
+    if (nomesExistentes.length > 0) {
+      partes.push(
+        [
+          "--- DIRETRIZ CRÍTICA DE MODIFICAÇÃO INCREMENTAL E PRESERVAÇÃO VISUAL ---",
+          "⚠️ ESTE É UM PROJETO EXISTENTE QUE VOCÊ ESTÁ EVOLUINDO/EDITANDO.",
+          "1. PRESERVAÇÃO ESTRITA DE DESIGN E LAYOUT: Preserve 100% da identidade visual, layout, classes CSS, IDs, componentes e funcionalidades existentes. NUNCA reescreva tudo do zero com um design simples ou cru.",
+          "2. MODIFICAÇÃO CIRÚRGICA: Altere APENAS o que o usuário explicitamente pediu (por exemplo, se pediu para mudar a cor de um elemento ou trocar um texto, altere apenas a regra de cor no CSS ou o trecho específico no HTML/JS).",
+          "3. ENTREGA COMPLETA DOS ARQUIVOS AFETADOS: Todo arquivo que você alterar deve ser entregue 100% completo e funcional dentro da tag <arquivo nome=\"caminho\">...</arquivo>. Se a alteração for apenas no CSS (ex: troca de cor), entregue o <arquivo nome=\"styles.css\"> completo com a cor atualizada sem desmanchar as outras regras de estilo.",
+          "4. PROIBIDO RESPONDER APENAS COM TEXTO: NUNCA diga que fez a alteração sem entregar o arquivo modificado dentro da tag <arquivo nome=\"...\">.",
+        ].join("\n"),
+      );
+    }
   }
   partes.push(`--- Pedido do usuário ---\n${pedido}`);
   return partes.join("\n\n");
@@ -497,34 +584,8 @@ export function diagnosticarProjeto(arquivos: Record<string, string>, pedido: st
 export function classificarPedido(pedido: string): IntencaoPedido {
   const limpo = pedido.trim();
 
-  // Saudações puras -> conversar
-  if (
-    /^(?:oi|ol[aá]|bom dia|boa tarde|boa noite|opa|e a[ií]|hello|hi|hey|eai|fala|tudo bem|tudo bom|salve)[!.\s]*$/i.test(
-      limpo,
-    )
-  ) {
-    return "conversar";
-  }
-
-  // Dúvidas conceituais puras sem pedido de código -> conversar
-  if (
-    /^(?:quem [eé] voc[eê]|o que [eé]|qual a diferen[çc]a|me explique o que [eé]|para que serve o|como funciona o javascript|o que significa)[^?]*\?*$/i.test(
-      limpo,
-    )
-  ) {
-    return "conversar";
-  }
-
-  // Confirmações curtas e agradecimentos / elogios puros sem ordem de edição -> conversar
-  if (
-    /^(?:sim|s|yes|isso|exato|exatamente|pode|pode sim|pode ser|pode fazer|ok|beleza|blz|valeu|obrigad[oa]|show|perfeito|muito bom|gostei|adorei|entendi|compreendi|legal|top|otimo|ótimo)[.!,\s]*(?:gostei do resultado|ficou bom|ficou otimo|ficou ótimo|muito bom|valeu)?$/i.test(
-      limpo,
-    ) ||
-    (/^(?:obrigad[oa]|valeu|show|perfeito|muito bom|parab[eé]ns)[\s\S]*$/i.test(limpo) &&
-      !/\b(cri[ea]|fa[çc]a|mud[ea]|alter[ea]|adicion[ea]|coloqu[ea]|bot[ea]|remov[ea]|tir[ea]|corrij[ea]|arrum[ea]|consert[ea]|troqu[ea]|ger[ea])\b/i.test(
-        limpo,
-      ))
-  ) {
+  // Saudações e conversa casual rápida
+  if (ehSaudacaoOuConversaCasual(limpo)) {
     return "conversar";
   }
 
