@@ -76,34 +76,29 @@ export const listarProjetos = createServerFn({ method: "GET" })
     let list: any[] = [];
     const targetUserIds = extrairUserIds(context);
     try {
-      const { data, error } = await context.supabase
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: adminData, error: adminError } = await supabaseAdmin
         .from("projetos")
         .select("id, user_id, nome, modelo, arquivos, updated_at")
         .order("updated_at", { ascending: false });
-      if (error) {
-        console.warn("[listarProjetos] Erro Supabase context:", error.message);
-      } else if (data && data.length > 0) {
-        list = data.filter((p: any) => targetUserIds.includes(p.user_id));
+      if (!adminError && adminData && adminData.length > 0) {
+        list = adminData;
       }
     } catch (err: any) {
-      console.warn("[listarProjetos] Falha de conexão Supabase:", err?.message);
+      console.warn("[listarProjetos] Falha de conexão Supabase Admin:", err?.message);
     }
 
     if (list.length === 0) {
       try {
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const { data: adminData, error: adminError } = await supabaseAdmin
+        const { data, error } = await context.supabase
           .from("projetos")
           .select("id, user_id, nome, modelo, arquivos, updated_at")
           .order("updated_at", { ascending: false });
-        if (adminError) {
-          console.warn("[listarProjetos] Erro Supabase Admin:", adminError.message);
-        } else if (adminData && adminData.length > 0) {
-          const matched = adminData.filter((p: any) => targetUserIds.includes(p.user_id));
-          list = matched.length > 0 ? matched : adminData;
+        if (!error && data && data.length > 0) {
+          list = data;
         }
       } catch (err: any) {
-        console.warn("[listarProjetos] Falha de conexão Supabase Admin:", err?.message);
+        console.warn("[listarProjetos] Falha de conexão Supabase:", err?.message);
       }
     }
 
@@ -3111,8 +3106,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
                   modelo: provedorUsado,
                   updated_at: new Date().toISOString(),
                 })
-                .eq("id", projetoId)
-                .in("user_id", targetUserIds);
+                .eq("id", projetoId);
             }
           } catch {
             try {
@@ -3124,8 +3118,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
                   modelo: provedorUsado,
                   updated_at: new Date().toISOString(),
                 })
-                .eq("id", projetoId)
-                .in("user_id", targetUserIds);
+                .eq("id", projetoId);
             } catch {
               // ignore
             }
@@ -3147,8 +3140,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
               await supabaseAdmin
                 .from("projetos")
                 .update({ modelo: data.model, updated_at: new Date().toISOString() })
-                .eq("id", projetoId)
-                .in("user_id", targetUserIds);
+                .eq("id", projetoId);
             }
           } catch {
             // ignore
