@@ -134,7 +134,7 @@ export function montarPreviewHtml(arquivos: Record<string, string>) {
       try {
         return await origFetch.apply(window, arguments);
       } catch (err) {
-        if (/image\.pollinations\.ai/i.test(urlStr)) {
+        if (/image\\.pollinations\\.ai/i.test(urlStr)) {
           return new Response("", { status: 200 });
         }
         throw err;
@@ -172,7 +172,7 @@ export function montarPreviewHtml(arquivos: Record<string, string>) {
       return;
     }
 
-    var secao = href.replace(/^https?:\/\/[^/]+/i, "").replace(/^\//, "").replace(/\.html$/i, "");
+    var secao = href.replace(/^https?:\\/\\/[^/]+/i, "").replace(/^\\//, "").replace(/\\.html$/i, "");
     var alvo = document.getElementById(secao) || document.querySelector('[data-secao="' + secao + '"]') || document.querySelector('[data-tab="' + secao + '"]');
     if (alvo) {
       alvo.scrollIntoView({ behavior: "smooth" });
@@ -459,7 +459,7 @@ export function injetarSondaDeErros(html: string) {
     window.fetch = function(entrada, opcoes){
       var alvo = typeof entrada === "string" ? entrada : (entrada && entrada.url) || "";
       var metodo = (opcoes && opcoes.method ? opcoes.method : "GET").toUpperCase();
-      var ehRotaDados = /(?:\/api)?\/public\/dados(?:\/[0-9a-f-]+)?\/([a-z0-9_-]+)/i.exec(alvo);
+      var ehRotaDados = /(?:\\/api)?\\/public\\/dados(?:\\/[0-9a-f-]+)?\\/([a-z0-9_-]+)/i.exec(alvo);
 
       function tratarMockLocal(colecao) {
         var storageKey = "faby_previa_dados_" + colecao.toLowerCase();

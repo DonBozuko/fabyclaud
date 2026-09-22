@@ -550,7 +550,7 @@ function FabyClaud() {
         }
       }
     }
-  }, [projetos.data]);
+  }, [projetos.data, projetoId]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -640,7 +640,10 @@ function FabyClaud() {
   }
 
   const mensagens = projeto.data?.mensagens ?? [];
-  const arquivos = (projeto.data?.arquivos ?? {}) as Record<string, string>;
+  const arquivos = useMemo(
+    () => (projeto.data?.arquivos ?? {}) as Record<string, string>,
+    [projeto.data?.arquivos],
+  );
   const previewHtml = useMemo(() => montarPreviewHtml(arquivos), [arquivos]);
   const previewComSonda = useMemo(
     () => (previewHtml ? injetarSondaDeErros(previewHtml) : null),

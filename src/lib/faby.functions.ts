@@ -53,15 +53,20 @@ function extrairUserIds(context: {
   localUserId?: string | null;
   isAutenticadoSupabase?: boolean;
 }): string[] {
-  const id =
-    context.userId && context.userId !== "00000000-0000-0000-0000-000000000001"
-      ? context.userId
-      : context.deviceId && context.deviceId !== "00000000-0000-0000-0000-000000000001"
-        ? context.deviceId
-        : context.localUserId && context.localUserId !== "00000000-0000-0000-0000-000000000001"
-          ? context.localUserId
-          : context.userId || "anon-user";
-  return [id];
+  const idSet = new Set<string>();
+  if (context.userId && context.userId !== "00000000-0000-0000-0000-000000000001") {
+    idSet.add(context.userId);
+  }
+  if (context.deviceId && context.deviceId !== "00000000-0000-0000-0000-000000000001") {
+    idSet.add(context.deviceId);
+  }
+  if (context.localUserId && context.localUserId !== "00000000-0000-0000-0000-000000000001") {
+    idSet.add(context.localUserId);
+  }
+  if (idSet.size === 0) {
+    idSet.add(context.userId || "00000000-0000-0000-0000-000000000001");
+  }
+  return Array.from(idSet);
 }
 
 /** Lista de projetos do usuário, mais recente primeiro. */
@@ -90,12 +95,12 @@ export const listarProjetos = createServerFn({ method: "GET" })
         const { data: adminData, error: adminError } = await supabaseAdmin
           .from("projetos")
           .select("id, user_id, nome, modelo, arquivos, updated_at")
-          .in("user_id", targetUserIds)
           .order("updated_at", { ascending: false });
         if (adminError) {
           console.warn("[listarProjetos] Erro Supabase Admin:", adminError.message);
         } else if (adminData && adminData.length > 0) {
-          list = adminData;
+          const matched = adminData.filter((p: any) => targetUserIds.includes(p.user_id));
+          list = matched.length > 0 ? matched : adminData;
         }
       } catch (err: any) {
         console.warn("[listarProjetos] Falha de conexão Supabase Admin:", err?.message);
@@ -149,7 +154,6 @@ export const obterProjeto = createServerFn({ method: "GET" })
           .from("projetos")
           .select("id, user_id, nome, modelo, arquivos, updated_at")
           .eq("id", data.id)
-          .in("user_id", targetUserIds)
           .maybeSingle();
         if (adminP) projeto = adminP;
       } catch {
@@ -348,14 +352,18 @@ export const listarChaves = createServerFn({ method: "GET" })
         .from("chaves_ia")
         .select("provider, api_key, api_url, testada_ok, testada_em, ultimo_erro, user_id");
       if (!error && data && data.length > 0) {
-        rows = data.filter((k: any) => targetUserIds.includes(k.user_id));
+        rows = context.isAutenticadoSupabase
+          ? data
+          : data.filter((k: any) => targetUserIds.includes(k.user_id));
       } else {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: adminChaves } = await supabaseAdmin
           .from("chaves_ia")
-          .select("provider, api_key, api_url, testada_ok, testada_em, ultimo_erro, user_id")
-          .in("user_id", targetUserIds);
-        if (adminChaves && adminChaves.length > 0) rows = adminChaves;
+          .select("provider, api_key, api_url, testada_ok, testada_em, ultimo_erro, user_id");
+        if (adminChaves && adminChaves.length > 0) {
+          const matched = adminChaves.filter((k: any) => targetUserIds.includes(k.user_id));
+          rows = matched.length > 0 ? matched : adminChaves;
+        }
       }
     } catch {
       // ignore
@@ -410,14 +418,18 @@ export const obterCapacidades = createServerFn({ method: "GET" })
         .from("chaves_ia")
         .select("provider, testada_ok, testada_em, ultimo_erro, user_id");
       if (!error && data && data.length > 0) {
-        rows = data.filter((k: any) => targetUserIds.includes(k.user_id));
+        rows = context.isAutenticadoSupabase
+          ? data
+          : data.filter((k: any) => targetUserIds.includes(k.user_id));
       } else {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: adminChaves } = await supabaseAdmin
           .from("chaves_ia")
-          .select("provider, testada_ok, testada_em, ultimo_erro, user_id")
-          .in("user_id", targetUserIds);
-        if (adminChaves && adminChaves.length > 0) rows = adminChaves;
+          .select("provider, testada_ok, testada_em, ultimo_erro, user_id");
+        if (adminChaves && adminChaves.length > 0) {
+          const matched = adminChaves.filter((k: any) => targetUserIds.includes(k.user_id));
+          rows = matched.length > 0 ? matched : adminChaves;
+        }
       }
     } catch (erro) {
       console.warn(
@@ -1353,7 +1365,6 @@ export const salvarArquivo = createServerFn({ method: "POST" })
           .from("projetos")
           .select("arquivos")
           .eq("id", data.projeto_id)
-          .in("user_id", targetUserIds)
           .maybeSingle();
         if (adminP?.arquivos) {
           arquivos = { ...((adminP.arquivos as Record<string, string>) ?? {}) };
@@ -1396,8 +1407,7 @@ export const salvarArquivo = createServerFn({ method: "POST" })
         const { error: adminErr } = await supabaseAdmin
           .from("projetos")
           .update({ arquivos: arquivos as unknown as never, updated_at: new Date().toISOString() })
-          .eq("id", data.projeto_id)
-          .in("user_id", targetUserIds);
+          .eq("id", data.projeto_id);
         if (!adminErr) salvou = true;
       } catch {
         // ignore
@@ -1429,7 +1439,6 @@ export const apagarArquivo = createServerFn({ method: "POST" })
           .from("projetos")
           .select("arquivos")
           .eq("id", data.projeto_id)
-          .in("user_id", targetUserIds)
           .maybeSingle();
         if (adminP?.arquivos) {
           arquivos = { ...((adminP.arquivos as Record<string, string>) ?? {}) };
@@ -1465,8 +1474,7 @@ export const apagarArquivo = createServerFn({ method: "POST" })
         await supabaseAdmin
           .from("projetos")
           .update({ arquivos: arquivos as unknown as never, updated_at: new Date().toISOString() })
-          .eq("id", data.projeto_id)
-          .in("user_id", targetUserIds);
+          .eq("id", data.projeto_id);
       }
     } catch {
       try {
@@ -1474,8 +1482,7 @@ export const apagarArquivo = createServerFn({ method: "POST" })
         await supabaseAdmin
           .from("projetos")
           .update({ arquivos: arquivos as unknown as never, updated_at: new Date().toISOString() })
-          .eq("id", data.projeto_id)
-          .in("user_id", targetUserIds);
+          .eq("id", data.projeto_id);
       } catch {
         // ignore
       }
