@@ -47,19 +47,43 @@ export function montarPreviewHtml(arquivos: Record<string, string>) {
 
     if (nome.endsWith(".css")) {
       const antes = saida;
-      for (const referencia of referencias) {
+      const variacoes = [
+        ...referencias,
+        "styles.css",
+        "style.css",
+        "main.css",
+        "app.css",
+        "./styles.css",
+        "./style.css",
+        "./main.css",
+        "./app.css",
+        "/styles.css",
+        "/style.css",
+      ];
+      for (const referencia of new Set(variacoes)) {
         const padrao = new RegExp(`<link[^>]*href=["']${escaparRegex(referencia)}["'][^>]*>`, "gi");
         saida = saida.replace(padrao, `<style>\n${conteudo}\n</style>`);
       }
       // Se a IA esqueceu o <link>, ainda assim aplicamos o CSS (senão abre "cru").
-      if (antes === saida && pastaDo(nome) === pastaEntrada) {
+      if (antes === saida) {
         saida = injetarNoHead(saida, `<style>\n${conteudo}\n</style>`);
       }
     }
 
     if (nome.endsWith(".js")) {
       const antes = saida;
-      for (const referencia of referencias) {
+      const variacoesJs = [
+        ...referencias,
+        "app.js",
+        "main.js",
+        "script.js",
+        "./app.js",
+        "./main.js",
+        "./script.js",
+        "/app.js",
+        "/main.js",
+      ];
+      for (const referencia of new Set(variacoesJs)) {
         const padrao = new RegExp(
           `<script[^>]*src=["']${escaparRegex(referencia)}["'][^>]*>\\s*</script>`,
           "gi",
@@ -70,6 +94,20 @@ export function montarPreviewHtml(arquivos: Record<string, string>) {
         saida = saida.replace(/<\/body>/i, `<script>\n${conteudo}\n</script>\n</body>`);
       }
     }
+  }
+
+  // Se nenhum estilo foi embutido e o HTML está totalmente cru, injeta design system base
+  const temAlgumEstilo = /<style\b/i.test(saida);
+  if (!temAlgumEstilo) {
+    const estiloBaseFallback = `<style>
+:root { --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; --primary: #3b82f6; --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --border: #e2e8f0; }
+body { font-family: var(--font-sans); background: var(--bg); color: var(--text); margin: 0; padding: 24px; line-height: 1.5; }
+button { cursor: pointer; border-radius: 8px; font-family: inherit; font-weight: 600; padding: 8px 16px; border: none; background: var(--primary); color: #fff; transition: opacity 0.2s ease; }
+button:hover { opacity: 0.9; }
+input, textarea, select { font-family: inherit; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; outline: none; }
+input:focus, textarea:focus { border-color: var(--primary); }
+</style>`;
+    saida = injetarNoHead(saida, estiloBaseFallback);
   }
 
   // Limpa URLs duplicadas de banco que possam ter sido gravadas anteriormente
