@@ -348,6 +348,60 @@ function IndicadorProgressoConstrucao({ projetoId, modelo }: IndicadorProgressoC
   );
 }
 
+function extrairSugestoesAcao(conteudo: string): string[] {
+  if (!conteudo) return [];
+  const sugestoes: string[] = [];
+  const linhas = conteudo.split("\n");
+  let naSecaoPassos = false;
+
+  for (const linha of linhas) {
+    const limpo = linha.trim();
+    if (
+      /pr[oó]ximos?\s+passos?|sugest[õo]es|op[çc][õo]es|o\s+que\s+deseja|personaliza[çc]|posso\s+fazer/i.test(
+        limpo,
+      )
+    ) {
+      naSecaoPassos = true;
+      continue;
+    }
+    if (naSecaoPassos) {
+      if (!limpo) continue;
+      if (/^#{1,4}\s+|^-{3,}/.test(limpo)) {
+        naSecaoPassos = false;
+        continue;
+      }
+      const match = limpo.match(/^(?:(?:\d+\.|[-*•]|💡|🚀)\s*)(.+)$/);
+      if (match && match[1]) {
+        const textoSugestao = match[1].replace(/\*\*/g, "").replace(/["']/g, "").trim();
+        if (textoSugestao.length >= 6 && textoSugestao.length <= 110) {
+          sugestoes.push(textoSugestao);
+        }
+      }
+    }
+  }
+
+  if (sugestoes.length === 0) {
+    for (const linha of linhas) {
+      const limpo = linha.trim();
+      const match = limpo.match(
+        /^(?:(?:\d+\.|[-*•])\s*)(?:\*\*)?(?:Adicionar|Criar|Integrar|Personalizar|Modificar|Implementar|Mudar|Conectar|Trocar)\b(.+)$/i,
+      );
+      if (match) {
+        const textoSugestao = limpo
+          .replace(/^(?:\d+\.|[-*•])\s*/, "")
+          .replace(/\*\*/g, "")
+          .replace(/["']/g, "")
+          .trim();
+        if (textoSugestao.length >= 6 && textoSugestao.length <= 110) {
+          sugestoes.push(textoSugestao);
+        }
+      }
+    }
+  }
+
+  return sugestoes.slice(0, 4);
+}
+
 function FabyClaud() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -1368,46 +1422,68 @@ function FabyClaud() {
                   </div>
                 ) : null}
 
-                {mensagens.map((m: any) => (
-                  <div
-                    key={m.id}
-                    className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
-                      m.role === "user"
-                        ? "ml-auto bg-primary text-primary-foreground"
-                        : m.ok
-                          ? "mr-auto border border-border bg-secondary text-foreground"
-                          : "mr-auto border border-destructive/40 bg-destructive/15 text-foreground"
-                    }`}
-                  >
-                    {m.conteudo}
-                    {(m.anexos as Anexo[] | null)?.length ? (
-                      <span className="mt-2 flex flex-wrap gap-2">
-                        {((m.anexos ?? []) as Anexo[]).map((a, i) =>
-                          a.tipo === "imagem" ? (
-                            <img
-                              key={`${a.nome}-${i}`}
-                              src={`data:${a.mime};base64,${a.data}`}
-                              alt={a.nome}
-                              className="max-h-32 rounded-lg border border-border/50"
-                            />
-                          ) : (
-                            <span
-                              key={`${a.nome}-${i}`}
-                              className="rounded-lg bg-background/30 px-2 py-1 text-[11px]"
+                {mensagens.map((m: any) => {
+                  const sugestoes =
+                    m.role === "assistant" && m.ok ? extrairSugestoesAcao(m.conteudo) : [];
+                  return (
+                    <div
+                      key={m.id}
+                      className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                        m.role === "user"
+                          ? "ml-auto bg-primary text-primary-foreground"
+                          : m.ok
+                            ? "mr-auto border border-border bg-secondary text-foreground"
+                            : "mr-auto border border-destructive/40 bg-destructive/15 text-foreground"
+                      }`}
+                    >
+                      {m.conteudo}
+                      {(m.anexos as Anexo[] | null)?.length ? (
+                        <span className="mt-2 flex flex-wrap gap-2">
+                          {((m.anexos ?? []) as Anexo[]).map((a, i) =>
+                            a.tipo === "imagem" ? (
+                              <img
+                                key={`${a.nome}-${i}`}
+                                src={`data:${a.mime};base64,${a.data}`}
+                                alt={a.nome}
+                                className="max-h-32 rounded-lg border border-border/50"
+                              />
+                            ) : (
+                              <span
+                                key={`${a.nome}-${i}`}
+                                className="rounded-lg bg-background/30 px-2 py-1 text-[11px]"
+                              >
+                                {a.nome}
+                              </span>
+                            ),
+                          )}
+                        </span>
+                      ) : null}
+                      {sugestoes.length > 0 ? (
+                        <div className="mt-3 flex flex-wrap gap-1.5 border-t border-border/60 pt-2.5">
+                          {sugestoes.map((sugestao, sIdx) => (
+                            <button
+                              key={sIdx}
+                              type="button"
+                              onClick={() => {
+                                setTexto(sugestao);
+                                campoTexto.current?.focus();
+                              }}
+                              className="flex items-center gap-1.5 rounded-xl border border-primary/40 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary transition hover:bg-primary hover:text-primary-foreground"
                             >
-                              {a.nome}
-                            </span>
-                          ),
-                        )}
-                      </span>
-                    ) : null}
-                    {m.role === "assistant" && m.modelo ? (
-                      <span className="mt-1.5 block text-[10px] text-muted-foreground">
-                        {PROVIDER_LABELS[m.modelo] ?? m.modelo}
-                      </span>
-                    ) : null}
-                  </div>
-                ))}
+                              <Sparkles className="size-3 shrink-0" />
+                              <span>{sugestao}</span>
+                            </button>
+                          ))}
+                        </div>
+                      ) : null}
+                      {m.role === "assistant" && m.modelo ? (
+                        <span className="mt-1.5 block text-[10px] text-muted-foreground">
+                          {PROVIDER_LABELS[m.modelo] ?? m.modelo}
+                        </span>
+                      ) : null}
+                    </div>
+                  );
+                })}
 
                 {pendente ? (
                   <div className="ml-auto max-w-[85%] whitespace-pre-wrap rounded-2xl bg-primary px-4 py-2.5 text-sm leading-relaxed text-primary-foreground opacity-80">
