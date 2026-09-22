@@ -2222,6 +2222,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     }
     // Plugins: a IA pode pedir busca na web, leitura de página, documentação,
     // consulta ao banco do projeto e geração de imagem — sozinha, sem chave.
+    const ferramentas = await import("./faby/ferramentas.server");
     const diagnostico =
       intencao === "conversar"
         ? ""
