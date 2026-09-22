@@ -15,7 +15,7 @@ const TIMEOUT_MS = 120_000;
  * 120s de timeout cada — no pior caso, minutos de espera silenciosa no navegador,
  * que parece travado porque o cliente não tem timeout próprio.
  */
-const ORCAMENTO_TOTAL_MS = 65_000;
+const ORCAMENTO_TOTAL_MS = 120_000;
 
 /** Bloqueia endpoints que poderiam apontar o servidor para a rede interna. */
 export function ehUrlPublicaSegura(valor: string) {
@@ -257,7 +257,7 @@ async function chamarGoogle(
       `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent`,
       { "x-goog-api-key": key },
       { contents, generationConfig: { temperature: 0.2 } },
-      Math.min(timeoutMs, 35_000),
+      Math.min(timeoutMs, 85_000),
     );
 
     if (status === 503 && tentativas < maxTentativas) {

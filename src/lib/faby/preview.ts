@@ -8,8 +8,9 @@ import { normalizarUrlsApi } from "./nuvem";
 export function montarPreviewHtml(arquivos: Record<string, string>) {
   const entrada = localizarPaginaInicial(arquivos);
   if (!entrada) return null;
-  const html = arquivos[entrada];
-  if (!html) return null;
+  const htmlBruto = arquivos[entrada];
+  if (!htmlBruto) return null;
+  const html = htmlBruto.replace(/^```(?:html)?\s*/i, "").replace(/\s*```$/i, "").trim();
 
   // Projetos Vite/React precisam ser compilados por seu próprio servidor.
   // Abrir o index cru em srcDoc produz apenas uma tela branca.

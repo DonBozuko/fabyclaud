@@ -63,6 +63,18 @@ describe("cérebro contextual", () => {
     assert.equal(classificarPedido("criar saas igual lovable, porém grátis"), "alterar");
   });
 
+  test("pedido começando com 'pode criar' preserva o pedido original sem sequestro", () => {
+    const historico = [
+      { role: "assistant" as const, conteudo: "Posso criar um gerenciador de tarefas para você." },
+    ];
+    const resultado = resolverPedidoContextual(
+      "pode criar uma versao do orkut com nome yorccut",
+      historico,
+    );
+    assert.equal(resultado.pedidoEfetivo, "pode criar uma versao do orkut com nome yorccut");
+    assert.equal(resultado.intencao, "alterar");
+  });
+
   test("diagnóstico inclui erro real e estado do projeto", () => {
     const texto = diagnosticarProjeto(
       { "index.html": "<!doctype html><html><head><style></style></head><body></body></html>" },

@@ -30,16 +30,6 @@ export function ehSaudacaoOuConversaCasual(pedido: string): boolean {
   const limpo = pedido.trim().toLowerCase();
   if (!limpo) return true;
 
-  // Se tem verbos claros de criação/edição/código, NÃO é apenas conversa
-  const temVerboAcao =
-    /\b(cri[ea]|fa[çc]a|mud[ea]|alter[ea]|adicion[ea]|coloqu[ea]|bot[ea]|remov[ea]|tir[ea]|corrij[ea]|arrum[ea]|consert[ea]|troqu[ea]|ger[ea]|estiliz[ea]|redesenh[ea]|ajust[ea]|constru[ai]|mont[ea]|implement[ea]|recri[ea]|clon[ea]|desenh[ea])\b/i.test(
-      limpo,
-    );
-
-  if (temVerboAcao) {
-    return false;
-  }
-
   // Saudações puras ou compostas com pontuação e nomes amigáveis
   if (
     /^(?:oi|ol[aá]|bom\s+dia|boa\s+tarde|boa\s+noite|opa|e\s+a[ií]|hello|hi|hey|eai|fala|salve|ia[eí])(?:[\s,!?.-]+(?:tudo\s+bem|tudo\s+bom|como\s+vai|beleza|tranquilo|amigo|faby|fabyclaud|dev|buddy|parceiro|mestre))?[\s,!?.-]*$/i.test(
@@ -75,6 +65,16 @@ export function ehSaudacaoOuConversaCasual(pedido: string): boolean {
     /^(?:muito\s+)?(?:obrigad[oa]|valeu|show|perfeito|muito\s+bom|parab[eé]ns)[\s\S]{0,100}$/i.test(limpo)
   ) {
     return true;
+  }
+
+  // Se tem verbos claros de criação/edição/código, NÃO é apenas conversa
+  const temVerboAcao =
+    /\b(cri(?:ar|e|a|ou|e-me)|fa(?:zer|ça|z|ço|z-me)|mud(?:ar|e|a|ou)|alter(?:ar|e|a|ou)|adicion(?:ar|e|a|ou)|coloqu(?:e|ar|a)|coloc(?:ar|a)|bot(?:ar|e|a)|remov(?:er|a|e)|tir(?:ar|e|a)|corrij(?:a|ir)|correg(?:ir)|arrum(?:ar|e|a)|consert(?:ar|e|a)|troqu(?:e|ar)|troc(?:ar|a)|ger(?:ar|e|a)|estiliz(?:ar|e|a)|redesenh(?:ar|e|a)|ajust(?:ar|e|a)|constru(?:ir|a|i)|mont(?:ar|e|a)|implement(?:ar|e|a)|recri(?:ar|e|a)|clon(?:ar|e|a)|desenh(?:ar|e|a)|desenvolv(?:er|a|e))\b/i.test(
+      limpo,
+    );
+
+  if (temVerboAcao) {
+    return false;
   }
 
   return false;
@@ -482,8 +482,20 @@ export function resolverPedidoContextual(
 ): { pedidoEfetivo: string; intencao: IntencaoPedido; continuacao: boolean } {
   const limpo = pedido.trim();
   let intencao: IntencaoPedido = classificarPedido(limpo);
-  const confirmacao =
-    /^(?:sim|s|yes|isso|exato|exatamente|pode|pode sim|pode ser|pode fazer|pode aplicar|fa[çc]a|manda|vamos|beleza|ok|claro|quero|bora|continue|continua|crie|vai|criar|execute|aplique|aplicar)\b/i.test(
+  const ehNovoPedidoCriacao =
+    /\b(?:cri(?:ar|e|a|e-me|a-me)|constru(?:ir|a|i)|desenvolv(?:er|a|e)|mont(?:ar|e|a)|fa(?:zer|ça|z)|ger(?:ar|e|a)|clon(?:ar|e|a)|recri(?:ar|e|a))\b[\s\S]{0,60}\b(?:vers[ãa]o|jogo|site|sistema|app|aplica[çc][ãa]o|calculadora|painel|dashboard|orkut|yorccut|clone|loja|saas|tela|p[aá]gina|todo|tarefas|chat|blog|portfolio|layout|design)\b/i.test(
+      limpo,
+    );
+
+  const temInstrucaoSubstantiva =
+    /\b(?:criar|construir|desenvolver|montar|fazer|gerar|clonar|recriar|mudar|trocar|adicionar|remover|ajustar|colocar|alterar|implementar|refazer)\b/i.test(
+      limpo,
+    ) && limpo.split(/\s+/).length > 2;
+
+  const confirmacaoPura =
+    !ehNovoPedidoCriacao &&
+    !temInstrucaoSubstantiva &&
+    /^(?:sim|s|yes|isso|exato|exatamente|pode|pode sim|pode ser|pode fazer|pode aplicar|fa[çc]a isso|fa[çc]a|manda|vamos|beleza|ok|claro|quero|bora|continue|continua|vai|execute|aplique)(?:[.,! ]|$)/i.test(
       limpo,
     );
   const queixaPrevia =
@@ -509,13 +521,13 @@ export function resolverPedidoContextual(
   if (queixaPrevia && (ultimoPedidoDoUsuario || ultimaResposta)) {
     const alvo = ultimoPedidoDoUsuario || ultimaResposta;
     return {
-      pedidoEfetivo: `O usuário relatou: "${limpo}".\nContexto do projeto solicitado: "${alvo.slice(0, 2000)}".\n\nATENÇÃO CRÍTICA OBRIGATÓRIA: A prévia do projeto ainda está vazia ou sem os arquivos executáveis. Você DEVE GERAR E ENTREGAR AGORA TODOS OS ARQUIVOS COMPLETOS dentro das tags <arquivo nome="index.html">...</arquivo>, <arquivo nome="style.css">...</arquivo>, <arquivo nome="app.js">...</arquivo>. É terminantemente proibido responder apenas com texto explicativo ou promessas sem as tags <arquivo> completas!`,
+      pedidoEfetivo: `O usuário relatou: "${limpo}".\nContexto do projeto solicitado: "${alvo.slice(0, 2000)}".\n\nATENÇÃO CRÍTICA OBRIGATÓRIA: A prévia do projeto ainda está vazia ou sem os arquivos executáveis. Você DEVE GERAR E ENTREGAR AGORA TODOS OS ARQUIVOS COMPLETOS dentro das tags <arquivo nome="index.html">...</arquivo>, <arquivo nome="styles.css">...</arquivo>, <arquivo nome="app.js">...</arquivo>. É terminantemente proibido responder apenas com texto explicativo ou promessas sem as tags <arquivo> completas!`,
       intencao: "alterar" as IntencaoPedido,
       continuacao: true,
     };
   }
 
-  if (confirmacao) {
+  if (confirmacaoPura) {
     if (!ofereceuAcao) {
       return {
         pedidoEfetivo: limpo,
