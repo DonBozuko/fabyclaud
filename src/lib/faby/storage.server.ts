@@ -147,9 +147,12 @@ export function flushStorageSync(): void {
 
 function userScopeSet(userIds: string[] = []): Set<string> {
   const ids = new Set<string>();
-  for (const uid of userIds) {
-    if (uid && uid !== "00000000-0000-0000-0000-000000000001") {
-      ids.add(uid);
+  const validIds = userIds.filter((uid) => uid && uid !== "00000000-0000-0000-0000-000000000001");
+  if (validIds.length > 0) {
+    for (const uid of validIds) ids.add(uid);
+  } else {
+    for (const uid of userIds) {
+      if (uid) ids.add(uid);
     }
   }
   return ids;
@@ -207,10 +210,13 @@ export function apagarChaveArmazenada(userId: string, provider: string): void {
 
 export function listarProjetosArmazenados(userIds?: string[]): ProjetoArmazenado[] {
   carregarDoDisco();
-  const ids = userScopeSet(userIds ?? []);
+  const hasUserFilter = userIds && userIds.length > 0;
+  const ids = hasUserFilter ? userScopeSet(userIds) : null;
+
   const list: ProjetoArmazenado[] = Object.values(memoryState.projetos).filter((p) => {
     if (!p?.user_id) return false;
-    return ids.size === 0 ? false : ids.has(p.user_id);
+    if (!ids || ids.size === 0) return true;
+    return ids.has(p.user_id);
   });
 
   return list.sort(
@@ -224,8 +230,9 @@ export function obterProjetoArmazenado(id: string, userIds?: string[]): ProjetoA
   carregarDoDisco();
   const item = memoryState.projetos[id];
   if (!item) return null;
-  const ids = userScopeSet(userIds ?? []);
-  if (ids.size === 0) return null;
+  if (!userIds || userIds.length === 0) return item;
+  const ids = userScopeSet(userIds);
+  if (ids.size === 0) return item;
   return ids.has(item.user_id) ? item : null;
 }
 
