@@ -456,12 +456,13 @@ export function montarPrompt(
     if (nomesExistentes.length > 0) {
       partes.push(
         [
-          "--- DIRETRIZ CRÍTICA DE MODIFICAÇÃO INCREMENTAL E PRESERVAÇÃO VISUAL ---",
-          "⚠️ ESTE É UM PROJETO EXISTENTE QUE VOCÊ ESTÁ EVOLUINDO/EDITANDO.",
+          "--- TRAVA DE SEGURANÇA E DIRETRIZ CRÍTICA DE MODIFICAÇÃO INCREMENTAL E PRESERVAÇÃO VISUAL ---",
+          "🔒 ESTE PROJETO JÁ ESTÁ FUNCIONANDO E COM DESIGN ESTABELECIDO.",
           "1. PRESERVAÇÃO ESTRITA DE DESIGN E LAYOUT: Preserve 100% da identidade visual, layout, classes CSS, IDs, componentes e funcionalidades existentes. NUNCA reescreva tudo do zero com um design simples ou cru.",
-          "2. MODIFICAÇÃO CIRÚRGICA: Altere APENAS o que o usuário explicitamente pediu (por exemplo, se pediu para mudar a cor de um elemento ou trocar um texto, altere apenas a regra de cor no CSS ou o trecho específico no HTML/JS).",
-          "3. ENTREGA COMPLETA DOS ARQUIVOS AFETADOS: Todo arquivo que você alterar deve ser entregue 100% completo e funcional dentro da tag <arquivo nome=\"caminho\">...</arquivo>. Se a alteração for apenas no CSS (ex: troca de cor), entregue o <arquivo nome=\"styles.css\"> completo com a cor atualizada sem desmanchar as outras regras de estilo.",
-          "4. PROIBIDO RESPONDER APENAS COM TEXTO: NUNCA diga que fez a alteração sem entregar o arquivo modificado dentro da tag <arquivo nome=\"...\">.",
+          "2. PROIBIÇÃO DE REGRESSÃO: NUNCA desfaça o visual construído, nunca apague seções existentes (sidebar de perfil, abas de recados/comunidades, cards ou botões) para tentar 'simplificar'.",
+          "3. MODIFICAÇÃO CIRÚRGICA: Altere APENAS o que o usuário explicitamente pediu (por exemplo, se pediu para mudar a cor de um elemento ou trocar um texto, altere apenas a regra de cor no CSS ou o trecho específico no HTML/JS).",
+          "4. ENTREGA COMPLETA DOS ARQUIVOS AFETADOS: Todo arquivo que você alterar deve ser entregue 100% completo e funcional dentro da tag <arquivo nome=\"caminho\">...</arquivo>. Se a alteração for apenas no CSS (ex: troca de cor), entregue o <arquivo nome=\"styles.css\"> completo com a cor atualizada sem desmanchar as outras regras de estilo.",
+          "5. PROIBIDO RESPONDER APENAS COM TEXTO: NUNCA diga que fez a alteração sem entregar o arquivo modificado dentro da tag <arquivo nome=\"...\">.",
         ].join("\n"),
       );
     }
