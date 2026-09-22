@@ -547,8 +547,6 @@ function FabyClaud() {
       } else if (!projetoId && projetos.data.length > 0) {
         setProjetoId(projetos.data[0]?.id || null);
       }
-    } else if (projetoId && !projetos.data.some((p: any) => p.id === projetoId)) {
-      setProjetoId(projetos.data[0]?.id || null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projetos.data]);

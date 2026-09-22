@@ -102,18 +102,38 @@ export const listarProjetos = createServerFn({ method: "GET" })
       }
     }
 
+    const mapa = new Map<string, any>();
+    for (const p of list) {
+      mapa.set(p.id, p);
+    }
+
     const diskProjetos = listarProjetosArmazenados(targetUserIds);
     for (const p of diskProjetos) {
-      if (!list.some((item) => item.id === p.id)) {
-        list.push(p);
+      const existente = mapa.get(p.id);
+      if (!existente) {
+        mapa.set(p.id, p);
+      } else {
+        const timeExistente = new Date(existente.updated_at || existente.created_at || 0).getTime();
+        const timeDisco = new Date(p.updated_at || p.created_at || 0).getTime();
+        const arqsExistente = Object.keys(existente.arquivos || {}).length;
+        const arqsDisco = Object.keys(p.arquivos || {}).length;
+        if (timeDisco >= timeExistente || (arqsDisco > 0 && arqsExistente === 0)) {
+          mapa.set(p.id, { ...existente, ...p });
+        }
       }
     }
 
-    for (const p of list) {
+    const resultadoFinal = Array.from(mapa.values()).sort(
+      (a, b) =>
+        new Date(b.updated_at || b.created_at || 0).getTime() -
+        new Date(a.updated_at || a.created_at || 0).getTime(),
+    );
+
+    for (const p of resultadoFinal) {
       salvarProjetoArmazenado(p);
     }
 
-    return list.map((p: any) => ({
+    return resultadoFinal.map((p: any) => ({
       id: p.id,
       nome: p.nome,
       modelo: p.modelo,
@@ -156,9 +176,19 @@ export const obterProjeto = createServerFn({ method: "GET" })
       }
     }
 
+    const localP = obterProjetoArmazenado(data.id, targetUserIds);
     if (!projeto) {
-      projeto = obterProjetoArmazenado(data.id, targetUserIds);
+      projeto = localP;
+    } else if (localP) {
+      const timeSupabase = new Date(projeto.updated_at || projeto.created_at || 0).getTime();
+      const timeLocal = new Date(localP.updated_at || localP.created_at || 0).getTime();
+      const arquivosSupabase = Object.keys(projeto.arquivos || {}).length;
+      const arquivosLocal = Object.keys(localP.arquivos || {}).length;
+      if (timeLocal >= timeSupabase || (arquivosLocal > 0 && arquivosSupabase === 0)) {
+        projeto = { ...projeto, ...localP };
+      }
     }
+
     if (!projeto) throw new Error("Projeto não encontrado");
 
     let mensagens: any[] = [];
