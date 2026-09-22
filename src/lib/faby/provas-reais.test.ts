@@ -223,4 +223,32 @@ document.getElementById("btnStart").addEventListener("click", () => {
     assert.equal(classificarPedidoLovable("mude a cor do fundo para azul"), "edicao");
     assert.equal(classificarPedidoLovable("crie um clone do netflix"), "criacao");
   });
+
+  test("PROVA 6: Resiliência de Chaves de IA em Sessões Anônimas e Locais", () => {
+    const randomUser1 = "user-original-" + Date.now();
+    const randomUser2 = "user-outra-aba-" + Date.now();
+
+    salvarChaveArmazenada({
+      user_id: randomUser1,
+      provider: "groq",
+      api_key: "gsk_TestResilienceKey12345",
+      api_url: null,
+      testada_ok: true,
+      testada_em: new Date().toISOString(),
+      ultimo_erro: null,
+    });
+
+    // Quando outra aba abre ou o usuário conecta de forma anônima/diferente:
+    const chavesSessaoNova = obterChavesArmazenadas([randomUser2]);
+    assert.ok(chavesSessaoNova.length > 0, "Chaves salvas no disco devem ser recuperadas sem travar a geração");
+    assert.ok(chavesSessaoNova.some((k) => k.provider === "groq" && k.api_key === "gsk_TestResilienceKey12345"));
+  });
+
+  test("PROVA 7: Diretrizes de Excelência Visual Lovable e Plano Pós-Criação no Prompt", () => {
+    const prompt = montarPrompt("crie uma rede social chamada Yorccut", {});
+    assert.match(prompt, /DESIGN SYSTEM E PADRÃO VISUAL PREMIUM OBRIGATÓRIO/);
+    assert.match(prompt, /Google Fonts/);
+    assert.match(prompt, /Próximos Passos & Sugestões de Evolução/);
+    assert.match(prompt, /PROIBIÇÃO DE VERSÕES ESQUELÉTICAS/);
+  });
 });
