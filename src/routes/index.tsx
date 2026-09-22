@@ -438,6 +438,7 @@ function FabyClaud() {
   const [salvandoArquivo, setSalvandoArquivo] = useState(false);
 
   const [idContaReal, setIdContaReal] = useState<string | null>(null);
+  const isFirstProjectLoad = useRef(true);
 
   useEffect(() => {
     let ativo = true;
@@ -529,28 +530,28 @@ function FabyClaud() {
   }, [chaves.data, queryClient, salvarChaveFn]);
 
   useEffect(() => {
-    if (projetos.data && projetos.data.length > 0) {
-      if (typeof window !== "undefined") {
-        try {
-          localStorage.setItem("faby_projects_backup", JSON.stringify(projetos.data));
-        } catch (erro) {
-          console.warn("[FabyClaud] Não foi possível guardar a cópia local dos projetos.", erro);
-        }
+    if (!projetos.data || projetos.data.length === 0) return;
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("faby_projects_backup", JSON.stringify(projetos.data));
+      } catch (erro) {
+        console.warn("[FabyClaud] Não foi possível guardar a cópia local dos projetos.", erro);
       }
+    }
+    if (isFirstProjectLoad.current) {
+      isFirstProjectLoad.current = false;
       const salvo =
         typeof window !== "undefined" ? localStorage.getItem("faby_active_project_id") : null;
       if (salvo && projetos.data.some((p: any) => p.id === salvo)) {
-        if (projetoId !== salvo) setProjetoId(salvo);
-      } else if (projetoId && !projetos.data.some((p: any) => p.id === projetoId)) {
-        const primeiro = projetos.data[0]?.id || null;
-        setProjetoId(primeiro);
-        if (typeof window !== "undefined") {
-          if (primeiro) localStorage.setItem("faby_active_project_id", primeiro);
-          else localStorage.removeItem("faby_active_project_id");
-        }
+        setProjetoId(salvo);
+      } else if (!projetoId && projetos.data.length > 0) {
+        setProjetoId(projetos.data[0]?.id || null);
       }
+    } else if (projetoId && !projetos.data.some((p: any) => p.id === projetoId)) {
+      setProjetoId(projetos.data[0]?.id || null);
     }
-  }, [projetos.data, projetoId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projetos.data]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -923,7 +924,12 @@ function FabyClaud() {
                 <div key={p.id} className="flex items-center gap-1">
                   <button
                     type="button"
-                    onClick={() => setProjetoId(p.id)}
+                    onClick={() => {
+                      setProjetoId(p.id);
+                      if (typeof window !== "undefined") {
+                        localStorage.setItem("faby_active_project_id", p.id);
+                      }
+                    }}
                     title={p.nome}
                     className={`flex-1 truncate rounded-md border px-2.5 py-1.5 text-left text-xs transition ${
                       projetoId === p.id

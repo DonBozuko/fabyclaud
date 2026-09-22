@@ -1664,24 +1664,32 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         context.supabase.from("memorias").select("conteudo, user_id").maybeSingle(),
       ]);
       if (resChaves.data && resChaves.data.length > 0) {
-        chaves = resChaves.data.filter((k: any) => targetUserIds.includes(k.user_id));
+        chaves = context.isAutenticadoSupabase
+          ? resChaves.data
+          : resChaves.data.filter((k: any) => targetUserIds.includes(k.user_id));
       } else {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: adminChaves } = await supabaseAdmin
           .from("chaves_ia")
-          .select("provider, api_key, api_url, testada_ok, user_id")
-          .in("user_id", targetUserIds);
-        if (adminChaves && adminChaves.length > 0) chaves = adminChaves;
+          .select("provider, api_key, api_url, testada_ok, user_id");
+        if (adminChaves && adminChaves.length > 0) {
+          const matched = adminChaves.filter((k: any) => targetUserIds.includes(k.user_id));
+          chaves = matched.length > 0 ? matched : adminChaves;
+        }
       }
       if (resCustom.data && resCustom.data.length > 0) {
-        custom = resCustom.data.filter((c: any) => targetUserIds.includes(c.user_id));
+        custom = context.isAutenticadoSupabase
+          ? resCustom.data
+          : resCustom.data.filter((c: any) => targetUserIds.includes(c.user_id));
       } else {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data: adminCustom } = await supabaseAdmin
           .from("provedores_custom")
-          .select("id, slug, nome, url, modelo, suporta_imagem, user_id")
-          .in("user_id", targetUserIds);
-        if (adminCustom && adminCustom.length > 0) custom = adminCustom;
+          .select("id, slug, nome, url, modelo, suporta_imagem, user_id");
+        if (adminCustom && adminCustom.length > 0) {
+          const matched = adminCustom.filter((c: any) => targetUserIds.includes(c.user_id));
+          custom = matched.length > 0 ? matched : adminCustom;
+        }
       }
       if (resMem.data) {
         mem = resMem.data;
@@ -1690,7 +1698,6 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         const { data: adminMem } = await supabaseAdmin
           .from("memorias")
           .select("conteudo, user_id")
-          .in("user_id", targetUserIds)
           .maybeSingle();
         if (adminMem) mem = adminMem;
       }
@@ -1841,7 +1848,6 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             .from("projetos")
             .select("id, user_id, arquivos, notas")
             .eq("id", projetoId)
-            .in("user_id", targetUserIds)
             .maybeSingle();
           if (adminP) {
             arquivosAtuais = (adminP.arquivos as Record<string, string>) ?? {};
