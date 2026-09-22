@@ -1,17 +1,17 @@
 # Graph Report - Dev Buddy  (2026-09-22)
 
 ## Corpus Check
-- 151 files · ~88,373 words
+- 151 files · ~88,277 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 8 file(s) not represented in the graph (top: (none) 3, .toml 2, .lock 1)
 
 ## Summary
-- 1208 nodes · 2381 edges · 67 communities (54 shown, 13 thin omitted)
+- 1208 nodes · 2380 edges · 67 communities (54 shown, 13 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 16 edges (avg confidence: 0.84)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5fdaf358`
+- Built from commit: `6bbff468`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -335,9 +335,9 @@ Nodes (5): definida(), EstadoBackend, estadoBackendServidor(), exigirAdministrac
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `react` connect `react` to `package.json`, `cn`, `sidebar.tsx`, `index.tsx`, `github.functions.ts`, `routeTree.gen.ts`, `class-variance-authority`, `pagination.tsx`, `navigation-menu.tsx`, `command.tsx`, `menubar.tsx`, `form.tsx`, `carousel.tsx`, `drawer.tsx`, `SettingsDialog.tsx`, `chart.tsx`, `breadcrumb.tsx`, `lucide-react`, `faby.functions.ts`?**
-  _High betweenness centrality (0.219) - this node is a cross-community bridge._
+  _High betweenness centrality (0.221) - this node is a cross-community bridge._
 - **Why does `@tanstack/react-start` connect `github.functions.ts` to `package.json`, `faby.functions.ts`, `index.tsx`, `app-auth.$projeto.ts`, `server.ts`, `SettingsDialog.tsx`?**
-  _High betweenness centrality (0.082) - this node is a cross-community bridge._
+  _High betweenness centrality (0.078) - this node is a cross-community bridge._
 - **Why does `dependencies` connect `dependencies` to `package.json`?**
   _High betweenness centrality (0.071) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `FabyClaud()` (e.g. with `index.tsx` and `aoFicarOffline()`) actually correct?**

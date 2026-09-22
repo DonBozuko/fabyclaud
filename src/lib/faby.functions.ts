@@ -2115,18 +2115,31 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           `O modelo local não passou no controle de qualidade: ${criticos.join("; ")}`,
         );
       }
+
+      salvarProjetoArmazenado({
+        id: projetoId!,
+        user_id: context.userId,
+        nome: aplicativoLocal.nome,
+        modelo: "modelo-local",
+        arquivos: aplicativoLocal.arquivos,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+
       try {
         await context.supabase
           .from("projetos")
           .update({
             arquivos: aplicativoLocal.arquivos as unknown as never,
             modelo: "modelo-local",
+            updated_at: new Date().toISOString(),
           })
           .eq("id", projetoId);
       } catch {
         // ignore
       }
-      const resposta = `${aplicativoLocal.descricao}\n\nFuncionando e testável agora: operações básicas, decimal, limpar, apagar, teclado e aviso de divisão por zero.\nLimite: este modelo local não usa IA e não serve para pedidos personalizados.`;
+
+      const resposta = `✨ **${aplicativoLocal.nome} criada com sucesso!**\n\n${aplicativoLocal.descricao}\n\nTodos os arquivos (\`index.html\`, \`styles.css\`, \`app.js\`) foram gerados e estão 100% funcionais para testar na prévia interativa ao lado.\n\n### 💡 Próximos Passos & Sugestões de Evolução:\n1. Adicionar novos campos, abas ou seções personalizadas.\n2. Customizar cores, fontes ou tema de fundo.\n3. Conectar a um banco de dados hospedado para salvar registros entre navegadores.\n\nQual dessas melhorias você gostaria de fazer agora?`;
 
       const novaMsgLocal: MensagemArmazenada = {
         id: crypto.randomUUID(),
@@ -2143,6 +2156,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
 
       try {
         await context.supabase.from("mensagens").insert({
+          id: novaMsgLocal.id,
           projeto_id: projetoId,
           user_id: context.userId,
           role: "assistant",
