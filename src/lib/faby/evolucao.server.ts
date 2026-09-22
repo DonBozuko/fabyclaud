@@ -140,13 +140,20 @@ export function avaliarEntrega(
     .map(([, c]) => c)
     .join("\n");
   const tamanhoHtml = htmlTotal.replace(/<!--[\s\S]*?-->/g, "").trim().length;
-  const tagsEstruturais = (htmlTotal.match(/<(?:header|main|section|article|nav|aside|footer|form|div|ul|ol|table|video|audio|canvas)\b/gi) || []).length;
+  const tagsEstruturais = (
+    htmlTotal.match(
+      /<(?:header|main|section|article|nav|aside|footer|form|div|ul|ol|table|video|audio|canvas)\b/gi,
+    ) || []
+  ).length;
   const temSubstancia = !inicial || (tamanhoHtml >= 250 && tagsEstruturais >= 2);
 
   metas.push({
     id: "substancia",
-    titulo: "a interface tem estrutura rica e componentes reais (não é apenas um título ou esqueleto vazio)",
-    falha: temSubstancia ? null : "a aplicação entregue é apenas um esqueleto vazio sem componentes, cards ou estrutura visual completa",
+    titulo:
+      "a interface tem estrutura rica e componentes reais (não é apenas um título ou esqueleto vazio)",
+    falha: temSubstancia
+      ? null
+      : "a aplicação entregue é apenas um esqueleto vazio sem componentes, cards ou estrutura visual completa",
   });
 
   if (pedidoUsaReferenciaVisual(opcoes.pedido, opcoes.imagensEnviadas)) {

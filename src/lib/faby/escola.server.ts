@@ -135,7 +135,13 @@ export async function rodarCicloEscola(
     .select("user_id");
 
   if (!travado || !travado.length) {
-    return { ok: false, mensagem: "Já existe um estudo em andamento agora.", novas: 0, dia: estado.dia, pausado: estado.pausado };
+    return {
+      ok: false,
+      mensagem: "Já existe um estudo em andamento agora.",
+      novas: 0,
+      dia: estado.dia,
+      pausado: estado.pausado,
+    };
   }
 
   const liberar = async (extra: Record<string, unknown> = {}) => {
@@ -146,54 +152,116 @@ export async function rodarCicloEscola(
   };
 
   try {
-    const [{ data: chaves }, { data: custom }, { data: sabidas }, { data: erros }] = await Promise.all([
-      db.from("chaves_ia").select("provider, api_key, api_url, testada_ok").eq("user_id", userId),
-      db.from("provedores_custom").select("id, slug, nome, url, modelo, suporta_imagem").eq("user_id", userId),
-      db.from("licoes").select("regra").eq("user_id", userId).order("created_at", { ascending: false }).limit(20),
-      db.from("licoes").select("regra").eq("user_id", userId).eq("origem", "falha").order("created_at", { ascending: false }).limit(6),
-    ]);
+    const [{ data: chaves }, { data: custom }, { data: sabidas }, { data: erros }] =
+      await Promise.all([
+        db.from("chaves_ia").select("provider, api_key, api_url, testada_ok").eq("user_id", userId),
+        db
+          .from("provedores_custom")
+          .select("id, slug, nome, url, modelo, suporta_imagem")
+          .eq("user_id", userId),
+        db
+          .from("licoes")
+          .select("regra")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false })
+          .limit(20),
+        db
+          .from("licoes")
+          .select("regra")
+          .eq("user_id", userId)
+          .eq("origem", "falha")
+          .order("created_at", { ascending: false })
+          .limit(6),
+      ]);
 
     const candidatos = (chaves ?? [])
       .filter((k: any) => k.api_key && k.testada_ok && k.provider !== "omniroute")
       .sort((a: any, b: any) => Number(b.testada_ok) - Number(a.testada_ok));
     if (!candidatos.length) {
       await liberar();
-      return { ok: false, mensagem: "Nenhuma chave de IA testada disponível para estudar. A criação de projetos continua independente da Escola das IAs.", novas: 0, dia: estado.dia, pausado: estado.pausado };
+      return {
+        ok: false,
+        mensagem:
+          "Nenhuma chave de IA testada disponível para estudar. A criação de projetos continua independente da Escola das IAs.",
+        novas: 0,
+        dia: estado.dia,
+        pausado: estado.pausado,
+      };
     }
 
     const tema = TEMAS_ESCOLA[estado.dia % TEMAS_ESCOLA.length]!;
-    const prompt = promptEstudo(tema, (sabidas ?? []).map((l: { regra: string }) => l.regra), (erros ?? []).map((l: { regra: string }) => l.regra));
+    const prompt = promptEstudo(
+      tema,
+      (sabidas ?? []).map((l: { regra: string }) => l.regra),
+      (erros ?? []).map((l: { regra: string }) => l.regra),
+    );
     let resposta: { ok: boolean; texto: string; status?: number } | null = null;
     for (const candidato of candidatos.slice(0, sondagem ? 1 : 3)) {
-      const r = await chamarProvedor(candidato.provider, prompt, [], candidato.api_key, [], (custom ?? []) as ProvedorCustom[], 60_000, candidato.api_url ?? undefined);
+      const r = await chamarProvedor(
+        candidato.provider,
+        prompt,
+        [],
+        candidato.api_key,
+        [],
+        (custom ?? []) as ProvedorCustom[],
+        60_000,
+        candidato.api_url ?? undefined,
+      );
       resposta = r;
       if (r.ok) break;
       if (r.status === 402 || r.status === 403) {
         await liberar({ pausado: true, motivo: `estudo pausado: ${r.texto.slice(0, 200)}` });
-        return { ok: false, mensagem: `Estudos pausados: ${r.texto}`, novas: 0, dia: estado.dia, pausado: true };
+        return {
+          ok: false,
+          mensagem: `Estudos pausados: ${r.texto}`,
+          novas: 0,
+          dia: estado.dia,
+          pausado: true,
+        };
       }
       if (r.status === 429) break;
     }
 
     if (!resposta?.ok) {
       await liberar();
-      return { ok: false, mensagem: `Não consegui estudar agora: ${resposta?.texto ?? "nenhuma IA respondeu"}`, novas: 0, dia: estado.dia, pausado: estado.pausado };
+      return {
+        ok: false,
+        mensagem: `Não consegui estudar agora: ${resposta?.texto ?? "nenhuma IA respondeu"}`,
+        novas: 0,
+        dia: estado.dia,
+        pausado: estado.pausado,
+      };
     }
 
     const regras = extrairRegras(resposta.texto);
     let novas = 0;
     for (const regra of regras) {
-      const { error } = await db.from("licoes").insert({ user_id: userId, tema, regra, origem: "estudo", peso: 1 });
+      const { error } = await db
+        .from("licoes")
+        .insert({ user_id: userId, tema, regra, origem: "estudo", peso: 1 });
       if (!error) novas += 1;
     }
 
     const dia = estado.dia + 1;
     const resumo = `Dia ${dia} — ${tema}: ${novas} lição(ões) nova(s).`;
-    await liberar({ dia, licoes_total: estado.licoes_total + novas, ultimo_ciclo: new Date().toISOString(), ultimo_resumo: resumo, pausado: false, motivo: null });
+    await liberar({
+      dia,
+      licoes_total: estado.licoes_total + novas,
+      ultimo_ciclo: new Date().toISOString(),
+      ultimo_resumo: resumo,
+      pausado: false,
+      motivo: null,
+    });
     return { ok: true, mensagem: resumo, novas, dia, pausado: false };
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     await liberar({ motivo: `falha no estudo: ${msg.slice(0, 200)}` });
-    return { ok: false, mensagem: `Falha no estudo: ${msg}`, novas: 0, dia: estado.dia, pausado: estado.pausado };
+    return {
+      ok: false,
+      mensagem: `Falha no estudo: ${msg}`,
+      novas: 0,
+      dia: estado.dia,
+      pausado: estado.pausado,
+    };
   }
 }

@@ -881,8 +881,8 @@ document.getElementById("btnCriarComunidade")?.addEventListener("click", () => {
 renderRecados();
 renderDepoimentos();
 renderComunidades();
-`
-      }
+`,
+      },
     };
   }
 

@@ -2268,9 +2268,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     // consulta ao banco do projeto e geração de imagem — sozinha, sem chave.
     const ferramentas = await import("./faby/ferramentas.server");
     const diagnostico =
-      intencao === "conversar"
-        ? ""
-        : diagnosticarProjeto(arquivosAtuais, pedidoBase, notasProjeto);
+      intencao === "conversar" ? "" : diagnosticarProjeto(arquivosAtuais, pedidoBase, notasProjeto);
     const promptFinal =
       intencao === "conversar"
         ? montarPromptConversa(pedidoBase, {

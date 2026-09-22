@@ -384,16 +384,16 @@
     "semantic_hash": "8da0ddd7569bac2676b9a5c8edff8a36"
   },
   "src/lib/faby.functions.ts": {
-    "mtime": 1790099436.3288367,
-    "seen": 1790099458.7055912,
-    "ast_hash": "40badcd8fcd99402f672ec13e2b8abaf",
+    "mtime": 1790108239.202184,
+    "seen": 1790108263.6291316,
+    "ast_hash": "90ed8dc1771cd8afc498b00854370adf",
     "semantic_hash": ""
   },
   "src/lib/faby/aplicativos-locais.server.ts": {
-    "mtime": 1789609125.3833122,
-    "seen": 1789610381.0676482,
-    "ast_hash": "978f6a7081f155995f5143f61b1377e1",
-    "semantic_hash": "978f6a7081f155995f5143f61b1377e1"
+    "mtime": 1790108221.9716575,
+    "seen": 1790108263.6294665,
+    "ast_hash": "40f72312b81247526babb8fd9cd246eb",
+    "semantic_hash": ""
   },
   "src/lib/faby/auditoria.ts": {
     "mtime": 1789791889.9361925,

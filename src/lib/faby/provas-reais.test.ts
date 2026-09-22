@@ -240,8 +240,15 @@ document.getElementById("btnStart").addEventListener("click", () => {
 
     // Quando outra aba abre ou o usuário conecta de forma anônima/diferente:
     const chavesSessaoNova = obterChavesArmazenadas([randomUser2]);
-    assert.ok(chavesSessaoNova.length > 0, "Chaves salvas no disco devem ser recuperadas sem travar a geração");
-    assert.ok(chavesSessaoNova.some((k) => k.provider === "groq" && k.api_key === "gsk_TestResilienceKey12345"));
+    assert.ok(
+      chavesSessaoNova.length > 0,
+      "Chaves salvas no disco devem ser recuperadas sem travar a geração",
+    );
+    assert.ok(
+      chavesSessaoNova.some(
+        (k) => k.provider === "groq" && k.api_key === "gsk_TestResilienceKey12345",
+      ),
+    );
   });
 
   test("PROVA 7: Diretrizes de Excelência Visual Lovable e Plano Pós-Criação no Prompt", () => {

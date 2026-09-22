@@ -371,4 +371,3 @@ test("montarPrompt inclui diretrizes de preservação para projetos existentes",
   assert.ok(promptAlt.includes("DIRETRIZ CRÍTICA DE MODIFICAÇÃO INCREMENTAL E PRESERVAÇÃO VISUAL"));
   assert.ok(promptAlt.includes("PRESERVAÇÃO ESTRITA DE DESIGN E LAYOUT"));
 });
-
