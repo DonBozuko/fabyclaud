@@ -1,6 +1,6 @@
 export type AgentStatus = "ativo" | "inativo" | "ocupado" | "erro";
 
-export type AgentRole = "arquiteto" | "programador" | "revisor" | "seguranca" | "auditor";
+export type AgentRole = "arquiteto" | "programador" | "revisor" | "seguranca" | "auditor" | "engenheiro-autonomo";
 
 export interface AgentConfig {
   id: string;

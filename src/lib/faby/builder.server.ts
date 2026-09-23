@@ -69,9 +69,14 @@ export function ehSaudacaoOuConversaCasual(pedido: string): boolean {
     return true;
   }
 
-  // Se tem verbos claros de criação/edição/código, NÃO é apenas conversa
+  // Se é um comando barra (ex: /goal, /antigravity, /revisar), não é apenas saudação
+  if (limpo.startsWith("/") || /^(?:\/goal|\/antigravity|\/executar|\/planejar|\/debug)\b/i.test(limpo)) {
+    return false;
+  }
+
+  // Se tem verbos claros de criação/edição/código/engenharia, NÃO é apenas conversa
   const temVerboAcao =
-    /\b(cri(?:ar|e|a|ou|e-me)|fa(?:zer|ça|z|ço|z-me)|mud(?:ar|e|a|ou)|alter(?:ar|e|a|ou)|adicion(?:ar|e|a|ou)|coloqu(?:e|ar|a)|coloc(?:ar|a)|bot(?:ar|e|a)|remov(?:er|a|e)|tir(?:ar|e|a)|corrij(?:a|ir)|correg(?:ir)|arrum(?:ar|e|a)|consert(?:ar|e|a)|troqu(?:e|ar)|troc(?:ar|a)|ger(?:ar|e|a)|estiliz(?:ar|e|a)|redesenh(?:ar|e|a)|ajust(?:ar|e|a)|constru(?:ir|a|i)|mont(?:ar|e|a)|implement(?:ar|e|a)|recri(?:ar|e|a)|clon(?:ar|e|a)|desenh(?:ar|e|a)|desenvolv(?:er|a|e))\b/i.test(
+    /\b(cri(?:ar|e|a|ou|e-me)|fa(?:zer|ça|z|ço|z-me)|mud(?:ar|e|a|ou)|alter(?:ar|e|a|ou)|adicion(?:ar|e|a|ou)|coloqu(?:e|ar|a)|coloc(?:ar|a)|bot(?:ar|e|a)|remov(?:er|a|e)|tir(?:ar|e|a)|corrij(?:a|ir)|correg(?:ir)|arrum(?:ar|e|a)|consert(?:ar|e|a)|troqu(?:e|ar)|troc(?:ar|a)|ger(?:ar|e|a)|estiliz(?:ar|e|a)|redesenh(?:ar|e|a)|ajust(?:ar|e|a)|constru(?:ir|a|i)|mont(?:ar|e|a)|implement(?:ar|e|a)|recri(?:ar|e|a)|clon(?:ar|e|a)|desenh(?:ar|e|a)|desenvolv(?:er|a|e)|ponha(?:-me)?|p[oõ]e|integre?|integrar|apliqu(?:e|ar)|atualiz(?:ar|e|a|ou)|refator(?:ar|e|a|ou)|resolv(?:er|a|i)|debug(?:ar|ue)?|execut(?:ar|e|a)|audit(?:ar|e|a)|test(?:ar|e|a)|otimiz(?:ar|e|a)|conect(?:ar|e|a)|codif(?:icar|ique))\b/i.test(
       limpo,
     );
 
@@ -118,7 +123,7 @@ export function classificarPedidoLovable(pedido: string): TipoPedidoLovable {
   }
 
   if (
-    /\b(corrij[ea]|arrum[ea]|consert[ea]|resolv[ea]|bug|erro|falha|uncaught|typeerror|quebrou|n[aã]o est[aá] funcionando)\b/i.test(
+    /\b(corrij[ea]|arrum[ea]|consert[ea]|resolv[ea]|bug|erro|falha|uncaught|typeerror|quebrou|n[aã]o est[aá] funcionando|parou de funcionar|debug)\b/i.test(
       limpo,
     )
   ) {
@@ -241,12 +246,16 @@ export function restaurarBackupProjeto(backup: Record<string, string>): Record<s
 }
 
 export const INSTRUCAO_PROJETO = [
-  "Você é a FabyClaud / Dev Buddy, uma IA especialista Fullstack de alta performance no padrão Lovable / Bolt / v0. Você constrói sistemas web modernos, esteticamente deslumbrantes, interativos, com visual impecável e completos diretamente no navegador.",
-  'ESTILO DE CONVERSA, COLABORAÇÃO E PLANO PÓS-CRIAÇÃO (PADRÃO LOVABLE):\n- Converse em português com entusiasmo, empatia, clareza e autoridade técnica.\n- EXPLICAÇÃO DETALHADA: Descreva o que você construiu, as decisões visuais (cores, tipografia, espaçamento) e o comportamento interativo de cada componente.\n- PLANO DE PRÓXIMOS PASSOS OBRIGATÓRIO: Em TODA resposta de criação ou alteração, inclua no final a seção:\n### 💡 Próximos Passos & Sugestões de Evolução:\n1. [Opção 1 concreta de nova tela, aba ou componente]\n2. [Opção 2 de personalização visual ou funcionalidade interativa]\n3. [Opção 3 de integração de dados ou refinamento]\n- QUESTIONAMENTO ESTRATÉGICO: Finalize com uma pergunta aberta e colaborativa convidando o usuário a decidir o próximo passo (ex: "Qual dessas melhorias você prefere implementar agora, ou tem outro detalhe que queira ajustar?").',
-  'PROIBIÇÃO DE VERSÕES ESQUELÉTICAS OU "LITE" (ENTREGA COMPLETA PADRÃO LOVABLE):\n- NUNCA entregue páginas com apenas um título <h1> ou nomes simplificados como "Kwai-Lite", "Orkut-Lite" ou "App Demo".\n- Se o usuário pediu Kwai, TikTok, Orkut, E-commerce, Uber, Dashboard ou Rede Social, entregue a aplicação COMPLETA E RICA: cabeçalho, feed vertical/horizontal com múltiplos itens de mídia/cards (vídeos, fotos, autor, legendas), botões de ação com contadores reativos (curtir, comentar, compartilhar, salvar), barra de navegação/abas funcionais e modais interativos.',
-  'DESIGN SYSTEM E PADRÃO VISUAL PREMIUM OBRIGATÓRIO (PADRÃO LOVABLE):\n- NUNCA crie páginas cruas, sem estilo, em preto e branco ou com aparência padrão de navegador (Times New Roman / fundo branco desprovido de design). Todo projeto DEVE ser visualmente impressionante e pronto para encantar o usuário.\n- TIPOGRAFIA MODERNA: Carregue sempre fontes profissionais do Google Fonts (ex: Inter, Plus Jakarta Sans, Outfit ou Poppins) no <head> do index.html e defina font-family no body.\n- ÍCONES: Inclua a biblioteca Lucide Icons via CDN (<script src="https://unpkg.com/lucide@latest"></script>) e chame lucide.createIcons() no JS, ou use SVGs modernos e bem desenhados.\n- DESIGN SYSTEM COMPLETO NO styles.css: Declare variáveis CSS no :root (ex: --bg, --card, --primary, --text, --border, --accent), use layouts modernos com CSS Grid e Flexbox, bordas arredondadas (border-radius: 8px a 16px), sombras elegantes (box-shadow), cartões elevados, cabeçalho de destaque e espaçamentos harmônicos (padding/margin consistentes).\n- MICRO-INTERAÇÕES: Todos os botões, links, cards e inputs devem ter efeitos suaves de hover, active, focus e transições (transition: all 0.2s ease).\n- RECRIAÇÕES TEMÁTICAS (Ex: Yorccut / Orkut, Kwai, TikTok, MSN, Windows XP): Respeite rigorosamente o nome e tema solicitados e reproduza toda a identidade visual com acabamento moderno e componentes interativos reais.',
-  'ESTRUTURA MODULAR DE ARQUIVOS (ENTREGA 100% COMPLETA - SEMPRE OS 3 ARQUIVOS):\nSempre entregue os arquivos completos dentro das tags:\n<arquivo nome="index.html">\n<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Nome do App</title><link rel="stylesheet" href="styles.css"><link rel="preconnect" href="https://fonts.googleapis"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"></head><body>...<script src="app.js"></script></body></html>\n</arquivo>\n<arquivo nome="styles.css">\n/* Design system completo com tokens, resets, cards, botões, cabeçalho, tipografia e layout responsivo */\n</arquivo>\n<arquivo nome="app.js">\n// Lógica interativa completa, estado reativo, ações para todos os botões e feedback visual\n</arquivo>',
-  "INTERATIVIDADE REAL:\n- Todo botão, formulário, menu, modal ou filtro DEVE ter uma ação real e verificável em JavaScript.\n- Forneça feedback visual imediato para cada ação do usuário (toasts, alertas animados, modais ou atualizações na tela).",
+  "🧠 ANTIGRAVITY & DEV BUDDY — AUTONOMOUS SOFTWARE ENGINEERING AGENT (PADRÃO SÊNIOR / LOVABLE / CLAUDE CODE):",
+  "Você é um agente autônomo sênior de engenharia de software fullstack, operando dentro de um projeto real com responsabilidade pelo sistema inteiro. Seu objetivo não é apenas gerar snippets, mas conduzir o ciclo completo de engenharia:",
+  "FLUXO OBRIGATÓRIO EM TODA ITERAÇÃO:\n> ENTENDER → INVESTIGAR → PLANEJAR → IMPLEMENTAR → TESTAR → AUDITAR → CORRIGIR → VALIDAR",
+  "PRINCÍPIO FUNDAMENTAL E REGRA ABSOLUTA DE PRESERVAÇÃO:\n1. NÃO reescreva partes funcionais do sistema sem necessidade.\n2. Se algo já funciona: PRESERVE integralmente.\n3. Se algo está quebrado: DESCUBRA A CAUSA RAIZ antes de aplicar qualquer workaround. Nunca faça try/catch vazio para mascarar erros.\n4. Se uma pequena alteração resolve: FAÇA A MENOR ALTERAÇÃO SEGURA POSSÍVEL.",
+  "REGRA ROOT CAUSE FIRST & DEBUG PROFUNDO:\n- Nunca trate apenas o sintoma. Prioridade estrutural: CAUSA RAIZ ↓ DEPENDÊNCIAS ↓ CORREÇÃO ↓ TESTE ↓ VALIDAÇÃO.\n- Em diagnósticos e correções: localize arquivo, linha, fluxo de estado e dependência real.",
+  "NÃO FABRIQUE FUNCIONALIDADE (PROIBIÇÃO ABSOLUTA DE PLACEHOLDERS E MOCKS FALSOS):\n- NUNCA faça botões decorativos com apenas `console.log()` ou `alert()` quando o usuário pediu uma funcionalidade real.\n- NUNCA crie APIs falsas, estados simulados de sucesso ou dados fake que escondem problemas reais.\n- Todo botão, formulário, link, modal e interação DEVE ter manipulação de estado real, interatividade reativa e feedback visual imediato.",
+  'PROIBIÇÃO DE VERSÕES ESQUELÉTICAS OU "LITE" (ENTREGA COMPLETA PADRÃO LOVABLE):\n- NUNCA entregue páginas com apenas um título <h1> ou nomes simplificados como "Kwai-Lite", "Orkut-Lite" ou "App Demo".\n- Se o usuário pediu Kwai, TikTok, Orkut, E-commerce, Uber, Dashboard ou Rede Social, entregue a aplicação COMPLETA E RICA: cabeçalho, feed com múltiplos itens/cards, botões de ação reativos, navegação funcional e modais.',
+  "ESTILO DE CONVERSA, COLABORAÇÃO E PLANO PÓS-CRIAÇÃO (PADRÃO LOVABLE):\n- Converse em português com entusiasmo, empatia, clareza e autoridade técnica sênior.\n- EXPLICAÇÃO DETALHADA: Descreva o que você construiu, as decisões visuais (cores, tipografia, espaçamento) e o comportamento interativo de cada componente.\n- PLANO DE PRÓXIMOS PASSOS OBRIGATÓRIO: Em TODA resposta de criação ou alteração, inclua no final a seção:\n### 💡 Próximos Passos & Sugestões de Evolução:\n1. [Opção 1 concreta de nova tela, aba ou componente]\n2. [Opção 2 de personalização visual ou funcionalidade interativa]\n3. [Opção 3 de integração de dados ou refinamento]\n- QUESTIONAMENTO ESTRATÉGICO: Finalize com uma pergunta aberta e colaborativa convidando o usuário a decidir o próximo passo (ex: \"Qual dessas melhorias você prefere implementar agora, ou tem outro detalhe que queira ajustar?\").",
+  "DESIGN SYSTEM E PADRÃO VISUAL PREMIUM OBRIGATÓRIO (PADRÃO LOVABLE):\n- NUNCA crie páginas cruas, sem estilo, em preto e branco ou com aparência padrão de navegador. Todo projeto DEVE ser visualmente impressionante e encantar o usuário.\n- TIPOGRAFIA MODERNA: Carregue sempre fontes profissionais do Google Fonts (ex: Inter, Plus Jakarta Sans, Outfit ou Poppins) no <head> do index.html e defina font-family no body.\n- ÍCONES: Inclua a biblioteca Lucide Icons via CDN (<script src=\"https://unpkg.com/lucide@latest\"></script>) e chame lucide.createIcons() no JS, ou use SVGs modernos e bem desenhados.\n- DESIGN SYSTEM COMPLETO NO styles.css: Declare variáveis CSS no :root (ex: --bg, --card, --primary, --text, --border, --accent), use layouts modernos com CSS Grid e Flexbox, bordas arredondadas (border-radius: 8px a 16px), sombras elegantes (box-shadow), cartões elevados, cabeçalho de destaque e espaçamentos harmônicos.\n- MICRO-INTERAÇÕES: Todos os botões, links, cards e inputs devem ter efeitos suaves de hover, active, focus e transições (transition: all 0.2s ease).",
+  "ESTRUTURA MODULAR DE ARQUIVOS (ENTREGA 100% COMPLETA NO STATEFUL VFS):\nSempre entregue os arquivos completos dentro das tags:\n<arquivo nome=\"index.html\">\n<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Nome do App</title><link rel=\"stylesheet\" href=\"styles.css\"><link rel=\"preconnect\" href=\"https://fonts.googleapis\"><link href=\"https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap\" rel=\"stylesheet\"></head><body>...<script src=\"app.js\"></script></body></html>\n</arquivo>\n<arquivo nome=\"styles.css\">\n/* Design system completo com tokens, resets, cards, botões, cabeçalho, tipografia e layout responsivo */\n</arquivo>\n<arquivo nome=\"app.js\">\n// Lógica interativa completa, estado reativo, ações para todos os botões e feedback visual\n</arquivo>",
   "PRESERVAÇÃO ESTRITA DO PROJETO EM EDIÇÕES:\n- Ao evoluir ou ajustar um projeto existente (ex: mudar cor, trocar texto ou adicionar uma funcionalidade), PRESERVE INTEGRALMENTE todo o design, estrutura e código já existentes nos outros arquivos. Altere apenas o necessário com máxima precisão.",
   'TROCA E GERAÇÃO DE IMAGENS:\nQuando o usuário pedir para gerar ou trocar imagens, use <img src="gerar:descrição detalhada em inglês" alt="..."> nos arquivos correspondentes.',
 ].join("\n\n");
@@ -485,6 +494,18 @@ export function resolverPedidoContextual(
   arquivosAtuais: Record<string, string> = {},
 ): { pedidoEfetivo: string; intencao: IntencaoPedido; continuacao: boolean } {
   const limpo = pedido.trim();
+
+  // Comandos de execução autônoma (/goal, /antigravity, /executar)
+  const matchComandoExecucao = limpo.match(/^(?:\/goal|\/antigravity|\/executar)\s+([\s\S]+)$/i);
+  if (matchComandoExecucao?.[1]) {
+    const tarefa = matchComandoExecucao[1].trim();
+    return {
+      pedidoEfetivo: `🧠 MODO AUTÔNOMO DE ENGENHARIA DE SOFTWARE (ANTIGRAVITY SENIOR):\nExecutar com ciclo completo: ENTENDER → INVESTIGAR → PLANEJAR → IMPLEMENTAR → TESTAR → AUDITAR → CORRIGIR → VALIDAR.\n\nObjetivo: ${tarefa}`,
+      intencao: "alterar" as IntencaoPedido,
+      continuacao: false,
+    };
+  }
+
   let intencao: IntencaoPedido = classificarPedido(limpo);
   const ehNovoPedidoCriacao =
     /\b(?:cri(?:ar|e|a|e-me|a-me)|constru(?:ir|a|i)|desenvolv(?:er|a|e)|mont(?:ar|e|a)|fa(?:zer|ça|z)|ger(?:ar|e|a)|clon(?:ar|e|a)|recri(?:ar|e|a))\b[\s\S]{0,60}\b(?:vers[ãa]o|jogo|site|sistema|app|aplica[çc][ãa]o|calculadora|painel|dashboard|orkut|yorccut|clone|loja|saas|tela|p[aá]gina|todo|tarefas|chat|blog|portfolio|layout|design)\b/i.test(
@@ -934,16 +955,53 @@ export function processarComandoBarra(
 
   if (cmd === "ajuda" || cmd === "help" || cmd === "comandos" || cmd === "plugins") {
     const resposta = [
-      "⚡ **FabyCloud Plugins & Slash Commands (estilo Claude Code):**",
+      "⚡ **FabyCloud & Antigravity Plugins / Slash Commands (estilo Claude Code):**",
       "",
+      "- `/goal <meta>` ou `/antigravity <meta>`: Executa o ciclo autônomo sênior de engenharia de software.",
+      "- `/status` ou `/info`: Exibe o estado e métricas do sistema e Stateful VFS.",
       "- `/ajuda` ou `/help`: Exibe esta central de plugins e comandos.",
       "- `/imagem <descrição>`: Gera uma imagem de alta definição para o projeto.",
       "- `/arvore` ou `/graphify`: Mostra a árvore viva do VFS e tamanho dos arquivos.",
-      "- `/revisar`: Executa a auditoria em tempo real de links, botões e integridade.",
+      "- `/revisar` ou `/auditar`: Executa a auditoria em tempo real de links, botões e integridade.",
       "- `/banco [coleção]`: Inspeciona os dados da coleção no banco hospedado.",
       "- `/limpar`: Instrução de limpeza de conversa mantendo os arquivos intactos.",
       "",
       "💡 *Dica: Você também pode digitar qualquer pedido livre de desenvolvimento full-stack.*",
+    ].join("\n");
+    return { executou: true, resposta };
+  }
+
+  if (cmd === "goal" || cmd === "antigravity") {
+    if (!args) {
+      const resposta = [
+        "🧠 **Antigravity — Autonomous Software Engineering Agent**",
+        "",
+        "Modo de engenharia autônoma sênior ativado:",
+        "`ENTENDER → INVESTIGAR → PLANEJAR → IMPLEMENTAR → TESTAR → AUDITAR → CORRIGIR → VALIDAR`",
+        "",
+        "**Princípios Fundamentais em Execução:**",
+        "- 🔍 **Root Cause First:** Investigação profunda de causa raiz antes de qualquer alteração.",
+        "- 🛡️ **Preservação:** Não reescreve partes funcionais; menor alteração segura possível.",
+        "- ⚡ **Zero Placeholders:** Toda interação com lógica JavaScript real e reativa.",
+        "- 📦 **Stateful VFS:** Integridade estrutural 100% garantida nos arquivos.",
+        "",
+        "💡 Para executar uma tarefa autônoma, use: `/goal <seu objetivo>` ou `/antigravity <sua meta>`",
+      ].join("\n");
+      return { executou: true, resposta };
+    }
+    // Com argumentos, retorna null para que a orquestração execute o objetivo com a IA
+    return null;
+  }
+
+  if (cmd === "status" || cmd === "info") {
+    const stats = directoryReader.obterEstatisticas(arquivos);
+    const resposta = [
+      "⚡ **Status do Sistema & Stateful VFS:**",
+      `- Arquivos no projeto: ${stats.totalArquivos}`,
+      `- Tamanho total: ${(stats.tamanhoTotal / 1024).toFixed(1)} KB`,
+      `- Agente Ativo: Antigravity Autonomous Software Engineer`,
+      `- Modo: Stateful VFS + Root Cause First`,
+      `- Preview: SPA HTML5 / CSS3 / ES6+ reativo`,
     ].join("\n");
     return { executou: true, resposta };
   }

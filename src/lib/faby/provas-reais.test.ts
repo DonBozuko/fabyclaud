@@ -258,4 +258,63 @@ document.getElementById("btnStart").addEventListener("click", () => {
     assert.match(prompt, /Próximos Passos & Sugestões de Evolução/);
     assert.match(prompt, /PROIBIÇÃO DE VERSÕES ESQUELÉTICAS/);
   });
+
+  test("PROVA 8: Protocolo Antigravity Autonomous Software Engineering & Slash Commands /goal e /antigravity", async () => {
+    const { processarComandoBarra, resolverPedidoContextual, montarPrompt } = await import("./builder.server");
+    const { AgentManager } = await import("@/agents/AgentManager");
+    const { OpenManusReActAgent } = await import("@/agents/OpenManusEngine");
+
+    // 1. Verificação do Prompt com o Ciclo Completo de Engenharia Autônoma
+    const prompt = montarPrompt("corrija o erro do botão de envio", {
+      "index.html": "<!doctype html><html><body><button id='send'>Enviar</button></body></html>",
+    });
+    assert.match(prompt, /ANTIGRAVITY & DEV BUDDY — AUTONOMOUS SOFTWARE ENGINEERING AGENT/);
+    assert.match(prompt, /ENTENDER → INVESTIGAR → PLANEJAR → IMPLEMENTAR → TESTAR → AUDITAR → CORRIGIR → VALIDAR/);
+    assert.match(prompt, /REGRA ROOT CAUSE FIRST & DEBUG PROFUNDO/);
+    assert.match(prompt, /NÃO FABRIQUE FUNCIONALIDADE/);
+
+    // 2. Slash command /goal e /antigravity sem args retorna dashboard informativo
+    const cmdGoalVazio = processarComandoBarra("/goal", {});
+    assert.ok(cmdGoalVazio?.executou);
+    assert.match(cmdGoalVazio.resposta, /Antigravity — Autonomous Software Engineering Agent/);
+    assert.match(cmdGoalVazio.resposta, /Root Cause First/);
+
+    const cmdStatus = processarComandoBarra("/status", { "index.html": "<html></html>" });
+    assert.ok(cmdStatus?.executou);
+    assert.match(cmdStatus.resposta, /Antigravity Autonomous Software Engineer/);
+
+    // 3. Slash command com meta repassa para o pipeline autônomo
+    const cmdGoalComMeta = processarComandoBarra("/goal construa uma calculadora com histórico", {});
+    assert.equal(cmdGoalComMeta, null, "Comandos com objetivo devem ir para o motor de IA");
+
+    const contextualGoal = resolverPedidoContextual("/goal construa uma calculadora com histórico", []);
+    assert.equal(contextualGoal.intencao, "alterar");
+    assert.match(contextualGoal.pedidoEfetivo, /MODO AUTÔNOMO DE ENGENHARIA DE SOFTWARE/);
+    assert.match(contextualGoal.pedidoEfetivo, /construa uma calculadora com histórico/);
+
+    // 4. Agente Antigravity cadastrado no AgentManager
+    const manager = new AgentManager();
+    const agenteAntigravity = manager.getAgent("antigravity");
+    assert.ok(agenteAntigravity, "Agente antigravity deve estar disponível no AgentManager");
+    assert.equal(agenteAntigravity.role, "engenheiro-autonomo");
+
+    // 5. OpenManus Engine com protocolo Antigravity
+    const openManus = new OpenManusReActAgent();
+    const promptOpenManus = openManus.gerarPromptInstrucoesOpenManus();
+    assert.match(promptOpenManus, /ANTIGRAVITY & OPENMANUS REACT AGENT PROTOCOL/);
+    assert.match(promptOpenManus, /ROOT CAUSE FIRST/);
+  });
+
+  test("PROVA 9: Detecção Precisa de Verbos de Ação de Engenharia e Prevenção de Falso Positivo em Conversa", async () => {
+    const { ehSaudacaoOuConversaCasual, classificarPedido, classificarPedidoLovable } = await import("./builder.server");
+
+    // Verbos de ação e engenharia nunca são classificados como simples conversa
+    assert.equal(ehSaudacaoOuConversaCasual("ponha esse mesmo conceito no meu sistema pois parou de funcionar"), false);
+    assert.equal(classificarPedido("ponha esse mesmo conceito no meu sistema pois parou de funcionar"), "alterar");
+    assert.equal(classificarPedidoLovable("ponha esse mesmo conceito no meu sistema pois parou de funcionar"), "correcao");
+
+    assert.equal(ehSaudacaoOuConversaCasual("integre o banco de dados"), false);
+    assert.equal(ehSaudacaoOuConversaCasual("refatore o componente de cabeçalho"), false);
+    assert.equal(ehSaudacaoOuConversaCasual("debug o erro no formulário"), false);
+  });
 });

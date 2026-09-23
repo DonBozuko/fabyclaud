@@ -16,6 +16,21 @@ export class AgentManager {
   private inicializarAgentesPadrao() {
     const defaultAgents: AgentConfig[] = [
       {
+        id: "antigravity",
+        name: "Antigravity-IA",
+        role: "engenheiro-autonomo",
+        description:
+          "Agente autônomo sênior de engenharia: Entender -> Investigar -> Planejar -> Implementar -> Testar -> Auditar -> Corrigir -> Validar",
+        status: "ativo",
+        capacidades: [
+          "root-cause-analysis",
+          "autonomous-loop",
+          "vfs-management",
+          "preservation-audit",
+          "fullstack-engineering",
+        ],
+      },
+      {
         id: "arquiteto",
         name: "Arquiteto-IA",
         role: "arquiteto",
