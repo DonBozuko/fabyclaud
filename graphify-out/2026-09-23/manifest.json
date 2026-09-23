@@ -42,9 +42,9 @@
     "semantic_hash": ""
   },
   "src/components/faby/SettingsDialog.tsx": {
-    "mtime": 1790185192.074655,
-    "seen": 1790185228.428691,
-    "ast_hash": "b006ad8e85fd3c383bed9af79cb12443",
+    "mtime": 1790190782.7443557,
+    "seen": 1790191057.1928065,
+    "ast_hash": "10ce21583db3b1c50994e8f2fee4ab27",
     "semantic_hash": ""
   },
   "src/components/ui/accordion.tsx": {
@@ -384,9 +384,9 @@
     "semantic_hash": "8da0ddd7569bac2676b9a5c8edff8a36"
   },
   "src/lib/faby.functions.ts": {
-    "mtime": 1790184071.825426,
-    "seen": 1790184231.521122,
-    "ast_hash": "ef372c5b9f1ef088053dce93df2808fb",
+    "mtime": 1790190929.9071121,
+    "seen": 1790191057.2020724,
+    "ast_hash": "812ac9030ea90b23c48e099d00b32e60",
     "semantic_hash": ""
   },
   "src/lib/faby/aplicativos-locais.server.ts": {
@@ -408,15 +408,15 @@
     "semantic_hash": ""
   },
   "src/lib/faby/builder.server.ts": {
-    "mtime": 1790181671.3902433,
-    "seen": 1790182034.4619484,
-    "ast_hash": "e6501a68f3f07185be319a2f56abb3d4",
+    "mtime": 1790190848.3193583,
+    "seen": 1790191057.2028792,
+    "ast_hash": "66d06de2106be988b58c4d042892d4b0",
     "semantic_hash": ""
   },
   "src/lib/faby/config.ts": {
-    "mtime": 1790185194.069709,
-    "seen": 1790185228.4403133,
-    "ast_hash": "46ee018d75adc18dc36e5ed07f55b99b",
+    "mtime": 1790190764.2850535,
+    "seen": 1790191057.2028813,
+    "ast_hash": "86abead24e2a146584cdb9db035f93f1",
     "semantic_hash": ""
   },
   "src/lib/faby/escola.server.ts": {
@@ -474,9 +474,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/providers.server.ts": {
-    "mtime": 1790184006.8996072,
-    "seen": 1790184231.5257103,
-    "ast_hash": "cc5b4f809e3960d4e689f4613863340a",
+    "mtime": 1790191014.7669964,
+    "seen": 1790191057.2045841,
+    "ast_hash": "5919b813970ed22a9ad6e0b0eff97e9f",
     "semantic_hash": ""
   },
   "src/lib/faby/upload.ts": {
@@ -798,9 +798,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/provas-reais.test.ts": {
-    "mtime": 1790181671.854885,
-    "seen": 1790182034.4643033,
-    "ast_hash": "65544954c53939d8159367e8634bf8f4",
+    "mtime": 1790191014.6769478,
+    "seen": 1790191057.2045805,
+    "ast_hash": "fbec511eee2c85626115f4240e9528f7",
     "semantic_hash": ""
   },
   "src/lib/faby/ambiente.server.ts": {

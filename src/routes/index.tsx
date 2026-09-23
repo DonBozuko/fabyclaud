@@ -535,9 +535,28 @@ function FabyClaud() {
 
   const projeto = useQuery({
     queryKey: ["projeto", projetoId],
-    queryFn: () => buscarProjeto({ data: { id: projetoId! } }),
+    queryFn: async () => {
+      try {
+        const res = await buscarProjeto({ data: { id: projetoId! } });
+        return res ?? null;
+      } catch (err: any) {
+        console.warn("[FabyClaud] Projeto não encontrado ou erro:", err?.message);
+        return null;
+      }
+    },
     enabled: Boolean(projetoId) && logado,
   });
+
+  // Se o projetoId salvo não for encontrado, limpa a referência e seleciona o mais recente
+  useEffect(() => {
+    if (projetoId && projeto.data === null && !projeto.isLoading) {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("faby_active_project_id");
+      }
+      const primeiro = projetos.data?.[0]?.id ?? null;
+      setProjetoId(primeiro);
+    }
+  }, [projetoId, projeto.data, projeto.isLoading, projetos.data]);
 
   const custom = useQuery({
     queryKey: ["provedores"],

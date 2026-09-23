@@ -238,8 +238,7 @@ export const obterProjeto = createServerFn({ method: "GET" })
   .handler(async ({ data, context }) => {
     const targetUserIds = extrairUserIds(context);
     const proj = await carregarProjetoCompleto(data.id, targetUserIds, context);
-    if (!proj) throw new Error("Projeto não encontrado");
-    return proj;
+    return proj ?? null;
   });
 
 export const obterProgressoExecucao = createServerFn({ method: "GET" })

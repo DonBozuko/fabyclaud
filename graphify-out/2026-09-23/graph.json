@@ -4,19 +4,6 @@
   "graph": {},
   "nodes": [
     {
-      "id": "src_lib_faby_aplicativos_locais_server_aplicativolocal",
-      "label": "AplicativoLocal",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "aplicativolocal",
-      "source_file": "src/lib/faby/aplicativos-locais.server.ts",
-      "source_location": "L6"
-    },
-    {
       "id": "src_lib_faby_builder_server_intencaopedido",
       "label": "IntencaoPedido",
       "_callable": true,
@@ -27,7 +14,7 @@
       "file_type": "code",
       "norm_label": "intencaopedido",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L489"
+      "source_location": "L497"
     },
     {
       "id": "src_lib_faby_builder_server_inventario",
@@ -40,7 +27,7 @@
       "file_type": "code",
       "norm_label": "inventario",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1552"
+      "source_location": "L1560"
     },
     {
       "id": "src_lib_faby_builder_server_itemhistorico",
@@ -53,7 +40,7 @@
       "file_type": "code",
       "norm_label": "itemhistorico",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L491"
+      "source_location": "L499"
     },
     {
       "id": "src_lib_faby_builder_server_resultadocomandobarra",
@@ -66,7 +53,7 @@
       "file_type": "code",
       "norm_label": "resultadocomandobarra",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L937"
+      "source_location": "L945"
     },
     {
       "id": "src_lib_faby_builder_server_tipopedidolovable",
@@ -365,7 +352,7 @@
       "file_type": "code",
       "norm_label": "anexo",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L373"
+      "source_location": "L369"
     },
     {
       "id": "src_lib_faby_config_contratoentrega",
@@ -378,7 +365,7 @@
       "file_type": "code",
       "norm_label": "contratoentrega",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L77"
+      "source_location": "L76"
     },
     {
       "id": "src_lib_faby_config_etapaorquestracao",
@@ -391,7 +378,7 @@
       "file_type": "code",
       "norm_label": "etapaorquestracao",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L60"
+      "source_location": "L59"
     },
     {
       "id": "src_lib_faby_config_preferenciamodeloetapa",
@@ -404,7 +391,7 @@
       "file_type": "code",
       "norm_label": "preferenciamodeloetapa",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L71"
+      "source_location": "L70"
     },
     {
       "id": "src_lib_faby_config_promptsalvo",
@@ -417,33 +404,7 @@
       "file_type": "code",
       "norm_label": "promptsalvo",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L393"
-    },
-    {
-      "id": "src_lib_faby_config_provedorcustom",
-      "label": "ProvedorCustom",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "config.ts",
-      "file_type": "code",
-      "norm_label": "provedorcustom",
-      "source_file": "src/lib/faby/config.ts",
-      "source_location": "L384"
-    },
-    {
-      "id": "src_lib_faby_storage_server_fabystoragedata",
-      "label": "FabyStorageData",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "config.ts",
-      "file_type": "code",
-      "norm_label": "fabystoragedata",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L74"
+      "source_location": "L389"
     },
     {
       "id": "src_components_ui_form_formfieldcontextvalue",
@@ -470,45 +431,6 @@
       "norm_label": "formitemcontextvalue",
       "source_file": "src/components/ui/form.tsx",
       "source_location": "L67"
-    },
-    {
-      "id": "src_lib_faby_storage_server_chavearmazenada",
-      "label": "ChaveArmazenada",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "chavearmazenada",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L5"
-    },
-    {
-      "id": "src_lib_faby_storage_server_mensagemarmazenada",
-      "label": "MensagemArmazenada",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "mensagemarmazenada",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L26"
-    },
-    {
-      "id": "src_lib_faby_storage_server_projetoarmazenado",
-      "label": "ProjetoArmazenado",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "projetoarmazenado",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L15"
     },
     {
       "id": "src_components_ui_carousel_carouselapi",
@@ -615,6 +537,19 @@
       "source_location": "L122"
     },
     {
+      "id": "src_lib_faby_aplicativos_locais_server_aplicativolocal",
+      "label": "AplicativoLocal",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "aplicativolocal",
+      "source_file": "src/lib/faby/aplicativos-locais.server.ts",
+      "source_location": "L6"
+    },
+    {
       "id": "src_lib_faby_omniroute_local_omniroutelocalconfig",
       "label": "OmniRouteLocalConfig",
       "_callable": true,
@@ -693,32 +628,6 @@
       "source_location": "L6"
     },
     {
-      "id": "src_agents_types_agentresult",
-      "label": "AgentResult",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "AgentManager",
-      "file_type": "code",
-      "norm_label": "agentresult",
-      "source_file": "src/agents/types.ts",
-      "source_location": "L23"
-    },
-    {
-      "id": "src_agents_types_agenttask",
-      "label": "AgentTask",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "AgentManager",
-      "file_type": "code",
-      "norm_label": "agenttask",
-      "source_file": "src/agents/types.ts",
-      "source_location": "L15"
-    },
-    {
       "id": "src_lib_faby_ferramentas_server_pedidoferramenta",
       "label": "PedidoFerramenta",
       "_callable": true,
@@ -730,32 +639,6 @@
       "norm_label": "pedidoferramenta",
       "source_file": "src/lib/faby/ferramentas.server.ts",
       "source_location": "L12"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_painelnome",
-      "label": "PainelNome",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "painelnome",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L30"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_props",
-      "label": "Props",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "props",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L50"
     },
     {
       "id": "src_agents_openmanusengine_openmanusreactagent",
@@ -784,6 +667,19 @@
       "source_location": "L16"
     },
     {
+      "id": "src_agents_types_agentresult",
+      "label": "AgentResult",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 35,
+      "community_name": "agents/types.ts",
+      "file_type": "code",
+      "norm_label": "agentresult",
+      "source_file": "src/agents/types.ts",
+      "source_location": "L23"
+    },
+    {
       "id": "src_agents_types_agentrole",
       "label": "AgentRole",
       "_callable": true,
@@ -810,17 +706,17 @@
       "source_location": "L1"
     },
     {
-      "id": "src_agents_types_alteracaoprojeto",
-      "label": "AlteracaoProjeto",
+      "id": "src_agents_types_agenttask",
+      "label": "AgentTask",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 35,
       "community_name": "agents/types.ts",
       "file_type": "code",
-      "norm_label": "alteracaoprojeto",
+      "norm_label": "agenttask",
       "source_file": "src/agents/types.ts",
-      "source_location": "L48"
+      "source_location": "L15"
     },
     {
       "id": "src_agents_types_arquivocompleto",
@@ -873,19 +769,6 @@
       "norm_label": "manusplanitem",
       "source_file": "src/agents/types.ts",
       "source_location": "L108"
-    },
-    {
-      "id": "src_agents_types_modificacaoarquivo",
-      "label": "ModificacaoArquivo",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 35,
-      "community_name": "agents/types.ts",
-      "file_type": "code",
-      "norm_label": "modificacaoarquivo",
-      "source_file": "src/agents/types.ts",
-      "source_location": "L54"
     },
     {
       "id": "src_agents_types_reactstep",
@@ -1096,6 +979,19 @@
       "source_location": "L11"
     },
     {
+      "id": "src_agents_types_alteracaoprojeto",
+      "label": "AlteracaoProjeto",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 56,
+      "community_name": "CodeModifier",
+      "file_type": "code",
+      "norm_label": "alteracaoprojeto",
+      "source_file": "src/agents/types.ts",
+      "source_location": "L48"
+    },
+    {
       "id": "src_agents_types_codeedit",
       "label": "CodeEdit",
       "_callable": true,
@@ -1107,6 +1003,19 @@
       "norm_label": "codeedit",
       "source_file": "src/agents/types.ts",
       "source_location": "L38"
+    },
+    {
+      "id": "src_agents_types_modificacaoarquivo",
+      "label": "ModificacaoArquivo",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 56,
+      "community_name": "CodeModifier",
+      "file_type": "code",
+      "norm_label": "modificacaoarquivo",
+      "source_file": "src/agents/types.ts",
+      "source_location": "L54"
     },
     {
       "id": "src_components_faby_githubsecao_props",
@@ -1174,6 +1083,32 @@
       "source_location": "L2"
     },
     {
+      "id": "src_lib_faby_config_provedorcustom",
+      "label": "ProvedorCustom",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "provedorcustom",
+      "source_file": "src/lib/faby/config.ts",
+      "source_location": "L380"
+    },
+    {
+      "id": "src_lib_faby_storage_server_chavearmazenada",
+      "label": "ChaveArmazenada",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "chavearmazenada",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L5"
+    },
+    {
       "id": "src_lib_faby_storage_server_etapaarmazenada",
       "label": "EtapaArmazenada",
       "_callable": true,
@@ -1200,6 +1135,19 @@
       "source_location": "L38"
     },
     {
+      "id": "src_lib_faby_storage_server_fabystoragedata",
+      "label": "FabyStorageData",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "fabystoragedata",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L74"
+    },
+    {
       "id": "src_lib_faby_storage_server_githubcontaarmazenada",
       "label": "GithubContaArmazenada",
       "_callable": true,
@@ -1211,6 +1159,32 @@
       "norm_label": "githubcontaarmazenada",
       "source_file": "src/lib/faby/storage.server.ts",
       "source_location": "L66"
+    },
+    {
+      "id": "src_lib_faby_storage_server_mensagemarmazenada",
+      "label": "MensagemArmazenada",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "mensagemarmazenada",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L26"
+    },
+    {
+      "id": "src_lib_faby_storage_server_projetoarmazenado",
+      "label": "ProjetoArmazenado",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "storage.server.ts",
+      "file_type": "code",
+      "norm_label": "projetoarmazenado",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L15"
     },
     {
       "id": "src_components_ui_sonner_toasterprops",
@@ -1289,6 +1263,58 @@
       "norm_label": "register",
       "source_file": "src/routeTree.gen.ts",
       "source_location": "L176"
+    },
+    {
+      "id": "src_components_faby_painelrecursos_painelnome",
+      "label": "PainelNome",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "painelnome",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L30"
+    },
+    {
+      "id": "src_components_faby_painelrecursos_props",
+      "label": "Props",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "props",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L50"
+    },
+    {
+      "id": "src_lib_faby_orquestracao_server_db",
+      "label": "Db",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "orquestracao.server.ts",
+      "file_type": "code",
+      "norm_label": "db",
+      "source_file": "src/lib/faby/orquestracao.server.ts",
+      "source_location": "L8"
+    },
+    {
+      "id": "src_lib_faby_orquestracao_server_etapaconstrucao",
+      "label": "EtapaConstrucao",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "orquestracao.server.ts",
+      "file_type": "code",
+      "norm_label": "etapaconstrucao",
+      "source_file": "src/lib/faby/orquestracao.server.ts",
+      "source_location": "L25"
     },
     {
       "id": "src_routetree_gen_fileroutesbyfullpath",
@@ -1375,7 +1401,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "orquestracao.server.ts",
+      "community_name": "DirectoryReader",
       "file_type": "code",
       "norm_label": "directoryreader",
       "source_file": "src/agents/DirectoryReader.ts",
@@ -1388,7 +1414,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "orquestracao.server.ts",
+      "community_name": "DirectoryReader",
       "file_type": "code",
       "norm_label": "arquivoitem",
       "source_file": "src/agents/types.ts",
@@ -1401,7 +1427,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "orquestracao.server.ts",
+      "community_name": "DirectoryReader",
       "file_type": "code",
       "norm_label": "filenode",
       "source_file": "src/agents/types.ts",
@@ -1414,49 +1440,11 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "orquestracao.server.ts",
+      "community_name": "DirectoryReader",
       "file_type": "code",
       "norm_label": "vfssnapshot",
       "source_file": "src/agents/types.ts",
       "source_location": "L66"
-    },
-    {
-      "id": "src_lib_faby_orquestracao_server_db",
-      "label": "Db",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "orquestracao.server.ts",
-      "file_type": "code",
-      "norm_label": "db",
-      "source_file": "src/lib/faby/orquestracao.server.ts",
-      "source_location": "L8"
-    },
-    {
-      "id": "src_lib_faby_orquestracao_server_etapaconstrucao",
-      "label": "EtapaConstrucao",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "orquestracao.server.ts",
-      "file_type": "code",
-      "norm_label": "etapaconstrucao",
-      "source_file": "src/lib/faby/orquestracao.server.ts",
-      "source_location": "L25"
-    },
-    {
-      "id": "src_lib_faby_aplicativos_locais_server_aplicativolocalparapedido",
-      "label": "aplicativoLocalParaPedido()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "aplicativolocalparapedido()",
-      "source_file": "src/lib/faby/aplicativos-locais.server.ts",
-      "source_location": "L12"
     },
     {
       "id": "src_lib_faby_builder_server_auditararquivos",
@@ -1468,7 +1456,7 @@
       "file_type": "code",
       "norm_label": "auditararquivos()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1260"
+      "source_location": "L1268"
     },
     {
       "id": "src_lib_faby_builder_server_base",
@@ -1480,31 +1468,7 @@
       "file_type": "code",
       "norm_label": "base()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1146"
-    },
-    {
-      "id": "src_lib_faby_builder_server_classificarpedido",
-      "label": "classificarPedido()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "classificarpedido()",
-      "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L626"
-    },
-    {
-      "id": "src_lib_faby_builder_server_classificarpedidolovable",
-      "label": "classificarPedidoLovable()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "classificarpedidolovable()",
-      "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L93"
+      "source_location": "L1154"
     },
     {
       "id": "src_lib_faby_builder_server_coberturarecriacao",
@@ -1516,7 +1480,7 @@
       "file_type": "code",
       "norm_label": "coberturarecriacao()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1645"
+      "source_location": "L1653"
     },
     {
       "id": "src_lib_faby_builder_server_consultarduckduckgo",
@@ -1528,7 +1492,7 @@
       "file_type": "code",
       "norm_label": "consultarduckduckgo()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1079"
+      "source_location": "L1087"
     },
     {
       "id": "src_lib_faby_builder_server_crc32",
@@ -1540,7 +1504,7 @@
       "file_type": "code",
       "norm_label": "crc32()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L855"
+      "source_location": "L863"
     },
     {
       "id": "src_lib_faby_builder_server_diagnosticarprojeto",
@@ -1552,19 +1516,19 @@
       "file_type": "code",
       "norm_label": "diagnosticarprojeto()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L595"
+      "source_location": "L603"
     },
     {
-      "id": "src_lib_faby_builder_server_ehsaudacaoouconversacasual",
-      "label": "ehSaudacaoOuConversaCasual()",
+      "id": "src_lib_faby_builder_server_eharquivodeservidor",
+      "label": "ehArquivoDeServidor()",
       "_callable": true,
       "_origin": "ast",
       "community": 0,
       "community_name": "builder.server.ts",
       "file_type": "code",
-      "norm_label": "ehsaudacaoouconversacasual()",
+      "norm_label": "eharquivodeservidor()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L29"
+      "source_location": "L1159"
     },
     {
       "id": "src_lib_faby_builder_server_enriquecerpromptimagem",
@@ -1576,7 +1540,7 @@
       "file_type": "code",
       "norm_label": "enriquecerpromptimagem()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L868"
+      "source_location": "L876"
     },
     {
       "id": "src_lib_faby_builder_server_escaperegex",
@@ -1588,43 +1552,7 @@
       "file_type": "code",
       "norm_label": "escaperegex()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1539"
-    },
-    {
-      "id": "src_lib_faby_builder_server_formatarcontratoentrega",
-      "label": "formatarContratoEntrega()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "formatarcontratoentrega()",
-      "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L228"
-    },
-    {
-      "id": "src_lib_faby_builder_server_gerarcontratoentrega",
-      "label": "gerarContratoEntrega()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "gerarcontratoentrega()",
-      "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L151"
-    },
-    {
-      "id": "src_lib_faby_builder_server_inventarioreferencia",
-      "label": "inventarioReferencia()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "inventarioreferencia()",
-      "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1554"
+      "source_location": "L1547"
     },
     {
       "id": "src_lib_faby_builder_server_montarmapaprojeto",
@@ -1636,31 +1564,7 @@
       "file_type": "code",
       "norm_label": "montarmapaprojeto()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L666"
-    },
-    {
-      "id": "src_lib_faby_builder_server_montarprompt",
-      "label": "montarPrompt()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "montarprompt()",
-      "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L336"
-    },
-    {
-      "id": "src_lib_faby_builder_server_montarpromptconversa",
-      "label": "montarPromptConversa()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "montarpromptconversa()",
-      "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L309"
+      "source_location": "L674"
     },
     {
       "id": "src_lib_faby_builder_server_pastadoarquivo",
@@ -1672,19 +1576,7 @@
       "file_type": "code",
       "norm_label": "pastadoarquivo()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1543"
-    },
-    {
-      "id": "src_lib_faby_builder_server_pedidoexigearquivos",
-      "label": "pedidoExigeArquivos()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "pedidoexigearquivos()",
-      "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1163"
+      "source_location": "L1551"
     },
     {
       "id": "src_lib_faby_builder_server_pedidoexigebackend",
@@ -1696,7 +1588,19 @@
       "file_type": "code",
       "norm_label": "pedidoexigebackend()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1170"
+      "source_location": "L1178"
+    },
+    {
+      "id": "src_lib_faby_builder_server_problemasdeautenticacao",
+      "label": "problemasDeAutenticacao()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "builder.server.ts",
+      "file_type": "code",
+      "norm_label": "problemasdeautenticacao()",
+      "source_file": "src/lib/faby/builder.server.ts",
+      "source_location": "L1239"
     },
     {
       "id": "src_lib_faby_builder_server_processararquivos",
@@ -1708,7 +1612,7 @@
       "file_type": "code",
       "norm_label": "processararquivos()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1126"
+      "source_location": "L1134"
     },
     {
       "id": "src_lib_faby_builder_server_processarcomandobarra",
@@ -1720,7 +1624,7 @@
       "file_type": "code",
       "norm_label": "processarcomandobarra()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L947"
+      "source_location": "L955"
     },
     {
       "id": "src_lib_faby_builder_server_projetoexterno",
@@ -1744,43 +1648,7 @@
       "file_type": "code",
       "norm_label": "resolverconsultas()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1106"
-    },
-    {
-      "id": "src_lib_faby_builder_server_resolverpedidocontextual",
-      "label": "resolverPedidoContextual()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "resolverpedidocontextual()",
-      "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L494"
-    },
-    {
-      "id": "src_lib_faby_builder_server_restaurarbackupprojeto",
-      "label": "restaurarBackupProjeto()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "restaurarbackupprojeto()",
-      "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L247"
-    },
-    {
-      "id": "src_lib_faby_builder_server_salvarbackupprojeto",
-      "label": "salvarBackupProjeto()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "salvarbackupprojeto()",
-      "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L243"
+      "source_location": "L1114"
     },
     {
       "id": "src_lib_faby_builder_server_selecionararquivosparapedido",
@@ -1792,7 +1660,7 @@
       "file_type": "code",
       "norm_label": "selecionararquivosparapedido()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L717"
+      "source_location": "L725"
     },
     {
       "id": "src_lib_faby_builder_server_substituirgeradoresdeimagem",
@@ -1804,31 +1672,19 @@
       "file_type": "code",
       "norm_label": "substituirgeradoresdeimagem()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1063"
+      "source_location": "L1071"
     },
     {
-      "id": "src_lib_faby_img_to_html_server_instrucoesimgtohtml",
-      "label": "instrucoesImgToHtml()",
+      "id": "src_lib_faby_nuvem_usaautenticacaoprivada",
+      "label": "usaAutenticacaoPrivada()",
       "_callable": true,
       "_origin": "ast",
       "community": 0,
       "community_name": "builder.server.ts",
       "file_type": "code",
-      "norm_label": "instrucoesimgtohtml()",
-      "source_file": "src/lib/faby/img-to-html.server.ts",
-      "source_location": "L17"
-    },
-    {
-      "id": "src_lib_faby_img_to_html_server_preservarlayoutimgtohtml",
-      "label": "preservarLayoutImgToHtml()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "preservarlayoutimgtohtml()",
-      "source_file": "src/lib/faby/img-to-html.server.ts",
-      "source_location": "L73"
+      "norm_label": "usaautenticacaoprivada()",
+      "source_file": "src/lib/faby/nuvem.ts",
+      "source_location": "L135"
     },
     {
       "id": "src_components_ui_badge_badge",
@@ -2155,18 +2011,6 @@
       "source_location": "L23"
     },
     {
-      "id": "src_lib_faby_builder_server_eharquivodeservidor",
-      "label": "ehArquivoDeServidor()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 14,
-      "community_name": "evolucao.server.ts",
-      "file_type": "code",
-      "norm_label": "eharquivodeservidor()",
-      "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1151"
-    },
-    {
       "id": "src_lib_faby_builder_server_pedidoexigeautenticacaoprivada",
       "label": "pedidoExigeAutenticacaoPrivada()",
       "_callable": true,
@@ -2176,7 +2020,7 @@
       "file_type": "code",
       "norm_label": "pedidoexigeautenticacaoprivada()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1178"
+      "source_location": "L1186"
     },
     {
       "id": "src_lib_faby_builder_server_problemascriticos",
@@ -2188,19 +2032,7 @@
       "file_type": "code",
       "norm_label": "problemascriticos()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1253"
-    },
-    {
-      "id": "src_lib_faby_builder_server_problemasdeautenticacao",
-      "label": "problemasDeAutenticacao()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 14,
-      "community_name": "evolucao.server.ts",
-      "file_type": "code",
-      "norm_label": "problemasdeautenticacao()",
-      "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1231"
+      "source_location": "L1261"
     },
     {
       "id": "src_lib_faby_builder_server_problemasdebanco",
@@ -2212,7 +2044,7 @@
       "file_type": "code",
       "norm_label": "problemasdebanco()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1188"
+      "source_location": "L1196"
     },
     {
       "id": "src_lib_faby_evolucao_server_afirmacoessemprova",
@@ -2332,7 +2164,7 @@
       "file_type": "code",
       "norm_label": "eherrodemodelo()",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L266"
+      "source_location": "L265"
     },
     {
       "id": "src_lib_faby_escola_server_extrairregras",
@@ -2428,7 +2260,7 @@
       "file_type": "code",
       "norm_label": "chamarantigravity()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L454"
+      "source_location": "L472"
     },
     {
       "id": "src_lib_faby_providers_server_chamargoogle",
@@ -2440,7 +2272,7 @@
       "file_type": "code",
       "norm_label": "chamargoogle()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L337"
+      "source_location": "L355"
     },
     {
       "id": "src_lib_faby_providers_server_chamargooglecomfallback",
@@ -2452,7 +2284,7 @@
       "file_type": "code",
       "norm_label": "chamargooglecomfallback()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L387"
+      "source_location": "L405"
     },
     {
       "id": "src_lib_faby_providers_server_chamaropenaicompat",
@@ -2464,7 +2296,7 @@
       "file_type": "code",
       "norm_label": "chamaropenaicompat()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L426"
+      "source_location": "L444"
     },
     {
       "id": "src_lib_faby_providers_server_chamarprovedor",
@@ -2476,7 +2308,7 @@
       "file_type": "code",
       "norm_label": "chamarprovedor()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L536"
+      "source_location": "L554"
     },
     {
       "id": "src_lib_faby_providers_server_chamarprovedorcommodelo",
@@ -2488,7 +2320,19 @@
       "file_type": "code",
       "norm_label": "chamarprovedorcommodelo()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L493"
+      "source_location": "L511"
+    },
+    {
+      "id": "src_lib_faby_providers_server_compactarmensagemparahistorico",
+      "label": "compactarMensagemParaHistorico()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "providers.server.ts",
+      "file_type": "code",
+      "norm_label": "compactarmensagemparahistorico()",
+      "source_file": "src/lib/faby/providers.server.ts",
+      "source_location": "L77"
     },
     {
       "id": "src_lib_faby_providers_server_descobrirmodelos",
@@ -2500,7 +2344,7 @@
       "file_type": "code",
       "norm_label": "descobrirmodelos()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L260"
+      "source_location": "L278"
     },
     {
       "id": "src_lib_faby_providers_server_descobrirmodelosgoogle",
@@ -2512,7 +2356,7 @@
       "file_type": "code",
       "norm_label": "descobrirmodelosgoogle()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L287"
+      "source_location": "L305"
     },
     {
       "id": "src_lib_faby_providers_server_ehfalhademodelo",
@@ -2524,7 +2368,7 @@
       "file_type": "code",
       "norm_label": "ehfalhademodelo()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L246"
+      "source_location": "L264"
     },
     {
       "id": "src_lib_faby_providers_server_ehurlpublicasegura",
@@ -2548,7 +2392,7 @@
       "file_type": "code",
       "norm_label": "endpointmodelos()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L254"
+      "source_location": "L272"
     },
     {
       "id": "src_lib_faby_providers_server_endpointomniroute",
@@ -2560,7 +2404,7 @@
       "file_type": "code",
       "norm_label": "endpointomniroute()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L484"
+      "source_location": "L502"
     },
     {
       "id": "src_lib_faby_providers_server_errolegivel",
@@ -2572,7 +2416,7 @@
       "file_type": "code",
       "norm_label": "errolegivel()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L216"
+      "source_location": "L234"
     },
     {
       "id": "src_lib_faby_providers_server_limiteentrada",
@@ -2584,7 +2428,7 @@
       "file_type": "code",
       "norm_label": "limiteentrada()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L182"
+      "source_location": "L200"
     },
     {
       "id": "src_lib_faby_providers_server_postjson",
@@ -2596,7 +2440,7 @@
       "file_type": "code",
       "norm_label": "postjson()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L189"
+      "source_location": "L207"
     },
     {
       "id": "src_lib_faby_providers_server_prepararhistorico",
@@ -2620,7 +2464,7 @@
       "file_type": "code",
       "norm_label": "resumirtexto()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L175"
+      "source_location": "L193"
     },
     {
       "id": "src_lib_faby_providers_server_sanitizarhistoricoparagoogle",
@@ -2632,7 +2476,7 @@
       "file_type": "code",
       "norm_label": "sanitizarhistoricoparagoogle()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L77"
+      "source_location": "L95"
     },
     {
       "id": "src_lib_faby_providers_server_sanitizarhistoricoparaopenai",
@@ -2644,7 +2488,7 @@
       "file_type": "code",
       "norm_label": "sanitizarhistoricoparaopenai()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L132"
+      "source_location": "L150"
     },
     {
       "id": "src_lib_faby_providers_server_textodeanexos",
@@ -2656,7 +2500,7 @@
       "file_type": "code",
       "norm_label": "textodeanexos()",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L644"
+      "source_location": "L662"
     },
     {
       "id": "src_components_ui_command_commanddialog",
@@ -2716,7 +2560,7 @@
       "file_type": "code",
       "norm_label": "selecionarmelhormodeloetapa()",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L209"
+      "source_location": "L208"
     },
     {
       "id": "src_components_ui_menubar_menubargroup",
@@ -2815,52 +2659,16 @@
       "source_location": "L40"
     },
     {
-      "id": "src_lib_faby_functions_carregarprojetocompleto",
-      "label": "carregarProjetoCompleto()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "carregarprojetocompleto()",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L146"
-    },
-    {
-      "id": "src_lib_faby_functions_extrairuserids",
-      "label": "extrairUserIds()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "extrairuserids()",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L51"
-    },
-    {
       "id": "src_lib_faby_functions_parseduelchoice",
       "label": "parseDuelChoice()",
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "faby.functions.ts",
+      "community_name": "enviarMensagem",
       "file_type": "code",
       "norm_label": "parseduelchoice()",
       "source_file": "src/lib/faby.functions.ts",
       "source_location": "L42"
-    },
-    {
-      "id": "src_lib_faby_functions_respostacomprovacapacidade",
-      "label": "respostaComprovaCapacidade()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "respostacomprovacapacidade()",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L773"
     },
     {
       "id": "src_lib_faby_functions_sincronizarchaveslocais",
@@ -2868,7 +2676,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "faby.functions.ts",
+      "community_name": "enviarMensagem",
       "file_type": "code",
       "norm_label": "sincronizarchaveslocais()",
       "source_file": "src/lib/faby.functions.ts",
@@ -2880,11 +2688,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "faby.functions.ts",
+      "community_name": "enviarMensagem",
       "file_type": "code",
       "norm_label": "ischavedeteste()",
       "source_file": "src/lib/faby/storage.server.ts",
       "source_location": "L85"
+    },
+    {
+      "id": "src_lib_faby_storage_server_listarmensagensarmazenadas",
+      "label": "listarMensagensArmazenadas()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "enviarMensagem",
+      "file_type": "code",
+      "norm_label": "listarmensagensarmazenadas()",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L372"
     },
     {
       "id": "src_lib_faby_storage_server_obterchavesarmazenadas",
@@ -2892,23 +2712,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "faby.functions.ts",
+      "community_name": "enviarMensagem",
       "file_type": "code",
       "norm_label": "obterchavesarmazenadas()",
       "source_file": "src/lib/faby/storage.server.ts",
       "source_location": "L191"
-    },
-    {
-      "id": "src_lib_faby_storage_server_obterprojetoarmazenado",
-      "label": "obterProjetoArmazenado()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "obterprojetoarmazenado()",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L345"
     },
     {
       "id": "src_lib_faby_storage_server_salvarchavearmazenada",
@@ -2916,23 +2724,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 23,
-      "community_name": "faby.functions.ts",
+      "community_name": "enviarMensagem",
       "file_type": "code",
       "norm_label": "salvarchavearmazenada()",
       "source_file": "src/lib/faby/storage.server.ts",
       "source_location": "L269"
-    },
-    {
-      "id": "src_lib_faby_storage_server_salvarprojetoarmazenado",
-      "label": "salvarProjetoArmazenado()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "salvarprojetoarmazenado()",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L352"
     },
     {
       "id": "src_lib_faby_nuvem_aplicarapinocodigo",
@@ -2995,18 +2791,6 @@
       "source_location": "L23"
     },
     {
-      "id": "src_lib_faby_nuvem_usaautenticacaoprivada",
-      "label": "usaAutenticacaoPrivada()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 24,
-      "community_name": "nuvem.ts",
-      "file_type": "code",
-      "norm_label": "usaautenticacaoprivada()",
-      "source_file": "src/lib/faby/nuvem.ts",
-      "source_location": "L135"
-    },
-    {
       "id": "src_components_ui_carousel_usecarousel",
       "label": "useCarousel()",
       "_callable": true,
@@ -3065,6 +2849,198 @@
       "norm_label": "formatartempo()",
       "source_file": "src/routes/index.tsx",
       "source_location": "L251"
+    },
+    {
+      "id": "src_lib_faby_aplicativos_locais_server_aplicativolocalparapedido",
+      "label": "aplicativoLocalParaPedido()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "aplicativolocalparapedido()",
+      "source_file": "src/lib/faby/aplicativos-locais.server.ts",
+      "source_location": "L12"
+    },
+    {
+      "id": "src_lib_faby_builder_server_classificarpedido",
+      "label": "classificarPedido()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "classificarpedido()",
+      "source_file": "src/lib/faby/builder.server.ts",
+      "source_location": "L634"
+    },
+    {
+      "id": "src_lib_faby_builder_server_classificarpedidolovable",
+      "label": "classificarPedidoLovable()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "classificarpedidolovable()",
+      "source_file": "src/lib/faby/builder.server.ts",
+      "source_location": "L93"
+    },
+    {
+      "id": "src_lib_faby_builder_server_ehsaudacaoouconversacasual",
+      "label": "ehSaudacaoOuConversaCasual()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "ehsaudacaoouconversacasual()",
+      "source_file": "src/lib/faby/builder.server.ts",
+      "source_location": "L29"
+    },
+    {
+      "id": "src_lib_faby_builder_server_formatarcontratoentrega",
+      "label": "formatarContratoEntrega()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "formatarcontratoentrega()",
+      "source_file": "src/lib/faby/builder.server.ts",
+      "source_location": "L228"
+    },
+    {
+      "id": "src_lib_faby_builder_server_gerarcontratoentrega",
+      "label": "gerarContratoEntrega()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "gerarcontratoentrega()",
+      "source_file": "src/lib/faby/builder.server.ts",
+      "source_location": "L151"
+    },
+    {
+      "id": "src_lib_faby_builder_server_inventarioreferencia",
+      "label": "inventarioReferencia()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "inventarioreferencia()",
+      "source_file": "src/lib/faby/builder.server.ts",
+      "source_location": "L1562"
+    },
+    {
+      "id": "src_lib_faby_builder_server_montarprompt",
+      "label": "montarPrompt()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "montarprompt()",
+      "source_file": "src/lib/faby/builder.server.ts",
+      "source_location": "L336"
+    },
+    {
+      "id": "src_lib_faby_builder_server_montarpromptconversa",
+      "label": "montarPromptConversa()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "montarpromptconversa()",
+      "source_file": "src/lib/faby/builder.server.ts",
+      "source_location": "L309"
+    },
+    {
+      "id": "src_lib_faby_builder_server_pedidoexigearquivos",
+      "label": "pedidoExigeArquivos()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "pedidoexigearquivos()",
+      "source_file": "src/lib/faby/builder.server.ts",
+      "source_location": "L1171"
+    },
+    {
+      "id": "src_lib_faby_builder_server_resolverpedidocontextual",
+      "label": "resolverPedidoContextual()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "resolverpedidocontextual()",
+      "source_file": "src/lib/faby/builder.server.ts",
+      "source_location": "L502"
+    },
+    {
+      "id": "src_lib_faby_builder_server_restaurarbackupprojeto",
+      "label": "restaurarBackupProjeto()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "restaurarbackupprojeto()",
+      "source_file": "src/lib/faby/builder.server.ts",
+      "source_location": "L247"
+    },
+    {
+      "id": "src_lib_faby_builder_server_salvarbackupprojeto",
+      "label": "salvarBackupProjeto()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "salvarbackupprojeto()",
+      "source_file": "src/lib/faby/builder.server.ts",
+      "source_location": "L243"
+    },
+    {
+      "id": "src_lib_faby_functions_respostacomprovacapacidade",
+      "label": "respostaComprovaCapacidade()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "respostacomprovacapacidade()",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L773"
+    },
+    {
+      "id": "src_lib_faby_img_to_html_server_instrucoesimgtohtml",
+      "label": "instrucoesImgToHtml()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "instrucoesimgtohtml()",
+      "source_file": "src/lib/faby/img-to-html.server.ts",
+      "source_location": "L17"
+    },
+    {
+      "id": "src_lib_faby_img_to_html_server_preservarlayoutimgtohtml",
+      "label": "preservarLayoutImgToHtml()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "preservarlayoutimgtohtml()",
+      "source_file": "src/lib/faby/img-to-html.server.ts",
+      "source_location": "L73"
     },
     {
       "id": "src_components_faby_settingsdialog_settingsdialog",
@@ -3439,18 +3415,6 @@
       "source_location": "L10"
     },
     {
-      "id": "src_agents_agentmanager_agentmanager_executartarefa",
-      "label": ".executarTarefa()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "AgentManager",
-      "file_type": "code",
-      "norm_label": ".executartarefa()",
-      "source_file": "src/agents/AgentManager.ts",
-      "source_location": "L99"
-    },
-    {
       "id": "src_agents_agentmanager_agentmanager_getagent",
       "label": ".getAgent()",
       "_callable": true,
@@ -3461,6 +3425,18 @@
       "norm_label": ".getagent()",
       "source_file": "src/agents/AgentManager.ts",
       "source_location": "L76"
+    },
+    {
+      "id": "src_agents_agentmanager_agentmanager_getmodifier",
+      "label": ".getModifier()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "AgentManager",
+      "file_type": "code",
+      "norm_label": ".getmodifier()",
+      "source_file": "src/agents/AgentManager.ts",
+      "source_location": "L113"
     },
     {
       "id": "src_agents_agentmanager_agentmanager_getreader",
@@ -3655,156 +3631,12 @@
       "source_location": "L81"
     },
     {
-      "id": "src_components_faby_githubsecao_githubsecao",
-      "label": "GithubSecao()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "githubsecao()",
-      "source_file": "src/components/faby/GithubSecao.tsx",
-      "source_location": "L170"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_agentes",
-      "label": "Agentes()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "agentes()",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L298"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_backups",
-      "label": "Backups()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "backups()",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L555"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_backups_recarregar",
-      "label": "recarregar()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "recarregar()",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L576"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_docs",
-      "label": "Docs()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "docs()",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L487"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_docs_baixar",
-      "label": "baixar()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "baixar()",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L514"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_escola",
-      "label": "Escola()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "escola()",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L197"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_memoria",
-      "label": "Memoria()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "memoria()",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L144"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_painelrecursos",
-      "label": "PainelRecursos()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "painelrecursos()",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L62"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_prompts",
-      "label": "Prompts()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "prompts()",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L402"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_semprojeto",
-      "label": "SemProjeto()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "semprojeto()",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L135"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_workspace",
-      "label": "Workspace()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "workspace()",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L646"
-    },
-    {
       "id": "src_integrations_supabase_client_server_createsupabaseadminclient",
       "label": "createSupabaseAdminClient()",
       "_callable": true,
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "createsupabaseadminclient()",
       "source_file": "src/integrations/supabase/client.server.ts",
@@ -3816,7 +3648,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "createsupabasefetch()",
       "source_file": "src/integrations/supabase/client.server.ts",
@@ -3828,35 +3660,83 @@
       "_callable": true,
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "isnewsupabaseapikey()",
       "source_file": "src/integrations/supabase/client.server.ts",
       "source_location": "L8"
     },
     {
-      "id": "src_agents_codemodifier_codemodifier_aplicaralteracaoprojeto",
-      "label": ".aplicarAlteracaoProjeto()",
+      "id": "src_lib_faby_functions_carregarprojetocompleto",
+      "label": "carregarProjetoCompleto()",
       "_callable": true,
       "_origin": "ast",
-      "community": 35,
-      "community_name": "agents/types.ts",
+      "community": 34,
+      "community_name": "faby.functions.ts",
       "file_type": "code",
-      "norm_label": ".aplicaralteracaoprojeto()",
-      "source_file": "src/agents/CodeModifier.ts",
-      "source_location": "L213"
+      "norm_label": "carregarprojetocompleto()",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L146"
     },
     {
-      "id": "src_agents_codemodifier_codemodifier_aplicarmodificacoes",
-      "label": ".aplicarModificacoes()",
+      "id": "src_lib_faby_functions_extrairuserids",
+      "label": "extrairUserIds()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "extrairuserids()",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L51"
+    },
+    {
+      "id": "src_lib_faby_storage_server_obtermemoriaarmazenada",
+      "label": "obterMemoriaArmazenada()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "obtermemoriaarmazenada()",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L397"
+    },
+    {
+      "id": "src_lib_faby_storage_server_obterprojetoarmazenado",
+      "label": "obterProjetoArmazenado()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "obterprojetoarmazenado()",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L345"
+    },
+    {
+      "id": "src_lib_faby_storage_server_salvarprojetoarmazenado",
+      "label": "salvarProjetoArmazenado()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "salvarprojetoarmazenado()",
+      "source_file": "src/lib/faby/storage.server.ts",
+      "source_location": "L352"
+    },
+    {
+      "id": "src_agents_agentmanager_agentmanager_executartarefa",
+      "label": ".executarTarefa()",
       "_callable": true,
       "_origin": "ast",
       "community": 35,
       "community_name": "agents/types.ts",
       "file_type": "code",
-      "norm_label": ".aplicarmodificacoes()",
-      "source_file": "src/agents/CodeModifier.ts",
-      "source_location": "L193"
+      "norm_label": ".executartarefa()",
+      "source_file": "src/agents/AgentManager.ts",
+      "source_location": "L99"
     },
     {
       "id": "src_agents_openmanusengine_openmanusreactagent_executarpassoreact",
@@ -4867,16 +4747,16 @@
       "source_location": "L10"
     },
     {
-      "id": "src_agents_agentmanager_agentmanager_getmodifier",
-      "label": ".getModifier()",
+      "id": "src_agents_codemodifier_codemodifier_aplicaralteracaoprojeto",
+      "label": ".aplicarAlteracaoProjeto()",
       "_callable": true,
       "_origin": "ast",
       "community": 56,
       "community_name": "CodeModifier",
       "file_type": "code",
-      "norm_label": ".getmodifier()",
-      "source_file": "src/agents/AgentManager.ts",
-      "source_location": "L113"
+      "norm_label": ".aplicaralteracaoprojeto()",
+      "source_file": "src/agents/CodeModifier.ts",
+      "source_location": "L213"
     },
     {
       "id": "src_agents_codemodifier_codemodifier_aplicararquivoscompletos",
@@ -4889,6 +4769,18 @@
       "norm_label": ".aplicararquivoscompletos()",
       "source_file": "src/agents/CodeModifier.ts",
       "source_location": "L103"
+    },
+    {
+      "id": "src_agents_codemodifier_codemodifier_aplicarmodificacoes",
+      "label": ".aplicarModificacoes()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 56,
+      "community_name": "CodeModifier",
+      "file_type": "code",
+      "norm_label": ".aplicarmodificacoes()",
+      "source_file": "src/agents/CodeModifier.ts",
+      "source_location": "L193"
     },
     {
       "id": "src_agents_codemodifier_codemodifier_applyedit",
@@ -4972,7 +4864,7 @@
       "file_type": "code",
       "norm_label": "descartarpatchesparciais()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L751"
+      "source_location": "L759"
     },
     {
       "id": "src_lib_faby_builder_server_extrairarquivos",
@@ -4984,7 +4876,7 @@
       "file_type": "code",
       "norm_label": "extrairarquivos()",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L764"
+      "source_location": "L772"
     },
     {
       "id": "src_lib_faby_builder_server_limparpensamento",
@@ -5347,18 +5239,6 @@
       "source_location": "L488"
     },
     {
-      "id": "src_lib_faby_storage_server_listarmensagensarmazenadas",
-      "label": "listarMensagensArmazenadas()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 67,
-      "community_name": "storage.server.ts",
-      "file_type": "code",
-      "norm_label": "listarmensagensarmazenadas()",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L372"
-    },
-    {
       "id": "src_lib_faby_storage_server_listarprojetosarmazenados",
       "label": "listarProjetosArmazenados()",
       "_callable": true,
@@ -5405,18 +5285,6 @@
       "norm_label": "obtergithubcontaarmazenada()",
       "source_file": "src/lib/faby/storage.server.ts",
       "source_location": "L512"
-    },
-    {
-      "id": "src_lib_faby_storage_server_obtermemoriaarmazenada",
-      "label": "obterMemoriaArmazenada()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 67,
-      "community_name": "storage.server.ts",
-      "file_type": "code",
-      "norm_label": "obtermemoriaarmazenada()",
-      "source_file": "src/lib/faby/storage.server.ts",
-      "source_location": "L397"
     },
     {
       "id": "src_lib_faby_storage_server_persistirnodisco",
@@ -5647,6 +5515,246 @@
       "source_location": "L5"
     },
     {
+      "id": "src_components_faby_githubsecao_githubsecao",
+      "label": "GithubSecao()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "githubsecao()",
+      "source_file": "src/components/faby/GithubSecao.tsx",
+      "source_location": "L170"
+    },
+    {
+      "id": "src_components_faby_painelrecursos_agentes",
+      "label": "Agentes()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "agentes()",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L298"
+    },
+    {
+      "id": "src_components_faby_painelrecursos_backups",
+      "label": "Backups()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "backups()",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L555"
+    },
+    {
+      "id": "src_components_faby_painelrecursos_backups_recarregar",
+      "label": "recarregar()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "recarregar()",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L576"
+    },
+    {
+      "id": "src_components_faby_painelrecursos_docs",
+      "label": "Docs()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "docs()",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L487"
+    },
+    {
+      "id": "src_components_faby_painelrecursos_docs_baixar",
+      "label": "baixar()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "baixar()",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L514"
+    },
+    {
+      "id": "src_components_faby_painelrecursos_escola",
+      "label": "Escola()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "escola()",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L197"
+    },
+    {
+      "id": "src_components_faby_painelrecursos_memoria",
+      "label": "Memoria()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "memoria()",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L144"
+    },
+    {
+      "id": "src_components_faby_painelrecursos_painelrecursos",
+      "label": "PainelRecursos()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "painelrecursos()",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L62"
+    },
+    {
+      "id": "src_components_faby_painelrecursos_prompts",
+      "label": "Prompts()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "prompts()",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L402"
+    },
+    {
+      "id": "src_components_faby_painelrecursos_semprojeto",
+      "label": "SemProjeto()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "semprojeto()",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L135"
+    },
+    {
+      "id": "src_components_faby_painelrecursos_workspace",
+      "label": "Workspace()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "workspace()",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L646"
+    },
+    {
+      "id": "src_agents_openmanusengine_openmanusreactagent_gerarpromptinstrucoesopenmanus",
+      "label": ".gerarPromptInstrucoesOpenManus()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "orquestracao.server.ts",
+      "file_type": "code",
+      "norm_label": ".gerarpromptinstrucoesopenmanus()",
+      "source_file": "src/agents/OpenManusEngine.ts",
+      "source_location": "L384"
+    },
+    {
+      "id": "src_lib_faby_orquestracao_server_finalizarexecucao",
+      "label": "finalizarExecucao()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "orquestracao.server.ts",
+      "file_type": "code",
+      "norm_label": "finalizarexecucao()",
+      "source_file": "src/lib/faby/orquestracao.server.ts",
+      "source_location": "L182"
+    },
+    {
+      "id": "src_lib_faby_orquestracao_server_iniciarexecucao",
+      "label": "iniciarExecucao()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "orquestracao.server.ts",
+      "file_type": "code",
+      "norm_label": "iniciarexecucao()",
+      "source_file": "src/lib/faby/orquestracao.server.ts",
+      "source_location": "L98"
+    },
+    {
+      "id": "src_lib_faby_orquestracao_server_injetarsnapshotvfs",
+      "label": "injetarSnapshotVFS()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "orquestracao.server.ts",
+      "file_type": "code",
+      "norm_label": "injetarsnapshotvfs()",
+      "source_file": "src/lib/faby/orquestracao.server.ts",
+      "source_location": "L48"
+    },
+    {
+      "id": "src_lib_faby_orquestracao_server_montarcontextovfs",
+      "label": "montarContextoVFS()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "orquestracao.server.ts",
+      "file_type": "code",
+      "norm_label": "montarcontextovfs()",
+      "source_file": "src/lib/faby/orquestracao.server.ts",
+      "source_location": "L38"
+    },
+    {
+      "id": "src_lib_faby_orquestracao_server_montarpromptcomvfs",
+      "label": "montarPromptComVFS()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "orquestracao.server.ts",
+      "file_type": "code",
+      "norm_label": "montarpromptcomvfs()",
+      "source_file": "src/lib/faby/orquestracao.server.ts",
+      "source_location": "L85"
+    },
+    {
+      "id": "src_lib_faby_orquestracao_server_obterinstrucoesopenmanus",
+      "label": "obterInstrucoesOpenManus()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "orquestracao.server.ts",
+      "file_type": "code",
+      "norm_label": "obterinstrucoesopenmanus()",
+      "source_file": "src/lib/faby/orquestracao.server.ts",
+      "source_location": "L242"
+    },
+    {
+      "id": "src_lib_faby_orquestracao_server_registraretapa",
+      "label": "registrarEtapa()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "orquestracao.server.ts",
+      "file_type": "code",
+      "norm_label": "registraretapa()",
+      "source_file": "src/lib/faby/orquestracao.server.ts",
+      "source_location": "L135"
+    },
+    {
       "id": "src_routes_api_public_estudar_estudar",
       "label": "estudar()",
       "_callable": true,
@@ -5664,7 +5772,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "orquestracao.server.ts",
+      "community_name": "DirectoryReader",
       "file_type": "code",
       "norm_label": ".filterfiles()",
       "source_file": "src/agents/DirectoryReader.ts",
@@ -5676,7 +5784,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "orquestracao.server.ts",
+      "community_name": "DirectoryReader",
       "file_type": "code",
       "norm_label": ".gerararvoretexto()",
       "source_file": "src/agents/DirectoryReader.ts",
@@ -5688,7 +5796,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "orquestracao.server.ts",
+      "community_name": "DirectoryReader",
       "file_type": "code",
       "norm_label": ".gerarsnapshotcompleto()",
       "source_file": "src/agents/DirectoryReader.ts",
@@ -5700,7 +5808,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "orquestracao.server.ts",
+      "community_name": "DirectoryReader",
       "file_type": "code",
       "norm_label": ".gerarsnapshotxml()",
       "source_file": "src/agents/DirectoryReader.ts",
@@ -5712,7 +5820,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "orquestracao.server.ts",
+      "community_name": "DirectoryReader",
       "file_type": "code",
       "norm_label": ".lerarquivosdoobjeto()",
       "source_file": "src/agents/DirectoryReader.ts",
@@ -5724,7 +5832,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "orquestracao.server.ts",
+      "community_name": "DirectoryReader",
       "file_type": "code",
       "norm_label": ".listarcaminhos()",
       "source_file": "src/agents/DirectoryReader.ts",
@@ -5736,7 +5844,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "orquestracao.server.ts",
+      "community_name": "DirectoryReader",
       "file_type": "code",
       "norm_label": ".obterestatisticas()",
       "source_file": "src/agents/DirectoryReader.ts",
@@ -5748,118 +5856,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "orquestracao.server.ts",
+      "community_name": "DirectoryReader",
       "file_type": "code",
       "norm_label": ".parsefiletree()",
       "source_file": "src/agents/DirectoryReader.ts",
       "source_location": "L48"
-    },
-    {
-      "id": "src_agents_openmanusengine_openmanusreactagent_gerarpromptinstrucoesopenmanus",
-      "label": ".gerarPromptInstrucoesOpenManus()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "orquestracao.server.ts",
-      "file_type": "code",
-      "norm_label": ".gerarpromptinstrucoesopenmanus()",
-      "source_file": "src/agents/OpenManusEngine.ts",
-      "source_location": "L384"
-    },
-    {
-      "id": "src_lib_faby_orquestracao_server_finalizarexecucao",
-      "label": "finalizarExecucao()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "orquestracao.server.ts",
-      "file_type": "code",
-      "norm_label": "finalizarexecucao()",
-      "source_file": "src/lib/faby/orquestracao.server.ts",
-      "source_location": "L182"
-    },
-    {
-      "id": "src_lib_faby_orquestracao_server_iniciarexecucao",
-      "label": "iniciarExecucao()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "orquestracao.server.ts",
-      "file_type": "code",
-      "norm_label": "iniciarexecucao()",
-      "source_file": "src/lib/faby/orquestracao.server.ts",
-      "source_location": "L98"
-    },
-    {
-      "id": "src_lib_faby_orquestracao_server_injetarsnapshotvfs",
-      "label": "injetarSnapshotVFS()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "orquestracao.server.ts",
-      "file_type": "code",
-      "norm_label": "injetarsnapshotvfs()",
-      "source_file": "src/lib/faby/orquestracao.server.ts",
-      "source_location": "L48"
-    },
-    {
-      "id": "src_lib_faby_orquestracao_server_montarcontextovfs",
-      "label": "montarContextoVFS()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "orquestracao.server.ts",
-      "file_type": "code",
-      "norm_label": "montarcontextovfs()",
-      "source_file": "src/lib/faby/orquestracao.server.ts",
-      "source_location": "L38"
-    },
-    {
-      "id": "src_lib_faby_orquestracao_server_montarpromptcomvfs",
-      "label": "montarPromptComVFS()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "orquestracao.server.ts",
-      "file_type": "code",
-      "norm_label": "montarpromptcomvfs()",
-      "source_file": "src/lib/faby/orquestracao.server.ts",
-      "source_location": "L85"
-    },
-    {
-      "id": "src_lib_faby_orquestracao_server_obterinstrucoesopenmanus",
-      "label": "obterInstrucoesOpenManus()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "orquestracao.server.ts",
-      "file_type": "code",
-      "norm_label": "obterinstrucoesopenmanus()",
-      "source_file": "src/lib/faby/orquestracao.server.ts",
-      "source_location": "L242"
-    },
-    {
-      "id": "src_lib_faby_orquestracao_server_registraretapa",
-      "label": "registrarEtapa()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "orquestracao.server.ts",
-      "file_type": "code",
-      "norm_label": "registraretapa()",
-      "source_file": "src/lib/faby/orquestracao.server.ts",
-      "source_location": "L135"
-    },
-    {
-      "id": "src_lib_faby_aplicativos_locais_server",
-      "label": "aplicativos-locais.server.ts",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "aplicativos-locais.server.ts",
-      "source_file": "src/lib/faby/aplicativos-locais.server.ts",
-      "source_location": "L1"
     },
     {
       "id": "src_lib_faby_builder_server",
@@ -5893,28 +5894,6 @@
       "norm_label": "instrucao_projeto",
       "source_file": "src/lib/faby/builder.server.ts",
       "source_location": "L251"
-    },
-    {
-      "id": "src_lib_faby_builder_server_test",
-      "label": "builder.server.test.ts",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "builder.server.test.ts",
-      "source_file": "src/lib/faby/builder.server.test.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_lib_faby_provas_reais_test",
-      "label": "provas-reais.test.ts",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "file_type": "code",
-      "norm_label": "provas-reais.test.ts",
-      "source_file": "src/lib/faby/provas-reais.test.ts",
-      "source_location": "L1"
     },
     {
       "id": "package_dependencies",
@@ -7463,17 +7442,6 @@
       "source_location": "L32"
     },
     {
-      "id": "src_lib_faby_img_to_html_server",
-      "label": "img-to-html.server.ts",
-      "_origin": "ast",
-      "community": 14,
-      "community_name": "evolucao.server.ts",
-      "file_type": "code",
-      "norm_label": "img-to-html.server.ts",
-      "source_file": "src/lib/faby/img-to-html.server.ts",
-      "source_location": "L1"
-    },
-    {
       "id": "src_components_ui_navigation_menu",
       "label": "navigation-menu.tsx",
       "_origin": "ast",
@@ -7581,7 +7549,7 @@
       "file_type": "code",
       "norm_label": "modelos_alternativos",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L17"
+      "source_location": "L16"
     },
     {
       "id": "src_lib_faby_escola_server",
@@ -7614,7 +7582,7 @@
       "file_type": "code",
       "norm_label": "apagarlicao",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1013"
+      "source_location": "L1017"
     },
     {
       "id": "src_lib_faby_functions_estadoescola",
@@ -7625,7 +7593,7 @@
       "file_type": "code",
       "norm_label": "estadoescola",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L960"
+      "source_location": "L964"
     },
     {
       "id": "src_lib_faby_functions_estudaragora",
@@ -7636,7 +7604,7 @@
       "file_type": "code",
       "norm_label": "estudaragora",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1002"
+      "source_location": "L1006"
     },
     {
       "id": "src_lib_faby_functions_gerardocumentacao",
@@ -7647,7 +7615,7 @@
       "file_type": "code",
       "norm_label": "gerardocumentacao",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1564"
+      "source_location": "L1568"
     },
     {
       "id": "src_lib_faby_providers_server",
@@ -7669,7 +7637,7 @@
       "file_type": "code",
       "norm_label": "compat",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L476"
+      "source_location": "L494"
     },
     {
       "id": "src_lib_faby_providers_server_provedores_fixos",
@@ -7680,7 +7648,7 @@
       "file_type": "code",
       "norm_label": "provedores_fixos",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L464"
+      "source_location": "L482"
     },
     {
       "id": "src_components_ui_command",
@@ -8076,7 +8044,7 @@
       "file_type": "code",
       "norm_label": "agentes_prontos",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L452"
+      "source_location": "L448"
     },
     {
       "id": "src_lib_faby_config_extensoes_imagem",
@@ -8087,7 +8055,7 @@
       "file_type": "code",
       "norm_label": "extensoes_imagem",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L348"
+      "source_location": "L344"
     },
     {
       "id": "src_lib_faby_config_extensoes_texto",
@@ -8098,7 +8066,7 @@
       "file_type": "code",
       "norm_label": "extensoes_texto",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L349"
+      "source_location": "L345"
     },
     {
       "id": "src_lib_faby_config_limite_chars_arquivo",
@@ -8109,18 +8077,7 @@
       "file_type": "code",
       "norm_label": "limite_chars_arquivo",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L345"
-    },
-    {
-      "id": "src_lib_faby_config_memoria_sugerida",
-      "label": "MEMORIA_SUGERIDA",
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "config.ts",
-      "file_type": "code",
-      "norm_label": "memoria_sugerida",
-      "source_file": "src/lib/faby/config.ts",
-      "source_location": "L400"
+      "source_location": "L341"
     },
     {
       "id": "src_lib_faby_config_modelo_padrao",
@@ -8131,7 +8088,7 @@
       "file_type": "code",
       "norm_label": "modelo_padrao",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L371"
+      "source_location": "L367"
     },
     {
       "id": "src_lib_faby_config_modelos_por_etapa",
@@ -8142,7 +8099,7 @@
       "file_type": "code",
       "norm_label": "modelos_por_etapa",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L97"
+      "source_location": "L96"
     },
     {
       "id": "src_lib_faby_config_ordem_qualidade",
@@ -8153,7 +8110,7 @@
       "file_type": "code",
       "norm_label": "ordem_qualidade",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L334"
+      "source_location": "L331"
     },
     {
       "id": "src_lib_faby_config_prompt_mestre_fullstack",
@@ -8164,7 +8121,7 @@
       "file_type": "code",
       "norm_label": "prompt_mestre_fullstack",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L411"
+      "source_location": "L407"
     },
     {
       "id": "src_lib_faby_config_prompt_mestre_saas",
@@ -8175,7 +8132,7 @@
       "file_type": "code",
       "norm_label": "prompt_mestre_saas",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L405"
+      "source_location": "L401"
     },
     {
       "id": "src_lib_faby_config_prompts_pro",
@@ -8186,7 +8143,7 @@
       "file_type": "code",
       "norm_label": "prompts_pro",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L416"
+      "source_location": "L412"
     },
     {
       "id": "src_lib_faby_config_provider_links",
@@ -8197,7 +8154,7 @@
       "file_type": "code",
       "norm_label": "provider_links",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L323"
+      "source_location": "L321"
     },
     {
       "id": "src_lib_faby_config_tamanho_max_mb",
@@ -8208,7 +8165,7 @@
       "file_type": "code",
       "norm_label": "tamanho_max_mb",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L346"
+      "source_location": "L342"
     },
     {
       "id": "src_lib_faby_upload",
@@ -9058,158 +9015,59 @@
       "source_location": "L63"
     },
     {
-      "id": "src_lib_faby_functions",
-      "label": "faby.functions.ts",
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "faby.functions.ts",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_lib_faby_functions_anexoschema",
-      "label": "anexoSchema",
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "anexoschema",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L40"
-    },
-    {
-      "id": "src_lib_faby_functions_apagararquivo",
-      "label": "apagarArquivo",
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "apagararquivo",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1488"
-    },
-    {
-      "id": "src_lib_faby_functions_cacheagentes",
-      "label": "cacheAgentes",
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "cacheagentes",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L49"
-    },
-    {
-      "id": "src_lib_faby_functions_cacheprompts",
-      "label": "cachePrompts",
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "cacheprompts",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L48"
-    },
-    {
-      "id": "src_lib_faby_functions_criarbackup",
-      "label": "criarBackup",
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "criarbackup",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1252"
-    },
-    {
       "id": "src_lib_faby_functions_enviarmensagem",
       "label": "enviarMensagem",
       "_origin": "ast",
       "community": 23,
-      "community_name": "faby.functions.ts",
+      "community_name": "enviarMensagem",
       "file_type": "code",
       "norm_label": "enviarmensagem",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1638"
+      "source_location": "L1642"
     },
     {
       "id": "src_lib_faby_functions_listarchaves",
       "label": "listarChaves",
       "_origin": "ast",
       "community": 23,
-      "community_name": "faby.functions.ts",
+      "community_name": "enviarMensagem",
       "file_type": "code",
       "norm_label": "listarchaves",
       "source_file": "src/lib/faby.functions.ts",
       "source_location": "L411"
     },
     {
-      "id": "src_lib_faby_functions_listarprojetos",
-      "label": "listarProjetos",
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "listarprojetos",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L74"
-    },
-    {
       "id": "src_lib_faby_functions_obtercapacidades",
       "label": "obterCapacidades",
       "_origin": "ast",
       "community": 23,
-      "community_name": "faby.functions.ts",
+      "community_name": "enviarMensagem",
       "file_type": "code",
       "norm_label": "obtercapacidades",
       "source_file": "src/lib/faby.functions.ts",
       "source_location": "L475"
     },
     {
-      "id": "src_lib_faby_functions_obterprojeto",
-      "label": "obterProjeto",
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "obterprojeto",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L235"
-    },
-    {
-      "id": "src_lib_faby_functions_restaurarbackup",
-      "label": "restaurarBackup",
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "restaurarbackup",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1294"
-    },
-    {
-      "id": "src_lib_faby_functions_salvararquivo",
-      "label": "salvarArquivo",
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "faby.functions.ts",
-      "file_type": "code",
-      "norm_label": "salvararquivo",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1408"
-    },
-    {
       "id": "src_lib_faby_functions_testarchave",
       "label": "testarChave",
       "_origin": "ast",
       "community": 23,
-      "community_name": "faby.functions.ts",
+      "community_name": "enviarMensagem",
       "file_type": "code",
       "norm_label": "testarchave",
       "source_file": "src/lib/faby.functions.ts",
       "source_location": "L660"
+    },
+    {
+      "id": "src_lib_faby_storage_server_test",
+      "label": "storage.server.test.ts",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "enviarMensagem",
+      "file_type": "code",
+      "norm_label": "storage.server.test.ts",
+      "source_file": "src/lib/faby/storage.server.test.ts",
+      "source_location": "L1"
     },
     {
       "id": "src_lib_faby_nuvem",
@@ -9385,7 +9243,7 @@
       "file_type": "code",
       "norm_label": "provider_labels",
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L312"
+      "source_location": "L311"
     },
     {
       "id": "src_lib_faby_functions_listarprovedorescustom",
@@ -9396,7 +9254,7 @@
       "file_type": "code",
       "norm_label": "listarprovedorescustom",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L777"
+      "source_location": "L781"
     },
     {
       "id": "src_lib_faby_functions_salvarchave",
@@ -9474,6 +9332,50 @@
       "norm_label": "@tanstack/react-start",
       "source_file": "package.json",
       "source_location": "L50"
+    },
+    {
+      "id": "src_lib_faby_aplicativos_locais_server",
+      "label": "aplicativos-locais.server.ts",
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "aplicativos-locais.server.ts",
+      "source_file": "src/lib/faby/aplicativos-locais.server.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_faby_builder_server_test",
+      "label": "builder.server.test.ts",
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "builder.server.test.ts",
+      "source_file": "src/lib/faby/builder.server.test.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_faby_img_to_html_server",
+      "label": "img-to-html.server.ts",
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "img-to-html.server.ts",
+      "source_file": "src/lib/faby/img-to-html.server.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_faby_provas_reais_test",
+      "label": "provas-reais.test.ts",
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "file_type": "code",
+      "norm_label": "provas-reais.test.ts",
+      "source_file": "src/lib/faby/provas-reais.test.ts",
+      "source_location": "L1"
     },
     {
       "id": "src_lib_faby_omniroute_local",
@@ -10136,17 +10038,6 @@
       "source_location": "L65"
     },
     {
-      "id": "src_agents_agentmanager",
-      "label": "AgentManager.ts",
-      "_origin": "ast",
-      "community": 31,
-      "community_name": "AgentManager",
-      "file_type": "code",
-      "norm_label": "agentmanager.ts",
-      "source_file": "src/agents/AgentManager.ts",
-      "source_location": "L1"
-    },
-    {
       "id": "src_lib_faby_ferramentas_server",
       "label": "ferramentas.server.ts",
       "_origin": "ast",
@@ -10323,33 +10214,11 @@
       "source_location": "L17"
     },
     {
-      "id": "src_components_faby_painelrecursos",
-      "label": "PainelRecursos.tsx",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "painelrecursos.tsx",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_faby_painelrecursos_titulos",
-      "label": "TITULOS",
-      "_origin": "ast",
-      "community": 34,
-      "community_name": "client.server.ts",
-      "file_type": "code",
-      "norm_label": "titulos",
-      "source_file": "src/components/faby/PainelRecursos.tsx",
-      "source_location": "L33"
-    },
-    {
       "id": "src_integrations_supabase_client_server",
       "label": "client.server.ts",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "client.server.ts",
       "source_file": "src/integrations/supabase/client.server.ts",
@@ -10360,40 +10229,73 @@
       "label": "supabaseAdmin",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "supabaseadmin",
       "source_file": "src/integrations/supabase/client.server.ts",
       "source_location": "L58"
     },
     {
+      "id": "src_lib_faby_functions",
+      "label": "faby.functions.ts",
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "faby.functions.ts",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_faby_functions_anexoschema",
+      "label": "anexoSchema",
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "anexoschema",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L40"
+    },
+    {
       "id": "src_lib_faby_functions_apagaragente",
       "label": "apagarAgente",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "apagaragente",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1092"
+      "source_location": "L1096"
+    },
+    {
+      "id": "src_lib_faby_functions_apagararquivo",
+      "label": "apagarArquivo",
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "apagararquivo",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L1492"
     },
     {
       "id": "src_lib_faby_functions_apagarbackup",
       "label": "apagarBackup",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "apagarbackup",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1388"
+      "source_location": "L1392"
     },
     {
       "id": "src_lib_faby_functions_apagarchave",
       "label": "apagarChave",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "apagarchave",
       "source_file": "src/lib/faby.functions.ts",
@@ -10404,7 +10306,7 @@
       "label": "apagarProjeto",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "apagarprojeto",
       "source_file": "src/lib/faby.functions.ts",
@@ -10415,132 +10317,187 @@
       "label": "apagarPrompt",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "apagarprompt",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1182"
+      "source_location": "L1186"
     },
     {
       "id": "src_lib_faby_functions_apagarprovedorcustom",
       "label": "apagarProvedorCustom",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "apagarprovedorcustom",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L879"
+      "source_location": "L883"
+    },
+    {
+      "id": "src_lib_faby_functions_cacheagentes",
+      "label": "cacheAgentes",
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "cacheagentes",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L49"
+    },
+    {
+      "id": "src_lib_faby_functions_cacheprompts",
+      "label": "cachePrompts",
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "cacheprompts",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L48"
     },
     {
       "id": "src_lib_faby_functions_criaragente",
       "label": "criarAgente",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "criaragente",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1058"
+      "source_location": "L1062"
+    },
+    {
+      "id": "src_lib_faby_functions_criarbackup",
+      "label": "criarBackup",
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "criarbackup",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L1256"
     },
     {
       "id": "src_lib_faby_functions_criarprompt",
       "label": "criarPrompt",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "criarprompt",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1148"
+      "source_location": "L1152"
     },
     {
       "id": "src_lib_faby_functions_criarprovedorcustom",
       "label": "criarProvedorCustom",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "criarprovedorcustom",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L800"
+      "source_location": "L804"
     },
     {
       "id": "src_lib_faby_functions_listaragentes",
       "label": "listarAgentes",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "listaragentes",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1028"
+      "source_location": "L1032"
     },
     {
       "id": "src_lib_faby_functions_listarbackups",
       "label": "listarBackups",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "listarbackups",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1212"
+      "source_location": "L1216"
+    },
+    {
+      "id": "src_lib_faby_functions_listarprojetos",
+      "label": "listarProjetos",
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "listarprojetos",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L74"
     },
     {
       "id": "src_lib_faby_functions_listarprompts",
       "label": "listarPrompts",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "listarprompts",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1118"
+      "source_location": "L1122"
+    },
+    {
+      "id": "src_lib_faby_functions_obtermemoria",
+      "label": "obterMemoria",
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "obtermemoria",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L911"
+    },
+    {
+      "id": "src_lib_faby_functions_obterprojeto",
+      "label": "obterProjeto",
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "obterprojeto",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L235"
+    },
+    {
+      "id": "src_lib_faby_functions_restaurarbackup",
+      "label": "restaurarBackup",
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "restaurarbackup",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L1298"
+    },
+    {
+      "id": "src_lib_faby_functions_salvararquivo",
+      "label": "salvarArquivo",
+      "_origin": "ast",
+      "community": 34,
+      "community_name": "faby.functions.ts",
+      "file_type": "code",
+      "norm_label": "salvararquivo",
+      "source_file": "src/lib/faby.functions.ts",
+      "source_location": "L1412"
     },
     {
       "id": "src_lib_faby_functions_salvarmemoria",
       "label": "salvarMemoria",
       "_origin": "ast",
       "community": 34,
-      "community_name": "client.server.ts",
+      "community_name": "faby.functions.ts",
       "file_type": "code",
       "norm_label": "salvarmemoria",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L927"
-    },
-    {
-      "id": "promises",
-      "label": "node:fs/promises",
-      "_origin": "ast",
-      "community": 35,
-      "community_name": "agents/types.ts",
-      "confidence": "EXTRACTED",
-      "file_type": "code",
-      "norm_label": "node:fs/promises",
-      "source_file": "node:fs/promises"
-    },
-    {
-      "id": "src_agents_codemodifier",
-      "label": "CodeModifier.ts",
-      "_origin": "ast",
-      "community": 35,
-      "community_name": "agents/types.ts",
-      "file_type": "code",
-      "norm_label": "codemodifier.ts",
-      "source_file": "src/agents/CodeModifier.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_agents_index",
-      "label": "index.ts",
-      "_origin": "ast",
-      "community": 35,
-      "community_name": "agents/types.ts",
-      "file_type": "code",
-      "norm_label": "index.ts",
-      "source_file": "src/agents/index.ts",
-      "source_location": "L1"
+      "source_location": "L931"
     },
     {
       "id": "src_agents_openmanusengine",
@@ -12309,6 +12266,61 @@
       "source_location": "L14"
     },
     {
+      "id": "promises",
+      "label": "node:fs/promises",
+      "_origin": "ast",
+      "community": 56,
+      "community_name": "CodeModifier",
+      "confidence": "EXTRACTED",
+      "file_type": "code",
+      "norm_label": "node:fs/promises",
+      "source_file": "node:fs/promises"
+    },
+    {
+      "id": "src_agents_agentmanager",
+      "label": "AgentManager.ts",
+      "_origin": "ast",
+      "community": 56,
+      "community_name": "CodeModifier",
+      "file_type": "code",
+      "norm_label": "agentmanager.ts",
+      "source_file": "src/agents/AgentManager.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_agents_codemodifier",
+      "label": "CodeModifier.ts",
+      "_origin": "ast",
+      "community": 56,
+      "community_name": "CodeModifier",
+      "file_type": "code",
+      "norm_label": "codemodifier.ts",
+      "source_file": "src/agents/CodeModifier.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_agents_codemodifier_test",
+      "label": "CodeModifier.test.ts",
+      "_origin": "ast",
+      "community": 56,
+      "community_name": "CodeModifier",
+      "file_type": "code",
+      "norm_label": "codemodifier.test.ts",
+      "source_file": "src/agents/CodeModifier.test.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_agents_index",
+      "label": "index.ts",
+      "_origin": "ast",
+      "community": 56,
+      "community_name": "CodeModifier",
+      "file_type": "code",
+      "norm_label": "index.ts",
+      "source_file": "src/agents/index.ts",
+      "source_location": "L1"
+    },
+    {
       "id": "package_overrides",
       "label": "overrides",
       "_origin": "ast",
@@ -12937,17 +12949,6 @@
       "source_location": "L25"
     },
     {
-      "id": "src_lib_faby_functions_obtermemoria",
-      "label": "obterMemoria",
-      "_origin": "ast",
-      "community": 67,
-      "community_name": "storage.server.ts",
-      "file_type": "code",
-      "norm_label": "obtermemoria",
-      "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L907"
-    },
-    {
       "id": "src_lib_faby_functions_obterprogressoexecucao",
       "label": "obterProgressoExecucao",
       "_origin": "ast",
@@ -12979,17 +12980,6 @@
       "norm_label": "memorystate",
       "source_file": "src/lib/faby/storage.server.ts",
       "source_location": "L113"
-    },
-    {
-      "id": "src_lib_faby_storage_server_test",
-      "label": "storage.server.test.ts",
-      "_origin": "ast",
-      "community": 67,
-      "community_name": "storage.server.ts",
-      "file_type": "code",
-      "norm_label": "storage.server.test.ts",
-      "source_file": "src/lib/faby/storage.server.test.ts",
-      "source_location": "L1"
     },
     {
       "id": "lovable_plan_recuperar_e_provar_o_funcionamento_do_fabyclaud_2026_09_22",
@@ -13625,6 +13615,72 @@
       "source_location": "L23"
     },
     {
+      "id": "src_components_faby_painelrecursos",
+      "label": "PainelRecursos.tsx",
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "painelrecursos.tsx",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_faby_painelrecursos_titulos",
+      "label": "TITULOS",
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "titulos",
+      "source_file": "src/components/faby/PainelRecursos.tsx",
+      "source_location": "L33"
+    },
+    {
+      "id": "src_lib_faby_config_memoria_sugerida",
+      "label": "MEMORIA_SUGERIDA",
+      "_origin": "ast",
+      "community": 74,
+      "community_name": "PainelRecursos.tsx",
+      "file_type": "code",
+      "norm_label": "memoria_sugerida",
+      "source_file": "src/lib/faby/config.ts",
+      "source_location": "L396"
+    },
+    {
+      "id": "src_lib_faby_orquestracao_server",
+      "label": "orquestracao.server.ts",
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "orquestracao.server.ts",
+      "file_type": "code",
+      "norm_label": "orquestracao.server.ts",
+      "source_file": "src/lib/faby/orquestracao.server.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_faby_orquestracao_server_directoryreader",
+      "label": "directoryReader",
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "orquestracao.server.ts",
+      "file_type": "code",
+      "norm_label": "directoryreader",
+      "source_file": "src/lib/faby/orquestracao.server.ts",
+      "source_location": "L5"
+    },
+    {
+      "id": "src_lib_faby_orquestracao_server_openmanusagent",
+      "label": "openManusAgent",
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "orquestracao.server.ts",
+      "file_type": "code",
+      "norm_label": "openmanusagent",
+      "source_file": "src/lib/faby/orquestracao.server.ts",
+      "source_location": "L6"
+    },
+    {
       "id": "src_routes_api_public_estudar",
       "label": "estudar.ts",
       "_origin": "ast",
@@ -13779,83 +13835,15 @@
       "source_location": "L175"
     },
     {
-      "id": "src_agents_codemodifier_test",
-      "label": "CodeModifier.test.ts",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "orquestracao.server.ts",
-      "file_type": "code",
-      "norm_label": "codemodifier.test.ts",
-      "source_file": "src/agents/CodeModifier.test.ts",
-      "source_location": "L1"
-    },
-    {
       "id": "src_agents_directoryreader",
       "label": "DirectoryReader.ts",
       "_origin": "ast",
       "community": 9,
-      "community_name": "orquestracao.server.ts",
+      "community_name": "DirectoryReader",
       "file_type": "code",
       "norm_label": "directoryreader.ts",
       "source_file": "src/agents/DirectoryReader.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "src_lib_faby_orquestracao_server",
-      "label": "orquestracao.server.ts",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "orquestracao.server.ts",
-      "file_type": "code",
-      "norm_label": "orquestracao.server.ts",
-      "source_file": "src/lib/faby/orquestracao.server.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_lib_faby_orquestracao_server_directoryreader",
-      "label": "directoryReader",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "orquestracao.server.ts",
-      "file_type": "code",
-      "norm_label": "directoryreader",
-      "source_file": "src/lib/faby/orquestracao.server.ts",
-      "source_location": "L5"
-    },
-    {
-      "id": "src_lib_faby_orquestracao_server_openmanusagent",
-      "label": "openManusAgent",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "orquestracao.server.ts",
-      "file_type": "code",
-      "norm_label": "openmanusagent",
-      "source_file": "src/lib/faby/orquestracao.server.ts",
-      "source_location": "L6"
-    },
-    {
-      "id": "ref_node_assert_strict",
-      "label": "ref_node_assert_strict",
-      "_origin": "semantic",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "ref_node_assert_strict",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "ref_node_test",
-      "label": "ref_node_test",
-      "_origin": "semantic",
-      "community": 0,
-      "community_name": "builder.server.ts",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "ref_node_test",
-      "source_file": "",
-      "type": "external"
     },
     {
       "id": "ref_tanstack_react_start_server",
@@ -13890,6 +13878,30 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "src_components_ui_dialog_dialog",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "ref_node_assert_strict",
+      "label": "ref_node_assert_strict",
+      "_origin": "semantic",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "ref_node_assert_strict",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "ref_node_test",
+      "label": "ref_node_test",
+      "_origin": "semantic",
+      "community": 27,
+      "community_name": "provas-reais.test.ts",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "ref_node_test",
       "source_file": "",
       "type": "external"
     },
@@ -14228,7 +14240,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/faby/SettingsDialog.tsx",
-      "source_location": "L383",
+      "source_location": "L382",
       "weight": 1.0
     },
     {
@@ -16904,7 +16916,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1273",
+      "source_location": "L1281",
       "weight": 1.0
     },
     {
@@ -16916,7 +16928,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1292",
+      "source_location": "L1300",
       "weight": 1.0
     },
     {
@@ -16928,7 +16940,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1298",
+      "source_location": "L1306",
       "weight": 1.0
     },
     {
@@ -16940,7 +16952,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1429",
+      "source_location": "L1437",
       "weight": 1.0
     },
     {
@@ -16952,7 +16964,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L630",
+      "source_location": "L638",
       "weight": 1.0
     },
     {
@@ -16976,7 +16988,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1655",
+      "source_location": "L1663",
       "weight": 1.0
     },
     {
@@ -16988,7 +17000,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L599",
+      "source_location": "L607",
       "weight": 1.0
     },
     {
@@ -17000,7 +17012,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L600",
+      "source_location": "L608",
       "weight": 1.0
     },
     {
@@ -17012,7 +17024,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L769",
+      "source_location": "L777",
       "weight": 1.0
     },
     {
@@ -17024,7 +17036,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L790",
+      "source_location": "L798",
       "weight": 1.0
     },
     {
@@ -17036,7 +17048,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L791",
+      "source_location": "L799",
       "weight": 1.0
     },
     {
@@ -17108,7 +17120,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L434",
+      "source_location": "L442",
       "weight": 1.0
     },
     {
@@ -17120,7 +17132,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L464",
+      "source_location": "L472",
       "weight": 1.0
     },
     {
@@ -17132,7 +17144,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L465",
+      "source_location": "L473",
       "weight": 1.0
     },
     {
@@ -17144,7 +17156,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L466",
+      "source_location": "L474",
       "weight": 1.0
     },
     {
@@ -17156,7 +17168,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1164",
+      "source_location": "L1172",
       "weight": 1.0
     },
     {
@@ -17168,7 +17180,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1237",
+      "source_location": "L1245",
       "weight": 1.0
     },
     {
@@ -17180,7 +17192,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1242",
+      "source_location": "L1250",
       "weight": 1.0
     },
     {
@@ -17192,7 +17204,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1195",
+      "source_location": "L1203",
       "weight": 1.0
     },
     {
@@ -17204,7 +17216,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1202",
+      "source_location": "L1210",
       "weight": 1.0
     },
     {
@@ -17216,7 +17228,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1132",
+      "source_location": "L1140",
       "weight": 1.0
     },
     {
@@ -17228,7 +17240,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1133",
+      "source_location": "L1141",
       "weight": 1.0
     },
     {
@@ -17240,7 +17252,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1020",
+      "source_location": "L1028",
       "weight": 1.0
     },
     {
@@ -17252,7 +17264,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1021",
+      "source_location": "L1029",
       "weight": 1.0
     },
     {
@@ -17264,7 +17276,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1043",
+      "source_location": "L1051",
       "weight": 1.0
     },
     {
@@ -17276,7 +17288,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1114",
+      "source_location": "L1122",
       "weight": 1.0
     },
     {
@@ -17288,7 +17300,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L512",
+      "source_location": "L520",
       "weight": 1.0
     },
     {
@@ -17300,7 +17312,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1072",
+      "source_location": "L1080",
       "weight": 1.0
     },
     {
@@ -17312,7 +17324,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1073",
+      "source_location": "L1081",
       "weight": 1.0
     },
     {
@@ -17708,7 +17720,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1495",
+      "source_location": "L1499",
       "weight": 1.0
     },
     {
@@ -17720,7 +17732,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1520",
+      "source_location": "L1524",
       "weight": 1.0
     },
     {
@@ -17732,7 +17744,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1532",
+      "source_location": "L1536",
       "weight": 1.0
     },
     {
@@ -17780,7 +17792,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L883",
+      "source_location": "L887",
       "weight": 1.0
     },
     {
@@ -17792,7 +17804,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L885",
+      "source_location": "L889",
       "weight": 1.0
     },
     {
@@ -17828,7 +17840,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1268",
+      "source_location": "L1272",
       "weight": 1.0
     },
     {
@@ -17840,7 +17852,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1268",
+      "source_location": "L1272",
       "weight": 1.0
     },
     {
@@ -17852,7 +17864,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L839",
+      "source_location": "L843",
       "weight": 1.0
     },
     {
@@ -17864,7 +17876,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1705",
+      "source_location": "L1709",
       "weight": 1.0
     },
     {
@@ -17876,7 +17888,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1708",
+      "source_location": "L1712",
       "weight": 1.0
     },
     {
@@ -17888,7 +17900,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1762",
+      "source_location": "L1766",
       "weight": 1.0
     },
     {
@@ -17900,7 +17912,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1764",
+      "source_location": "L1768",
       "weight": 1.0
     },
     {
@@ -17912,7 +17924,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1775",
+      "source_location": "L1779",
       "weight": 1.0
     },
     {
@@ -17924,7 +17936,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1785",
+      "source_location": "L1789",
       "weight": 1.0
     },
     {
@@ -17936,7 +17948,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1903",
+      "source_location": "L1908",
       "weight": 1.0
     },
     {
@@ -17948,7 +17960,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1960",
+      "source_location": "L1965",
       "weight": 1.0
     },
     {
@@ -17960,7 +17972,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1990",
+      "source_location": "L1995",
       "weight": 1.0
     },
     {
@@ -17972,7 +17984,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2035",
+      "source_location": "L2040",
       "weight": 1.0
     },
     {
@@ -17984,7 +17996,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2061",
+      "source_location": "L2066",
       "weight": 1.0
     },
     {
@@ -17996,7 +18008,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2452",
+      "source_location": "L2457",
       "weight": 1.0
     },
     {
@@ -18008,7 +18020,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2575",
+      "source_location": "L2580",
       "weight": 1.0
     },
     {
@@ -18020,7 +18032,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2629",
+      "source_location": "L2634",
       "weight": 1.0
     },
     {
@@ -18116,7 +18128,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L780",
+      "source_location": "L784",
       "weight": 1.0
     },
     {
@@ -18128,7 +18140,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L797",
+      "source_location": "L801",
       "weight": 1.0
     },
     {
@@ -18176,7 +18188,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L910",
+      "source_location": "L914",
       "weight": 1.0
     },
     {
@@ -18188,7 +18200,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L924",
+      "source_location": "L928",
       "weight": 1.0
     },
     {
@@ -18260,7 +18272,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1347",
+      "source_location": "L1351",
       "weight": 1.0
     },
     {
@@ -18272,7 +18284,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1347",
+      "source_location": "L1351",
       "weight": 1.0
     },
     {
@@ -18284,7 +18296,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1351",
+      "source_location": "L1355",
       "weight": 1.0
     },
     {
@@ -18296,7 +18308,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1421",
+      "source_location": "L1425",
       "weight": 1.0
     },
     {
@@ -18308,7 +18320,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1446",
+      "source_location": "L1450",
       "weight": 1.0
     },
     {
@@ -18320,7 +18332,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1458",
+      "source_location": "L1462",
       "weight": 1.0
     },
     {
@@ -18344,7 +18356,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L933",
+      "source_location": "L937",
       "weight": 1.0
     },
     {
@@ -18876,6 +18888,30 @@
       "weight": 1.0
     },
     {
+      "source": "src_lib_faby_provas_reais_test",
+      "target": "src_lib_faby_providers_server_compactarmensagemparahistorico",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/provas-reais.test.ts",
+      "source_location": "L419",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_provas_reais_test",
+      "target": "src_lib_faby_functions_respostacomprovacapacidade",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/provas-reais.test.ts",
+      "source_location": "L445",
+      "weight": 1.0
+    },
+    {
       "source": "src_lib_faby_providers_server_chamarantigravity",
       "target": "src_lib_faby_providers_server_chamargooglecomfallback",
       "relation": "calls",
@@ -18884,7 +18920,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L461",
+      "source_location": "L479",
       "weight": 1.0
     },
     {
@@ -18896,7 +18932,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L346",
+      "source_location": "L364",
       "weight": 1.0
     },
     {
@@ -18908,7 +18944,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L353",
+      "source_location": "L371",
       "weight": 1.0
     },
     {
@@ -18920,7 +18956,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L366",
+      "source_location": "L384",
       "weight": 1.0
     },
     {
@@ -18932,7 +18968,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L410",
+      "source_location": "L428",
       "weight": 1.0
     },
     {
@@ -18944,7 +18980,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L413",
+      "source_location": "L431",
       "weight": 1.0
     },
     {
@@ -18956,7 +18992,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L415",
+      "source_location": "L433",
       "weight": 1.0
     },
     {
@@ -18968,7 +19004,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L436",
+      "source_location": "L454",
       "weight": 1.0
     },
     {
@@ -18980,7 +19016,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L438",
+      "source_location": "L456",
       "weight": 1.0
     },
     {
@@ -18992,7 +19028,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L444",
+      "source_location": "L462",
       "weight": 1.0
     },
     {
@@ -19004,7 +19040,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L553",
+      "source_location": "L571",
       "weight": 1.0
     },
     {
@@ -19016,7 +19052,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L556",
+      "source_location": "L574",
       "weight": 1.0
     },
     {
@@ -19028,7 +19064,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L570",
+      "source_location": "L588",
       "weight": 1.0
     },
     {
@@ -19040,7 +19076,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L591",
+      "source_location": "L609",
       "weight": 1.0
     },
     {
@@ -19052,7 +19088,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L603",
+      "source_location": "L621",
       "weight": 1.0
     },
     {
@@ -19064,7 +19100,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L605",
+      "source_location": "L623",
       "weight": 1.0
     },
     {
@@ -19076,7 +19112,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L505",
+      "source_location": "L523",
       "weight": 1.0
     },
     {
@@ -19088,7 +19124,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L507",
+      "source_location": "L525",
       "weight": 1.0
     },
     {
@@ -19100,7 +19136,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L511",
+      "source_location": "L529",
       "weight": 1.0
     },
     {
@@ -19112,7 +19148,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L520",
+      "source_location": "L538",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_providers_server_compactarmensagemparahistorico",
+      "target": "src_lib_faby_providers_server_resumirtexto",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/faby/providers.server.ts",
+      "source_location": "L90",
       "weight": 1.0
     },
     {
@@ -19124,7 +19172,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L261",
+      "source_location": "L279",
       "weight": 1.0
     },
     {
@@ -19136,7 +19184,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L251",
+      "source_location": "L269",
       "weight": 1.0
     },
     {
@@ -19153,26 +19201,26 @@
     },
     {
       "source": "src_lib_faby_providers_server_sanitizarhistoricoparagoogle",
-      "target": "src_lib_faby_providers_server_resumirtexto",
+      "target": "src_lib_faby_providers_server_compactarmensagemparahistorico",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L89",
+      "source_location": "L107",
       "weight": 1.0
     },
     {
       "source": "src_lib_faby_providers_server_sanitizarhistoricoparaopenai",
-      "target": "src_lib_faby_providers_server_resumirtexto",
+      "target": "src_lib_faby_providers_server_compactarmensagemparahistorico",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L144",
+      "source_location": "L162",
       "weight": 1.0
     },
     {
@@ -21255,7 +21303,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1108",
+      "source_location": "L1112",
       "weight": 1.0
     },
     {
@@ -21268,7 +21316,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1505",
+      "source_location": "L1509",
       "weight": 1.0
     },
     {
@@ -21281,7 +21329,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1398",
+      "source_location": "L1402",
       "weight": 1.0
     },
     {
@@ -21307,7 +21355,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1018",
+      "source_location": "L1022",
       "weight": 1.0
     },
     {
@@ -21333,7 +21381,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1198",
+      "source_location": "L1202",
       "weight": 1.0
     },
     {
@@ -21346,7 +21394,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L893",
+      "source_location": "L897",
       "weight": 1.0
     },
     {
@@ -21372,7 +21420,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1074",
+      "source_location": "L1078",
       "weight": 1.0
     },
     {
@@ -21385,7 +21433,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1280",
+      "source_location": "L1284",
       "weight": 1.0
     },
     {
@@ -21398,7 +21446,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1164",
+      "source_location": "L1168",
       "weight": 1.0
     },
     {
@@ -21411,7 +21459,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L813",
+      "source_location": "L817",
       "weight": 1.0
     },
     {
@@ -21424,7 +21472,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L851",
+      "source_location": "L855",
       "weight": 1.0
     },
     {
@@ -21437,7 +21485,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1663",
+      "source_location": "L1667",
       "weight": 1.0
     },
     {
@@ -21450,7 +21498,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1680",
+      "source_location": "L1684",
       "weight": 1.0
     },
     {
@@ -21463,7 +21511,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1683",
+      "source_location": "L1687",
       "weight": 1.0
     },
     {
@@ -21476,7 +21524,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1684",
+      "source_location": "L1688",
       "weight": 1.0
     },
     {
@@ -21489,7 +21537,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1725",
+      "source_location": "L1729",
       "weight": 1.0
     },
     {
@@ -21502,7 +21550,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2272",
+      "source_location": "L2277",
       "weight": 1.0
     },
     {
@@ -21515,7 +21563,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2352",
+      "source_location": "L2357",
       "weight": 1.0
     },
     {
@@ -21528,7 +21576,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2362",
+      "source_location": "L2367",
       "weight": 1.0
     },
     {
@@ -21541,7 +21589,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L2381",
+      "source_location": "L2386",
       "weight": 1.0
     },
     {
@@ -21554,7 +21602,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L3108",
+      "source_location": "L3113",
       "weight": 1.0
     },
     {
@@ -21567,7 +21615,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L964",
+      "source_location": "L968",
       "weight": 1.0
     },
     {
@@ -21580,7 +21628,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1006",
+      "source_location": "L1010",
       "weight": 1.0
     },
     {
@@ -21593,7 +21641,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1570",
+      "source_location": "L1574",
       "weight": 1.0
     },
     {
@@ -21606,7 +21654,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1040",
+      "source_location": "L1044",
       "weight": 1.0
     },
     {
@@ -21619,7 +21667,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1233",
+      "source_location": "L1237",
       "weight": 1.0
     },
     {
@@ -21658,7 +21706,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1130",
+      "source_location": "L1134",
       "weight": 1.0
     },
     {
@@ -21671,7 +21719,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L787",
+      "source_location": "L791",
       "weight": 1.0
     },
     {
@@ -21697,7 +21745,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L914",
+      "source_location": "L918",
       "weight": 1.0
     },
     {
@@ -21723,7 +21771,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1307",
+      "source_location": "L1311",
       "weight": 1.0
     },
     {
@@ -21736,7 +21784,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1431",
+      "source_location": "L1435",
       "weight": 1.0
     },
     {
@@ -21775,7 +21823,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L939",
+      "source_location": "L943",
       "weight": 1.0
     },
     {
@@ -21854,6 +21902,32 @@
       "deferred": true,
       "source_file": "src/lib/faby/provas-reais.test.ts",
       "source_location": "L347",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_provas_reais_test",
+      "target": "src_lib_faby_config",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "deferred": true,
+      "source_file": "src/lib/faby/provas-reais.test.ts",
+      "source_location": "L413",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_provas_reais_test",
+      "target": "src_lib_faby_functions",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "deferred": true,
+      "source_file": "src/lib/faby/provas-reais.test.ts",
+      "source_location": "L414",
       "weight": 1.0
     },
     {
@@ -36552,7 +36626,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1063",
+      "source_location": "L1071",
       "weight": 1.0
     },
     {
@@ -36563,7 +36637,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1079",
+      "source_location": "L1087",
       "weight": 1.0
     },
     {
@@ -36574,7 +36648,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1106",
+      "source_location": "L1114",
       "weight": 1.0
     },
     {
@@ -36585,7 +36659,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1126",
+      "source_location": "L1134",
       "weight": 1.0
     },
     {
@@ -36596,7 +36670,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1146",
+      "source_location": "L1154",
       "weight": 1.0
     },
     {
@@ -36607,7 +36681,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1151",
+      "source_location": "L1159",
       "weight": 1.0
     },
     {
@@ -36618,7 +36692,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1163",
+      "source_location": "L1171",
       "weight": 1.0
     },
     {
@@ -36629,7 +36703,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1170",
+      "source_location": "L1178",
       "weight": 1.0
     },
     {
@@ -36640,7 +36714,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1178",
+      "source_location": "L1186",
       "weight": 1.0
     },
     {
@@ -36651,7 +36725,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1188",
+      "source_location": "L1196",
       "weight": 1.0
     },
     {
@@ -36662,7 +36736,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1231",
+      "source_location": "L1239",
       "weight": 1.0
     },
     {
@@ -36673,7 +36747,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1253",
+      "source_location": "L1261",
       "weight": 1.0
     },
     {
@@ -36684,7 +36758,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1260",
+      "source_location": "L1268",
       "weight": 1.0
     },
     {
@@ -36706,7 +36780,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1539",
+      "source_location": "L1547",
       "weight": 1.0
     },
     {
@@ -36717,7 +36791,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1543",
+      "source_location": "L1551",
       "weight": 1.0
     },
     {
@@ -36728,7 +36802,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1552",
+      "source_location": "L1560",
       "weight": 1.0
     },
     {
@@ -36739,7 +36813,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1554",
+      "source_location": "L1562",
       "weight": 1.0
     },
     {
@@ -36750,7 +36824,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L1645",
+      "source_location": "L1653",
       "weight": 1.0
     },
     {
@@ -36882,7 +36956,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L489",
+      "source_location": "L497",
       "weight": 1.0
     },
     {
@@ -36893,7 +36967,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L491",
+      "source_location": "L499",
       "weight": 1.0
     },
     {
@@ -36904,7 +36978,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L494",
+      "source_location": "L502",
       "weight": 1.0
     },
     {
@@ -36915,7 +36989,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L595",
+      "source_location": "L603",
       "weight": 1.0
     },
     {
@@ -36926,7 +37000,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L626",
+      "source_location": "L634",
       "weight": 1.0
     },
     {
@@ -36937,7 +37011,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L666",
+      "source_location": "L674",
       "weight": 1.0
     },
     {
@@ -36948,7 +37022,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L717",
+      "source_location": "L725",
       "weight": 1.0
     },
     {
@@ -36959,7 +37033,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L751",
+      "source_location": "L759",
       "weight": 1.0
     },
     {
@@ -36970,7 +37044,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L764",
+      "source_location": "L772",
       "weight": 1.0
     },
     {
@@ -36981,7 +37055,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L855",
+      "source_location": "L863",
       "weight": 1.0
     },
     {
@@ -36992,7 +37066,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L868",
+      "source_location": "L876",
       "weight": 1.0
     },
     {
@@ -37014,7 +37088,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L937",
+      "source_location": "L945",
       "weight": 1.0
     },
     {
@@ -37025,7 +37099,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L947",
+      "source_location": "L955",
       "weight": 1.0
     },
     {
@@ -37047,7 +37121,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L17",
+      "source_location": "L16",
       "weight": 1.0
     },
     {
@@ -37058,7 +37132,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L209",
+      "source_location": "L208",
       "weight": 1.0
     },
     {
@@ -37069,7 +37143,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L266",
+      "source_location": "L265",
       "weight": 1.0
     },
     {
@@ -37080,7 +37154,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L312",
+      "source_location": "L311",
       "weight": 1.0
     },
     {
@@ -37091,7 +37165,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L323",
+      "source_location": "L321",
       "weight": 1.0
     },
     {
@@ -37102,7 +37176,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L334",
+      "source_location": "L331",
       "weight": 1.0
     },
     {
@@ -37113,7 +37187,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L345",
+      "source_location": "L341",
       "weight": 1.0
     },
     {
@@ -37124,7 +37198,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L346",
+      "source_location": "L342",
       "weight": 1.0
     },
     {
@@ -37135,7 +37209,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L348",
+      "source_location": "L344",
       "weight": 1.0
     },
     {
@@ -37146,7 +37220,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L349",
+      "source_location": "L345",
       "weight": 1.0
     },
     {
@@ -37157,7 +37231,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L371",
+      "source_location": "L367",
       "weight": 1.0
     },
     {
@@ -37168,7 +37242,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L373",
+      "source_location": "L369",
       "weight": 1.0
     },
     {
@@ -37179,7 +37253,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L384",
+      "source_location": "L380",
       "weight": 1.0
     },
     {
@@ -37190,7 +37264,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L393",
+      "source_location": "L389",
       "weight": 1.0
     },
     {
@@ -37201,7 +37275,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L400",
+      "source_location": "L396",
       "weight": 1.0
     },
     {
@@ -37212,7 +37286,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L405",
+      "source_location": "L401",
       "weight": 1.0
     },
     {
@@ -37223,7 +37297,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L411",
+      "source_location": "L407",
       "weight": 1.0
     },
     {
@@ -37234,7 +37308,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L416",
+      "source_location": "L412",
       "weight": 1.0
     },
     {
@@ -37245,7 +37319,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L452",
+      "source_location": "L448",
       "weight": 1.0
     },
     {
@@ -37256,7 +37330,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L60",
+      "source_location": "L59",
       "weight": 1.0
     },
     {
@@ -37267,7 +37341,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L71",
+      "source_location": "L70",
       "weight": 1.0
     },
     {
@@ -37278,7 +37352,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L77",
+      "source_location": "L76",
       "weight": 1.0
     },
     {
@@ -37289,7 +37363,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/config.ts",
-      "source_location": "L97",
+      "source_location": "L96",
       "weight": 1.0
     },
     {
@@ -37685,7 +37759,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1002",
+      "source_location": "L1006",
       "weight": 1.0
     },
     {
@@ -37696,7 +37770,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1013",
+      "source_location": "L1017",
       "weight": 1.0
     },
     {
@@ -37707,7 +37781,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1028",
+      "source_location": "L1032",
       "weight": 1.0
     },
     {
@@ -37718,7 +37792,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1058",
+      "source_location": "L1062",
       "weight": 1.0
     },
     {
@@ -37729,7 +37803,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1092",
+      "source_location": "L1096",
       "weight": 1.0
     },
     {
@@ -37740,7 +37814,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1118",
+      "source_location": "L1122",
       "weight": 1.0
     },
     {
@@ -37751,7 +37825,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1148",
+      "source_location": "L1152",
       "weight": 1.0
     },
     {
@@ -37762,7 +37836,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1182",
+      "source_location": "L1186",
       "weight": 1.0
     },
     {
@@ -37773,7 +37847,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1212",
+      "source_location": "L1216",
       "weight": 1.0
     },
     {
@@ -37784,7 +37858,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1252",
+      "source_location": "L1256",
       "weight": 1.0
     },
     {
@@ -37795,7 +37869,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1294",
+      "source_location": "L1298",
       "weight": 1.0
     },
     {
@@ -37806,7 +37880,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1388",
+      "source_location": "L1392",
       "weight": 1.0
     },
     {
@@ -37817,7 +37891,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1408",
+      "source_location": "L1412",
       "weight": 1.0
     },
     {
@@ -37839,7 +37913,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1488",
+      "source_location": "L1492",
       "weight": 1.0
     },
     {
@@ -37850,7 +37924,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1564",
+      "source_location": "L1568",
       "weight": 1.0
     },
     {
@@ -37861,7 +37935,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L1638",
+      "source_location": "L1642",
       "weight": 1.0
     },
     {
@@ -38048,7 +38122,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L777",
+      "source_location": "L781",
       "weight": 1.0
     },
     {
@@ -38059,7 +38133,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L800",
+      "source_location": "L804",
       "weight": 1.0
     },
     {
@@ -38070,7 +38144,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L879",
+      "source_location": "L883",
       "weight": 1.0
     },
     {
@@ -38081,7 +38155,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L907",
+      "source_location": "L911",
       "weight": 1.0
     },
     {
@@ -38092,7 +38166,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L927",
+      "source_location": "L931",
       "weight": 1.0
     },
     {
@@ -38103,7 +38177,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby.functions.ts",
-      "source_location": "L960",
+      "source_location": "L964",
       "weight": 1.0
     },
     {
@@ -38862,7 +38936,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L132",
+      "source_location": "L150",
       "weight": 1.0
     },
     {
@@ -38873,7 +38947,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L175",
+      "source_location": "L193",
       "weight": 1.0
     },
     {
@@ -38884,7 +38958,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L182",
+      "source_location": "L200",
       "weight": 1.0
     },
     {
@@ -38895,7 +38969,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L189",
+      "source_location": "L207",
       "weight": 1.0
     },
     {
@@ -38917,7 +38991,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L216",
+      "source_location": "L234",
       "weight": 1.0
     },
     {
@@ -38928,7 +39002,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L246",
+      "source_location": "L264",
       "weight": 1.0
     },
     {
@@ -38939,7 +39013,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L254",
+      "source_location": "L272",
       "weight": 1.0
     },
     {
@@ -38950,7 +39024,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L260",
+      "source_location": "L278",
       "weight": 1.0
     },
     {
@@ -38961,7 +39035,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L287",
+      "source_location": "L305",
       "weight": 1.0
     },
     {
@@ -38972,18 +39046,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L337",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_providers_server",
-      "target": "src_lib_faby_providers_server_chamargooglecomfallback",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L387",
+      "source_location": "L355",
       "weight": 1.0
     },
     {
@@ -38999,13 +39062,24 @@
     },
     {
       "source": "src_lib_faby_providers_server",
+      "target": "src_lib_faby_providers_server_chamargooglecomfallback",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/faby/providers.server.ts",
+      "source_location": "L405",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_providers_server",
       "target": "src_lib_faby_providers_server_chamaropenaicompat",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L426",
+      "source_location": "L444",
       "weight": 1.0
     },
     {
@@ -39016,7 +39090,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L454",
+      "source_location": "L472",
       "weight": 1.0
     },
     {
@@ -39027,7 +39101,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L464",
+      "source_location": "L482",
       "weight": 1.0
     },
     {
@@ -39038,29 +39112,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L476",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_providers_server",
-      "target": "src_lib_faby_providers_server_endpointomniroute",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L484",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_faby_providers_server",
-      "target": "src_lib_faby_providers_server_chamarprovedorcommodelo",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L493",
+      "source_location": "L494",
       "weight": 1.0
     },
     {
@@ -39076,13 +39128,35 @@
     },
     {
       "source": "src_lib_faby_providers_server",
+      "target": "src_lib_faby_providers_server_endpointomniroute",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/faby/providers.server.ts",
+      "source_location": "L502",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_providers_server",
+      "target": "src_lib_faby_providers_server_chamarprovedorcommodelo",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/faby/providers.server.ts",
+      "source_location": "L511",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_providers_server",
       "target": "src_lib_faby_providers_server_chamarprovedor",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L536",
+      "source_location": "L554",
       "weight": 1.0
     },
     {
@@ -39093,7 +39167,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
-      "source_location": "L644",
+      "source_location": "L662",
       "weight": 1.0
     },
     {
@@ -39120,13 +39194,24 @@
     },
     {
       "source": "src_lib_faby_providers_server",
-      "target": "src_lib_faby_providers_server_sanitizarhistoricoparagoogle",
+      "target": "src_lib_faby_providers_server_compactarmensagemparahistorico",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/faby/providers.server.ts",
       "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_faby_providers_server",
+      "target": "src_lib_faby_providers_server_sanitizarhistoricoparagoogle",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/faby/providers.server.ts",
+      "source_location": "L95",
       "weight": 1.0
     },
     {
@@ -41826,7 +41911,7 @@
       "confidence_score": 0.8,
       "context": "call",
       "source_file": "src/lib/faby/builder.server.ts",
-      "source_location": "L770",
+      "source_location": "L778",
       "weight": 1.0
     },
     {
@@ -42011,5 +42096,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "55b434b9571d3c6ef20c22422977131ebb7135b5"
+  "built_at_commit": "1edc77d09b7b91df6541343723c46a9002c5437f"
 }
