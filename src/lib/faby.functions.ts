@@ -573,7 +573,7 @@ export const salvarChave = createServerFn({ method: "POST" })
         chave,
         [],
         [],
-        15_000,
+        25_000,
         data.provider === "omniroute" ? apiUrlValida || undefined : undefined,
       );
       if (teste.ok) {
@@ -771,7 +771,11 @@ export const testarChave = createServerFn({ method: "POST" })
   });
 
 export function respostaComprovaCapacidade(texto: string) {
-  return (texto || "").includes("FABY_OK|HTML|CSS|JS");
+  const t = (texto || "").toUpperCase();
+  return (
+    t.includes("FABY_OK|HTML|CSS|JS") ||
+    /FABY_OK\s*\|\s*HTML\s*\|\s*CSS\s*\|\s*JS/i.test(texto || "")
+  );
 }
 
 export const listarProvedoresCustom = createServerFn({ method: "GET" })
@@ -1830,14 +1834,15 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       ]),
     );
 
-    // O Antigravity Agent utiliza a mesma chave do Google Gemini já cadastrada
-    const chaveGoogle = mapaChaves.get("google");
-    if (chaveGoogle && !mapaChaves.has("antigravity")) {
-      mapaChaves.set("antigravity", { ...chaveGoogle });
+    // Normalização transparente: chave Google/Gemini alimenta chamadas do Google e loop Antigravity
+    const chaveGoogle = mapaChaves.get("google") ?? mapaChaves.get("antigravity");
+    if (chaveGoogle) {
+      mapaChaves.set("google", { ...chaveGoogle });
     }
 
+    const modeloEscolhido = data.model === "antigravity" ? "google" : data.model;
     const ordem = [
-      data.model,
+      modeloEscolhido,
       ...Object.keys(MODELS),
       ...provedoresCustom.map((p) => p.slug),
     ].filter((pid, i, arr) => arr.indexOf(pid) === i);
@@ -3402,8 +3407,8 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       try {
         await guardarNota(
           mudouArquivos
-            ? `[CONCLUÍDO] Pedido "${prompt.slice(0, 70)}" (${placarEvolucao || "sem placar"}). Arquivos tocados: ${Object.keys(extraido.arquivos).join(", ").slice(0, 200)}. [PRÓXIMO] Validar na prévia e tratar somente erros observados.`
-            : `[BLOQUEADO] Pedido "${prompt.slice(0, 70)}" não entrou na prévia (${placarEvolucao || "sem placar"}): ${textoFinal.slice(0, 200).replace(/\s+/g, " ")}. [PENDENTE] Resolver o bloqueio sem repetir a mesma abordagem.`,
+            ? `[EQUIPE - ${nomeDe(provedorUsado)}] Pedido concluído: "${prompt.slice(0, 80)}". Arquivos atualizados: ${Object.keys(extraido.arquivos).join(", ")}. DIRETRIZ DA EQUIPE: Partir deste estado, preservar 100% dos estilos e arquivos já criados.`
+            : `[AVISO] Pedido "${prompt.slice(0, 80)}" não alterou arquivos: ${textoFinal.slice(0, 150).replace(/\s+/g, " ")}.`,
         );
       } catch {
         // ignore

@@ -6,7 +6,6 @@ export const MODELS = {
   deepseek: "deepseek-chat",
   zai: "glm-4-flash",
   omniroute: "auto/coding",
-  antigravity: "gemini-2.0-flash",
 } satisfies Record<string, string>;
 
 /**
@@ -310,21 +309,19 @@ export function ehErroDeModelo(status: number, texto: string) {
 }
 
 export const PROVIDER_LABELS: Record<string, string> = {
-  antigravity: "Google Antigravity Agent (Sandbox + Loop Autônomo)",
+  google: "Google Gemini (2.5 Flash / Pro)",
   groq: "Groq (Qwen 2.5 Coder 32B / Llama 70B)",
   openrouter: "OpenRouter (Qwen Coder / DeepSeek R1 grátis)",
-  google: "Gemini 2.5 Flash / Pro",
-  deepseek: "DeepSeek oficial (V3 / R1 — exige saldo)",
   huggingface: "Hugging Face (Qwen Coder / DeepSeek V3)",
+  deepseek: "DeepSeek oficial (V3 / R1 — exige saldo)",
   zai: "Z.AI (GLM-4 Flash)",
   omniroute: "OmniRoute local (IAs grátis)",
 };
 
 export const PROVIDER_LINKS: Record<string, string> = {
-  antigravity: "https://aistudio.google.com/apikey",
+  google: "https://aistudio.google.com/apikey",
   groq: "https://console.groq.com/keys",
   openrouter: "https://openrouter.ai/keys",
-  google: "https://aistudio.google.com/apikey",
   huggingface: "https://huggingface.co/settings/tokens",
   deepseek: "https://platform.deepseek.com/api_keys",
   zai: "https://z.ai/manage-apikey/apikey-list",
@@ -332,10 +329,9 @@ export const PROVIDER_LINKS: Record<string, string> = {
 
 /** Ordem de preferência para programar (a primeira com chave vira juíza do duelo). */
 export const ORDEM_QUALIDADE = [
-  "antigravity",
+  "google",
   "groq",
   "openrouter",
-  "google",
   "deepseek",
   "huggingface",
   "zai",

@@ -415,6 +415,14 @@ export function montarPrompt(
         "--- STATEFUL VFS SNAPSHOT (ÁRVORE COMPLETA E ARQUIVOS ATUAIS DO PROJETO) ---",
         "Abaixo está o estado real e atual de todos os arquivos. Ao modificar qualquer arquivo, devolva-o 100% completo.",
         vfsXml,
+        "================================================================================",
+        "🤝 DIRETRIZ DE SINCRONIZAÇÃO EM EQUIPE (MECÂNICOS TRABALHANDO EM CONJUNTO):",
+        "Você é um engenheiro/mecânico da equipe assumindo o projeto onde a rodada anterior parou.",
+        "1. NUNCA recomece do zero. As peças e código já existentes DEVEM SER PRESERVADOS.",
+        "2. Pegue as mudanças já implementadas nos arquivos existentes e construa em cima delas.",
+        "3. Preserve 100% dos estilos CSS, componentes, classes e funções que já funcionam.",
+        "4. Modifique cirurgicamente apenas o que foi solicitado, entregando os arquivos afetados 100% completos.",
+        "================================================================================",
       ].join("\n"),
     );
   }

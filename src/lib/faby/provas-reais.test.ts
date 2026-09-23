@@ -406,4 +406,43 @@ document.getElementById("btnStart").addEventListener("click", () => {
     assert.equal(msgsOpenAI[msgsOpenAI.length - 1]!.role, "user");
     assert.equal(msgsOpenAI[msgsOpenAI.length - 1]!.content, "Nova mensagem");
   });
+
+  test("PROVA 11: Sincronização da Equipe de IAs & Preservação de Continuidade (Sem Começar do Zero)", async () => {
+    const { compactarMensagemParaHistorico } = await import("./providers.server");
+    const { montarPrompt } = await import("./builder.server");
+    const { ORDEM_QUALIDADE, PROVIDER_LABELS } = await import("./config");
+    const { respostaComprovaCapacidade } = await import("../faby.functions");
+
+    // 1. Compactação de código no histórico preserva explicação e sumário de arquivos sem mutilar sintaxe
+    const msgComArquivo =
+      '<arquivo nome="index.html">\n<!doctype html><html><body><h1>App</h1></body></html>\n</arquivo>\n\nConstruí o cabeçalho e o feed principal com cartões interativos.';
+    const compactada = compactarMensagemParaHistorico(msgComArquivo, 2000);
+    assert.match(compactada, /Arquivos gerados\/atualizados nesta rodada: index\.html/);
+    assert.match(compactada, /Construí o cabeçalho e o feed principal/);
+    assert.ok(
+      !compactada.includes("<!doctype html>"),
+      "Não deve embutir código bruto truncado no chat history",
+    );
+
+    // 2. Diretriz de sincronização em equipe é injetada quando há arquivos existentes
+    const promptEquipe = montarPrompt("mude o botão para verde", {
+      "index.html": "<html><body><button id='btn'>Clique</button></body></html>",
+      "styles.css": "#btn { background: blue; }",
+    });
+    assert.match(promptEquipe, /DIRETRIZ DE SINCRONIZAÇÃO EM EQUIPE/);
+    assert.match(promptEquipe, /NUNCA recomece do zero/);
+    assert.match(promptEquipe, /Pegue as mudanças já implementadas/);
+
+    // 3. Ordem de qualidade limpa e sem duplicatas
+    assert.ok(ORDEM_QUALIDADE.includes("google"));
+    assert.ok(
+      !ORDEM_QUALIDADE.includes("antigravity" as any),
+      "Antigravity não deve ser duplicado como provedor externo",
+    );
+    assert.equal(PROVIDER_LABELS.google, "Google Gemini (2.5 Flash / Pro)");
+
+    // 4. Tolerância robusta em teste de capacidade
+    assert.ok(respostaComprovaCapacidade("FABY_OK|HTML|CSS|JS"));
+    assert.ok(respostaComprovaCapacidade("FABY_OK | HTML | CSS | JS"));
+  });
 });

@@ -74,6 +74,24 @@ export function prepararHistorico(historico: HistoricoItem[]) {
     }));
 }
 
+export function compactarMensagemParaHistorico(conteudo: string, limite: number): string {
+  const limpo = conteudo.trim();
+  if (/<(?:arquivo\s+nome|file\s+path)=/i.test(limpo)) {
+    const nomes = Array.from(
+      limpo.matchAll(/<(?:arquivo\s+nome|file\s+path)=["']([^"']+)["']/gi),
+    ).map((m) => m[1]);
+    const textoSemArquivos = limpo
+      .replace(/<(?:arquivo\s+nome|file\s+path)=["'][^"']+["']>[\s\S]*?<\/(?:arquivo|file)>/gi, "")
+      .trim();
+    const sumario = nomes.length
+      ? `[Arquivos gerados/atualizados nesta rodada: ${nomes.join(", ")} — Código preservado integralmente no Stateful VFS]`
+      : "";
+    const sintetizado = [sumario, textoSemArquivos].filter(Boolean).join("\n\n");
+    return resumirTexto(sintetizado, limite);
+  }
+  return resumirTexto(limpo, limite);
+}
+
 export function sanitizarHistoricoParaGoogle(
   historico: HistoricoItem[],
   promptAtual: string,
@@ -86,7 +104,7 @@ export function sanitizarHistoricoParaGoogle(
     const limpo = (item.conteudo ?? "").trim();
     if (!limpo) continue;
     const role: "user" | "model" = item.role === "assistant" ? "model" : "user";
-    filtrados.push({ role, texto: resumirTexto(limpo, limiteCharsPorItem) });
+    filtrados.push({ role, texto: compactarMensagemParaHistorico(limpo, limiteCharsPorItem) });
   }
 
   // 2. Mescla mensagens consecutivas com o mesmo role para garantir estrita alternância
@@ -141,7 +159,7 @@ export function sanitizarHistoricoParaOpenAI(
     .slice(-limiteTurnos)
     .map((h) => ({
       role: h.role === "assistant" ? "assistant" : "user",
-      content: resumirTexto(h.conteudo.trim(), 2_500),
+      content: compactarMensagemParaHistorico(h.conteudo.trim(), 2_500),
     }));
 
   const messages: { role: string; content: unknown }[] = [];

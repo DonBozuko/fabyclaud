@@ -332,12 +332,11 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
             className="w-full rounded-lg border border-border bg-secondary px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
           />
 
-          {(provedor === "google" || provedor === "antigravity") &&
-          chave.trim().startsWith("AQ.") ? (
+          {provedor === "google" && chave.trim().startsWith("AQ.") ? (
             <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-2.5 text-xs text-destructive">
-              ⚠️ <strong>Atenção:</strong> Essa chave começa com &quot;AQ.&quot;, que é um token
-              interno/sessão. A chave de API gratuita do Google Gemini sempre começa com{" "}
-              <strong>AIzaSy</strong>. Gere sua chave gratuita de API em{" "}
+              ⚠️ <strong>Token de Sessão Detectado:</strong> Essa chave começa com &quot;AQ.&quot;,
+              que é um token interno de sessão, não uma chave de API. A chave oficial de API do
+              Google Gemini começa com <strong>AIzaSy</strong>. Pegue sua chave gratuita de API em{" "}
               <a
                 href="https://aistudio.google.com/apikey"
                 target="_blank"

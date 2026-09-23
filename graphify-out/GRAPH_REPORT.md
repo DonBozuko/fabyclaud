@@ -1,17 +1,17 @@
 # Graph Report - Dev Buddy  (2026-09-23)
 
 ## Corpus Check
-- 151 files · ~116,014 words
+- 151 files · ~116,365 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 8 file(s) not represented in the graph (top: (none) 3, .toml 2, .lock 1)
 
 ## Summary
-- 1213 nodes · 2407 edges · 73 communities (60 shown, 13 thin omitted)
+- 1214 nodes · 2413 edges · 76 communities (62 shown, 14 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 16 edges (avg confidence: 0.84)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `55b434b9`
+- Built from commit: `1edc77d0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -25,7 +25,7 @@
 - github.functions.ts
 - react
 - routeTree.gen.ts
-- orquestracao.server.ts
+- DirectoryReader
 - class-variance-authority
 - pagination.tsx
 - client.ts
@@ -39,17 +39,18 @@
 - devDependencies
 - menubar.tsx
 - form.tsx
-- faby.functions.ts
+- enviarMensagem
 - nuvem.ts
 - carousel.tsx
 - index.tsx
+- provas-reais.test.ts
 - omniroute-local.ts
 - dados.$projeto.$colecao.ts
 - chart.tsx
 - AgentManager
 - ferramentas.server.ts
 - opencode.json
-- client.server.ts
+- faby.functions.ts
 - agents/types.ts
 - Implementação
 - execucao-isolada.ts
@@ -86,6 +87,8 @@
 - ambiente.server.ts
 - @tanstack/react-router
 - avatar.tsx
+- PainelRecursos.tsx
+- orquestracao.server.ts
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 220 edges
@@ -114,11 +117,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (73 total, 13 thin omitted)
+## Communities (76 total, 14 thin omitted)
 
 ### Community 0 - "builder.server.ts"
-Cohesion: 0.09
-Nodes (39): ref_node_assert_strict, ref_node_test, AplicativoLocal, aplicativoLocalParaPedido(), auditarArquivos(), base(), classificarPedido(), classificarPedidoLovable() (+31 more)
+Cohesion: 0.12
+Nodes (24): auditarArquivos(), base(), coberturaRecriacao(), consultarDuckDuckGo(), crc32(), diagnosticarProjeto(), directoryReader, ehArquivoDeServidor() (+16 more)
 
 ### Community 1 - "dependencies"
 Cohesion: 0.04
@@ -152,9 +155,9 @@ Nodes (21): @radix-ui/react-accordion, @radix-ui/react-radio-group, @radix-ui/re
 Cohesion: 0.13
 Nodes (19): estudar(), Route, Route, Route, Route, ApiPublicAppAuthProjetoRoute, ApiPublicAppPrivateProjetoColecaoRoute, ApiPublicDadosProjetoColecaoRoute (+11 more)
 
-### Community 9 - "orquestracao.server.ts"
-Cohesion: 0.12
-Nodes (14): DirectoryReader, ArquivoItem, FileNode, VFSSnapshot, Db, directoryReader, EtapaConstrucao, finalizarExecucao() (+6 more)
+### Community 9 - "DirectoryReader"
+Cohesion: 0.27
+Nodes (4): DirectoryReader, ArquivoItem, FileNode, VFSSnapshot
 
 ### Community 10 - "class-variance-authority"
 Cohesion: 0.13
@@ -173,8 +176,8 @@ Cohesion: 0.08
 Nodes (23): compilerOptions, allowImportingTsExtensions, exactOptionalPropertyTypes, jsx, lib, module, moduleResolution, noEmit (+15 more)
 
 ### Community 14 - "evolucao.server.ts"
-Cohesion: 0.19
-Nodes (15): ehArquivoDeServidor(), pedidoExigeAutenticacaoPrivada(), problemasCriticos(), problemasDeAutenticacao(), problemasDeBanco(), afirmacoesSemProva(), Avaliacao, avaliarEntrega() (+7 more)
+Cohesion: 0.22
+Nodes (13): pedidoExigeAutenticacaoPrivada(), problemasCriticos(), problemasDeBanco(), afirmacoesSemProva(), Avaliacao, avaliarEntrega(), juntar(), Meta (+5 more)
 
 ### Community 15 - "navigation-menu.tsx"
 Cohesion: 0.25
@@ -182,7 +185,7 @@ Nodes (8): @radix-ui/react-navigation-menu, NavigationMenu, NavigationMenuConten
 
 ### Community 16 - "providers.server.ts"
 Cohesion: 0.08
-Nodes (38): ehErroDeModelo(), MODELOS_ALTERNATIVOS, Db, Estado, extrairRegras(), obterEstadoEscola(), promptEstudo(), registrarNotaEscola() (+30 more)
+Nodes (39): ehErroDeModelo(), MODELOS_ALTERNATIVOS, Db, Estado, extrairRegras(), obterEstadoEscola(), promptEstudo(), registrarNotaEscola() (+31 more)
 
 ### Community 17 - "command.tsx"
 Cohesion: 0.11
@@ -193,8 +196,8 @@ Cohesion: 0.11
 Nodes (18): aliases, components, hooks, lib, ui, utils, iconLibrary, registries (+10 more)
 
 ### Community 19 - "config.ts"
-Cohesion: 0.11
-Nodes (21): AGENTES_PRONTOS, Anexo, ContratoEntrega, EtapaOrquestracao, EXTENSOES_IMAGEM, EXTENSOES_TEXTO, LIMITE_CHARS_ARQUIVO, MEMORIA_SUGERIDA (+13 more)
+Cohesion: 0.13
+Nodes (18): AGENTES_PRONTOS, Anexo, ContratoEntrega, EtapaOrquestracao, EXTENSOES_IMAGEM, EXTENSOES_TEXTO, LIMITE_CHARS_ARQUIVO, MODELO_PADRAO (+10 more)
 
 ### Community 20 - "devDependencies"
 Cohesion: 0.11
@@ -208,13 +211,13 @@ Nodes (12): @radix-ui/react-menubar, Menubar, MenubarCheckboxItem, MenubarConten
 Cohesion: 0.19
 Nodes (12): @radix-ui/react-label, react-hook-form, FormControl, FormDescription, FormFieldContext, FormFieldContextValue, FormItem, FormItemContext (+4 more)
 
-### Community 23 - "faby.functions.ts"
-Cohesion: 0.19
-Nodes (26): anexoSchema, apagarArquivo, cacheAgentes, cachePrompts, carregarProjetoCompleto(), criarBackup, enviarMensagem, extrairUserIds() (+18 more)
+### Community 23 - "enviarMensagem"
+Cohesion: 0.36
+Nodes (10): enviarMensagem, listarChaves, obterCapacidades, parseDuelChoice(), sincronizarChavesLocais(), testarChave, isChaveDeTeste(), listarMensagensArmazenadas() (+2 more)
 
 ### Community 24 - "nuvem.ts"
-Cohesion: 0.22
-Nodes (7): aplicarApiNoCodigo(), aplicarApiNosArquivos(), instrucaoNuvem(), MARCADOR_API, MARCADOR_AUTH, MARCADOR_PRIVADO, usaAutenticacaoPrivada()
+Cohesion: 0.25
+Nodes (6): aplicarApiNoCodigo(), aplicarApiNosArquivos(), instrucaoNuvem(), MARCADOR_API, MARCADOR_AUTH, MARCADOR_PRIVADO
 
 ### Community 25 - "carousel.tsx"
 Cohesion: 0.17
@@ -223,6 +226,10 @@ Nodes (14): embla-carousel-react, Carousel, CarouselApi, CarouselContent, Carous
 ### Community 26 - "index.tsx"
 Cohesion: 0.18
 Nodes (14): sonner, @tanstack/react-query, @tanstack/react-start, descreverAuditoria(), injetarAuditorDeCliques(), ResultadoAuditoria, MODELS, PROVIDER_LABELS (+6 more)
+
+### Community 27 - "provas-reais.test.ts"
+Cohesion: 0.16
+Nodes (19): ref_node_assert_strict, ref_node_test, AplicativoLocal, aplicativoLocalParaPedido(), classificarPedido(), classificarPedidoLovable(), ehSaudacaoOuConversaCasual(), formatarContratoEntrega() (+11 more)
 
 ### Community 28 - "omniroute-local.ts"
 Cohesion: 0.35
@@ -236,10 +243,6 @@ Nodes (11): achatar(), cacheMemoriaDados, conectar(), CORS, erro(), excedeuLimit
 Cohesion: 0.23
 Nodes (10): recharts, ChartConfig, ChartContainer, ChartContext, ChartContextProps, ChartLegendContent, ChartTooltipContent, getPayloadConfigFromPayload() (+2 more)
 
-### Community 31 - "AgentManager"
-Cohesion: 0.23
-Nodes (4): AgentManager, AgentConfig, AgentResult, AgentTask
-
 ### Community 32 - "ferramentas.server.ts"
 Cohesion: 0.26
 Nodes (10): buscarNaWeb(), consultarBanco(), crc32(), executarFerramentas(), gerarImagem(), INSTRUCAO_FERRAMENTAS, lerDocumentacao(), lerPagina() (+2 more)
@@ -248,13 +251,13 @@ Nodes (10): buscarNaWeb(), consultarBanco(), crc32(), executarFerramentas(), ger
 Cohesion: 0.14
 Nodes (13): branch, description, repository, branch, description, repository, plugin, references (+5 more)
 
-### Community 34 - "client.server.ts"
-Cohesion: 0.08
-Nodes (24): GithubSecao(), Backups(), Docs(), PainelNome, PainelRecursos(), Props, TITULOS, createSupabaseAdminClient() (+16 more)
+### Community 34 - "faby.functions.ts"
+Cohesion: 0.13
+Nodes (32): createSupabaseAdminClient(), createSupabaseFetch(), isNewSupabaseApiKey(), supabaseAdmin, anexoSchema, apagarAgente, apagarArquivo, apagarBackup (+24 more)
 
 ### Community 35 - "agents/types.ts"
-Cohesion: 0.13
-Nodes (16): ref_bun_test, OpenManusReActAgent, OpenManusToolRegistry, AgentRole, AgentStatus, AlteracaoProjeto, ArquivoCompleto, ManusExecutionState (+8 more)
+Cohesion: 0.14
+Nodes (16): ref_bun_test, OpenManusReActAgent, OpenManusToolRegistry, AgentResult, AgentRole, AgentStatus, AgentTask, ArquivoCompleto (+8 more)
 
 ### Community 36 - "Implementação"
 Cohesion: 0.15
@@ -317,8 +320,8 @@ Cohesion: 0.14
 Nodes (4): JSZip, JSZipFileOptions, JSZipGeneratorOptions, JSZipObject
 
 ### Community 56 - "CodeModifier"
-Cohesion: 0.16
-Nodes (6): ref_node_fs_promises, CodeModifier, CodeEdit, descartarPatchesParciais(), extrairArquivos(), limparPensamento()
+Cohesion: 0.13
+Nodes (8): ref_node_fs_promises, CodeModifier, AlteracaoProjeto, CodeEdit, ModificacaoArquivo, descartarPatchesParciais(), extrairArquivos(), limparPensamento()
 
 ### Community 59 - "lucide-react"
 Cohesion: 0.09
@@ -329,8 +332,8 @@ Cohesion: 0.40
 Nodes (4): ClassArray, ClassDictionary, ClassValue, clsx
 
 ### Community 67 - "storage.server.ts"
-Cohesion: 0.15
-Nodes (29): ref_node_fs, ref_node_path, obterMemoria, obterProgressoExecucao, apagarChaveArmazenada(), apagarGithubContaArmazenada(), apagarProjetoArmazenado(), apagarProvedorCustomArmazenado() (+21 more)
+Cohesion: 0.13
+Nodes (31): ref_node_fs, ref_node_path, ProvedorCustom, obterProgressoExecucao, apagarChaveArmazenada(), apagarGithubContaArmazenada(), apagarProjetoArmazenado(), apagarProvedorCustomArmazenado() (+23 more)
 
 ### Community 68 - "Recuperar e provar o funcionamento do FabyClaud"
 Cohesion: 0.33
@@ -356,18 +359,26 @@ Nodes (5): @tanstack/react-router, getRouter(), Register, routeTree, startInstan
 Cohesion: 0.40
 Nodes (4): @radix-ui/react-avatar, Avatar, AvatarFallback, AvatarImage
 
+### Community 74 - "PainelRecursos.tsx"
+Cohesion: 0.12
+Nodes (8): GithubSecao(), Backups(), Docs(), PainelNome, PainelRecursos(), Props, TITULOS, MEMORIA_SUGERIDA
+
+### Community 75 - "orquestracao.server.ts"
+Cohesion: 0.19
+Nodes (10): Db, directoryReader, EtapaConstrucao, finalizarExecucao(), iniciarExecucao(), injetarSnapshotVFS(), montarPromptComVFS(), obterInstrucoesOpenManus() (+2 more)
+
 ## Knowledge Gaps
 - **342 isolated node(s):** `$schema`, `plugin`, `repository`, `branch`, `description` (+337 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 468 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **14 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `react` connect `react` to `package.json`, `client.server.ts`, `cn`, `sidebar.tsx`, `github.functions.ts`, `FabyClaud`, `__root.tsx`, `avatar.tsx`, `class-variance-authority`, `pagination.tsx`, `navigation-menu.tsx`, `command.tsx`, `menubar.tsx`, `form.tsx`, `carousel.tsx`, `index.tsx`, `lucide-react`, `chart.tsx`?**
-  _High betweenness centrality (0.220) - this node is a cross-community bridge._
-- **Why does `@tanstack/react-start` connect `index.tsx` to `package.json`, `client.server.ts`, `github.functions.ts`, `client.ts`, `faby.functions.ts`?**
-  _High betweenness centrality (0.091) - this node is a cross-community bridge._
+- **Why does `react` connect `react` to `package.json`, `cn`, `sidebar.tsx`, `FabyClaud`, `github.functions.ts`, `__root.tsx`, `avatar.tsx`, `class-variance-authority`, `PainelRecursos.tsx`, `pagination.tsx`, `navigation-menu.tsx`, `command.tsx`, `menubar.tsx`, `form.tsx`, `carousel.tsx`, `index.tsx`, `lucide-react`, `chart.tsx`?**
+  _High betweenness centrality (0.217) - this node is a cross-community bridge._
+- **Why does `@tanstack/react-start` connect `index.tsx` to `package.json`, `faby.functions.ts`, `github.functions.ts`, `PainelRecursos.tsx`, `client.ts`?**
+  _High betweenness centrality (0.082) - this node is a cross-community bridge._
 - **Why does `dependencies` connect `dependencies` to `package.json`?**
   _High betweenness centrality (0.071) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `FabyClaud()` (e.g. with `index.tsx` and `aoFicarOffline()`) actually correct?**
@@ -375,6 +386,6 @@ _Questions this graph is uniquely positioned to answer:_
 - **What connects `$schema`, `plugin`, `repository` to the rest of the system?**
   _342 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `builder.server.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.08888888888888889 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1164021164021164 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.03636363636363636 - nodes in this community are weakly interconnected._
