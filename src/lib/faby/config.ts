@@ -1,12 +1,12 @@
 export const MODELS = {
-  google: "gemini-2.5-flash",
+  google: "gemini-2.0-flash",
   groq: "qwen/qwen-2.5-coder-32b",
   openrouter: "qwen/qwen-2.5-coder-32b-instruct:free",
   huggingface: "Qwen/Qwen2.5-Coder-32B-Instruct",
   deepseek: "deepseek-chat",
   zai: "glm-4-flash",
   omniroute: "auto/coding",
-  antigravity: "gemini-2.5-flash",
+  antigravity: "gemini-2.0-flash",
 } satisfies Record<string, string>;
 
 /**
@@ -16,15 +16,15 @@ export const MODELS = {
  */
 export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
   antigravity: [
-    "gemini-2.5-flash",
     "gemini-2.0-flash",
+    "gemini-2.5-flash",
     "gemini-1.5-flash",
     "gemini-2.5-pro",
     "gemini-1.5-pro",
   ],
   google: [
-    "gemini-2.5-flash",
     "gemini-2.0-flash",
+    "gemini-2.5-flash",
     "gemini-1.5-flash",
     "gemini-2.5-pro",
     "gemini-1.5-pro",

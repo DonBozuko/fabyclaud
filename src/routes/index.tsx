@@ -933,17 +933,18 @@ function FabyClaud() {
   }
 
   return (
-    <div className="relative h-screen overflow-hidden">
+    <div className="relative h-screen overflow-hidden text-foreground">
+      {/* Imagem de Fundo (Homem de Capuz / Matrix) com Overlay de Profundidade */}
       <div
-        className="fixed inset-0 -z-20 bg-cover bg-[center_15%] bg-no-repeat"
+        className="fixed inset-0 -z-20 bg-cover bg-[center_20%] bg-no-repeat transition-all duration-700"
         style={{ backgroundImage: `url(${heroAsset.url})` }}
         aria-hidden
       />
-      <div className="fixed inset-0 -z-10 bg-background/75 backdrop-blur-[2px]" aria-hidden />
+      <div className="fixed inset-0 -z-10 bg-black/65 backdrop-blur-[4px]" aria-hidden />
 
-      <div className="flex h-screen gap-4 p-4">
-        {/* ===== barra lateral ===== */}
-        <aside className="panel-glass flex w-[230px] shrink-0 flex-col gap-3.5 rounded-2xl p-4">
+      <div className="flex h-screen gap-3.5 p-3.5">
+        {/* ===== BARRA LATERAL MODERNA ===== */}
+        <aside className="panel-glass flex w-[240px] shrink-0 flex-col gap-3 rounded-2xl p-3.5 shadow-2xl">
           <button
             type="button"
             onClick={() => {
@@ -958,7 +959,7 @@ function FabyClaud() {
               setAbaPrincipal("previa");
               campoTexto.current?.focus();
             }}
-            className="flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-bold text-primary-foreground shadow-glow transition hover:brightness-110 active:scale-[0.98]"
+            className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 py-2.5 text-xs font-bold text-white shadow-lg shadow-emerald-500/25 transition-all hover:scale-[1.02] hover:brightness-110 active:scale-[0.98]"
           >
             <Plus className="size-4" /> Novo Projeto
           </button>
@@ -966,27 +967,27 @@ function FabyClaud() {
           <button
             type="button"
             onClick={() => setConversasAbertas((v) => !v)}
-            className="flex items-center justify-between rounded-lg bg-accent/70 px-3 py-2 text-xs font-semibold text-accent-foreground transition hover:bg-accent"
+            className="flex items-center justify-between rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-xs font-semibold text-foreground/90 transition hover:bg-white/10"
           >
             <span className="flex items-center gap-2">
               <FolderOpen className="size-3.5 text-primary" /> Meus Projetos
             </span>
-            <span className="rounded-full bg-background/60 px-2 py-0.5 text-[10px] font-bold text-primary">
+            <span className="rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-bold text-primary">
               {projetos.data?.length ?? 0}
             </span>
           </button>
 
           {conversasAbertas ? (
-            <div className="flex max-h-56 flex-col gap-1.5 overflow-y-auto pr-1">
+            <div className="flex max-h-52 flex-col gap-1 overflow-y-auto pr-1">
               {(projetos.data ?? []).map((p: any) => {
                 const estaAtivo = projetoId === p.id;
                 return (
                   <div
                     key={p.id}
-                    className={`group flex items-center justify-between rounded-xl border p-1 transition ${
+                    className={`group flex items-center justify-between rounded-xl border px-2 py-1.5 transition-all ${
                       estaAtivo
-                        ? "border-primary/60 bg-primary/10 shadow-sm"
-                        : "border-transparent bg-secondary/60 hover:border-border hover:bg-secondary"
+                        ? "border-primary/50 bg-primary/15 text-primary shadow-sm"
+                        : "border-transparent bg-white/[0.03] text-muted-foreground hover:border-white/10 hover:bg-white/[0.08] hover:text-foreground"
                     }`}
                   >
                     <button
@@ -999,18 +1000,16 @@ function FabyClaud() {
                         setAbaPrincipal("previa");
                       }}
                       title={p.nome}
-                      className="flex min-w-0 flex-1 items-center gap-2 px-1.5 py-1 text-left"
+                      className="flex min-w-0 flex-1 items-center gap-2 text-left"
                     >
                       <Globe
                         className={`size-3.5 shrink-0 ${
-                          estaAtivo ? "text-primary" : "text-muted-foreground"
+                          estaAtivo ? "text-primary animate-pulse" : "text-muted-foreground"
                         }`}
                       />
                       <span
                         className={`truncate text-xs ${
-                          estaAtivo
-                            ? "font-bold text-primary"
-                            : "font-medium text-foreground"
+                          estaAtivo ? "font-bold text-primary" : "font-medium"
                         }`}
                       >
                         {p.nome}
@@ -1023,7 +1022,6 @@ function FabyClaud() {
                       onClick={async (e) => {
                         e.stopPropagation();
                         const idParaApagar = p.id;
-                        // 1. Atualização otimista imediata na lista visual
                         queryClient.setQueryData(["projetos"], (old: any) =>
                           Array.isArray(old)
                             ? old.filter((item: any) => item.id !== idParaApagar)
@@ -1052,17 +1050,16 @@ function FabyClaud() {
                         }
                         queryClient.removeQueries({ queryKey: ["projeto", idParaApagar] });
 
-                        // 2. Exclusão garantida no backend
                         try {
                           await removerProjeto({ data: { id: idParaApagar } });
                           await queryClient.invalidateQueries({ queryKey: ["projetos"] });
                           toast.success("Projeto excluído com sucesso.");
-                        } catch (err) {
+                        } catch {
                           await queryClient.invalidateQueries({ queryKey: ["projetos"] });
                           toast.error("Não foi possível excluir o projeto.");
                         }
                       }}
-                      className="rounded-lg p-1 text-muted-foreground opacity-60 transition hover:bg-destructive/20 hover:text-destructive hover:opacity-100 group-hover:opacity-100"
+                      className="rounded-lg p-1 text-muted-foreground opacity-40 transition hover:bg-destructive/20 hover:text-destructive hover:opacity-100 group-hover:opacity-100"
                     >
                       <Trash2 className="size-3.5" />
                     </button>
@@ -1077,19 +1074,19 @@ function FabyClaud() {
             </div>
           ) : null}
 
-          <nav className="flex flex-col gap-0.5">
+          <nav className="flex flex-col gap-0.5 pt-1">
             {ITENS_MENU.map(({ nome, Icone, painel }) => (
               <button
                 key={nome}
                 type="button"
                 onClick={() => setPainel(painel)}
-                className="flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-muted-foreground transition hover:bg-accent hover:text-primary"
+                className="flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-xs font-medium text-foreground/80 transition hover:bg-white/[0.08] hover:text-primary"
               >
                 <span className="flex items-center gap-2.5">
-                  <Icone className="size-4" /> {nome}
+                  <Icone className="size-4 text-primary/80" /> {nome}
                 </span>
                 {painel === "agentes" && agente ? (
-                  <span className="rounded-md bg-accent px-1.5 py-0.5 text-[9px] uppercase tracking-wide text-primary">
+                  <span className="rounded-md bg-primary/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-primary">
                     Ativo
                   </span>
                 ) : null}
@@ -1097,7 +1094,7 @@ function FabyClaud() {
             ))}
           </nav>
 
-          <div className="mt-auto space-y-2">
+          <div className="mt-auto space-y-2 border-t border-white/5 pt-2">
             <button
               type="button"
               onClick={async () => {
@@ -1109,34 +1106,34 @@ function FabyClaud() {
                 }
                 void navigate({ to: "/auth" });
               }}
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-muted-foreground transition hover:text-primary"
+              className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-muted-foreground transition hover:bg-white/5 hover:text-primary"
             >
               <LogOut className="size-3.5" /> Sair da conta
             </button>
           </div>
         </aside>
 
-        {/* ===== área principal ===== */}
-        <div className="flex min-w-0 flex-1 flex-col gap-4">
-          <header className="panel-glass flex items-center justify-between rounded-2xl px-5 py-3.5">
+        {/* ===== ÁREA PRINCIPAL ===== */}
+        <div className="flex min-w-0 flex-1 flex-col gap-3">
+          <header className="panel-glass flex items-center justify-between rounded-2xl px-4 py-2.5 shadow-xl">
             <div className="flex items-center gap-3">
-              <span className="flex size-[42px] items-center justify-center rounded-xl border border-border bg-accent">
+              <span className="flex size-[38px] items-center justify-center rounded-xl border border-primary/30 bg-primary/10 shadow-inner">
                 <Bot className="size-5 text-primary" />
               </span>
               <div>
-                <h1 className="flex items-center gap-2 text-lg font-semibold">
+                <h1 className="flex items-center gap-2 text-base font-bold text-foreground">
                   FabyClaud
-                  <span className="rounded-xl bg-accent px-2.5 py-0.5 text-[11px] font-semibold text-primary">
+                  <span className="rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-bold text-primary">
                     GRÁTIS
                   </span>
                 </h1>
-                <p className="text-xs text-muted-foreground">
-                  Criação com capacidades verificadas.
+                <p className="text-[11px] text-muted-foreground">
+                  Engenharia Autônoma de Software com Provas Reais
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2">
               <input
                 ref={(elemento) => {
                   inputPasta.current = elemento;
@@ -1167,18 +1164,18 @@ function FabyClaud() {
                 type="button"
                 onClick={() => inputPasta.current?.click()}
                 title="Escolher uma pasta completa do computador"
-                className="flex items-center gap-2 rounded-xl border border-border bg-secondary px-3 py-2 text-[13px] transition hover:bg-accent"
+                className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-foreground transition hover:border-primary/40 hover:bg-white/10"
               >
-                <FolderOpen className="size-4" /> Abrir projeto
+                <FolderOpen className="size-3.5 text-primary" /> Abrir projeto
               </button>
               <button
                 type="button"
                 onClick={() => inputZip.current?.click()}
                 aria-label="Abrir projeto em ZIP"
                 title="Abrir projeto por arquivo ZIP"
-                className="flex size-[38px] items-center justify-center rounded-xl border border-border bg-secondary transition hover:bg-accent"
+                className="flex size-[34px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-primary/40 hover:bg-white/10"
               >
-                <FileArchive className="size-4" />
+                <FileArchive className="size-3.5 text-primary" />
               </button>
               {Object.keys(arquivos).length ? (
                 <>
@@ -1189,25 +1186,25 @@ function FabyClaud() {
                         toast.error("Esse projeto ainda não tem index.html.");
                     }}
                     title="Abre a prévia do projeto numa aba nova"
-                    className="flex items-center gap-2 rounded-xl border border-border bg-secondary px-3 py-2 text-[13px] transition hover:bg-accent"
+                    className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-foreground transition hover:border-primary/40 hover:bg-white/10"
                   >
-                    <ExternalLink className="size-4" /> Abrir prévia
+                    <ExternalLink className="size-3.5 text-primary" /> Prévia
                   </button>
                   <button
                     type="button"
                     onClick={() => void baixarProjetoZip(projeto.data?.nome ?? "projeto", arquivos)}
-                    className="flex items-center gap-2 rounded-xl border border-border bg-secondary px-3 py-2 text-[13px] transition hover:bg-accent"
+                    className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-foreground transition hover:border-primary/40 hover:bg-white/10"
                   >
-                    <Download className="size-4" /> Baixar
+                    <Download className="size-3.5 text-primary" /> Baixar
                   </button>
                   <button
                     type="button"
                     disabled={publicando}
                     onClick={() => void publicarSite()}
                     title="Coloca o projeto no ar e te dá o endereço do site"
-                    className="flex items-center gap-2 rounded-xl border border-border bg-secondary px-3 py-2 text-[13px] transition hover:bg-accent disabled:opacity-60"
+                    className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-foreground transition hover:border-primary/40 hover:bg-white/10 disabled:opacity-60"
                   >
-                    <Globe className="size-4" /> {publicando ? "Publicando..." : "Publicar"}
+                    <Globe className="size-3.5 text-primary" /> {publicando ? "Publicando..." : "Publicar"}
                   </button>
                 </>
               ) : null}
@@ -1216,19 +1213,19 @@ function FabyClaud() {
                 onClick={() => setDuelo((v) => !v)}
                 aria-pressed={duelo}
                 title="Várias IAs respondem ao mesmo tempo e a melhor resposta vence"
-                className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-[13px] transition ${
+                className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-medium transition ${
                   duelo
-                    ? "border-border bg-primary text-primary-foreground shadow-glow"
-                    : "border-border bg-secondary hover:bg-accent"
+                    ? "border-primary bg-primary text-primary-foreground shadow-glow"
+                    : "border-white/10 bg-white/5 text-foreground hover:border-primary/40 hover:bg-white/10"
                 }`}
               >
-                <Swords className="size-4" /> Duelo de IAs
+                <Swords className="size-3.5" /> Duelo
               </button>
               <select
                 value={modelo}
                 onChange={(e) => setModelo(e.target.value)}
                 aria-label="Escolher a IA"
-                className="rounded-xl border border-border bg-secondary px-3.5 py-2.5 text-[13px]"
+                className="rounded-xl border border-white/10 bg-black/40 px-3 py-1.5 text-xs font-medium text-foreground outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary"
               >
                 {opcoesModelo.map((o) => (
                   <option key={o.id} value={o.id}>
@@ -1240,7 +1237,7 @@ function FabyClaud() {
                 type="button"
                 aria-label="Configurações"
                 onClick={() => setConfigAberta(true)}
-                className="flex size-[38px] items-center justify-center rounded-xl border border-border bg-secondary transition hover:bg-accent"
+                className="flex size-[34px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-primary/40 hover:bg-white/10"
               >
                 <Settings className="size-4" />
               </button>
@@ -1258,7 +1255,7 @@ function FabyClaud() {
           ) : null}
 
           <section
-            className="panel-glass flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl px-4 py-2 text-[11px]"
+            className="panel-glass flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl px-4 py-1.5 text-[11px]"
             aria-label="Capacidades disponíveis"
           >
             <span className="font-semibold text-foreground">Agora:</span>
@@ -1303,19 +1300,19 @@ function FabyClaud() {
               <button
                 type="button"
                 onClick={() => setConfigAberta(true)}
-                className="ml-auto text-primary underline"
+                className="ml-auto font-medium text-primary underline hover:brightness-110"
               >
                 Conectar IA
               </button>
             ) : null}
           </section>
 
-          <div className="flex min-h-0 flex-1 gap-4">
-            {/* área de prévia, código ou vídeo */}
-            <section className="panel-glass relative flex min-w-[300px] flex-1 flex-col overflow-hidden rounded-2xl border border-border">
-              {/* Barra de controle de abas (Estilo Lovable) */}
-              <div className="flex items-center justify-between border-b border-border/70 bg-secondary/50 px-3 py-2">
-                <div className="flex items-center gap-1 rounded-xl bg-background/50 p-1 border border-border/50">
+          <div className="flex min-h-0 flex-1 gap-3.5">
+            {/* ÁREA DE PRÉVIA OU CÓDIGO */}
+            <section className="panel-glass relative flex min-w-[300px] flex-1 flex-col overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+              {/* Barra de controle de abas */}
+              <div className="flex items-center justify-between border-b border-white/10 bg-black/20 px-3 py-2">
+                <div className="flex items-center gap-1 rounded-xl bg-black/40 p-1 border border-white/5">
                   <button
                     type="button"
                     onClick={() => setAbaPrincipal("previa")}
@@ -1367,17 +1364,17 @@ function FabyClaud() {
                     </>
                   ) : (
                     <div className="max-w-[280px] p-8 text-center text-muted-foreground">
-                      <Wrench className="mx-auto mb-3 size-8" />
-                      <h2 className="mb-2 text-base text-foreground font-semibold">
+                      <Wrench className="mx-auto mb-3 size-8 text-primary/70" />
+                      <h2 className="mb-2 text-base font-semibold text-foreground">
                         {Object.keys(arquivos).length ? "Arquivos importados" : "Prévia do projeto"}
                       </h2>
                       {Object.keys(arquivos).length ? (
-                        <p className="text-[13px] leading-relaxed">
+                        <p className="text-xs leading-relaxed">
                           {Object.keys(arquivos).length} arquivo(s) disponíveis. Clique na aba{" "}
-                          <strong>Código</strong> para inspecionar e editar.
+                          <strong className="text-primary">Código</strong> para inspecionar e editar.
                         </p>
                       ) : (
-                        <p className="text-[13px] leading-relaxed">
+                        <p className="text-xs leading-relaxed">
                           Abra uma pasta, envie um ZIP ou peça um site no chat para começar.
                         </p>
                       )}
@@ -1386,11 +1383,11 @@ function FabyClaud() {
                 </div>
               ) : (
                 /* Aba de Código / Editor integrado */
-                <div className="flex flex-1 flex-col overflow-hidden bg-secondary/15">
+                <div className="flex flex-1 flex-col overflow-hidden bg-black/30">
                   {nomesArquivos.length > 0 ? (
                     <>
                       {/* Abas dos Arquivos */}
-                      <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border/50 bg-secondary/40 px-3 py-2 scrollbar-none">
+                      <div className="flex items-center gap-1.5 overflow-x-auto border-b border-white/10 bg-black/40 px-3 py-2 scrollbar-none">
                         {nomesArquivos.map((nome) => (
                           <button
                             key={nome}
@@ -1401,8 +1398,8 @@ function FabyClaud() {
                             }}
                             className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-mono transition ${
                               arquivoAtivo === nome
-                                ? "bg-accent font-bold text-primary border border-border"
-                                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                                ? "bg-primary/20 font-bold text-primary border border-primary/40"
+                                : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
                             }`}
                           >
                             <FileCode className="size-3.5" />
@@ -1417,17 +1414,16 @@ function FabyClaud() {
                           value={codigoEditando}
                           onChange={(e) => setCodigoEditando(e.target.value)}
                           spellCheck={false}
-                          className="size-full resize-none rounded-xl border border-border/80 bg-background/95 p-4 font-mono text-xs leading-relaxed text-foreground outline-none focus:ring-2 focus:ring-primary shadow-inner"
+                          className="size-full resize-none rounded-xl border border-white/10 bg-black/70 p-4 font-mono text-xs leading-relaxed text-emerald-300 outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary shadow-inner"
                           placeholder="Selecione um arquivo para editar seu código..."
                         />
                         <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground px-1">
                           <span>
-                            Arquivo ativo: <strong>{arquivoAtivo}</strong> (
+                            Arquivo ativo: <strong className="text-primary">{arquivoAtivo}</strong> (
                             {(codigoEditando || "").length} caracteres)
                           </span>
                           <span>
-                            Você pode editar e clicar em <strong>Salvar alterações</strong> para
-                            atualizar a prévia na hora.
+                            Clique em <strong>Salvar alterações</strong> para atualizar a prévia.
                           </span>
                         </div>
                       </div>
@@ -1436,7 +1432,7 @@ function FabyClaud() {
                     <div className="flex flex-1 items-center justify-center p-8 text-center text-muted-foreground">
                       <div>
                         <FileCode className="mx-auto mb-3 size-8 text-muted-foreground/60" />
-                        <h2 className="mb-2 text-base text-foreground font-semibold">
+                        <h2 className="mb-2 text-base font-semibold text-foreground">
                           Nenhum arquivo ainda
                         </h2>
                         <p className="text-xs max-w-xs">
@@ -1450,15 +1446,15 @@ function FabyClaud() {
               )}
             </section>
 
-            {/* chat */}
-            <section className="flex min-w-[300px] flex-[1.3] flex-col overflow-hidden rounded-2xl border border-border bg-background/35">
-              <div ref={areaChat} className="flex-1 space-y-3 overflow-y-auto p-5">
+            {/* CHAT MODERNO */}
+            <section className="panel-glass flex min-w-[320px] flex-[1.25] flex-col overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+              <div ref={areaChat} className="flex-1 space-y-3 overflow-y-auto p-4">
                 {mensagens.length === 0 ? (
-                  <div className="panel-glass rounded-2xl p-5 text-center">
-                    <p className="flex items-center justify-center gap-2 font-semibold text-primary">
+                  <div className="rounded-2xl border border-white/10 bg-black/40 p-5 text-center shadow-lg">
+                    <p className="flex items-center justify-center gap-2 font-bold text-primary">
                       <Hand className="size-4" /> Olá! Sou a FabyClaud
                     </p>
-                    <p className="mt-1 text-sm text-muted-foreground">
+                    <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
                       Peça uma calculadora sem chave, ou conecte uma IA testada para projetos
                       personalizados.
                     </p>
@@ -1471,11 +1467,11 @@ function FabyClaud() {
                   return (
                     <div
                       key={m.id}
-                      className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                      className={`max-w-[88%] whitespace-pre-wrap rounded-2xl px-4 py-3 text-xs leading-relaxed shadow-md ${
                         m.role === "user"
-                          ? "ml-auto bg-primary text-primary-foreground"
+                          ? "ml-auto bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium shadow-emerald-500/10"
                           : m.ok
-                            ? "mr-auto border border-border bg-secondary text-foreground"
+                            ? "mr-auto border border-white/10 bg-black/60 text-foreground"
                             : "mr-auto border border-destructive/40 bg-destructive/15 text-foreground"
                       }`}
                     >
@@ -1502,7 +1498,7 @@ function FabyClaud() {
                         </span>
                       ) : null}
                       {sugestoes.length > 0 ? (
-                        <div className="mt-3 flex flex-wrap gap-1.5 border-t border-border/60 pt-2.5">
+                        <div className="mt-3 flex flex-wrap gap-1.5 border-t border-white/10 pt-2.5">
                           {sugestoes.map((sugestao, sIdx) => (
                             <button
                               key={sIdx}
@@ -1511,7 +1507,7 @@ function FabyClaud() {
                                 setTexto(sugestao);
                                 campoTexto.current?.focus();
                               }}
-                              className="flex items-center gap-1.5 rounded-xl border border-primary/40 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary transition hover:bg-primary hover:text-primary-foreground"
+                              className="flex items-center gap-1.5 rounded-xl border border-primary/40 bg-primary/15 px-2.5 py-1 text-xs font-medium text-primary transition hover:bg-primary hover:text-primary-foreground"
                             >
                               <Sparkles className="size-3 shrink-0" />
                               <span>{sugestao}</span>
@@ -1520,7 +1516,7 @@ function FabyClaud() {
                         </div>
                       ) : null}
                       {m.role === "assistant" && m.modelo ? (
-                        <span className="mt-1.5 block text-[10px] text-muted-foreground">
+                        <span className="mt-1.5 block text-[10px] text-muted-foreground/80">
                           {PROVIDER_LABELS[m.modelo] ?? m.modelo}
                         </span>
                       ) : null}
@@ -1529,7 +1525,7 @@ function FabyClaud() {
                 })}
 
                 {pendente ? (
-                  <div className="ml-auto max-w-[85%] whitespace-pre-wrap rounded-2xl bg-primary px-4 py-2.5 text-sm leading-relaxed text-primary-foreground opacity-80">
+                  <div className="ml-auto max-w-[88%] whitespace-pre-wrap rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-3 text-xs leading-relaxed text-white opacity-85 shadow-md">
                     {pendente}
                     {pendenteAnexos.length ? (
                       <span className="mt-2 flex flex-wrap gap-2">
@@ -1561,11 +1557,11 @@ function FabyClaud() {
               </div>
 
               {anexos.length ? (
-                <div className="flex flex-wrap gap-2 border-t border-border px-4 py-2">
+                <div className="flex flex-wrap gap-2 border-t border-white/10 bg-black/40 px-4 py-2">
                   {anexos.map((a, i) => (
                     <span
                       key={`${a.nome}-${i}`}
-                      className="flex items-center gap-1.5 rounded-lg bg-secondary px-2 py-1 text-[11px]"
+                      className="flex items-center gap-1.5 rounded-lg bg-white/10 px-2 py-1 text-[11px]"
                     >
                       {a.tipo === "imagem" ? (
                         <img src={a.preview} alt={a.nome} className="size-8 rounded object-cover" />
@@ -1575,7 +1571,7 @@ function FabyClaud() {
                         type="button"
                         aria-label={`Remover ${a.nome}`}
                         onClick={() => setAnexos((atual) => atual.filter((_, j) => j !== i))}
-                        className="text-destructive"
+                        className="text-destructive font-bold hover:scale-110"
                       >
                         ×
                       </button>
@@ -1589,7 +1585,7 @@ function FabyClaud() {
                   e.preventDefault();
                   enviarAgora();
                 }}
-                className="flex items-end gap-2.5 border-t border-border p-4"
+                className="flex items-end gap-2 border-t border-white/10 bg-black/40 p-3"
               >
                 <input
                   ref={inputArquivo}
@@ -1609,9 +1605,9 @@ function FabyClaud() {
                   aria-label="Anexar arquivo"
                   title="Anexar imagem, arquivo de código ou um .zip do projeto"
                   onClick={() => inputArquivo.current?.click()}
-                  className="flex size-[42px] shrink-0 items-center justify-center rounded-xl border border-border bg-secondary transition hover:bg-accent"
+                  className="flex size-[40px] shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-primary/40 hover:bg-white/10"
                 >
-                  <Paperclip className="size-4" />
+                  <Paperclip className="size-4 text-primary" />
                 </button>
                 <textarea
                   ref={campoTexto}
@@ -1625,14 +1621,14 @@ function FabyClaud() {
                     }
                   }}
                   placeholder="Digite sua mensagem..."
-                  className="max-h-32 min-h-[42px] flex-1 resize-none rounded-xl border border-border bg-secondary px-3.5 py-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+                  className="max-h-32 min-h-[40px] flex-1 resize-none rounded-xl border border-white/10 bg-black/60 px-3.5 py-2.5 text-xs text-foreground outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary shadow-inner placeholder:text-muted-foreground/60"
                 />
                 <button
                   type="submit"
                   disabled={mandar.isPending}
-                  className="flex h-[42px] shrink-0 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground shadow-glow transition hover:brightness-110 disabled:opacity-60"
+                  className="flex h-[40px] shrink-0 items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 text-xs font-bold text-white shadow-lg shadow-emerald-500/25 transition hover:brightness-110 active:scale-95 disabled:opacity-50"
                 >
-                  <Send className="size-4" /> Enviar
+                  <Send className="size-3.5" /> Enviar
                 </button>
               </form>
             </section>

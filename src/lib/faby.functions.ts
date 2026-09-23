@@ -1620,7 +1620,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         .object({
           prompt: z.string().max(20000),
           model: z.string().min(1),
-          projeto_id: z.string().uuid().nullish(),
+          projeto_id: z.string().nullish(),
           anexos: anexoSchema,
           duelo: z.boolean().default(false),
           agente: z.string().max(80).nullish(),
@@ -1899,13 +1899,6 @@ export const enviarMensagem = createServerFn({ method: "POST" })
 
     const aplicativoLocal = aplicativoLocalParaPedido(prompt, arquivosAtuais);
 
-    // Sem IA pronta, só modelos locais mantidos e testáveis podem gerar arquivos.
-    if (!candidatos.length && !aplicativoLocal) {
-      throw new Error(
-        "Nenhuma chave de IA está salva. Abra Configurações e cole uma chave grátis. Nenhum projeto ou tela de faz de conta foi criado.",
-      );
-    }
-
     if (!projetoId) {
       const nome = aplicativoLocal?.nome ?? (prompt.slice(0, 50) || "Novo projeto").trim();
       const novoId = crypto.randomUUID();
@@ -1955,6 +1948,72 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         updated_at: new Date().toISOString(),
       });
       projetoNovo = true;
+    }
+
+    // Sem IA pronta, responde com orientação amigável no chat sem travar a interface
+    if (!candidatos.length && !aplicativoLocal) {
+      const respostaOrientacao =
+        intencao === "conversar"
+          ? "Olá! Sou a **FabyClaud**, sua arquiteta e engenheira de software autônoma. 🚀\n\nPosso construir aplicações web completas, recriar projetos a partir de referências, integrar bancos de dados em tempo real e muito mais.\n\n👉 **Para começar imediatamente sem chave:** Peça uma **calculadora** funcional.\n👉 **Para criar qualquer aplicativo ou SaaS personalizado:** Abra as **Configurações** (ícone de engrenagem ⚙️ no menu superior) e cole uma chave gratuita do **Google Gemini**, **Groq** ou **OpenRouter**."
+          : "Para gerar códigos personalizados, criar aplicações web completas ou modificar este projeto em tempo real, conecte uma chave de IA gratuita em **Configurações (⚙️)** no menu superior direito (Google Gemini, Groq ou OpenRouter).\n\n💡 *Experimente agora:* Você pode pedir uma **calculadora** para testar a geração de código localmente sem chave!";
+
+      const novaMsgUsuario: MensagemArmazenada = {
+        id: crypto.randomUUID(),
+        projeto_id: projetoId!,
+        user_id: context.userId,
+        role: "user",
+        conteudo: prompt,
+        modelo: data.model,
+        ok: true,
+        anexos,
+        created_at: new Date().toISOString(),
+      };
+      salvarMensagemArmazenada(novaMsgUsuario);
+
+      const novaMsgAssistente: MensagemArmazenada = {
+        id: crypto.randomUUID(),
+        projeto_id: projetoId!,
+        user_id: context.userId,
+        role: "assistant",
+        conteudo: respostaOrientacao,
+        modelo: "faby-guia",
+        ok: true,
+        anexos: [],
+        created_at: new Date().toISOString(),
+      };
+      salvarMensagemArmazenada(novaMsgAssistente);
+
+      try {
+        await context.supabase.from("mensagens").insert([
+          {
+            id: novaMsgUsuario.id,
+            projeto_id: projetoId,
+            user_id: context.userId,
+            role: "user",
+            conteudo: prompt,
+            anexos: anexos as unknown as never,
+          },
+          {
+            id: novaMsgAssistente.id,
+            projeto_id: projetoId,
+            user_id: context.userId,
+            role: "assistant",
+            conteudo: respostaOrientacao,
+            modelo: "faby-guia",
+            ok: true,
+          },
+        ]);
+      } catch {
+        // ignore
+      }
+
+      return {
+        projeto_id: projetoId,
+        texto: respostaOrientacao,
+        ok: true,
+        mudou_arquivos: false,
+        projetoNovo,
+      };
     }
 
     let historicoRows: any[] = [];

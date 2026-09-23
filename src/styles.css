@@ -98,9 +98,24 @@
 }
 
 @utility panel-glass {
-  background: var(--color-panel);
-  border: 1px solid var(--color-border);
-  backdrop-filter: blur(10px);
+  background: rgba(14, 25, 20, 0.78);
+  border: 1px solid rgba(57, 255, 156, 0.16);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.45), 0 0 1px 1px rgba(57, 255, 156, 0.08);
+}
+
+@utility panel-glass-subtle {
+  background: rgba(18, 32, 26, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@utility glow-button {
+  background: linear-gradient(135deg, oklch(0.9 0.2 158) 0%, oklch(0.75 0.22 158) 100%);
+  box-shadow: 0 0 20px oklch(0.9 0.2 158 / 0.4);
+  transition: all 0.2s ease-in-out;
 }
 
 @keyframes thinking-people-turn {

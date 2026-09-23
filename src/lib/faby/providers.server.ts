@@ -122,7 +122,7 @@ export function sanitizarHistoricoParaGoogle(
   // 6. Adiciona o prompt atual do usuário
   const partesAtuais: unknown[] = [{ text: promptAtual }];
   for (const img of imagens) {
-    partesAtuais.push({ inline_data: { mime_type: img.mime, data: img.data } });
+    partesAtuais.push({ inlineData: { mimeType: img.mime, data: img.data } });
   }
   contents.push({ role: "user", parts: partesAtuais });
 
