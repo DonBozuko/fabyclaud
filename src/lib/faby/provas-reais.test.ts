@@ -179,9 +179,9 @@ document.getElementById("btnStart").addEventListener("click", () => {
     });
 
     const chavesLidas = obterChavesArmazenadas([testUserId]);
-    assert.equal(chavesLidas.length, 1, "Chave deve ser salva e lida do disco");
-    assert.equal(chavesLidas[0]?.provider, "google");
-    assert.equal(chavesLidas[0]?.api_key, "AIzaSyFakeKeyProofTest123456789");
+    const googleKey = chavesLidas.find((k) => k.provider === "google");
+    assert.ok(googleKey, "Chave google deve ser salva e lida");
+    assert.equal(googleKey?.api_key, "AIzaSyFakeKeyProofTest123456789");
 
     // 2. Salvar Projeto com arquivos reais
     const projetoOriginal = {

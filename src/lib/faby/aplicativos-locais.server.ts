@@ -9,8 +9,79 @@ export type AplicativoLocal = {
   arquivos: Record<string, string>;
 };
 
-export function aplicativoLocalParaPedido(pedido: string): AplicativoLocal | null {
+export function aplicativoLocalParaPedido(
+  pedido: string,
+  arquivosExistentes?: Record<string, string>,
+): AplicativoLocal | null {
   const limpo = pedido.trim().toLowerCase();
+
+  // Se já existem arquivos no projeto e o pedido é uma alteração / melhoria incremental
+  if (
+    arquivosExistentes &&
+    Object.keys(arquivosExistentes).length > 0 &&
+    !/\b(crie do zero|novo projeto|reiniciar do zero|apagar tudo)\b/i.test(limpo)
+  ) {
+    const novosArquivos = { ...arquivosExistentes };
+    let alterou = false;
+
+    // Alteração de cores e tema
+    if (
+      /\b(cor|cores|tema|escuro|claro|azul|verde|roxo|vermelho|rosa|fundo|layout|css|estilo)\b/i.test(
+        limpo,
+      )
+    ) {
+      const cssKey = Object.keys(novosArquivos).find((k) => k.endsWith(".css")) || "styles.css";
+      let cssAtual = novosArquivos[cssKey] || "";
+      if (/\b(azul|blue)\b/i.test(limpo)) {
+        cssAtual = cssAtual
+          .replace(/--primary:\s*[^;]+/g, "--primary: #3b82f6")
+          .replace(/--primary-hover:\s*[^;]+/g, "--primary-hover: #2563eb");
+        alterou = true;
+      } else if (/\b(verde|green)\b/i.test(limpo)) {
+        cssAtual = cssAtual
+          .replace(/--primary:\s*[^;]+/g, "--primary: #10b981")
+          .replace(/--primary-hover:\s*[^;]+/g, "--primary-hover: #059669");
+        alterou = true;
+      } else if (/\b(roxo|purple)\b/i.test(limpo)) {
+        cssAtual = cssAtual
+          .replace(/--primary:\s*[^;]+/g, "--primary: #8b5cf6")
+          .replace(/--primary-hover:\s*[^;]+/g, "--primary-hover: #7c3aed");
+        alterou = true;
+      } else if (/\b(vermelho|red)\b/i.test(limpo)) {
+        cssAtual = cssAtual
+          .replace(/--primary:\s*[^;]+/g, "--primary: #ef4444")
+          .replace(/--primary-hover:\s*[^;]+/g, "--primary-hover: #dc2626");
+        alterou = true;
+      } else if (/\b(rosa|pink)\b/i.test(limpo)) {
+        cssAtual = cssAtual
+          .replace(/--primary:\s*[^;]+/g, "--primary: #ec4899")
+          .replace(/--primary-hover:\s*[^;]+/g, "--primary-hover: #db2777");
+        alterou = true;
+      } else if (/\b(claro|light)\b/i.test(limpo)) {
+        cssAtual = cssAtual
+          .replace(/--bg:\s*[^;]+/g, "--bg: #f8fafc")
+          .replace(/--text:\s*[^;]+/g, "--text: #0f172a");
+        alterou = true;
+      } else if (/\b(escuro|dark|preto)\b/i.test(limpo)) {
+        cssAtual = cssAtual
+          .replace(/--bg:\s*[^;]+/g, "--bg: #0b0f19")
+          .replace(/--text:\s*[^;]+/g, "--text: #f8fafc");
+        alterou = true;
+      }
+      if (alterou) {
+        novosArquivos[cssKey] = cssAtual;
+      }
+    }
+
+    if (alterou) {
+      return {
+        nome: "Atualização de Interface",
+        descricao:
+          "Modificações solicitadas aplicadas diretamente nos arquivos existentes do projeto com preservação completa do código.",
+        arquivos: novosArquivos,
+      };
+    }
+  }
 
   // 1. Calculadora
   if (/\bcalculadora\b/i.test(limpo)) {

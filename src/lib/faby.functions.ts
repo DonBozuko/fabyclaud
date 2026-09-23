@@ -1842,16 +1842,6 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         return Number(b.testada) - Number(a.testada);
       });
 
-    const aplicativoLocal = aplicativoLocalParaPedido(prompt);
-
-    // Sem IA pronta, só modelos locais mantidos e testáveis podem gerar arquivos.
-    // Um texto vindo do navegador nunca é aceito como prova de que uma IA respondeu.
-    if (!candidatos.length && !aplicativoLocal) {
-      throw new Error(
-        "Nenhuma chave de IA está salva. Abra Configurações e cole uma chave grátis. Nenhum projeto ou tela de faz de conta foi criado.",
-      );
-    }
-
     // Projeto: usa o existente ou cria um novo com o nome vindo da mensagem.
     let projetoId = data.projeto_id ?? null;
     let arquivosAtuais: Record<string, string> = {};
@@ -1893,6 +1883,15 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           notasProjeto = cached.notas ?? "";
         }
       }
+    }
+
+    const aplicativoLocal = aplicativoLocalParaPedido(prompt, arquivosAtuais);
+
+    // Sem IA pronta, só modelos locais mantidos e testáveis podem gerar arquivos.
+    if (!candidatos.length && !aplicativoLocal) {
+      throw new Error(
+        "Nenhuma chave de IA está salva. Abra Configurações e cole uma chave grátis. Nenhum projeto ou tela de faz de conta foi criado.",
+      );
     }
 
     if (!projetoId) {

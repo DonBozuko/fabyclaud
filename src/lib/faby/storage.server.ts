@@ -192,6 +192,43 @@ export function obterChavesArmazenadas(userIds: string[]): ChaveArmazenada[] {
     }
   }
 
+  // 3. Suporte nativo a variáveis de ambiente do servidor / Lovable Cloud Secrets
+  const ENV_PROVIDER_MAP: Record<string, string[]> = {
+    google: ["GEMINI_API_KEY", "GOOGLE_API_KEY", "VITE_GEMINI_API_KEY", "VITE_GOOGLE_API_KEY"],
+    openrouter: ["OPENROUTER_API_KEY", "VITE_OPENROUTER_API_KEY"],
+    groq: ["GROQ_API_KEY", "VITE_GROQ_API_KEY"],
+    deepseek: ["DEEPSEEK_API_KEY", "VITE_DEEPSEEK_API_KEY"],
+    openai: ["OPENAI_API_KEY", "VITE_OPENAI_API_KEY"],
+    anthropic: ["ANTHROPIC_API_KEY", "CLAUDE_API_KEY", "VITE_ANTHROPIC_API_KEY"],
+    huggingface: ["HUGGINGFACE_API_KEY", "HF_TOKEN", "VITE_HUGGINGFACE_API_KEY"],
+    mistral: ["MISTRAL_API_KEY", "VITE_MISTRAL_API_KEY"],
+    cohere: ["COHERE_API_KEY", "VITE_COHERE_API_KEY"],
+    together: ["TOGETHER_API_KEY", "VITE_TOGETHER_API_KEY"],
+    cerebras: ["CEREBRAS_API_KEY", "VITE_CEREBRAS_API_KEY"],
+    sambanova: ["SAMBANOVA_API_KEY", "VITE_SAMBANOVA_API_KEY"],
+  };
+
+  for (const [provider, envNames] of Object.entries(ENV_PROVIDER_MAP)) {
+    if (!vistas.has(provider)) {
+      for (const envName of envNames) {
+        const val = process.env[envName];
+        if (val && val.trim()) {
+          vistas.add(provider);
+          res.push({
+            user_id: userIds[0] || "server_env",
+            provider,
+            api_key: val.trim(),
+            api_url: null,
+            testada_ok: true,
+            testada_em: new Date().toISOString(),
+            ultimo_erro: null,
+          });
+          break;
+        }
+      }
+    }
+  }
+
   return res;
 }
 
