@@ -142,97 +142,107 @@ export const listarProjetos = createServerFn({ method: "GET" })
     }));
   });
 
+export async function carregarProjetoCompleto(
+  id: string,
+  targetUserIds: string[],
+  context: any,
+) {
+  let projeto: any = null;
+  try {
+    const { data: p } = await context.supabase
+      .from("projetos")
+      .select("id, user_id, nome, modelo, arquivos, updated_at")
+      .eq("id", id)
+      .maybeSingle();
+    if (p) {
+      projeto = p;
+    }
+  } catch {
+    // ignore
+  }
+
+  if (!projeto) {
+    try {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: adminP } = await supabaseAdmin
+        .from("projetos")
+        .select("id, user_id, nome, modelo, arquivos, updated_at")
+        .eq("id", id)
+        .maybeSingle();
+      if (adminP) projeto = adminP;
+    } catch {
+      // ignore
+    }
+  }
+
+  const localP = obterProjetoArmazenado(id, targetUserIds);
+  if (!projeto) {
+    projeto = localP;
+  } else if (localP) {
+    const timeSupabase = new Date(projeto.updated_at || projeto.created_at || 0).getTime();
+    const timeLocal = new Date(localP.updated_at || localP.created_at || 0).getTime();
+    const arquivosSupabase = Object.keys(projeto.arquivos || {}).length;
+    const arquivosLocal = Object.keys(localP.arquivos || {}).length;
+    if (timeLocal >= timeSupabase || (arquivosLocal > 0 && arquivosSupabase === 0)) {
+      projeto = { ...projeto, ...localP };
+    }
+  }
+
+  if (!projeto) return null;
+
+  let mensagens: any[] = [];
+  try {
+    const { data: m } = await context.supabase
+      .from("mensagens")
+      .select("id, role, conteudo, modelo, ok, anexos, created_at")
+      .eq("projeto_id", id)
+      .order("created_at", { ascending: true });
+    if (m && m.length > 0) {
+      mensagens = m;
+    }
+  } catch {
+    // ignore
+  }
+
+  if (mensagens.length === 0) {
+    try {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: adminM } = await supabaseAdmin
+        .from("mensagens")
+        .select("id, role, conteudo, modelo, ok, anexos, created_at")
+        .eq("projeto_id", id)
+        .order("created_at", { ascending: true });
+      if (adminM && adminM.length > 0) mensagens = adminM;
+    } catch {
+      // ignore
+    }
+  }
+
+  const diskMsgs = listarMensagensArmazenadas(id);
+  for (const msg of diskMsgs) {
+    if (!mensagens.some((m) => m.id === msg.id)) {
+      mensagens.push(msg);
+    }
+  }
+
+  mensagens.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+
+  return {
+    ...projeto,
+    arquivos: (projeto.arquivos as Record<string, string>) ?? {},
+    mensagens,
+  };
+}
+
 /** Projeto completo: arquivos + histórico do chat. */
 export const obterProjeto = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { id: string }) => z.object({ id: z.string().min(1) }).parse(input))
   .handler(async ({ data, context }) => {
-    let projeto: any = null;
     const targetUserIds = extrairUserIds(context);
-    try {
-      const { data: p } = await context.supabase
-        .from("projetos")
-        .select("id, user_id, nome, modelo, arquivos, updated_at")
-        .eq("id", data.id)
-        .maybeSingle();
-      if (p) {
-        projeto = p;
-      }
-    } catch {
-      // ignore
-    }
-
-    if (!projeto) {
-      try {
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const { data: adminP } = await supabaseAdmin
-          .from("projetos")
-          .select("id, user_id, nome, modelo, arquivos, updated_at")
-          .eq("id", data.id)
-          .maybeSingle();
-        if (adminP) projeto = adminP;
-      } catch {
-        // ignore
-      }
-    }
-
-    const localP = obterProjetoArmazenado(data.id, targetUserIds);
-    if (!projeto) {
-      projeto = localP;
-    } else if (localP) {
-      const timeSupabase = new Date(projeto.updated_at || projeto.created_at || 0).getTime();
-      const timeLocal = new Date(localP.updated_at || localP.created_at || 0).getTime();
-      const arquivosSupabase = Object.keys(projeto.arquivos || {}).length;
-      const arquivosLocal = Object.keys(localP.arquivos || {}).length;
-      if (timeLocal >= timeSupabase || (arquivosLocal > 0 && arquivosSupabase === 0)) {
-        projeto = { ...projeto, ...localP };
-      }
-    }
-
-    if (!projeto) throw new Error("Projeto não encontrado");
-
-    let mensagens: any[] = [];
-    try {
-      const { data: m } = await context.supabase
-        .from("mensagens")
-        .select("id, role, conteudo, modelo, ok, anexos, created_at")
-        .eq("projeto_id", data.id)
-        .order("created_at", { ascending: true });
-      if (m && m.length > 0) {
-        mensagens = m;
-      }
-    } catch {
-      // ignore
-    }
-
-    if (mensagens.length === 0) {
-      try {
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const { data: adminM } = await supabaseAdmin
-          .from("mensagens")
-          .select("id, role, conteudo, modelo, ok, anexos, created_at")
-          .eq("projeto_id", data.id)
-          .order("created_at", { ascending: true });
-        if (adminM && adminM.length > 0) mensagens = adminM;
-      } catch {
-        // ignore
-      }
-    }
-
-    const diskMsgs = listarMensagensArmazenadas(data.id);
-    for (const msg of diskMsgs) {
-      if (!mensagens.some((m) => m.id === msg.id)) {
-        mensagens.push(msg);
-      }
-    }
-
-    mensagens.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
-
-    return {
-      ...projeto,
-      arquivos: (projeto.arquivos as Record<string, string>) ?? {},
-      mensagens,
-    };
+    const proj = await carregarProjetoCompleto(data.id, targetUserIds, context);
+    if (!proj) throw new Error("Projeto não encontrado");
+    return proj;
   });
 
 export const obterProgressoExecucao = createServerFn({ method: "GET" })
@@ -2013,6 +2023,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         ok: true,
         mudou_arquivos: false,
         projetoNovo,
+        projeto: await carregarProjetoCompleto(projetoId!, targetUserIds, context),
       };
     }
 
@@ -2174,6 +2185,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         ok: true,
         mudou_arquivos: false,
         projetoNovo,
+        projeto: await carregarProjetoCompleto(projetoId!, targetUserIds, context),
       };
     }
 
@@ -2243,6 +2255,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         ok: true,
         mudou_arquivos: true,
         projetoNovo,
+        projeto: await carregarProjetoCompleto(projetoId!, targetUserIds, context),
       };
     }
 
@@ -2274,6 +2287,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         ok: preview.estado === "funcionando" || preview.estado === "parcial",
         mudou_arquivos: false,
         projetoNovo,
+        projeto: await carregarProjetoCompleto(projetoId!, targetUserIds, context),
       };
     }
 
@@ -2762,6 +2776,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           ok,
           mudou_arquivos: false,
           projetoNovo,
+          projeto: await carregarProjetoCompleto(projetoId!, targetUserIds, context),
         };
       }
 
@@ -3387,5 +3402,6 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       ok,
       mudou_arquivos: mudouArquivos,
       projetoNovo,
+      projeto: await carregarProjetoCompleto(projetoId!, targetUserIds, context),
     };
   });

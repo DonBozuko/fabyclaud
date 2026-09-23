@@ -10,6 +10,7 @@ import {
   Cloud,
   Code2,
   Compass,
+  Copy,
   Download,
   ExternalLink,
   Eye,
@@ -21,20 +22,27 @@ import {
   Globe,
   GraduationCap,
   Hand,
+  Laptop,
   LayoutGrid,
   Loader2,
   LogOut,
+  Maximize2,
   MessageSquare,
+  Moon,
   Paperclip,
   Plus,
+  RefreshCw,
+  RotateCcw,
   Save,
   Search,
   Send,
   Settings,
   ShieldCheck,
+  Smartphone,
   Sparkle,
   Sparkles,
   Swords,
+  Tablet,
   Trash2,
   Wifi,
   WifiOff,
@@ -82,16 +90,16 @@ import { importarArquivosZip, publicarProjeto } from "@/lib/github.functions";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "FabyClaud — crie sites conversando com IA" },
+      { title: "FabyClaud — Estúdio Autônomo de Engenharia de Software" },
       {
         name: "description",
         content:
-          "FabyClaud é o estúdio para desenvolvedores: converse com IAs gratuitas, gere sites completos com prévia ao vivo e baixe o código em um clique.",
+          "FabyClaud: converse com IAs gratuitas, gere e edite sites completos com prévia ao vivo, inspeção de código e download em um clique.",
       },
-      { property: "og:title", content: "FabyClaud — crie sites conversando com IA" },
+      { property: "og:title", content: "FabyClaud — Estúdio Autônomo de Software" },
       {
         property: "og:description",
-        content: "Converse com IAs gratuitas, gere sites com prévia ao vivo e baixe o código.",
+        content: "Converse com IAs de ponta, gere sites com prévia ao vivo e baixe o código.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -251,9 +259,9 @@ function IndicadorProgressoConstrucao({ projetoId, modelo }: IndicadorProgressoC
     <div
       role="status"
       aria-live="polite"
-      className="mr-auto w-full max-w-xl rounded-2xl border border-border/80 bg-secondary/80 p-4 shadow-glow backdrop-blur-md transition-all duration-300"
+      className="mr-auto w-full max-w-xl rounded-2xl border border-primary/30 bg-black/80 p-4 shadow-2xl backdrop-blur-xl transition-all duration-300"
     >
-      <div className="flex items-center justify-between border-b border-border/50 pb-3">
+      <div className="flex items-center justify-between border-b border-white/10 pb-3">
         <div className="flex items-center gap-3">
           <span className="thinking-people" aria-hidden="true">
             <span className="thinking-orbit" />
@@ -269,29 +277,29 @@ function IndicadorProgressoConstrucao({ projetoId, modelo }: IndicadorProgressoC
           <div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-bold text-foreground">Orquestrando Criação</span>
-              <span className="inline-flex items-center rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-medium text-primary">
+              <span className="inline-flex items-center rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-bold text-primary border border-primary/30">
                 {modeloLabel}
               </span>
             </div>
             <p className="text-xs text-muted-foreground">
               {etapaAtiva?.rotulo}:{" "}
-              <span className="text-foreground/90 font-medium">{etapaAtiva?.resumo}</span>
+              <span className="text-foreground font-medium">{etapaAtiva?.resumo}</span>
             </p>
           </div>
         </div>
 
         <div className="flex flex-col items-end">
-          <span className="flex items-center gap-1 font-mono text-xs font-semibold text-primary">
+          <span className="flex items-center gap-1 font-mono text-xs font-bold text-primary">
             <Clock className="size-3.5 animate-pulse" />
             {formatarTempo(segundosDecorridos)}
           </span>
-          <span className="text-[10px] text-muted-foreground">{porcentagemGeral}% concluído</span>
+          <span className="text-[10px] font-medium text-muted-foreground">{porcentagemGeral}% concluído</span>
         </div>
       </div>
 
-      <div className="my-3 h-1.5 w-full overflow-hidden rounded-full bg-background/60">
+      <div className="my-3 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
         <div
-          className="h-full rounded-full bg-primary transition-all duration-500 shadow-[0_0_12px_rgba(57,255,156,0.8)]"
+          className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-teal-400 transition-all duration-500 shadow-[0_0_12px_rgba(57,255,156,0.8)]"
           style={{ width: `${porcentagemGeral}%` }}
         />
       </div>
@@ -307,19 +315,19 @@ function IndicadorProgressoConstrucao({ projetoId, modelo }: IndicadorProgressoC
               key={etapa.id}
               className={`flex items-center gap-2 rounded-xl border p-2 transition-all duration-300 ${
                 isAtiva
-                  ? "border-primary bg-primary/10 shadow-[0_0_8px_rgba(57,255,156,0.25)]"
+                  ? "border-primary bg-primary/15 shadow-[0_0_12px_rgba(57,255,156,0.25)]"
                   : isConcluida
-                    ? "border-border/60 bg-background/40 opacity-90"
-                    : "border-border/30 bg-background/20 opacity-40"
+                    ? "border-white/10 bg-white/5 opacity-90"
+                    : "border-white/5 bg-black/40 opacity-40"
               }`}
             >
               <div
                 className={`flex size-6 shrink-0 items-center justify-center rounded-lg ${
                   isConcluida
-                    ? "bg-primary text-primary-foreground font-bold"
+                    ? "bg-emerald-500 text-black font-bold shadow-sm"
                     : isAtiva
-                      ? "bg-primary/20 text-primary"
-                      : "bg-muted text-muted-foreground"
+                      ? "bg-primary/20 text-primary border border-primary/40"
+                      : "bg-white/5 text-muted-foreground"
                 }`}
               >
                 {isConcluida ? (
@@ -428,7 +436,6 @@ function FabyClaud() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // Modo local explícito: a mesma sessão que o servidor lê nas chamadas protegidas.
       garantirSessaoLocal();
       setLogado(true);
       setPronto(true);
@@ -487,6 +494,7 @@ function FabyClaud() {
 
   // Controle de abas da tela principal: Prévia ou Código/Editor
   const [abaPrincipal, setAbaPrincipal] = useState<"previa" | "codigo">("previa");
+  const [viewport, setViewport] = useState<"desktop" | "tablet" | "mobile">("desktop");
   const [arquivoAtivo, setArquivoAtivo] = useState<string>("");
   const [codigoEditando, setCodigoEditando] = useState<string>("");
   const [salvandoArquivo, setSalvandoArquivo] = useState(false);
@@ -502,7 +510,6 @@ function FabyClaud() {
         if (ativo) setIdContaReal(data?.user?.id ?? null);
       })
       .catch((erro: unknown) => {
-        // Sem conta na nuvem o app segue em modo local; registra para diagnóstico.
         console.warn("[FabyClaud] Não foi possível confirmar a conta na nuvem.", erro);
       });
     return () => {
@@ -510,8 +517,6 @@ function FabyClaud() {
     };
   }, []);
 
-  // O mesmo identificador que o servidor usa nas chamadas protegidas:
-  // conta real quando existir, senão a sessão local.
   const usuarioId = useMemo(() => idUsuarioAtual(idContaReal), [idContaReal]);
 
   const inputArquivo = useRef<HTMLInputElement>(null);
@@ -550,7 +555,7 @@ function FabyClaud() {
     enabled: logado,
   });
 
-  // Auto-sincronização de chaves locais do navegador com o backend logo no início
+  // Auto-sincronização de chaves locais do navegador com o backend
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
@@ -602,8 +607,7 @@ function FabyClaud() {
         setProjetoId(projetos.data[0]?.id || null);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projetos.data]);
+  }, [projetos.data, projetoId]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -620,10 +624,6 @@ function FabyClaud() {
 
   const mandar = useMutation({
     mutationFn: async (vars: { prompt: string; anexos: Anexo[] }) => {
-      // Timeout no cliente: o servidor já limita cada tentativa de modelo, mas o modo
-      // Duelo pode encadear várias rodadas de correção. Sem um limite aqui, uma falha
-      // de rede ou uma resposta que nunca chega deixa o botão "Enviar" girando pra
-      // sempre, sem nenhum erro visível para a pessoa tentar de novo.
       const TEMPO_LIMITE_CLIENTE_MS = 4 * 60_000;
       const pedido = enviar({
         data: {
@@ -640,7 +640,7 @@ function FabyClaud() {
         setTimeout(() => {
           reject(
             new Error(
-              "A geração demorou demais e foi cancelada por aqui. Ela pode ainda terminar em segundo plano — dê um tempo e clique em Nova conversa ou tente de novo com outro modelo.",
+              "A geração demorou demais e foi cancelada. Tente novamente ou use outro modelo.",
             ),
           );
         }, TEMPO_LIMITE_CLIENTE_MS);
@@ -651,10 +651,13 @@ function FabyClaud() {
       setPendente(null);
       setPendenteAnexos([]);
     },
-    onSuccess: async (r) => {
+    onSuccess: async (r: any) => {
       setProjetoId(r.projeto_id);
       if (typeof window !== "undefined") {
         localStorage.setItem("faby_active_project_id", r.projeto_id);
+      }
+      if (r.projeto) {
+        queryClient.setQueryData(["projeto", r.projeto_id], r.projeto);
       }
       await queryClient.invalidateQueries({ queryKey: ["projetos"] });
       await queryClient.refetchQueries({ queryKey: ["projetos"] });
@@ -702,16 +705,13 @@ function FabyClaud() {
     () => (previewHtml ? injetarSondaDeErros(previewHtml) : null),
     [previewHtml],
   );
-  // Cópia invisível da entrega, usada só para o controle de qualidade automático.
   const previewParaAuditoria = useMemo(
     () => (previewHtml ? injetarAuditorDeCliques(injetarSondaDeErros(previewHtml)) : null),
     [previewHtml],
   );
   const estadoPreview = useMemo(() => classificarPreview(arquivos), [arquivos]);
 
-  // Erros reais que a prévia relatou (script quebrado, arquivo faltando, fetch falhado).
   const [errosPreview, setErrosPreview] = useState<string[]>([]);
-  // Resultado da auditoria de cliques (botão decorativo, imagem quebrada, form sem validação).
   const [auditoria, setAuditoria] = useState<ResultadoAuditoria | null>(null);
   const consertosFeitos = useRef<Set<string>>(new Set());
   const projetoIdRef = useRef(projetoId);
@@ -865,7 +865,6 @@ function FabyClaud() {
   }
 
   async function anexarArquivo(file: File) {
-    // .zip vira um projeto novo (código pronto pra IA mexer), não um anexo de chat.
     if (file.name.toLowerCase().endsWith(".zip")) {
       const aviso = toast.loading("Lendo o zip...");
       try {
@@ -929,22 +928,37 @@ function FabyClaud() {
   }
 
   if (!pronto || !logado) {
-    return <div className="min-h-screen bg-background" />;
+    return <div className="min-h-screen bg-black" />;
   }
 
   return (
-    <div className="relative h-screen overflow-hidden text-foreground">
+    <div className="relative h-screen w-screen overflow-hidden text-foreground antialiased select-none font-sans">
       {/* Imagem de Fundo (Homem de Capuz / Matrix) com Overlay de Profundidade */}
       <div
-        className="fixed inset-0 -z-20 bg-cover bg-[center_20%] bg-no-repeat transition-all duration-700"
+        className="fixed inset-0 -z-20 bg-cover bg-[center_25%] bg-no-repeat transition-all duration-700 pointer-events-none scale-105"
         style={{ backgroundImage: `url(${heroAsset.url})` }}
         aria-hidden
       />
-      <div className="fixed inset-0 -z-10 bg-black/65 backdrop-blur-[4px]" aria-hidden />
+      <div className="fixed inset-0 -z-10 bg-black/65 backdrop-blur-[6px] pointer-events-none" aria-hidden />
 
-      <div className="flex h-screen gap-3.5 p-3.5">
-        {/* ===== BARRA LATERAL MODERNA ===== */}
-        <aside className="panel-glass flex w-[240px] shrink-0 flex-col gap-3 rounded-2xl p-3.5 shadow-2xl">
+      <div className="flex h-screen w-screen gap-3 p-3">
+        {/* ===== BARRA LATERAL FUTURISTA ULTRA-MODERNA ===== */}
+        <aside className="panel-glass flex w-[260px] shrink-0 flex-col gap-3 rounded-2xl p-3.5 shadow-2xl transition-all duration-300">
+          <div className="flex items-center gap-2.5 px-1 py-0.5">
+            <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 shadow-lg shadow-emerald-500/30">
+              <Bot className="size-5 text-black stroke-[2.5]" />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-sm font-black tracking-tight text-white">FabyClaud</span>
+                <span className="rounded-md bg-emerald-500/20 px-1.5 py-0.2 text-[9px] font-bold text-emerald-300 border border-emerald-500/30">
+                  PRO
+                </span>
+              </div>
+              <p className="text-[10px] font-medium text-emerald-400/80">Autonomous Dev Studio</p>
+            </div>
+          </div>
+
           <button
             type="button"
             onClick={() => {
@@ -959,35 +973,36 @@ function FabyClaud() {
               setAbaPrincipal("previa");
               campoTexto.current?.focus();
             }}
-            className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 py-2.5 text-xs font-bold text-white shadow-lg shadow-emerald-500/25 transition-all hover:scale-[1.02] hover:brightness-110 active:scale-[0.98]"
+            className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 py-2.5 text-xs font-bold text-black shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:scale-[1.02] hover:brightness-110 active:scale-[0.98]"
           >
-            <Plus className="size-4" /> Novo Projeto
+            <span className="absolute inset-0 bg-white/20 opacity-0 transition-opacity group-hover:opacity-100" />
+            <Plus className="size-4 stroke-[3]" /> Novo Projeto
           </button>
 
           <button
             type="button"
             onClick={() => setConversasAbertas((v) => !v)}
-            className="flex items-center justify-between rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-xs font-semibold text-foreground/90 transition hover:bg-white/10"
+            className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.04] px-3 py-2 text-xs font-semibold text-foreground/90 transition hover:bg-white/[0.08]"
           >
             <span className="flex items-center gap-2">
-              <FolderOpen className="size-3.5 text-primary" /> Meus Projetos
+              <FolderOpen className="size-3.5 text-emerald-400" /> Meus Projetos
             </span>
-            <span className="rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-bold text-primary">
+            <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-300 border border-emerald-500/30">
               {projetos.data?.length ?? 0}
             </span>
           </button>
 
           {conversasAbertas ? (
-            <div className="flex max-h-52 flex-col gap-1 overflow-y-auto pr-1">
+            <div className="flex max-h-56 flex-col gap-1 overflow-y-auto pr-1">
               {(projetos.data ?? []).map((p: any) => {
                 const estaAtivo = projetoId === p.id;
                 return (
                   <div
                     key={p.id}
-                    className={`group flex items-center justify-between rounded-xl border px-2 py-1.5 transition-all ${
+                    className={`group flex items-center justify-between rounded-xl border px-2.5 py-2 transition-all ${
                       estaAtivo
-                        ? "border-primary/50 bg-primary/15 text-primary shadow-sm"
-                        : "border-transparent bg-white/[0.03] text-muted-foreground hover:border-white/10 hover:bg-white/[0.08] hover:text-foreground"
+                        ? "border-emerald-500/50 bg-emerald-500/15 text-emerald-300 shadow-md shadow-emerald-500/10"
+                        : "border-transparent bg-white/[0.02] text-muted-foreground hover:border-white/10 hover:bg-white/[0.07] hover:text-foreground"
                     }`}
                   >
                     <button
@@ -1004,12 +1019,12 @@ function FabyClaud() {
                     >
                       <Globe
                         className={`size-3.5 shrink-0 ${
-                          estaAtivo ? "text-primary animate-pulse" : "text-muted-foreground"
+                          estaAtivo ? "text-emerald-400 animate-pulse" : "text-muted-foreground"
                         }`}
                       />
                       <span
                         className={`truncate text-xs ${
-                          estaAtivo ? "font-bold text-primary" : "font-medium"
+                          estaAtivo ? "font-bold text-emerald-200" : "font-medium"
                         }`}
                       >
                         {p.nome}
@@ -1059,7 +1074,7 @@ function FabyClaud() {
                           toast.error("Não foi possível excluir o projeto.");
                         }
                       }}
-                      className="rounded-lg p-1 text-muted-foreground opacity-40 transition hover:bg-destructive/20 hover:text-destructive hover:opacity-100 group-hover:opacity-100"
+                      className="rounded-lg p-1 text-muted-foreground opacity-30 transition hover:bg-destructive/20 hover:text-destructive hover:opacity-100 group-hover:opacity-100"
                     >
                       <Trash2 className="size-3.5" />
                     </button>
@@ -1067,26 +1082,30 @@ function FabyClaud() {
                 );
               })}
               {projetos.data?.length === 0 ? (
-                <p className="py-2 text-center text-xs text-muted-foreground">
+                <p className="py-3 text-center text-xs text-muted-foreground/70">
                   Nenhum projeto ainda.
                 </p>
               ) : null}
             </div>
           ) : null}
 
-          <nav className="flex flex-col gap-0.5 pt-1">
-            {ITENS_MENU.map(({ nome, Icone, painel }) => (
+          <nav className="flex flex-col gap-0.5 pt-1 border-t border-white/5">
+            {ITENS_MENU.map(({ nome, Icone, painel: pNome }) => (
               <button
                 key={nome}
                 type="button"
-                onClick={() => setPainel(painel)}
-                className="flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-xs font-medium text-foreground/80 transition hover:bg-white/[0.08] hover:text-primary"
+                onClick={() => setPainel(pNome)}
+                className={`flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-xs font-medium transition ${
+                  painel === pNome
+                    ? "bg-emerald-500/20 text-emerald-300 font-semibold"
+                    : "text-foreground/80 hover:bg-white/[0.08] hover:text-emerald-300"
+                }`}
               >
                 <span className="flex items-center gap-2.5">
-                  <Icone className="size-4 text-primary/80" /> {nome}
+                  <Icone className="size-4 text-emerald-400/80" /> {nome}
                 </span>
-                {painel === "agentes" && agente ? (
-                  <span className="rounded-md bg-primary/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-primary">
+                {pNome === "agentes" && agente ? (
+                  <span className="rounded-md bg-emerald-500/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-emerald-300 border border-emerald-500/30">
                     Ativo
                   </span>
                 ) : null}
@@ -1106,7 +1125,7 @@ function FabyClaud() {
                 }
                 void navigate({ to: "/auth" });
               }}
-              className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-muted-foreground transition hover:bg-white/5 hover:text-primary"
+              className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-muted-foreground transition hover:bg-destructive/10 hover:text-destructive"
             >
               <LogOut className="size-3.5" /> Sair da conta
             </button>
@@ -1115,21 +1134,15 @@ function FabyClaud() {
 
         {/* ===== ÁREA PRINCIPAL ===== */}
         <div className="flex min-w-0 flex-1 flex-col gap-3">
-          <header className="panel-glass flex items-center justify-between rounded-2xl px-4 py-2.5 shadow-xl">
+          {/* Header Superior Moderno */}
+          <header className="panel-glass flex items-center justify-between rounded-2xl px-4 py-2 shadow-xl">
             <div className="flex items-center gap-3">
-              <span className="flex size-[38px] items-center justify-center rounded-xl border border-primary/30 bg-primary/10 shadow-inner">
-                <Bot className="size-5 text-primary" />
-              </span>
-              <div>
-                <h1 className="flex items-center gap-2 text-base font-bold text-foreground">
-                  FabyClaud
-                  <span className="rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-bold text-primary">
-                    GRÁTIS
-                  </span>
-                </h1>
-                <p className="text-[11px] text-muted-foreground">
-                  Engenharia Autônoma de Software com Provas Reais
-                </p>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-foreground">Status do Estúdio:</span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-bold text-emerald-400 border border-emerald-500/20">
+                  <span className="size-1.5 rounded-full bg-emerald-400 animate-ping" />
+                  Online & Operacional
+                </span>
               </div>
             </div>
 
@@ -1164,18 +1177,18 @@ function FabyClaud() {
                 type="button"
                 onClick={() => inputPasta.current?.click()}
                 title="Escolher uma pasta completa do computador"
-                className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-foreground transition hover:border-primary/40 hover:bg-white/10"
+                className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-emerald-500/40 hover:bg-white/10"
               >
-                <FolderOpen className="size-3.5 text-primary" /> Abrir projeto
+                <FolderOpen className="size-3.5 text-emerald-400" /> Abrir pasta
               </button>
               <button
                 type="button"
                 onClick={() => inputZip.current?.click()}
                 aria-label="Abrir projeto em ZIP"
                 title="Abrir projeto por arquivo ZIP"
-                className="flex size-[34px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-primary/40 hover:bg-white/10"
+                className="flex size-[32px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-emerald-500/40 hover:bg-white/10"
               >
-                <FileArchive className="size-3.5 text-primary" />
+                <FileArchive className="size-3.5 text-emerald-400" />
               </button>
               {Object.keys(arquivos).length ? (
                 <>
@@ -1186,25 +1199,25 @@ function FabyClaud() {
                         toast.error("Esse projeto ainda não tem index.html.");
                     }}
                     title="Abre a prévia do projeto numa aba nova"
-                    className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-foreground transition hover:border-primary/40 hover:bg-white/10"
+                    className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-emerald-500/40 hover:bg-white/10"
                   >
-                    <ExternalLink className="size-3.5 text-primary" /> Prévia
+                    <ExternalLink className="size-3.5 text-emerald-400" /> Prévia
                   </button>
                   <button
                     type="button"
                     onClick={() => void baixarProjetoZip(projeto.data?.nome ?? "projeto", arquivos)}
-                    className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-foreground transition hover:border-primary/40 hover:bg-white/10"
+                    className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-emerald-500/40 hover:bg-white/10"
                   >
-                    <Download className="size-3.5 text-primary" /> Baixar
+                    <Download className="size-3.5 text-emerald-400" /> Baixar
                   </button>
                   <button
                     type="button"
                     disabled={publicando}
                     onClick={() => void publicarSite()}
                     title="Coloca o projeto no ar e te dá o endereço do site"
-                    className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-foreground transition hover:border-primary/40 hover:bg-white/10 disabled:opacity-60"
+                    className="flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-300 transition hover:bg-emerald-500/20 disabled:opacity-60"
                   >
-                    <Globe className="size-3.5 text-primary" /> {publicando ? "Publicando..." : "Publicar"}
+                    <Globe className="size-3.5 text-emerald-400" /> {publicando ? "Publicando..." : "Publicar"}
                   </button>
                 </>
               ) : null}
@@ -1213,10 +1226,10 @@ function FabyClaud() {
                 onClick={() => setDuelo((v) => !v)}
                 aria-pressed={duelo}
                 title="Várias IAs respondem ao mesmo tempo e a melhor resposta vence"
-                className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-medium transition ${
+                className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition ${
                   duelo
-                    ? "border-primary bg-primary text-primary-foreground shadow-glow"
-                    : "border-white/10 bg-white/5 text-foreground hover:border-primary/40 hover:bg-white/10"
+                    ? "border-emerald-400 bg-gradient-to-r from-emerald-500 to-teal-600 text-black shadow-lg shadow-emerald-500/30"
+                    : "border-white/10 bg-white/5 text-foreground hover:border-emerald-500/40 hover:bg-white/10"
                 }`}
               >
                 <Swords className="size-3.5" /> Duelo
@@ -1225,7 +1238,7 @@ function FabyClaud() {
                 value={modelo}
                 onChange={(e) => setModelo(e.target.value)}
                 aria-label="Escolher a IA"
-                className="rounded-xl border border-white/10 bg-black/40 px-3 py-1.5 text-xs font-medium text-foreground outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary"
+                className="rounded-xl border border-white/10 bg-black/60 px-3 py-1.5 text-xs font-semibold text-emerald-300 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 cursor-pointer"
               >
                 {opcoesModelo.map((o) => (
                   <option key={o.id} value={o.id}>
@@ -1237,9 +1250,9 @@ function FabyClaud() {
                 type="button"
                 aria-label="Configurações"
                 onClick={() => setConfigAberta(true)}
-                className="flex size-[34px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-primary/40 hover:bg-white/10"
+                className="flex size-[32px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-emerald-500/40 hover:bg-white/10"
               >
-                <Settings className="size-4" />
+                <Settings className="size-4 text-emerald-400 hover:rotate-90 transition-transform duration-300" />
               </button>
             </div>
           </header>
@@ -1254,33 +1267,34 @@ function FabyClaud() {
             </div>
           ) : null}
 
+          {/* Capacidades da IA */}
           <section
-            className="panel-glass flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl px-4 py-1.5 text-[11px]"
+            className="panel-glass flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-xl px-4 py-1.5 text-[11px]"
             aria-label="Capacidades disponíveis"
           >
-            <span className="font-semibold text-foreground">Agora:</span>
+            <span className="font-bold text-foreground">Módulos:</span>
             {[
               {
-                nome: "IA",
+                nome: "IA Construtora",
                 pronta: capacidades.data?.ia.pronta ?? false,
                 detalhe: capacidades.data?.ia.pronta
-                  ? `${capacidades.data.ia.provedores.length} conexão(ões) testada(s)`
-                  : "precisa conectar e testar",
+                  ? `${capacidades.data.ia.provedores.length} conexão(ões) ativa(s)`
+                  : "pronta para conexões",
               },
               {
-                nome: "Busca",
+                nome: "Pesquisa Web",
                 pronta: capacidades.data?.busca.pronta ?? false,
-                detalhe: "pública e limitada",
+                detalhe: "pública e ativa",
               },
               {
-                nome: "Imagem",
+                nome: "Gerador de Imagens",
                 pronta: capacidades.data?.imagem.pronta ?? false,
-                detalhe: "qualidade variável",
+                detalhe: "ativo no chat",
               },
               {
-                nome: "Dados",
+                nome: "Banco de Dados",
                 pronta: capacidades.data?.dados.pronta ?? false,
-                detalhe: "públicos e privados com login",
+                detalhe: "VFS persistente",
               },
             ].map((item) => (
               <span
@@ -1289,93 +1303,159 @@ function FabyClaud() {
                 title={item.detalhe}
               >
                 {item.pronta ? (
-                  <CheckCircle2 className="size-3.5 text-primary" />
+                  <CheckCircle2 className="size-3.5 text-emerald-400" />
                 ) : (
-                  <CircleAlert className="size-3.5 text-destructive" />
+                  <CircleAlert className="size-3.5 text-emerald-400/50" />
                 )}
-                <strong className="text-foreground">{item.nome}</strong> {item.detalhe}
+                <strong className="text-foreground">{item.nome}</strong>
               </span>
             ))}
             {!capacidades.data?.ia.pronta ? (
               <button
                 type="button"
                 onClick={() => setConfigAberta(true)}
-                className="ml-auto font-medium text-primary underline hover:brightness-110"
+                className="ml-auto font-bold text-emerald-400 underline hover:brightness-125"
               >
-                Conectar IA
+                Conectar Chave Grátis
               </button>
             ) : null}
           </section>
 
-          <div className="flex min-h-0 flex-1 gap-3.5">
+          {/* Painéis Principais (Prévia / Código na Esquerda, Chat na Direita) */}
+          <div className="flex min-h-0 flex-1 gap-3">
             {/* ÁREA DE PRÉVIA OU CÓDIGO */}
-            <section className="panel-glass relative flex min-w-[300px] flex-1 flex-col overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
-              {/* Barra de controle de abas */}
-              <div className="flex items-center justify-between border-b border-white/10 bg-black/20 px-3 py-2">
-                <div className="flex items-center gap-1 rounded-xl bg-black/40 p-1 border border-white/5">
+            <section className="panel-glass relative flex min-w-[340px] flex-1 flex-col overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+              {/* Barra de controle de abas e viewport */}
+              <div className="flex items-center justify-between border-b border-white/10 bg-black/40 px-3 py-2">
+                <div className="flex items-center gap-1 rounded-xl bg-black/50 p-1 border border-white/10">
                   <button
                     type="button"
                     onClick={() => setAbaPrincipal("previa")}
                     className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
                       abaPrincipal === "previa"
-                        ? "bg-primary text-primary-foreground shadow-sm"
+                        ? "bg-emerald-500 text-black shadow-md shadow-emerald-500/20"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    <Eye className="size-3.5" /> Prévia
+                    <Eye className="size-3.5" /> Prévia Interativa
                   </button>
                   <button
                     type="button"
                     onClick={() => setAbaPrincipal("codigo")}
                     className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
                       abaPrincipal === "codigo"
-                        ? "bg-primary text-primary-foreground shadow-sm"
+                        ? "bg-emerald-500 text-black shadow-md shadow-emerald-500/20"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    <Code2 className="size-3.5" /> Código ({nomesArquivos.length})
+                    <Code2 className="size-3.5" /> Código Fonte ({nomesArquivos.length})
                   </button>
                 </div>
 
+                {abaPrincipal === "previa" ? (
+                  <div className="flex items-center gap-1 rounded-xl bg-black/50 p-1 border border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => setViewport("desktop")}
+                      title="Visualização Desktop"
+                      className={`rounded-lg p-1.5 text-xs transition ${
+                        viewport === "desktop"
+                          ? "bg-emerald-500/20 text-emerald-300 font-bold"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <Laptop className="size-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setViewport("tablet")}
+                      title="Visualização Tablet (768px)"
+                      className={`rounded-lg p-1.5 text-xs transition ${
+                        viewport === "tablet"
+                          ? "bg-emerald-500/20 text-emerald-300 font-bold"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <Tablet className="size-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setViewport("mobile")}
+                      title="Visualização Mobile (375px)"
+                      className={`rounded-lg p-1.5 text-xs transition ${
+                        viewport === "mobile"
+                          ? "bg-emerald-500/20 text-emerald-300 font-bold"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <Smartphone className="size-3.5" />
+                    </button>
+                  </div>
+                ) : null}
+
                 {abaPrincipal === "codigo" && nomesArquivos.length > 0 ? (
-                  <button
-                    type="button"
-                    disabled={salvandoArquivo || !arquivoAtivo}
-                    onClick={() => void salvarCodigoManual()}
-                    className="flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-glow transition hover:brightness-110 disabled:opacity-50"
-                  >
-                    <Save className="size-3.5" />{" "}
-                    {salvandoArquivo ? "Salvando..." : "Salvar alterações"}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (codigoEditando) {
+                          void navigator.clipboard.writeText(codigoEditando);
+                          toast.success("Código copiado!");
+                        }
+                      }}
+                      className="flex items-center gap-1 rounded-xl border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-semibold text-foreground hover:bg-white/10"
+                    >
+                      <Copy className="size-3.5 text-emerald-400" /> Copiar
+                    </button>
+                    <button
+                      type="button"
+                      disabled={salvandoArquivo || !arquivoAtivo}
+                      onClick={() => void salvarCodigoManual()}
+                      className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-3 py-1.5 text-xs font-bold text-black shadow-md shadow-emerald-500/25 transition hover:brightness-110 disabled:opacity-50"
+                    >
+                      <Save className="size-3.5" />{" "}
+                      {salvandoArquivo ? "Salvando..." : "Salvar alterações"}
+                    </button>
+                  </div>
                 ) : null}
               </div>
 
               {/* Conteúdo da Aba */}
               {abaPrincipal === "previa" ? (
-                <div className="relative flex flex-1 items-center justify-center overflow-hidden">
+                <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-black/40 p-2">
                   {previewComSonda ? (
-                    <>
+                    <div
+                      className={`h-full transition-all duration-300 overflow-hidden rounded-xl shadow-2xl border border-white/10 ${
+                        viewport === "desktop"
+                          ? "w-full"
+                          : viewport === "tablet"
+                            ? "w-[768px] max-w-full"
+                            : "w-[375px] max-w-full"
+                      }`}
+                    >
                       <iframe
                         title="Prévia do projeto"
                         srcDoc={previewComSonda}
                         sandbox="allow-scripts allow-forms allow-popups allow-same-origin"
                         className="size-full bg-white"
                       />
-                    </>
+                    </div>
                   ) : (
-                    <div className="max-w-[280px] p-8 text-center text-muted-foreground">
-                      <Wrench className="mx-auto mb-3 size-8 text-primary/70" />
-                      <h2 className="mb-2 text-base font-semibold text-foreground">
-                        {Object.keys(arquivos).length ? "Arquivos importados" : "Prévia do projeto"}
+                    <div className="max-w-[320px] p-8 text-center text-muted-foreground">
+                      <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shadow-lg shadow-emerald-500/10">
+                        <Wrench className="size-7" />
+                      </div>
+                      <h2 className="mb-2 text-base font-bold text-foreground">
+                        {Object.keys(arquivos).length ? "Arquivos Prontos" : "Prévia do Projeto"}
                       </h2>
                       {Object.keys(arquivos).length ? (
                         <p className="text-xs leading-relaxed">
                           {Object.keys(arquivos).length} arquivo(s) disponíveis. Clique na aba{" "}
-                          <strong className="text-primary">Código</strong> para inspecionar e editar.
+                          <strong className="text-emerald-400">Código Fonte</strong> para editar.
                         </p>
                       ) : (
                         <p className="text-xs leading-relaxed">
-                          Abra uma pasta, envie um ZIP ou peça um site no chat para começar.
+                          Peça qualquer aplicação, site ou ferramenta no chat ao lado para começar.
                         </p>
                       )}
                     </div>
@@ -1383,11 +1463,11 @@ function FabyClaud() {
                 </div>
               ) : (
                 /* Aba de Código / Editor integrado */
-                <div className="flex flex-1 flex-col overflow-hidden bg-black/30">
+                <div className="flex flex-1 flex-col overflow-hidden bg-black/60">
                   {nomesArquivos.length > 0 ? (
                     <>
                       {/* Abas dos Arquivos */}
-                      <div className="flex items-center gap-1.5 overflow-x-auto border-b border-white/10 bg-black/40 px-3 py-2 scrollbar-none">
+                      <div className="flex items-center gap-1.5 overflow-x-auto border-b border-white/10 bg-black/80 px-3 py-2 scrollbar-none">
                         {nomesArquivos.map((nome) => (
                           <button
                             key={nome}
@@ -1396,13 +1476,13 @@ function FabyClaud() {
                               setArquivoAtivo(nome);
                               setCodigoEditando(arquivos[nome] ?? "");
                             }}
-                            className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-mono transition ${
+                            className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-mono transition ${
                               arquivoAtivo === nome
-                                ? "bg-primary/20 font-bold text-primary border border-primary/40"
+                                ? "bg-emerald-500/20 font-bold text-emerald-300 border border-emerald-500/40 shadow-sm"
                                 : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
                             }`}
                           >
-                            <FileCode className="size-3.5" />
+                            <FileCode className="size-3.5 text-emerald-400" />
                             {nome}
                           </button>
                         ))}
@@ -1414,12 +1494,12 @@ function FabyClaud() {
                           value={codigoEditando}
                           onChange={(e) => setCodigoEditando(e.target.value)}
                           spellCheck={false}
-                          className="size-full resize-none rounded-xl border border-white/10 bg-black/70 p-4 font-mono text-xs leading-relaxed text-emerald-300 outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary shadow-inner"
+                          className="size-full resize-none rounded-xl border border-white/10 bg-black/90 p-4 font-mono text-xs leading-relaxed text-emerald-300 outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500 shadow-inner"
                           placeholder="Selecione um arquivo para editar seu código..."
                         />
                         <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground px-1">
                           <span>
-                            Arquivo ativo: <strong className="text-primary">{arquivoAtivo}</strong> (
+                            Arquivo ativo: <strong className="text-emerald-400">{arquivoAtivo}</strong> (
                             {(codigoEditando || "").length} caracteres)
                           </span>
                           <span>
@@ -1446,17 +1526,19 @@ function FabyClaud() {
               )}
             </section>
 
-            {/* CHAT MODERNO */}
-            <section className="panel-glass flex min-w-[320px] flex-[1.25] flex-col overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
-              <div ref={areaChat} className="flex-1 space-y-3 overflow-y-auto p-4">
+            {/* CHAT MODERNO & RESILIENTE */}
+            <section className="panel-glass flex min-w-[340px] flex-[1.15] flex-col overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+              <div ref={areaChat} className="flex-1 space-y-3.5 overflow-y-auto p-4">
                 {mensagens.length === 0 ? (
-                  <div className="rounded-2xl border border-white/10 bg-black/40 p-5 text-center shadow-lg">
-                    <p className="flex items-center justify-center gap-2 font-bold text-primary">
-                      <Hand className="size-4" /> Olá! Sou a FabyClaud
+                  <div className="rounded-2xl border border-white/10 bg-black/60 p-6 text-center shadow-xl backdrop-blur-md">
+                    <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shadow-md">
+                      <Sparkles className="size-6" />
+                    </div>
+                    <p className="text-sm font-bold text-foreground">
+                      Bem-vindo à FabyClaud
                     </p>
-                    <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-                      Peça uma calculadora sem chave, ou conecte uma IA testada para projetos
-                      personalizados.
+                    <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed max-w-sm mx-auto">
+                      Digite o que você deseja construir: desde calculadoras locais até landing pages completas, painéis SaaS e jogos interativos.
                     </p>
                   </div>
                 ) : null}
@@ -1467,11 +1549,11 @@ function FabyClaud() {
                   return (
                     <div
                       key={m.id}
-                      className={`max-w-[88%] whitespace-pre-wrap rounded-2xl px-4 py-3 text-xs leading-relaxed shadow-md ${
+                      className={`max-w-[88%] whitespace-pre-wrap rounded-2xl px-4 py-3 text-xs leading-relaxed shadow-lg transition-all ${
                         m.role === "user"
-                          ? "ml-auto bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium shadow-emerald-500/10"
+                          ? "ml-auto bg-gradient-to-r from-emerald-500 to-teal-600 text-black font-semibold shadow-emerald-500/20"
                           : m.ok
-                            ? "mr-auto border border-white/10 bg-black/60 text-foreground"
+                            ? "mr-auto border border-white/10 bg-black/75 text-foreground backdrop-blur-md"
                             : "mr-auto border border-destructive/40 bg-destructive/15 text-foreground"
                       }`}
                     >
@@ -1507,7 +1589,7 @@ function FabyClaud() {
                                 setTexto(sugestao);
                                 campoTexto.current?.focus();
                               }}
-                              className="flex items-center gap-1.5 rounded-xl border border-primary/40 bg-primary/15 px-2.5 py-1 text-xs font-medium text-primary transition hover:bg-primary hover:text-primary-foreground"
+                              className="flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/15 px-2.5 py-1 text-xs font-medium text-emerald-300 transition hover:bg-emerald-500 hover:text-black"
                             >
                               <Sparkles className="size-3 shrink-0" />
                               <span>{sugestao}</span>
@@ -1516,7 +1598,7 @@ function FabyClaud() {
                         </div>
                       ) : null}
                       {m.role === "assistant" && m.modelo ? (
-                        <span className="mt-1.5 block text-[10px] text-muted-foreground/80">
+                        <span className="mt-1.5 block text-[10px] text-muted-foreground/80 font-mono">
                           {PROVIDER_LABELS[m.modelo] ?? m.modelo}
                         </span>
                       ) : null}
@@ -1525,7 +1607,7 @@ function FabyClaud() {
                 })}
 
                 {pendente ? (
-                  <div className="ml-auto max-w-[88%] whitespace-pre-wrap rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-3 text-xs leading-relaxed text-white opacity-85 shadow-md">
+                  <div className="ml-auto max-w-[88%] whitespace-pre-wrap rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-3 text-xs leading-relaxed text-black font-semibold opacity-90 shadow-md">
                     {pendente}
                     {pendenteAnexos.length ? (
                       <span className="mt-2 flex flex-wrap gap-2">
@@ -1557,7 +1639,7 @@ function FabyClaud() {
               </div>
 
               {anexos.length ? (
-                <div className="flex flex-wrap gap-2 border-t border-white/10 bg-black/40 px-4 py-2">
+                <div className="flex flex-wrap gap-2 border-t border-white/10 bg-black/60 px-4 py-2">
                   {anexos.map((a, i) => (
                     <span
                       key={`${a.nome}-${i}`}
@@ -1585,7 +1667,7 @@ function FabyClaud() {
                   e.preventDefault();
                   enviarAgora();
                 }}
-                className="flex items-end gap-2 border-t border-white/10 bg-black/40 p-3"
+                className="flex items-end gap-2 border-t border-white/10 bg-black/60 p-3"
               >
                 <input
                   ref={inputArquivo}
@@ -1605,9 +1687,9 @@ function FabyClaud() {
                   aria-label="Anexar arquivo"
                   title="Anexar imagem, arquivo de código ou um .zip do projeto"
                   onClick={() => inputArquivo.current?.click()}
-                  className="flex size-[40px] shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-primary/40 hover:bg-white/10"
+                  className="flex size-[42px] shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-emerald-500/40 hover:bg-white/10"
                 >
-                  <Paperclip className="size-4 text-primary" />
+                  <Paperclip className="size-4 text-emerald-400" />
                 </button>
                 <textarea
                   ref={campoTexto}
@@ -1620,13 +1702,13 @@ function FabyClaud() {
                       enviarAgora();
                     }
                   }}
-                  placeholder="Digite sua mensagem..."
-                  className="max-h-32 min-h-[40px] flex-1 resize-none rounded-xl border border-white/10 bg-black/60 px-3.5 py-2.5 text-xs text-foreground outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary shadow-inner placeholder:text-muted-foreground/60"
+                  placeholder="Descreva o que deseja criar ou modificar..."
+                  className="max-h-32 min-h-[42px] flex-1 resize-none rounded-xl border border-white/10 bg-black/80 px-3.5 py-2.5 text-xs text-foreground outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500 shadow-inner placeholder:text-muted-foreground/60"
                 />
                 <button
                   type="submit"
                   disabled={mandar.isPending}
-                  className="flex h-[40px] shrink-0 items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 text-xs font-bold text-white shadow-lg shadow-emerald-500/25 transition hover:brightness-110 active:scale-95 disabled:opacity-50"
+                  className="flex h-[42px] shrink-0 items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 text-xs font-bold text-black shadow-lg shadow-emerald-500/25 transition hover:brightness-110 active:scale-95 disabled:opacity-50"
                 >
                   <Send className="size-3.5" /> Enviar
                 </button>
@@ -1663,3 +1745,4 @@ function FabyClaud() {
     </div>
   );
 }
+
