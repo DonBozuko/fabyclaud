@@ -317,4 +317,64 @@ document.getElementById("btnStart").addEventListener("click", () => {
     assert.equal(ehSaudacaoOuConversaCasual("refatore o componente de cabeçalho"), false);
     assert.equal(ehSaudacaoOuConversaCasual("debug o erro no formulário"), false);
   });
+
+  test("PROVA 10: Saneamento de Multi-Turn Chat (Prevenção da Quebra no 2º Turno com Google Gemini e OpenAI)", async () => {
+    const { sanitizarHistoricoParaGoogle, sanitizarHistoricoParaOpenAI } = await import("./providers.server");
+
+    // Cenário 1: Histórico com mensagens consecutivas de usuário e assistente (desordenadas)
+    const historicoDesordenado = [
+      { role: "assistant" as const, conteudo: "Mensagem inicial do assistente" }, // deve ser ignorada pois Gemini exige começar com 'user'
+      { role: "user" as const, conteudo: "Crie uma calculadora" },
+      { role: "user" as const, conteudo: "Com botões coloridos" }, // deve ser mesclada com a anterior
+      { role: "assistant" as const, conteudo: "Aqui está a calculadora" },
+      { role: "user" as const, conteudo: "Agora mude para tema escuro" }, // trailing user antes do novo prompt
+    ];
+
+    const contentsGoogle = sanitizarHistoricoParaGoogle(
+      historicoDesordenado,
+      "Adicione botão de raiz quadrada",
+      [],
+    );
+
+    // Validações estritas da API do Google Gemini:
+    // 1. O primeiro item DEVE ser 'user'
+    assert.equal(contentsGoogle[0]!.role, "user");
+    // 2. O último item DEVE ser o prompt atual com role 'user'
+    assert.equal(contentsGoogle[contentsGoogle.length - 1]!.role, "user");
+    assert.deepEqual(contentsGoogle[contentsGoogle.length - 1]!.parts, [
+      { text: "Adicione botão de raiz quadrada" },
+    ]);
+
+    // 3. Todos os itens DEVEM alternar rigorosamente: user -> model -> user -> model -> user
+    for (let i = 0; i < contentsGoogle.length; i++) {
+      const esperado = i % 2 === 0 ? "user" : "model";
+      assert.equal(
+        contentsGoogle[i]!.role,
+        esperado,
+        `Item no índice ${i} deve ter role '${esperado}', mas recebeu '${contentsGoogle[i]!.role}'`,
+      );
+    }
+
+    // Cenário 2: Histórico vazio (1º turno)
+    const contentsTurno1 = sanitizarHistoricoParaGoogle([], "Primeira mensagem", []);
+    assert.equal(contentsTurno1.length, 1);
+    assert.equal(contentsTurno1[0]!.role, "user");
+
+    // Cenário 3: Histórico de 2 turnos normais (Turno 2 funcionando perfeitamente)
+    const historicoTurno2 = [
+      { role: "user" as const, conteudo: "Crie o site" },
+      { role: "assistant" as const, conteudo: "<arquivo nome='index.html'>...</arquivo>" },
+    ];
+    const contentsTurno2 = sanitizarHistoricoParaGoogle(historicoTurno2, "Mude a cor para azul", []);
+    assert.equal(contentsTurno2.length, 3);
+    assert.equal(contentsTurno2[0]!.role, "user");
+    assert.equal(contentsTurno2[1]!.role, "model");
+    assert.equal(contentsTurno2[2]!.role, "user");
+
+    // Cenário 4: OpenAI messages sanitization
+    const msgsOpenAI = sanitizarHistoricoParaOpenAI(historicoDesordenado, "Nova mensagem", []);
+    assert.ok(msgsOpenAI.length > 0);
+    assert.equal(msgsOpenAI[msgsOpenAI.length - 1]!.role, "user");
+    assert.equal(msgsOpenAI[msgsOpenAI.length - 1]!.content, "Nova mensagem");
+  });
 });

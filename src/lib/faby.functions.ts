@@ -2558,9 +2558,15 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           break;
         }
         falhas.push(`- ${nomeDe(candidato.pid)}: ${r.texto}`);
+        const dadosAtualizarChave: { ultimo_erro: string; testada_ok?: boolean } = {
+          ultimo_erro: r.texto.slice(0, 300),
+        };
+        if (r.status === 401) {
+          dadosAtualizarChave.testada_ok = false;
+        }
         const { error: erroFalha } = await context.supabase
           .from("chaves_ia")
-          .update({ testada_ok: false, ultimo_erro: r.texto.slice(0, 300) })
+          .update(dadosAtualizarChave)
           .eq("provider", candidato.pid);
         if (erroFalha) {
           falhas.push(

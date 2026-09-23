@@ -65,10 +65,110 @@ export function ehUrlPublicaSegura(valor: string) {
   }
 }
 
-function prepararHistorico(historico: HistoricoItem[]) {
-  // O provedor não guarda conversa. Reenviar todo o histórico evita que uma
-  // confirmação curta ("sim", "pode fazer") perca a tarefa combinada antes.
-  return historico.map((item) => ({ ...item, conteudo: resumirTexto(item.conteudo, 8_000) }));
+export function prepararHistorico(historico: HistoricoItem[]) {
+  return historico
+    .filter((item) => typeof item?.conteudo === "string" && item.conteudo.trim().length > 0)
+    .map((item) => ({
+      ...item,
+      conteudo: resumirTexto(item.conteudo.trim(), 4_000),
+    }));
+}
+
+export function sanitizarHistoricoParaGoogle(
+  historico: HistoricoItem[],
+  promptAtual: string,
+  imagens: Imagem[] = [],
+  limiteCharsPorItem = 4_000,
+): { role: "user" | "model"; parts: unknown[] }[] {
+  // 1. Filtra itens com conteúdo não-vazio
+  const filtrados: { role: "user" | "model"; texto: string }[] = [];
+  for (const item of historico) {
+    const limpo = (item.conteudo ?? "").trim();
+    if (!limpo) continue;
+    const role: "user" | "model" = item.role === "assistant" ? "model" : "user";
+    filtrados.push({ role, texto: resumirTexto(limpo, limiteCharsPorItem) });
+  }
+
+  // 2. Mescla mensagens consecutivas com o mesmo role para garantir estrita alternância
+  const alternados: { role: "user" | "model"; texto: string }[] = [];
+  for (const item of filtrados) {
+    if (alternados.length > 0 && alternados[alternados.length - 1]!.role === item.role) {
+      alternados[alternados.length - 1]!.texto += `\n\n${item.texto}`;
+    } else {
+      alternados.push({ ...item });
+    }
+  }
+
+  // 3. Garante que o primeiro item é 'user'
+  while (alternados.length > 0 && alternados[0]!.role !== "user") {
+    alternados.shift();
+  }
+
+  // 4. Garante que o último item antes do prompt atual é 'model'
+  // (pois o prompt atual que será adicionado ao final é 'user')
+  while (alternados.length > 0 && alternados[alternados.length - 1]!.role !== "model") {
+    alternados.pop();
+  }
+
+  // 5. Constrói a lista final de contents
+  const contents: { role: "user" | "model"; parts: unknown[] }[] = [];
+  for (const item of alternados) {
+    contents.push({
+      role: item.role,
+      parts: [{ text: item.texto }],
+    });
+  }
+
+  // 6. Adiciona o prompt atual do usuário
+  const partesAtuais: unknown[] = [{ text: promptAtual }];
+  for (const img of imagens) {
+    partesAtuais.push({ inline_data: { mime_type: img.mime, data: img.data } });
+  }
+  contents.push({ role: "user", parts: partesAtuais });
+
+  return contents;
+}
+
+export function sanitizarHistoricoParaOpenAI(
+  historico: HistoricoItem[],
+  promptAtual: string,
+  imagens: Imagem[] = [],
+  suportaImagem = false,
+  limiteTurnos = 6,
+): { role: string; content: unknown }[] {
+  const filtrados = historico
+    .filter((h) => typeof h?.conteudo === "string" && h.conteudo.trim().length > 0)
+    .slice(-limiteTurnos)
+    .map((h) => ({
+      role: h.role === "assistant" ? "assistant" : "user",
+      content: resumirTexto(h.conteudo.trim(), 2_500),
+    }));
+
+  const messages: { role: string; content: unknown }[] = [];
+  for (const item of filtrados) {
+    if (messages.length > 0 && messages[messages.length - 1]!.role === item.role) {
+      messages[messages.length - 1]!.content = `${String(messages[messages.length - 1]!.content)}\n\n${String(item.content)}`;
+    } else {
+      messages.push({ ...item });
+    }
+  }
+
+  if (imagens.length && suportaImagem) {
+    messages.push({
+      role: "user",
+      content: [
+        { type: "text", text: promptAtual },
+        ...imagens.map((img) => ({
+          type: "image_url",
+          image_url: { url: `data:${img.mime};base64,${img.data}` },
+        })),
+      ],
+    });
+  } else {
+    messages.push({ role: "user", content: promptAtual });
+  }
+
+  return messages;
 }
 
 function resumirTexto(texto: string, limite: number) {
@@ -237,16 +337,7 @@ async function chamarGoogle(
   modelo: string = MODELS.google,
 ): Promise<ResultadoIA> {
   const modeloLimpo = modelo.replace(/^models\//, "").trim();
-  const contents = prepararHistorico(historico).map((m) => ({
-    role: m.role === "assistant" ? "model" : "user",
-    parts: [{ text: m.conteudo }],
-  }));
-
-  const partesAtuais: unknown[] = [{ text: prompt }];
-  for (const img of imagens) {
-    partesAtuais.push({ inline_data: { mime_type: img.mime, data: img.data } });
-  }
-  contents.push({ role: "user", parts: partesAtuais as { text: string }[] });
+  const contents = sanitizarHistoricoParaGoogle(historico, prompt, imagens);
 
   // Retry rápido com espera curta em caso de 503
   let tentativas = 0;
@@ -330,33 +421,7 @@ async function chamarOpenAICompat(
   suportaImagem: boolean,
   timeoutMs: number,
 ): Promise<ResultadoIA> {
-  type Msg = { role: string; content: unknown };
-  const teto = limiteEntrada(url);
-  const historicoCurto = prepararHistorico(historico).map((m) => ({
-    role: m.role,
-    content: resumirTexto(m.conteudo, 2_500),
-  }));
-  const usadoNoHistorico = historicoCurto.reduce(
-    (total, item) => total + (typeof item.content === "string" ? item.content.length : 0),
-    0,
-  );
-  const promptAjustado = resumirTexto(prompt, Math.max(8_000, teto - usadoNoHistorico));
-  const messages: Msg[] = historicoCurto;
-
-  if (imagens.length && suportaImagem) {
-    messages.push({
-      role: "user",
-      content: [
-        { type: "text", text: promptAjustado },
-        ...imagens.map((img) => ({
-          type: "image_url",
-          image_url: { url: `data:${img.mime};base64,${img.data}` },
-        })),
-      ],
-    });
-  } else {
-    messages.push({ role: "user", content: promptAjustado });
-  }
+  const messages = sanitizarHistoricoParaOpenAI(historico, prompt, imagens, suportaImagem);
 
   const { ok, status, json, texto } = await postJson(
     url,
