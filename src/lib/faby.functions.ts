@@ -323,27 +323,39 @@ export const apagarProjeto = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { id: string }) => z.object({ id: z.string().min(1) }).parse(input))
   .handler(async ({ data, context }) => {
-    const targetUserIds = extrairUserIds(context);
     apagarProjetoArmazenado(data.id);
     try {
+      await context.supabase.from("execucoes_construcao").delete().eq("projeto_id", data.id);
+    } catch {}
+    try {
+      await context.supabase.from("backups").delete().eq("projeto_id", data.id);
+    } catch {}
+    try {
       await context.supabase.from("mensagens").delete().eq("projeto_id", data.id);
+    } catch {}
+    try {
       await context.supabase.from("app_dados").delete().eq("projeto_id", data.id);
+    } catch {}
+    try {
       await context.supabase.from("app_dados_privados").delete().eq("projeto_id", data.id);
+    } catch {}
+    try {
       await context.supabase.from("app_perfis").delete().eq("projeto_id", data.id);
+    } catch {}
+    try {
       await context.supabase.from("projetos").delete().eq("id", data.id);
-    } catch {
-      // ignore
-    }
+    } catch {}
+
     try {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      await supabaseAdmin.from("execucoes_construcao").delete().eq("projeto_id", data.id);
+      await supabaseAdmin.from("backups").delete().eq("projeto_id", data.id);
       await supabaseAdmin.from("mensagens").delete().eq("projeto_id", data.id);
       await supabaseAdmin.from("app_dados").delete().eq("projeto_id", data.id);
       await supabaseAdmin.from("app_dados_privados").delete().eq("projeto_id", data.id);
       await supabaseAdmin.from("app_perfis").delete().eq("projeto_id", data.id);
-      await supabaseAdmin.from("projetos").delete().eq("id", data.id).in("user_id", targetUserIds);
-    } catch {
-      // ignore
-    }
+      await supabaseAdmin.from("projetos").delete().eq("id", data.id);
+    } catch {}
     return { ok: true };
   });
 
@@ -1353,7 +1365,7 @@ export const apagarBackup = createServerFn({ method: "POST" })
     }
     try {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      await supabaseAdmin.from("backups").delete().eq("id", data.id).eq("user_id", context.userId);
+      await supabaseAdmin.from("backups").delete().eq("id", data.id);
     } catch {
       // ignore
     }

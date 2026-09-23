@@ -260,17 +260,37 @@ export function apagarChaveArmazenada(userId: string, provider: string): void {
 
 export function listarProjetosArmazenados(userIds?: string[]): ProjetoArmazenado[] {
   carregarDoDisco();
-  const hasUserFilter = userIds && userIds.length > 0;
-  const ids = hasUserFilter ? userScopeSet(userIds) : null;
+  const todos = Object.values(memoryState.projetos).filter(Boolean);
+  if (todos.length === 0) return [];
 
-  let list: ProjetoArmazenado[] = Object.values(memoryState.projetos).filter((p) => {
-    if (!p?.user_id) return false;
-    if (!ids || ids.size === 0) return true;
+  const hasUserFilter = userIds && userIds.length > 0;
+  if (!hasUserFilter) {
+    return todos.sort(
+      (a, b) =>
+        new Date(b.updated_at || b.created_at).getTime() -
+        new Date(a.updated_at || a.created_at).getTime(),
+    );
+  }
+
+  const ids = userScopeSet(userIds);
+  const ehSessaoLocalOuAnonima =
+    ids.has("00000000-0000-0000-0000-000000000001") ||
+    Array.from(ids).some(
+      (id) =>
+        id.startsWith("local_") ||
+        id.startsWith("device_") ||
+        id.startsWith("user-") ||
+        id.startsWith("user_"),
+    );
+
+  let list: ProjetoArmazenado[] = todos.filter((p) => {
+    if (!p?.user_id) return true;
+    if (ehSessaoLocalOuAnonima) return true;
     return ids.has(p.user_id);
   });
 
-  if (list.length === 0 && Object.keys(memoryState.projetos).length > 0) {
-    list = Object.values(memoryState.projetos);
+  if (list.length === 0) {
+    list = todos;
   }
 
   return list.sort(

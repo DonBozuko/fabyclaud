@@ -955,56 +955,95 @@ function FabyClaud() {
               setAnexos([]);
               setErrosPreview([]);
               setAuditoria(null);
+              setAbaPrincipal("previa");
               campoTexto.current?.focus();
             }}
-            className="flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-bold text-primary-foreground shadow-glow transition hover:brightness-110"
+            className="flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-bold text-primary-foreground shadow-glow transition hover:brightness-110 active:scale-[0.98]"
           >
-            <Plus className="size-4" /> Nova conversa
+            <Plus className="size-4" /> Novo Projeto
           </button>
 
           <button
             type="button"
             onClick={() => setConversasAbertas((v) => !v)}
-            className="flex items-center gap-2 rounded-lg bg-accent px-3 py-2.5 text-sm font-semibold text-accent-foreground"
+            className="flex items-center justify-between rounded-lg bg-accent/70 px-3 py-2 text-xs font-semibold text-accent-foreground transition hover:bg-accent"
           >
-            <MessageSquare className="size-4" /> Conversas
+            <span className="flex items-center gap-2">
+              <FolderOpen className="size-3.5 text-primary" /> Meus Projetos
+            </span>
+            <span className="rounded-full bg-background/60 px-2 py-0.5 text-[10px] font-bold text-primary">
+              {projetos.data?.length ?? 0}
+            </span>
           </button>
 
           {conversasAbertas ? (
-            <div className="flex max-h-56 flex-col gap-1.5 overflow-y-auto pl-2">
-              {(projetos.data ?? []).map((p: any) => (
-                <div key={p.id} className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setProjetoId(p.id);
-                      if (typeof window !== "undefined") {
-                        localStorage.setItem("faby_active_project_id", p.id);
-                      }
-                    }}
-                    title={p.nome}
-                    className={`flex-1 truncate rounded-md border px-2.5 py-1.5 text-left text-xs transition ${
-                      projetoId === p.id
-                        ? "border-border text-primary"
-                        : "border-transparent bg-secondary text-foreground hover:border-border"
+            <div className="flex max-h-56 flex-col gap-1.5 overflow-y-auto pr-1">
+              {(projetos.data ?? []).map((p: any) => {
+                const estaAtivo = projetoId === p.id;
+                return (
+                  <div
+                    key={p.id}
+                    className={`group flex items-center justify-between rounded-xl border p-1 transition ${
+                      estaAtivo
+                        ? "border-primary/60 bg-primary/10 shadow-sm"
+                        : "border-transparent bg-secondary/60 hover:border-border hover:bg-secondary"
                     }`}
                   >
-                    <Globe className="mr-1 inline size-3" />
-                    {p.nome}
-                  </button>
-                  <button
-                    type="button"
-                    aria-label={`Apagar ${p.nome}`}
-                    onClick={async (e) => {
-                      e.stopPropagation();
-                      const idParaApagar = p.id;
-                      try {
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProjetoId(p.id);
+                        if (typeof window !== "undefined") {
+                          localStorage.setItem("faby_active_project_id", p.id);
+                        }
+                        setAbaPrincipal("previa");
+                      }}
+                      title={p.nome}
+                      className="flex min-w-0 flex-1 items-center gap-2 px-1.5 py-1 text-left"
+                    >
+                      <Globe
+                        className={`size-3.5 shrink-0 ${
+                          estaAtivo ? "text-primary" : "text-muted-foreground"
+                        }`}
+                      />
+                      <span
+                        className={`truncate text-xs ${
+                          estaAtivo
+                            ? "font-bold text-primary"
+                            : "font-medium text-foreground"
+                        }`}
+                      >
+                        {p.nome}
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      aria-label={`Apagar ${p.nome}`}
+                      title={`Excluir ${p.nome}`}
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        const idParaApagar = p.id;
                         // 1. Atualização otimista imediata na lista visual
                         queryClient.setQueryData(["projetos"], (old: any) =>
                           Array.isArray(old)
                             ? old.filter((item: any) => item.id !== idParaApagar)
                             : [],
                         );
+                        if (typeof window !== "undefined") {
+                          try {
+                            const salvos = JSON.parse(
+                              localStorage.getItem("faby_projects_backup") || "[]",
+                            );
+                            if (Array.isArray(salvos)) {
+                              localStorage.setItem(
+                                "faby_projects_backup",
+                                JSON.stringify(
+                                  salvos.filter((item: any) => item.id !== idParaApagar),
+                                ),
+                              );
+                            }
+                          } catch {}
+                        }
                         if (projetoId === idParaApagar) {
                           setProjetoId(null);
                           if (typeof window !== "undefined") {
@@ -1013,23 +1052,27 @@ function FabyClaud() {
                         }
                         queryClient.removeQueries({ queryKey: ["projeto", idParaApagar] });
 
-                        // 2. Exclusão no backend
-                        await removerProjeto({ data: { id: idParaApagar } });
-                        await queryClient.invalidateQueries({ queryKey: ["projetos"] });
-                        toast.success("Conversa excluída com sucesso.");
-                      } catch (err) {
-                        await queryClient.invalidateQueries({ queryKey: ["projetos"] });
-                        toast.error("Não foi possível excluir a conversa agora.");
-                      }
-                    }}
-                    className="rounded-full bg-destructive/25 p-1 text-destructive transition hover:bg-destructive hover:text-destructive-foreground"
-                  >
-                    <Trash2 className="size-3" />
-                  </button>
-                </div>
-              ))}
+                        // 2. Exclusão garantida no backend
+                        try {
+                          await removerProjeto({ data: { id: idParaApagar } });
+                          await queryClient.invalidateQueries({ queryKey: ["projetos"] });
+                          toast.success("Projeto excluído com sucesso.");
+                        } catch (err) {
+                          await queryClient.invalidateQueries({ queryKey: ["projetos"] });
+                          toast.error("Não foi possível excluir o projeto.");
+                        }
+                      }}
+                      className="rounded-lg p-1 text-muted-foreground opacity-60 transition hover:bg-destructive/20 hover:text-destructive hover:opacity-100 group-hover:opacity-100"
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
+                  </div>
+                );
+              })}
               {projetos.data?.length === 0 ? (
-                <p className="py-1 text-xs text-muted-foreground">Nenhuma conversa ainda.</p>
+                <p className="py-2 text-center text-xs text-muted-foreground">
+                  Nenhum projeto ainda.
+                </p>
               ) : null}
             </div>
           ) : null}

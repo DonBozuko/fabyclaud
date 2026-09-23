@@ -177,4 +177,42 @@ body {
     const msgs = listarMensagensArmazenadas(testProjectId);
     assert.equal(msgs.length, 0);
   });
+
+  test("7. Múltiplos projetos coexistem sem se sobrescrever ou perder", () => {
+    const projA = "proj-multi-a-" + Date.now();
+    const projB = "proj-multi-b-" + Date.now();
+
+    salvarProjetoArmazenado({
+      id: projA,
+      user_id: testUserId,
+      nome: "Calculadora",
+      modelo: "google",
+      arquivos: { "index.html": "<h1>Calculadora</h1>" },
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
+
+    salvarProjetoArmazenado({
+      id: projB,
+      user_id: "local-user-diff-" + Date.now(),
+      nome: "Jogo da Velha",
+      modelo: "google",
+      arquivos: { "index.html": "<h1>Jogo</h1>" },
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
+
+    const todos = listarProjetosArmazenados([testUserId]);
+    assert.ok(todos.some((p) => p.id === projA), "Projeto A deve constar");
+    assert.ok(todos.some((p) => p.id === projB), "Projeto B deve constar");
+
+    // Exclusão de A não afeta B
+    apagarProjetoArmazenado(projA);
+    const posDelete = listarProjetosArmazenados([testUserId]);
+    assert.ok(!posDelete.some((p) => p.id === projA), "Projeto A foi apagado");
+    assert.ok(posDelete.some((p) => p.id === projB), "Projeto B continua intacto");
+
+    // Limpeza
+    apagarProjetoArmazenado(projB);
+  });
 });
