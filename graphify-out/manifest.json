@@ -390,9 +390,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/aplicativos-locais.server.ts": {
-    "mtime": 1790111844.150361,
-    "seen": 1790111883.8764508,
-    "ast_hash": "83c1d146836efeb391a627c69a768646",
+    "mtime": 1790113954.8615904,
+    "seen": 1790114005.1106052,
+    "ast_hash": "10831739acb5ceb69dd9902d5d95cbd6",
     "semantic_hash": ""
   },
   "src/lib/faby/auditoria.ts": {

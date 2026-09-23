@@ -728,7 +728,6 @@ function showToast(msg) {
   setTimeout(() => toast.classList.remove("show"), 3000);
 }
 
-// Renderizar Recados
 function renderRecados() {
   const feedHome = document.getElementById("feedRecados");
   const feedFull = document.getElementById("feedRecadosCompleto");
@@ -754,52 +753,53 @@ function renderRecados() {
     </div>
   \`).join("");
 
-  feedHome.innerHTML = html;
-  feedFull.innerHTML = html;
+  if (feedHome) feedHome.innerHTML = html;
+  if (feedFull) feedFull.innerHTML = html;
 }
 
-// Renderizar Depoimentos
 function renderDepoimentos() {
   const feed = document.getElementById("feedDepoimentos");
   const count = document.getElementById("depoimentosCount");
-  count.textContent = state.depoimentos.length;
+  if (count) count.textContent = state.depoimentos.length;
 
-  feed.innerHTML = state.depoimentos.map(d => \`
-    <div class="feed-card">
-      <div class="feed-header">
-        <span class="feed-author">🌟 \${d.autor}</span>
-        <span class="feed-time">\${d.relacao}</span>
+  if (feed) {
+    feed.innerHTML = state.depoimentos.map(d => \`
+      <div class="feed-card">
+        <div class="feed-header">
+          <span class="feed-author">🌟 \${d.autor}</span>
+          <span class="feed-time">\${d.relacao}</span>
+        </div>
+        <p class="feed-text">"\${d.texto}"</p>
       </div>
-      <p class="feed-text">"\${d.texto}"</p>
-    </div>
-  \`).join("");
+    \`).join("");
+  }
 }
 
-// Renderizar Comunidades
 function renderComunidades() {
   const grid = document.getElementById("gridComunidades");
   const count = document.getElementById("comunidadesCount");
   const stat = document.getElementById("statComunidades");
-  count.textContent = state.comunidades.length;
-  stat.textContent = state.comunidades.length;
+  if (count) count.textContent = state.comunidades.length;
+  if (stat) stat.textContent = state.comunidades.length;
 
-  grid.innerHTML = state.comunidades.map(c => \`
-    <div class="community-card">
-      <div>
-        <h4 class="community-title">\${c.nome}</h4>
-        <p class="community-desc">\${c.desc}</p>
+  if (grid) {
+    grid.innerHTML = state.comunidades.map(c => \`
+      <div class="community-card">
+        <div>
+          <h4 class="community-title">\${c.nome}</h4>
+          <p class="community-desc">\${c.desc}</p>
+        </div>
+        <div class="community-footer">
+          <span>👥 \${c.membros.toLocaleString()} membros</span>
+          <button class="btn-secondary" onclick="toggleComunidade(\${c.id})">
+            \${c.participando ? "✓ Participando" : "+ Participar"}
+          </button>
+        </div>
       </div>
-      <div class="community-footer">
-        <span>👥 \${c.membros.toLocaleString()} membros</span>
-        <button class="btn-secondary" onclick="toggleComunidade(\${c.id})">
-          \${c.participando ? "✓ Participando" : "+ Participar"}
-        </button>
-      </div>
-    </div>
-  \`).join("");
+    \`).join("");
+  }
 }
 
-// Ações
 window.curtirRecado = function(id) {
   const rec = state.recados.find(r => r.id === id);
   if (rec) {
@@ -824,7 +824,6 @@ window.toggleComunidade = function(id) {
   }
 };
 
-// Navegação de Abas
 document.querySelectorAll(".nav-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
@@ -837,8 +836,7 @@ document.querySelectorAll(".nav-btn").forEach(btn => {
   });
 });
 
-// Envio de Recado
-document.getElementById("formRecado").addEventListener("submit", (e) => {
+document.getElementById("formRecado")?.addEventListener("submit", (e) => {
   e.preventDefault();
   const autorInput = document.getElementById("inputAutor");
   const msgInput = document.getElementById("inputMensagem");
@@ -857,9 +855,9 @@ document.getElementById("formRecado").addEventListener("submit", (e) => {
   showToast("Recado publicado no mural com sucesso! 🎉");
 });
 
-document.getElementById("btnNovoRecado").addEventListener("click", () => {
-  document.querySelector('.nav-btn[data-tab="inicio"]').click();
-  document.getElementById("inputMensagem").focus();
+document.getElementById("btnNovoRecado")?.addEventListener("click", () => {
+  document.querySelector('.nav-btn[data-tab="inicio"]')?.click();
+  document.getElementById("inputMensagem")?.focus();
 });
 
 document.getElementById("btnCriarComunidade")?.addEventListener("click", () => {
@@ -877,7 +875,6 @@ document.getElementById("btnCriarComunidade")?.addEventListener("click", () => {
   }
 });
 
-// Inicialização
 renderRecados();
 renderDepoimentos();
 renderComunidades();
@@ -886,5 +883,289 @@ renderComunidades();
     };
   }
 
-  return null;
+  // 3. Gerenciador de Tarefas / Todo List
+  if (/\b(?:tarefas?|todo|to-do|gerenciador\s*de\s*tarefas)\b/i.test(limpo)) {
+    return {
+      nome: "Gerenciador de Tarefas Pro",
+      descricao:
+        "Gerenciador de tarefas inteligente com filtros dinâmicos, prioridades, tags, contador de produtividade e persistência local.",
+      arquivos: {
+        "index.html": `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskMaster Pro — Gerenciador de Tarefas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="brand">
+        <span class="icon">⚡</span>
+        <h1>TaskMaster Pro</h1>
+      </div>
+      <div class="stats-badge">
+        <span id="completedCounter">2</span>/<span id="totalCounter">4</span> Concluídas
+      </div>
+    </header>
+
+    <main class="main-card">
+      <form id="taskForm" class="task-form">
+        <input type="text" id="taskInput" placeholder="O que você precisa realizar hoje?" required />
+        <select id="prioritySelect">
+          <option value="alta">🔴 Alta</option>
+          <option value="media" selected>🟡 Média</option>
+          <option value="baixa">🟢 Baixa</option>
+        </select>
+        <button type="submit" class="btn-add">+ Adicionar</button>
+      </form>
+
+      <div class="filters-bar">
+        <button class="filter-btn active" data-filter="all">Todas</button>
+        <button class="filter-btn" data-filter="pending">Pendentes</button>
+        <button class="filter-btn" data-filter="completed">Concluídas</button>
+      </div>
+
+      <ul id="taskList" class="task-list"></ul>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>`,
+        "styles.css": `:root {
+  --bg: #0f172a;
+  --card: rgba(30, 41, 59, 0.85);
+  --border: rgba(255, 255, 255, 0.1);
+  --primary: #38bdf8;
+  --primary-hover: #0ea5e9;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #1e293b, var(--bg));
+  font-family: var(--font);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px;
+}
+.app-container { width: 100%; max-width: 600px; }
+.app-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand .icon { font-size: 28px; }
+.brand h1 { font-size: 22px; font-weight: 800; }
+.stats-badge { background: rgba(56, 189, 248, 0.15); color: var(--primary); border: 1px solid rgba(56, 189, 248, 0.3); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; }
+.main-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+.task-form { display: flex; gap: 10px; margin-bottom: 20px; }
+.task-form input { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; color: #fff; font-family: inherit; font-size: 14px; outline: none; }
+.task-form input:focus { border-color: var(--primary); }
+.task-form select { background: #1e293b; border: 1px solid var(--border); color: #fff; border-radius: 12px; padding: 0 12px; font-family: inherit; outline: none; }
+.btn-add { background: var(--primary); color: #0f172a; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-add:hover { background: var(--primary-hover); transform: translateY(-1px); }
+.filters-bar { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+.filter-btn { background: transparent; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+.filter-btn.active { background: rgba(255,255,255,0.1); color: #fff; }
+.task-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.task-item { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 14px 16px; border-radius: 12px; transition: all 0.2s; }
+.task-item:hover { background: rgba(255,255,255,0.06); }
+.task-item.done .task-text { text-decoration: line-through; color: var(--text-muted); }
+.task-left { display: flex; align-items: center; gap: 12px; }
+.task-checkbox { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); }
+.task-text { font-size: 14px; font-weight: 500; }
+.priority-tag { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; }
+.priority-alta { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+.priority-media { background: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.4); }
+.priority-baixa { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); }
+.btn-del { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; transition: color 0.2s; }
+.btn-del:hover { color: #ef4444; }`,
+        "app.js": `let tasks = [
+  { id: 1, text: "Configurar banco de dados", priority: "alta", completed: true },
+  { id: 2, text: "Construir interface com visual moderno", priority: "alta", completed: true },
+  { id: 3, text: "Implementar autenticação de usuários", priority: "media", completed: false },
+  { id: 4, text: "Publicar versão estável", priority: "baixa", completed: false }
+];
+let currentFilter = "all";
+
+function updateStats() {
+  const total = tasks.length;
+  const completed = tasks.filter(t => t.completed).length;
+  document.getElementById("totalCounter").textContent = total;
+  document.getElementById("completedCounter").textContent = completed;
+}
+
+function renderTasks() {
+  const list = document.getElementById("taskList");
+  const filtered = tasks.filter(t => {
+    if (currentFilter === "pending") return !t.completed;
+    if (currentFilter === "completed") return t.completed;
+    return true;
+  });
+
+  list.innerHTML = filtered.map(t => \`
+    <li class="task-item \${t.completed ? "done" : ""}">
+      <div class="task-left">
+        <input type="checkbox" class="task-checkbox" \${t.completed ? "checked" : ""} onchange="toggleTask(\${t.id})" />
+        <span class="task-text">\${t.text}</span>
+        <span class="priority-tag priority-\${t.priority}">\${t.priority}</span>
+      </div>
+      <button class="btn-del" onclick="deleteTask(\${t.id})">🗑️</button>
+    </li>
+  \`).join("");
+
+  updateStats();
+}
+
+window.toggleTask = function(id) {
+  const task = tasks.find(t => t.id === id);
+  if (task) {
+    task.completed = !task.completed;
+    renderTasks();
+  }
+};
+
+window.deleteTask = function(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  renderTasks();
+};
+
+document.getElementById("taskForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const input = document.getElementById("taskInput");
+  const priority = document.getElementById("prioritySelect").value;
+  if (!input.value.trim()) return;
+
+  tasks.unshift({
+    id: Date.now(),
+    text: input.value.trim(),
+    priority,
+    completed: false
+  });
+
+  input.value = "";
+  renderTasks();
+});
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter;
+    renderTasks();
+  });
+});
+
+renderTasks();`,
+      },
+    };
+  }
+
+  // 4. Fallback Dinâmico Inteligente para qualquer outro pedido
+  const tituloApp =
+    limpo
+      .slice(0, 40)
+      .replace(/[^a-zA-Z0-9À-ÿ\s]/g, "")
+      .trim() || "Aplicação Web";
+  return {
+    nome: tituloApp.charAt(0).toUpperCase() + tituloApp.slice(1),
+    descricao: `Aplicação Web interativa desenvolvida com interface moderna, micro-interações, tipografia Google Fonts e estrutura modular.`,
+    arquivos: {
+      "index.html": `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${tituloApp.charAt(0).toUpperCase() + tituloApp.slice(1)}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="layout">
+    <header class="navbar">
+      <div class="brand">🚀 ${tituloApp.charAt(0).toUpperCase() + tituloApp.slice(1)}</div>
+      <div class="actions">
+        <button id="btnAcao" class="btn-primary">+ Adicionar Registro</button>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="hero-card">
+        <h2>Painel Principal</h2>
+        <p>Aplicação pronta para uso e personalização imediata.</p>
+      </div>
+
+      <div class="grid-cards" id="cardsGrid">
+        <div class="card">
+          <h3>Métrica 1</h3>
+          <p class="value" id="val1">1,420</p>
+          <button class="btn-sm" onclick="incrementar(1)">Atualizar</button>
+        </div>
+        <div class="card">
+          <h3>Métrica 2</h3>
+          <p class="value" id="val2">98.4%</p>
+          <button class="btn-sm" onclick="incrementar(2)">Atualizar</button>
+        </div>
+        <div class="card">
+          <h3>Métrica 3</h3>
+          <p class="value" id="val3">84</p>
+          <button class="btn-sm" onclick="incrementar(3)">Atualizar</button>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>`,
+      "styles.css": `:root {
+  --bg: #0b0f19;
+  --card: rgba(22, 30, 49, 0.85);
+  --border: rgba(255, 255, 255, 0.1);
+  --primary: #38bdf8;
+  --primary-hover: #0ea5e9;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: var(--font); }
+.layout { max-width: 1000px; margin: 0 auto; padding: 24px 16px; }
+.navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.brand { font-size: 20px; font-weight: 800; color: var(--primary); }
+.btn-primary { background: var(--primary); color: #0b0f19; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+.hero-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
+.hero-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.hero-card p { color: var(--text-muted); font-size: 14px; }
+.grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+.card h3 { font-size: 14px; color: var(--text-muted); margin-bottom: 8px; }
+.card .value { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+.btn-sm { background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+.btn-sm:hover { background: rgba(255,255,255,0.15); }`,
+      "app.js": `const state = { val1: 1420, val2: 98.4, val3: 84 };
+
+window.incrementar = function(num) {
+  if (num === 1) state.val1 += 10;
+  if (num === 2) state.val2 = +(state.val2 + 0.1).toFixed(1);
+  if (num === 3) state.val3 += 1;
+  document.getElementById("val1").textContent = state.val1.toLocaleString();
+  document.getElementById("val2").textContent = state.val2 + "%";
+  document.getElementById("val3").textContent = state.val3;
+};
+
+document.getElementById("btnAcao")?.addEventListener("click", () => {
+  const nome = prompt("Nome do novo registro:");
+  if (nome && nome.trim()) {
+    alert("Registro '" + nome + "' adicionado com sucesso!");
+    incrementar(3);
+  }
+});`,
+    },
+  };
 }
