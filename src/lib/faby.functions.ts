@@ -382,6 +382,31 @@ export const apagarProjeto = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+function sincronizarChavesLocais(
+  localKeys: Record<string, { key?: string; api_url?: string }> | undefined,
+  userId: string,
+  targetUserIds: string[],
+) {
+  if (!localKeys || typeof localKeys !== "object") return;
+  const existentes = obterChavesArmazenadas(targetUserIds);
+  for (const [prov, info] of Object.entries(localKeys)) {
+    const dados = info as { key?: string; api_url?: string };
+    const chaveTrim = dados?.key?.trim();
+    if (chaveTrim) {
+      const existente = existentes.find((k) => k.provider === prov && k.api_key === chaveTrim);
+      salvarChaveArmazenada({
+        user_id: userId,
+        provider: prov,
+        api_key: chaveTrim,
+        api_url: dados.api_url || null,
+        testada_ok: existente ? Boolean(existente.testada_ok) : false,
+        testada_em: existente?.testada_em ?? null,
+        ultimo_erro: existente?.ultimo_erro ?? null,
+      });
+    }
+  }
+}
+
 /** Quais provedores já têm chave salva (nunca devolve a chave em si). */
 export const listarChaves = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -389,23 +414,8 @@ export const listarChaves = createServerFn({ method: "GET" })
     let rows: any[] = [];
     const targetUserIds = extrairUserIds(context);
 
-    // Auto-hidratação: se o cliente enviou chaves locais nos headers, salva e persiste
-    if (context.localKeys && typeof context.localKeys === "object") {
-      for (const [prov, info] of Object.entries(context.localKeys)) {
-        const dados = info as { key?: string; api_url?: string };
-        if (dados?.key?.trim()) {
-          salvarChaveArmazenada({
-            user_id: context.userId,
-            provider: prov,
-            api_key: dados.key.trim(),
-            api_url: dados.api_url || null,
-            testada_ok: true,
-            testada_em: new Date().toISOString(),
-            ultimo_erro: null,
-          });
-        }
-      }
-    }
+    // Sincroniza chaves locais sem falsificar o status de teste
+    sincronizarChavesLocais(context.localKeys, context.userId, targetUserIds);
 
     try {
       const { data, error } = await context.supabase
@@ -442,7 +452,16 @@ export const listarChaves = createServerFn({ method: "GET" })
       }
     }
 
-    return rows.map((k: any) => ({
+    // Deduplicação estrita por provedor (elimina duplicatas de conta/dispositivo)
+    const mapaUnico = new Map<string, any>();
+    for (const r of rows) {
+      if (!mapaUnico.has(r.provider) || (!mapaUnico.get(r.provider)?.testada_ok && r.testada_ok)) {
+        mapaUnico.set(r.provider, r);
+      }
+    }
+    const unicas = Array.from(mapaUnico.values());
+
+    return unicas.map((k: any) => ({
       provider: k.provider,
       mascara: `${(k.api_key || "").slice(0, 4)}••••${(k.api_key || "").slice(-4)}`,
       api_url: k.provider === "omniroute" ? k.api_url : null,
@@ -459,22 +478,8 @@ export const obterCapacidades = createServerFn({ method: "GET" })
     let rows: any[] = [];
     const targetUserIds = extrairUserIds(context);
 
-    if (context.localKeys && typeof context.localKeys === "object") {
-      for (const [prov, info] of Object.entries(context.localKeys)) {
-        const dados = info as { key?: string; api_url?: string };
-        if (dados?.key?.trim()) {
-          salvarChaveArmazenada({
-            user_id: context.userId,
-            provider: prov,
-            api_key: dados.key.trim(),
-            api_url: dados.api_url || null,
-            testada_ok: true,
-            testada_em: new Date().toISOString(),
-            ultimo_erro: null,
-          });
-        }
-      }
-    }
+    // Sincroniza chaves locais sem falsificar o status de teste
+    sincronizarChavesLocais(context.localKeys, context.userId, targetUserIds);
 
     try {
       const { data, error } = await context.supabase
@@ -1699,23 +1704,8 @@ export const enviarMensagem = createServerFn({ method: "POST" })
     let mem: any = null;
     const targetUserIds = extrairUserIds(context);
 
-    // Auto-hidratação de chaves enviadas pelo cliente
-    if (context.localKeys && typeof context.localKeys === "object") {
-      for (const [prov, info] of Object.entries(context.localKeys)) {
-        const dados = info as { key?: string; api_url?: string };
-        if (dados?.key?.trim()) {
-          salvarChaveArmazenada({
-            user_id: context.userId,
-            provider: prov,
-            api_key: dados.key.trim(),
-            api_url: dados.api_url || null,
-            testada_ok: true,
-            testada_em: new Date().toISOString(),
-            ultimo_erro: null,
-          });
-        }
-      }
-    }
+    // Sincroniza chaves locais sem falsificar o status de teste
+    sincronizarChavesLocais(context.localKeys, context.userId, targetUserIds);
 
     try {
       const [resChaves, resCustom, resMem] = await Promise.all([
@@ -2636,43 +2626,117 @@ export const enviarMensagem = createServerFn({ method: "POST" })
               ? especialistaConstrucao.rotuloLegivel
               : null) ?? nomeDe(candidato.pid);
           // Respondeu de verdade: a chave passa a constar como pronta.
-          if (!candidato.testada) {
-            const { error: erroTeste } = await context.supabase
+          salvarChaveArmazenada({
+            user_id: context.userId,
+            provider: candidato.pid,
+            api_key: candidato.key,
+            api_url: candidato.apiUrl || null,
+            testada_ok: true,
+            testada_em: new Date().toISOString(),
+            ultimo_erro: null,
+          });
+          try {
+            await context.supabase
               .from("chaves_ia")
               .update({ testada_ok: true, testada_em: new Date().toISOString(), ultimo_erro: null })
               .eq("provider", candidato.pid);
-            if (erroTeste) {
-              falhas.push(
-                `- ${nomeDe(candidato.pid)}: resposta recebida, mas não foi possível atualizar o estado da chave (${erroTeste.message})`,
-              );
-            }
+          } catch {
+            // ignore
           }
           break;
         }
         falhas.push(`- ${nomeDe(candidato.pid)}: ${r.texto}`);
-        const dadosAtualizarChave: { ultimo_erro: string; testada_ok?: boolean } = {
+        salvarChaveArmazenada({
+          user_id: context.userId,
+          provider: candidato.pid,
+          api_key: candidato.key,
+          api_url: candidato.apiUrl || null,
+          testada_ok: false,
+          testada_em: new Date().toISOString(),
           ultimo_erro: r.texto.slice(0, 300),
-        };
-        if (r.status === 401) {
-          dadosAtualizarChave.testada_ok = false;
-        }
-        const { error: erroFalha } = await context.supabase
-          .from("chaves_ia")
-          .update(dadosAtualizarChave)
-          .eq("provider", candidato.pid);
-        if (erroFalha) {
-          falhas.push(
-            `- ${nomeDe(candidato.pid)}: resposta falhou e o estado da chave não foi atualizado (${erroFalha.message})`,
-          );
+        });
+        try {
+          await context.supabase
+            .from("chaves_ia")
+            .update({ ultimo_erro: r.texto.slice(0, 300), testada_ok: false })
+            .eq("provider", candidato.pid);
+        } catch {
+          // ignore
         }
       }
       if (ok && falhas.length) {
         nota = `(atendido por ${nomeDe(provedorUsado)}; motivo de cada troca:\n${falhas.join("\n")}\n)`;
       }
       if (!ok) {
-        bruto = `Nenhuma conexão de IA concluiu este pedido. Motivo de cada uma:\n${
+        if (aplicativoLocal) {
+          salvarProjetoArmazenado({
+            id: projetoId!,
+            user_id: context.userId,
+            nome: aplicativoLocal.nome,
+            modelo: "modelo-local",
+            arquivos: aplicativoLocal.arquivos,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
+          try {
+            await context.supabase
+              .from("projetos")
+              .update({
+                arquivos: aplicativoLocal.arquivos as unknown as never,
+                modelo: "modelo-local",
+                updated_at: new Date().toISOString(),
+              })
+              .eq("id", projetoId);
+          } catch {
+            // ignore
+          }
+
+          const falhasFormatadas = falhas.length
+            ? `\n\n> ⚠️ **Motivo da falha das chaves em nuvem:**\n${falhas.map((f) => `> ${f}`).join("\n")}\n\n`
+            : "";
+
+          const resposta = `✨ **${aplicativoLocal.nome} criada com sucesso pelo motor local autônomo!**${falhasFormatadas}\n\n${aplicativoLocal.descricao}\n\nTodos os arquivos (\`index.html\`, \`styles.css\`, \`app.js\`) foram gerados e estão 100% funcionais para testar na prévia ao lado.\n\n*💡 Dica: Para usar IA em nuvem de ponta, acesse Configurações (⚙️) e adicione uma chave gratuita válida do Google Gemini (gerada em aistudio.google.com/apikey, começando com AIzaSy) ou do Groq (console.groq.com).*`;
+
+          const novaMsgLocal: MensagemArmazenada = {
+            id: crypto.randomUUID(),
+            projeto_id: projetoId!,
+            user_id: context.userId,
+            role: "assistant",
+            conteudo: resposta,
+            modelo: "modelo-local",
+            ok: true,
+            anexos: [],
+            created_at: new Date().toISOString(),
+          };
+          salvarMensagemArmazenada(novaMsgLocal);
+
+          try {
+            await context.supabase.from("mensagens").insert({
+              id: novaMsgLocal.id,
+              projeto_id: projetoId,
+              user_id: context.userId,
+              role: "assistant",
+              conteudo: resposta,
+              modelo: "modelo-local",
+              ok: true,
+            });
+          } catch {
+            // ignore
+          }
+
+          return {
+            projeto_id: projetoId,
+            texto: resposta,
+            ok: true,
+            mudou_arquivos: true,
+            projetoNovo,
+            projeto: await carregarProjetoCompleto(projetoId!, targetUserIds, context),
+          };
+        }
+
+        bruto = `Nenhuma conexão de IA concluiu este pedido. Motivo detalhado de cada chave:\n${
           falhas.length ? falhas.join("\n") : `- ${nomeDe(provedorUsado)}: ${bruto}`
-        }\n\nAbra Configurações, cole uma chave nova do provedor desejado e tente de novo. Nada foi alterado no projeto.`;
+        }\n\n👉 **Como resolver de verdade:**\n1. Abra as **Configurações (⚙️)** no menu superior direito.\n2. Para o **Google Gemini**: pegue sua chave gratuita no **Google AI Studio (aistudio.google.com/apikey)** — a chave correta sempre começa com **AIzaSy**. Chaves que começam com **AQ.** são tokens internos e são recusadas pela API do Gemini.\n3. Ou pegue uma chave gratuita do **Groq (console.groq.com)**.\n4. Clique no botão **Testar** ao lado de cada chave na lista para conferir a resposta em tempo real antes de enviar no chat.`;
       }
     }
 

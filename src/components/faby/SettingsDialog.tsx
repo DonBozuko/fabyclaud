@@ -332,6 +332,24 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
             className="w-full rounded-lg border border-border bg-secondary px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
           />
 
+          {(provedor === "google" || provedor === "antigravity") &&
+          chave.trim().startsWith("AQ.") ? (
+            <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-2.5 text-xs text-destructive">
+              ⚠️ <strong>Atenção:</strong> Essa chave começa com &quot;AQ.&quot;, que é um token
+              interno/sessão. A chave de API gratuita do Google Gemini sempre começa com{" "}
+              <strong>AIzaSy</strong>. Gere sua chave gratuita de API em{" "}
+              <a
+                href="https://aistudio.google.com/apikey"
+                target="_blank"
+                rel="noreferrer"
+                className="underline font-bold"
+              >
+                aistudio.google.com/apikey
+              </a>
+              .
+            </div>
+          ) : null}
+
           <div className="flex gap-2">
             <button
               type="button"
@@ -355,11 +373,12 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
             {omniPronta ? (
               <li className="flex items-center justify-between rounded-lg border border-border bg-secondary px-3 py-2 text-xs">
                 <span>
-                  OmniRoute local — <span className="text-primary">✓ pronta neste navegador</span>
+                  OmniRoute local —{" "}
+                  <span className="text-primary font-medium">✓ pronta neste navegador</span>
                 </span>
                 <button
                   type="button"
-                  className="text-destructive"
+                  className="text-destructive hover:underline text-xs"
                   onClick={() => {
                     apagarOmniRouteLocal();
                     setOmniPronta(false);
@@ -374,44 +393,91 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
               .map((k: any) => (
                 <li
                   key={k.provider}
-                  className="flex items-center justify-between rounded-lg border border-border bg-secondary px-3 py-2 text-xs"
+                  className="flex items-center justify-between gap-2 rounded-lg border border-border bg-secondary px-3 py-2 text-xs"
                 >
-                  <span>
-                    {PROVIDER_LABELS[k.provider] ?? k.provider} —{" "}
-                    <span className="text-muted-foreground">{k.mascara}</span>
-                    {k.provider === "omniroute" && k.api_url ? (
-                      <span className="ml-1 inline-flex items-center gap-1 text-primary">
-                        <Check className="size-3" /> endereço configurado
+                  <div className="flex flex-col gap-0.5 min-w-0">
+                    <span className="flex items-center gap-1.5 flex-wrap">
+                      <strong className="text-foreground">
+                        {PROVIDER_LABELS[k.provider] ?? k.provider}
+                      </strong>
+                      <span className="text-muted-foreground">{k.mascara}</span>
+                      {k.provider === "omniroute" && k.api_url ? (
+                        <span className="inline-flex items-center gap-1 text-primary">
+                          <Check className="size-3" /> endereço configurado
+                        </span>
+                      ) : null}
+                      {k.testada_ok ? (
+                        <span className="rounded bg-primary/20 px-1.5 py-0.5 text-[11px] font-medium text-primary">
+                          ✓ pronta
+                        </span>
+                      ) : k.ultimo_erro ? (
+                        <span className="rounded bg-destructive/20 px-1.5 py-0.5 text-[11px] font-medium text-destructive">
+                          ✗ falhou
+                        </span>
+                      ) : (
+                        <span className="rounded bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground">
+                          • não testada
+                        </span>
+                      )}
+                    </span>
+                    {k.ultimo_erro && !k.testada_ok ? (
+                      <span className="text-[11px] text-destructive break-words mt-0.5">
+                        {k.ultimo_erro}
                       </span>
                     ) : null}
-                    <span
-                      className={`ml-1 ${k.testada_ok ? "text-primary" : "text-muted-foreground"}`}
-                    >
-                      {k.testada_ok ? "✓ pronta" : "• precisa testar"}
-                    </span>
-                  </span>
-                  <button
-                    type="button"
-                    className="text-destructive"
-                    onClick={async () => {
-                      if (typeof window !== "undefined") {
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      type="button"
+                      disabled={testando}
+                      className="text-primary hover:underline font-medium text-xs disabled:opacity-50"
+                      onClick={async () => {
+                        setProvedor(k.provider);
+                        setTestando(true);
                         try {
-                          const salvas = JSON.parse(
-                            localStorage.getItem("faby_local_keys") || "{}",
-                          );
-                          delete salvas[k.provider];
-                          localStorage.setItem("faby_local_keys", JSON.stringify(salvas));
+                          const r = await testar({
+                            data: {
+                              provider: k.provider,
+                              key: "",
+                              api_url: k.api_url || "",
+                            },
+                          });
+                          if (r.ok) toast.success(r.msg);
+                          else toast.error(r.msg);
+                          void queryClient.invalidateQueries({ queryKey: ["chaves"] });
+                          void queryClient.invalidateQueries({ queryKey: ["capacidades"] });
                         } catch {
-                          // ignore
+                          toast.error("Erro ao testar chave.");
+                        } finally {
+                          setTestando(false);
                         }
-                      }
-                      await remover({ data: { provider: k.provider } });
-                      void queryClient.invalidateQueries({ queryKey: ["chaves"] });
-                      void queryClient.invalidateQueries({ queryKey: ["capacidades"] });
-                    }}
-                  >
-                    remover
-                  </button>
+                      }}
+                    >
+                      testar
+                    </button>
+                    <button
+                      type="button"
+                      className="text-destructive hover:underline text-xs"
+                      onClick={async () => {
+                        if (typeof window !== "undefined") {
+                          try {
+                            const salvas = JSON.parse(
+                              localStorage.getItem("faby_local_keys") || "{}",
+                            );
+                            delete salvas[k.provider];
+                            localStorage.setItem("faby_local_keys", JSON.stringify(salvas));
+                          } catch {
+                            // ignore
+                          }
+                        }
+                        await remover({ data: { provider: k.provider } });
+                        void queryClient.invalidateQueries({ queryKey: ["chaves"] });
+                        void queryClient.invalidateQueries({ queryKey: ["capacidades"] });
+                      }}
+                    >
+                      remover
+                    </button>
+                  </div>
                 </li>
               ))}
             {chaves.data && chaves.data.length === 0 ? (

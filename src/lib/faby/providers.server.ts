@@ -362,7 +362,13 @@ async function chamarGoogle(
       continue;
     }
 
-    if (!ok) return { ok: false, texto: erroLegivel(status, json, texto), status, bruto: texto };
+    if (!ok) {
+      let msg = erroLegivel(status, json, texto);
+      if ((status === 400 || status === 401) && !key.startsWith("AIzaSy")) {
+        msg = `${msg} (a chave do Google AI Studio deve começar com 'AIzaSy'. Chaves iniciando com 'AQ.' são tokens internos/OAuth e não funcionam aqui. Pegue a chave de API em aistudio.google.com/apikey)`;
+      }
+      return { ok: false, texto: msg, status, bruto: texto };
+    }
 
     const partes = (json as { candidates?: { content?: { parts?: { text?: string }[] } }[] })
       ?.candidates?.[0]?.content?.parts;

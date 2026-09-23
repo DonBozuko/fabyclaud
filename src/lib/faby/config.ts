@@ -1,6 +1,6 @@
 export const MODELS = {
   google: "gemini-2.0-flash",
-  groq: "qwen/qwen-2.5-coder-32b",
+  groq: "qwen-2.5-coder-32b",
   openrouter: "qwen/qwen-2.5-coder-32b-instruct:free",
   huggingface: "Qwen/Qwen2.5-Coder-32B-Instruct",
   deepseek: "deepseek-chat",
@@ -31,7 +31,7 @@ export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
     "gemini-flash-latest",
   ],
   groq: [
-    "qwen/qwen-2.5-coder-32b",
+    "qwen-2.5-coder-32b",
     "llama-3.3-70b-versatile",
     "deepseek-r1-distill-llama-70b",
     "openai/gpt-oss-120b",
@@ -139,7 +139,7 @@ export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa
     { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
     {
       provedor: "groq",
-      modelo: "qwen/qwen-2.5-coder-32b",
+      modelo: "qwen-2.5-coder-32b",
       nomeLegivel: "Qwen 2.5 Coder 32B (Groq)",
     },
     {
@@ -179,7 +179,7 @@ export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa
     { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
     {
       provedor: "groq",
-      modelo: "qwen/qwen-2.5-coder-32b",
+      modelo: "qwen-2.5-coder-32b",
       nomeLegivel: "Qwen 2.5 Coder 32B (Groq)",
     },
   ],
@@ -187,7 +187,7 @@ export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa
     { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
     {
       provedor: "groq",
-      modelo: "qwen/qwen-2.5-coder-32b",
+      modelo: "qwen-2.5-coder-32b",
       nomeLegivel: "Qwen 2.5 Coder 32B (Groq)",
     },
   ],

@@ -42,9 +42,9 @@
     "semantic_hash": ""
   },
   "src/components/faby/SettingsDialog.tsx": {
-    "mtime": 1789934772.3212507,
-    "seen": 1789934795.8823757,
-    "ast_hash": "5d50647a4154da682ef3ac2cf010dbbb",
+    "mtime": 1790184166.8203635,
+    "seen": 1790184231.5083957,
+    "ast_hash": "237e9edd95b3e20eb665b80082b0a6db",
     "semantic_hash": ""
   },
   "src/components/ui/accordion.tsx": {
@@ -384,9 +384,9 @@
     "semantic_hash": "8da0ddd7569bac2676b9a5c8edff8a36"
   },
   "src/lib/faby.functions.ts": {
-    "mtime": 1790181757.5588703,
-    "seen": 1790182034.460944,
-    "ast_hash": "3ac4f23abf31b509396ae7bc2a026baf",
+    "mtime": 1790184071.825426,
+    "seen": 1790184231.521122,
+    "ast_hash": "ef372c5b9f1ef088053dce93df2808fb",
     "semantic_hash": ""
   },
   "src/lib/faby/aplicativos-locais.server.ts": {
@@ -414,9 +414,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/config.ts": {
-    "mtime": 1790175990.984885,
-    "seen": 1790177532.1973102,
-    "ast_hash": "5fde78a1b2790aa9dd894e7a080ef5b3",
+    "mtime": 1790183922.288317,
+    "seen": 1790184231.5223548,
+    "ast_hash": "fcebe2951909581d49577bd8bca7727f",
     "semantic_hash": ""
   },
   "src/lib/faby/escola.server.ts": {
@@ -474,9 +474,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/providers.server.ts": {
-    "mtime": 1790181671.970848,
-    "seen": 1790182034.4643075,
-    "ast_hash": "847bf8bf7e5034672519b3381a024860",
+    "mtime": 1790184006.8996072,
+    "seen": 1790184231.5257103,
+    "ast_hash": "cc5b4f809e3960d4e689f4613863340a",
     "semantic_hash": ""
   },
   "src/lib/faby/upload.ts": {
@@ -831,6 +831,12 @@
     "mtime": 1790178277.4755487,
     "seen": 1790180998.0260293,
     "ast_hash": "cb7d9f450270ac06fb06aba3bdbd3233",
+    "semantic_hash": ""
+  },
+  "src/lib/faby/diagnostico-real.test.ts": {
+    "mtime": 1790184170.5896153,
+    "seen": 1790184231.5223608,
+    "ast_hash": "f9702eac594559fbbcf29812b0e6fd07",
     "semantic_hash": ""
   }
 }

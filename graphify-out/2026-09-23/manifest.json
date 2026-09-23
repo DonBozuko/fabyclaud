@@ -360,15 +360,15 @@
     "semantic_hash": "d05be20476d3287ad487690a4cf98029"
   },
   "src/integrations/supabase/previewAuthStorage.ts": {
-    "mtime": 1790130369.126287,
-    "seen": 1790177532.1961558,
-    "ast_hash": "fffc728f26ef2ea691938a5a2d5c7e04",
+    "mtime": 1790181734.2106483,
+    "seen": 1790182034.460529,
+    "ast_hash": "9e38ebed5a8b84b7c47412a25dd07052",
     "semantic_hash": ""
   },
   "src/integrations/supabase/types.ts": {
-    "mtime": 1790130369.1292784,
-    "seen": 1790177532.1961584,
-    "ast_hash": "37b26d1e92fc4467dc900b887f1747d6",
+    "mtime": 1790181670.2085938,
+    "seen": 1790182034.460533,
+    "ast_hash": "5975cbd3dd4da278afcbeb60f6cd1964",
     "semantic_hash": ""
   },
   "src/lib/error-capture.ts": {
@@ -384,9 +384,9 @@
     "semantic_hash": "8da0ddd7569bac2676b9a5c8edff8a36"
   },
   "src/lib/faby.functions.ts": {
-    "mtime": 1790180495.963889,
-    "seen": 1790180998.0153215,
-    "ast_hash": "c7e48dfe5a9cde2920c05d7a9d1f96cb",
+    "mtime": 1790181757.5588703,
+    "seen": 1790182034.460944,
+    "ast_hash": "3ac4f23abf31b509396ae7bc2a026baf",
     "semantic_hash": ""
   },
   "src/lib/faby/aplicativos-locais.server.ts": {
@@ -408,9 +408,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/builder.server.ts": {
-    "mtime": 1790173892.6295006,
-    "seen": 1790177532.1973083,
-    "ast_hash": "b4e8275d584ded6b57bbc7ad8b9314b9",
+    "mtime": 1790181671.3902433,
+    "seen": 1790182034.4619484,
+    "ast_hash": "e6501a68f3f07185be319a2f56abb3d4",
     "semantic_hash": ""
   },
   "src/lib/faby/config.ts": {
@@ -462,9 +462,9 @@
     "semantic_hash": "892b58e840f2777a032065ad8266b684"
   },
   "src/lib/faby/orquestracao.server.ts": {
-    "mtime": 1790173819.6526158,
-    "seen": 1790177532.198712,
-    "ast_hash": "92b09bdd0710d759e3099aeea4d0f238",
+    "mtime": 1790181671.7391987,
+    "seen": 1790182034.4640539,
+    "ast_hash": "c4acb2e3ac0cbfcfd8cef8f3bd55c242",
     "semantic_hash": ""
   },
   "src/lib/faby/preview.ts": {
@@ -474,9 +474,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/providers.server.ts": {
-    "mtime": 1790176694.096404,
-    "seen": 1790177532.1988802,
-    "ast_hash": "aaabdc4f7b44166690fe13c2f333b349",
+    "mtime": 1790181671.970848,
+    "seen": 1790182034.4643075,
+    "ast_hash": "847bf8bf7e5034672519b3381a024860",
     "semantic_hash": ""
   },
   "src/lib/faby/upload.ts": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "src/routes/index.tsx": {
-    "mtime": 1790180599.8709779,
-    "seen": 1790180998.0208998,
-    "ast_hash": "a312c5e746fbdd4555cf771aa11659ed",
+    "mtime": 1790181780.5053375,
+    "seen": 1790182034.4674656,
+    "ast_hash": "b776f0b22b367259ae0872237f7aaa39",
     "semantic_hash": ""
   },
   "src/server.ts": {
@@ -738,9 +738,9 @@
     "semantic_hash": ""
   },
   "src/agents/types.ts": {
-    "mtime": 1790173682.532004,
-    "seen": 1790177532.1867695,
-    "ast_hash": "47e496b1e8b9248de9e082003224b7c1",
+    "mtime": 1790181668.7148514,
+    "seen": 1790182034.446385,
+    "ast_hash": "4639322446ae0b5dbb2b7754dd6cd23c",
     "semantic_hash": ""
   },
   "src/types/bun-test.d.ts": {
@@ -786,21 +786,21 @@
     "semantic_hash": ""
   },
   "src/lib/faby/storage.server.ts": {
-    "mtime": 1790180791.0536962,
-    "seen": 1790180998.018458,
-    "ast_hash": "e277551f79d5a8321be3b2a3cbb0156d",
+    "mtime": 1790181672.0947404,
+    "seen": 1790182034.4645073,
+    "ast_hash": "5ff284d6d93fa151559e906b3beb846b",
     "semantic_hash": ""
   },
   "src/lib/faby/storage.server.test.ts": {
-    "mtime": 1790180814.2674947,
-    "seen": 1790180998.0184555,
-    "ast_hash": "bc05cf1504bb22ad9b6f4316db23b98f",
+    "mtime": 1790181672.023641,
+    "seen": 1790182034.4645023,
+    "ast_hash": "81043f236b4a49ac7b4205f4667d21bb",
     "semantic_hash": ""
   },
   "src/lib/faby/provas-reais.test.ts": {
-    "mtime": 1790180833.1527925,
-    "seen": 1790180998.0181186,
-    "ast_hash": "d236fb85109248b3e4126836a41480e4",
+    "mtime": 1790181671.854885,
+    "seen": 1790182034.4643033,
+    "ast_hash": "65544954c53939d8159367e8634bf8f4",
     "semantic_hash": ""
   },
   "src/lib/faby/ambiente.server.ts": {
