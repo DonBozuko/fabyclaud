@@ -278,14 +278,15 @@ export function ehErroDeModelo(status: number, texto: string) {
   ) {
     return false;
   }
-  if (status === 410 || status === 404) return true;
+  if (status === 410 || status === 404 || status === 503 || status === 502 || status === 504)
+    return true;
   if (
     status === 429 &&
     (t.includes("limit: 0") || t.includes("limit:0") || t.includes("quota exceeded for metric"))
   ) {
     return true;
   }
-  if (status === 400 || status === 403 || status === 422 || status === 429) {
+  if (status === 400 || status === 403 || status === 422 || status === 429 || status === 503) {
     return (
       t.includes("model") ||
       t.includes("not found") ||
@@ -298,6 +299,10 @@ export function ehErroDeModelo(status: number, texto: string) {
       t.includes("deprecated") ||
       t.includes("retired") ||
       t.includes("update your code") ||
+      t.includes("high demand") ||
+      t.includes("overloaded") ||
+      t.includes("capacity") ||
+      t.includes("temporarily") ||
       t.includes("limit: 0")
     );
   }

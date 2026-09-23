@@ -557,67 +557,37 @@ function FabyClaud() {
     enabled: logado,
   });
 
-  // Auto-sincronização de chaves locais do navegador com o backend
+  // Preserva projetos em backup local do navegador
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const salvas = JSON.parse(localStorage.getItem("faby_local_keys") || "{}");
-        const entries = Object.entries(salvas);
-        if (entries.length > 0 && chaves.data) {
-          for (const [prov, info] of entries) {
-            const dados = info as { key?: string; api_url?: string };
-            if (dados?.key && !chaves.data.some((k: any) => k.provider === prov)) {
-              salvarChaveFn({
-                data: {
-                  provider: prov,
-                  key: dados.key,
-                  api_url: prov === "omniroute" ? dados.api_url || "" : "",
-                },
-              })
-                .then(() => {
-                  void queryClient.invalidateQueries({ queryKey: ["chaves"] });
-                  void queryClient.invalidateQueries({ queryKey: ["capacidades"] });
-                })
-                .catch((erro: unknown) => {
-                  console.warn("[FabyClaud] Não foi possível reaproveitar a chave salva.", erro);
-                });
-            }
-          }
+    if (projetos.data && projetos.data.length > 0) {
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("faby_projects_backup", JSON.stringify(projetos.data));
+        } catch {
+          // ignore
         }
-      } catch (erro) {
-        console.warn("[FabyClaud] Chaves salvas no navegador estavam ilegíveis.", erro);
       }
-    }
-  }, [chaves.data, queryClient, salvarChaveFn]);
-
-  useEffect(() => {
-    if (!projetos.data || projetos.data.length === 0) return;
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem("faby_projects_backup", JSON.stringify(projetos.data));
-      } catch (erro) {
-        console.warn("[FabyClaud] Não foi possível guardar a cópia local dos projetos.", erro);
+      if (isFirstProjectLoad.current) {
+        isFirstProjectLoad.current = false;
+        const salvo =
+          typeof window !== "undefined" ? localStorage.getItem("faby_active_project_id") : null;
+        if (salvo && projetos.data.some((p: any) => p.id === salvo)) {
+          setProjetoId(salvo);
+        } else if (!projetoId && projetos.data.length > 0) {
+          setProjetoId(projetos.data[0]?.id || null);
+        }
       }
-    }
-    if (isFirstProjectLoad.current) {
-      isFirstProjectLoad.current = false;
-      const salvo =
-        typeof window !== "undefined" ? localStorage.getItem("faby_active_project_id") : null;
-      if (salvo && projetos.data.some((p: any) => p.id === salvo)) {
+    } else if (typeof window !== "undefined" && isFirstProjectLoad.current) {
+      const salvo = localStorage.getItem("faby_active_project_id");
+      if (salvo) {
         setProjetoId(salvo);
-      } else if (!projetoId && projetos.data.length > 0) {
-        setProjetoId(projetos.data[0]?.id || null);
       }
     }
   }, [projetos.data, projetoId]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (projetoId) {
-        localStorage.setItem("faby_active_project_id", projetoId);
-      } else {
-        localStorage.removeItem("faby_active_project_id");
-      }
+    if (typeof window !== "undefined" && projetoId) {
+      localStorage.setItem("faby_active_project_id", projetoId);
     }
   }, [projetoId]);
 

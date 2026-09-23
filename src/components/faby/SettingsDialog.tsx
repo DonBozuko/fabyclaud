@@ -465,14 +465,27 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
                               localStorage.getItem("faby_local_keys") || "{}",
                             );
                             delete salvas[k.provider];
+                            if (k.provider === "google") {
+                              delete salvas["antigravity"];
+                            }
                             localStorage.setItem("faby_local_keys", JSON.stringify(salvas));
                           } catch {
                             // ignore
                           }
                         }
                         await remover({ data: { provider: k.provider } });
-                        void queryClient.invalidateQueries({ queryKey: ["chaves"] });
-                        void queryClient.invalidateQueries({ queryKey: ["capacidades"] });
+                        if (k.provider === "google") {
+                          try {
+                            await remover({ data: { provider: "antigravity" } });
+                          } catch {
+                            // ignore
+                          }
+                        }
+                        toast.success(
+                          `${PROVIDER_LABELS[k.provider] ?? k.provider} removido com sucesso.`,
+                        );
+                        await queryClient.invalidateQueries({ queryKey: ["chaves"] });
+                        await queryClient.invalidateQueries({ queryKey: ["capacidades"] });
                       }}
                     >
                       remover
@@ -493,19 +506,24 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
             <div className="mt-2 flex flex-wrap gap-1.5">
               {Object.keys(MODELS)
                 .filter((id) => id !== "omniroute" && PROVIDER_LINKS[id])
-                .map((id) => (
-                  <a
-                    key={id}
-                    href={PROVIDER_LINKS[id]}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={() => selecionarProvedor(id)}
-                    className="rounded-lg border border-border px-2.5 py-1.5 text-xs transition hover:bg-accent"
-                  >
-                    {PROVIDER_LABELS[id] ?? id}
-                    {(chaves.data ?? []).some((k: any) => k.provider === id) ? " ✓" : ""}
-                  </a>
-                ))}
+                .map((id) => {
+                  const pronta = (chaves.data ?? []).some(
+                    (k: any) => k.provider === id && k.testada_ok,
+                  );
+                  return (
+                    <a
+                      key={id}
+                      href={PROVIDER_LINKS[id]}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() => selecionarProvedor(id)}
+                      className="rounded-lg border border-border px-2.5 py-1.5 text-xs transition hover:bg-accent"
+                    >
+                      {PROVIDER_LABELS[id] ?? id}
+                      {pronta ? " ✓ pronta" : ""}
+                    </a>
+                  );
+                })}
             </div>
           </div>
         </section>

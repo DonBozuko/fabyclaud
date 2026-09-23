@@ -287,12 +287,13 @@ export function salvarChaveArmazenada(chave: ChaveArmazenada): void {
 
 export function apagarChaveArmazenada(userId: string, provider: string): void {
   carregarDoDisco();
-  const userMap = memoryState.chaves[userId];
-  if (userMap && userMap[provider]) {
-    delete userMap[provider];
-  }
-  if (Object.keys(userMap ?? {}).length === 0) {
-    delete memoryState.chaves[userId];
+  for (const [uid, userMap] of Object.entries(memoryState.chaves)) {
+    if (userMap && userMap[provider]) {
+      delete userMap[provider];
+    }
+    if (Object.keys(userMap ?? {}).length === 0) {
+      delete memoryState.chaves[uid];
+    }
   }
   persistirNoDisco();
 }
