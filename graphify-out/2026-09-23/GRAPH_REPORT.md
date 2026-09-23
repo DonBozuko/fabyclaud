@@ -1,7 +1,7 @@
 # Graph Report - Dev Buddy  (2026-09-23)
 
 ## Corpus Check
-- 151 files · ~116,365 words
+- 151 files · ~116,437 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 8 file(s) not represented in the graph (top: (none) 3, .toml 2, .lock 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1edc77d0`
+- Built from commit: `30b39600`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -376,9 +376,9 @@ Nodes (10): Db, directoryReader, EtapaConstrucao, finalizarExecucao(), iniciarEx
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `react` connect `react` to `package.json`, `cn`, `sidebar.tsx`, `FabyClaud`, `github.functions.ts`, `__root.tsx`, `avatar.tsx`, `class-variance-authority`, `PainelRecursos.tsx`, `pagination.tsx`, `navigation-menu.tsx`, `command.tsx`, `menubar.tsx`, `form.tsx`, `carousel.tsx`, `index.tsx`, `lucide-react`, `chart.tsx`?**
-  _High betweenness centrality (0.217) - this node is a cross-community bridge._
+  _High betweenness centrality (0.219) - this node is a cross-community bridge._
 - **Why does `@tanstack/react-start` connect `index.tsx` to `package.json`, `faby.functions.ts`, `github.functions.ts`, `PainelRecursos.tsx`, `client.ts`?**
-  _High betweenness centrality (0.082) - this node is a cross-community bridge._
+  _High betweenness centrality (0.081) - this node is a cross-community bridge._
 - **Why does `dependencies` connect `dependencies` to `package.json`?**
   _High betweenness centrality (0.071) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `FabyClaud()` (e.g. with `index.tsx` and `aoFicarOffline()`) actually correct?**

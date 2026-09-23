@@ -445,4 +445,92 @@ document.getElementById("btnStart").addEventListener("click", () => {
     assert.ok(respostaComprovaCapacidade("FABY_OK|HTML|CSS|JS"));
     assert.ok(respostaComprovaCapacidade("FABY_OK | HTML | CSS | JS"));
   });
+
+  test("PROVA 12: Prevenção de Sequestro de Projeto & Continuidade do Motor (Anti-Template Hijacking)", async () => {
+    const { aplicativoLocalParaPedido } = await import("./aplicativos-locais.server");
+    const { classificarPedidoLovable, gerarContratoEntrega } = await import("./builder.server");
+
+    const arquivosProjetoExistente = {
+      "index.html":
+        "<!doctype html><html><head><title>Meu Sistema ERP</title></head><body><h1>Dashboard</h1></body></html>",
+      "styles.css": ":root { --primary: #3b82f6; --bg: #ffffff; }",
+      "app.js": "console.log('ERP rodando');",
+    };
+
+    // 1. Quando o projeto já tem arquivos, palavras-chave de templates (tarefas, calculadora, cronômetro, etc.)
+    // NUNCA devem sequestrar o projeto com um aplicativo estático pré-moldado!
+    const sequestroTarefas = aplicativoLocalParaPedido(
+      "adicione uma lista de tarefas na barra lateral",
+      arquivosProjetoExistente,
+    );
+    assert.equal(
+      sequestroTarefas,
+      null,
+      "Não deve substituir o projeto existente pelo template de Tarefas",
+    );
+
+    const sequestroCalculadora = aplicativoLocalParaPedido(
+      "adicione uma calculadora de frete",
+      arquivosProjetoExistente,
+    );
+    assert.equal(
+      sequestroCalculadora,
+      null,
+      "Não deve substituir o projeto existente pelo template de Calculadora",
+    );
+
+    const sequestroCronometro = aplicativoLocalParaPedido(
+      "coloque um cronômetro na tela",
+      arquivosProjetoExistente,
+    );
+    assert.equal(
+      sequestroCronometro,
+      null,
+      "Não deve substituir o projeto existente pelo template de Cronômetro",
+    );
+
+    // 2. Modificações incrementais determinísticas suportadas (ex: tema de cor) são preservadas
+    const mudancaTema = aplicativoLocalParaPedido(
+      "mude a cor para verde",
+      arquivosProjetoExistente,
+    );
+    assert.ok(mudancaTema);
+    assert.match(mudancaTema.arquivos["styles.css"]!, /--primary:\s*#10b981/);
+    assert.equal(
+      mudancaTema.arquivos["index.html"],
+      arquivosProjetoExistente["index.html"],
+      "Deve preservar 100% dos outros arquivos do projeto",
+    );
+
+    // 3. Classificação Lovable com arquivos existentes é sempre 'edicao' (salvo pedido explícito de recriação do zero)
+    assert.equal(
+      classificarPedidoLovable("faça um novo módulo de pagamentos", arquivosProjetoExistente),
+      "edicao",
+    );
+    assert.equal(
+      classificarPedidoLovable("construa um painel de usuários", arquivosProjetoExistente),
+      "edicao",
+    );
+    assert.equal(
+      classificarPedidoLovable("apagar tudo e começar do zero", arquivosProjetoExistente),
+      "criacao",
+    );
+
+    // 4. Contrato de entrega preserva o título real do projeto existente em vez de adivinhar novo produto
+    const contrato = gerarContratoEntrega(
+      "adicione uma calculadora de impostos",
+      arquivosProjetoExistente,
+      "edicao",
+    );
+    assert.match(
+      contrato.nomeProduto,
+      /Meu Sistema ERP/,
+      "O produto deve manter o nome do projeto atual e não virar 'calculadora'",
+    );
+    assert.match(
+      contrato.criteriosAceite.join(" "),
+      /PRESERVAÇÃO OBRIGATÓRIA/,
+      "Critérios de aceite devem proibir expressamente começar do zero ou trocar o projeto",
+    );
+  });
 });

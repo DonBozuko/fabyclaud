@@ -384,15 +384,15 @@
     "semantic_hash": "8da0ddd7569bac2676b9a5c8edff8a36"
   },
   "src/lib/faby.functions.ts": {
-    "mtime": 1790197518.624318,
-    "seen": 1790197636.000659,
-    "ast_hash": "c7f2b1eb3bb3c6d872604a599320ce0a",
+    "mtime": 1790205152.959838,
+    "seen": 1790205252.776187,
+    "ast_hash": "0a831cf5868d2e168c1ec0825626f94f",
     "semantic_hash": ""
   },
   "src/lib/faby/aplicativos-locais.server.ts": {
-    "mtime": 1790126956.5932455,
-    "seen": 1790126994.3028038,
-    "ast_hash": "6bcfddee30fed2dee3ca12eb841960fe",
+    "mtime": 1790204987.402702,
+    "seen": 1790205252.7765388,
+    "ast_hash": "a2546d1d05a4def0a331528c3c473961",
     "semantic_hash": ""
   },
   "src/lib/faby/auditoria.ts": {
@@ -408,9 +408,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/builder.server.ts": {
-    "mtime": 1790190848.3193583,
-    "seen": 1790191057.2028792,
-    "ast_hash": "66d06de2106be988b58c4d042892d4b0",
+    "mtime": 1790205022.472864,
+    "seen": 1790205252.7769623,
+    "ast_hash": "bf833a1a1166ac0bfb6618ac161a7f53",
     "semantic_hash": ""
   },
   "src/lib/faby/config.ts": {
@@ -798,9 +798,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/provas-reais.test.ts": {
-    "mtime": 1790191014.6769478,
-    "seen": 1790191057.2045805,
-    "ast_hash": "fbec511eee2c85626115f4240e9528f7",
+    "mtime": 1790205163.8870444,
+    "seen": 1790205252.779481,
+    "ast_hash": "e18182a4f2384c60b0c82a7427b3b2f9",
     "semantic_hash": ""
   },
   "src/lib/faby/ambiente.server.ts": {

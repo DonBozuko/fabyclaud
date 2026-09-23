@@ -90,8 +90,15 @@ export function ehSaudacaoOuConversaCasual(pedido: string): boolean {
   return false;
 }
 
-export function classificarPedidoLovable(pedido: string): TipoPedidoLovable {
+export function classificarPedidoLovable(
+  pedido: string,
+  arquivosAtuais?: Record<string, string>,
+): TipoPedidoLovable {
   const limpo = pedido.trim();
+  const nomesArquivos = Object.keys(arquivosAtuais ?? {}).filter(
+    (n) => !n.startsWith("enviados/") && !n.startsWith("originais/"),
+  );
+  const temArquivos = nomesArquivos.length > 0;
 
   if (
     /\b(gerar imagem|criar imagem|desenho|desenhe|foto de|ilustra[çc][ãa]o|wallpaper|avatar|imagem de|gerar:\s*)\b/i.test(
@@ -145,6 +152,15 @@ export function classificarPedidoLovable(pedido: string): TipoPedidoLovable {
     return "edicao";
   }
 
+  // Se já existem arquivos no projeto e não é pedido explícito de começar do zero,
+  // qualquer comando é uma evolução/edição incremental, nunca criação de projeto diferente!
+  if (
+    temArquivos &&
+    !/\b(do zero|novo projeto|reiniciar do zero|apagar tudo|começar do zero)\b/i.test(limpo)
+  ) {
+    return "edicao";
+  }
+
   return "criacao";
 }
 
@@ -160,13 +176,23 @@ export function gerarContratoEntrega(
   const temArquivos = nomesArquivos.length > 0;
 
   let nomeProduto = "Aplicação Web Interativa";
-  const matchNome = limpo.match(
-    /(?:app|clone|jogo|site|sistema|painel|dashboard|calculadora|saas)\s+(?:d[eao]\s+)?([a-zA-Z0-9À-ÿ\s-]{3,30})/i,
-  );
-  if (matchNome?.[1]) {
-    nomeProduto = matchNome[0].trim();
-  } else if (limpo.length < 40) {
-    nomeProduto = limpo;
+  if (temArquivos) {
+    const htmlContent = arquivosAtuais["index.html"] || arquivosAtuais["index.htm"] || "";
+    const titleMatch = htmlContent.match(/<title[^>]*>([^<]+)<\/title>/i);
+    if (titleMatch?.[1]?.trim()) {
+      nomeProduto = `${titleMatch[1].trim()} (Evolução Contínua)`;
+    } else {
+      nomeProduto = "Projeto em Desenvolvimento";
+    }
+  } else {
+    const matchNome = limpo.match(
+      /(?:app|clone|jogo|site|sistema|painel|dashboard|calculadora|saas)\s+(?:d[eao]\s+)?([a-zA-Z0-9À-ÿ\s-]{3,30})/i,
+    );
+    if (matchNome?.[1]) {
+      nomeProduto = matchNome[0].trim();
+    } else if (limpo.length < 40) {
+      nomeProduto = limpo;
+    }
   }
 
   const telas = ["Tela Principal (Visão Geral / Interface Interativa)"];
@@ -191,7 +217,9 @@ export function gerarContratoEntrega(
     "Interface 100% funcional diretamente no navegador sem dependências quebradas",
     "Visual moderno, refinado, com tipografia Google Fonts, cores e animações",
     "Código modular e limpo dividido entre index.html, styles.css e app.js",
-    "Preservação integral de funcionalidades e arquivos pré-existentes",
+    temArquivos
+      ? "PRESERVAÇÃO OBRIGATÓRIA: NUNCA crie um projeto diferente nem comece do zero. Mantenha 100% do layout, estilo e funcionalidades já existentes, incorporando o novo recurso solicitado harmonicamente no código atual."
+      : "Preservação integral de funcionalidades e arquivos pré-existentes",
   ];
 
   const limitacoesAmbiente = [
@@ -469,7 +497,7 @@ export function montarPrompt(
       ].join("\n"),
     );
   } else if (intencao === "alterar") {
-    const tipoLovable = classificarPedidoLovable(pedido);
+    const tipoLovable = classificarPedidoLovable(pedido, arquivosAtuais);
     const contrato = extras?.contrato ?? gerarContratoEntrega(pedido, arquivosAtuais, tipoLovable);
     partes.push(formatarContratoEntrega(contrato));
 

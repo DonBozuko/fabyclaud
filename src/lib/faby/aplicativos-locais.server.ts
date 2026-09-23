@@ -81,6 +81,12 @@ export function aplicativoLocalParaPedido(
         arquivos: novosArquivos,
       };
     }
+
+    // REGRA DE OURO DO MOTOR:
+    // Se o projeto já possui arquivos e não pediu explicitamente para apagar/reiniciar do zero,
+    // NUNCA permita que um template estático pré-moldado (ex: Calculadora, Tarefas, Cronômetro)
+    // substitua ou destrua o projeto do usuário a cada comando!
+    return null;
   }
 
   // 1. Calculadora

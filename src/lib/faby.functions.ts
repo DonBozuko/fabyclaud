@@ -2211,13 +2211,18 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         );
       }
 
+      const projExistente = obterProjetoArmazenado(projetoId!, targetUserIds);
+      const nomeFinal =
+        (projExistente && !projetoNovo ? projExistente.nome : null) || aplicativoLocal.nome;
+      const arquivosFinais = { ...(projExistente?.arquivos ?? {}), ...aplicativoLocal.arquivos };
+
       salvarProjetoArmazenado({
         id: projetoId!,
         user_id: context.userId,
-        nome: aplicativoLocal.nome,
+        nome: nomeFinal,
         modelo: "modelo-local",
-        arquivos: aplicativoLocal.arquivos,
-        created_at: new Date().toISOString(),
+        arquivos: arquivosFinais,
+        created_at: projExistente?.created_at ?? new Date().toISOString(),
         updated_at: new Date().toISOString(),
       });
 
@@ -2225,7 +2230,8 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         await context.supabase
           .from("projetos")
           .update({
-            arquivos: aplicativoLocal.arquivos as unknown as never,
+            arquivos: arquivosFinais as unknown as never,
+            nome: nomeFinal,
             modelo: "modelo-local",
             updated_at: new Date().toISOString(),
           })
@@ -2673,20 +2679,29 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       }
       if (!ok) {
         if (aplicativoLocal) {
+          const projExistente = obterProjetoArmazenado(projetoId!, targetUserIds);
+          const nomeFinal =
+            (projExistente && !projetoNovo ? projExistente.nome : null) || aplicativoLocal.nome;
+          const arquivosFinais = {
+            ...(projExistente?.arquivos ?? {}),
+            ...aplicativoLocal.arquivos,
+          };
+
           salvarProjetoArmazenado({
             id: projetoId!,
             user_id: context.userId,
-            nome: aplicativoLocal.nome,
+            nome: nomeFinal,
             modelo: "modelo-local",
-            arquivos: aplicativoLocal.arquivos,
-            created_at: new Date().toISOString(),
+            arquivos: arquivosFinais,
+            created_at: projExistente?.created_at ?? new Date().toISOString(),
             updated_at: new Date().toISOString(),
           });
           try {
             await context.supabase
               .from("projetos")
               .update({
-                arquivos: aplicativoLocal.arquivos as unknown as never,
+                arquivos: arquivosFinais as unknown as never,
+                nome: nomeFinal,
                 modelo: "modelo-local",
                 updated_at: new Date().toISOString(),
               })

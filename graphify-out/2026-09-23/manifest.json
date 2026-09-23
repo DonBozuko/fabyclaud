@@ -384,9 +384,9 @@
     "semantic_hash": "8da0ddd7569bac2676b9a5c8edff8a36"
   },
   "src/lib/faby.functions.ts": {
-    "mtime": 1790190929.9071121,
-    "seen": 1790191057.2020724,
-    "ast_hash": "812ac9030ea90b23c48e099d00b32e60",
+    "mtime": 1790197518.624318,
+    "seen": 1790197636.000659,
+    "ast_hash": "c7f2b1eb3bb3c6d872604a599320ce0a",
     "semantic_hash": ""
   },
   "src/lib/faby/aplicativos-locais.server.ts": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "src/routes/index.tsx": {
-    "mtime": 1790185100.4920068,
-    "seen": 1790185228.4455059,
-    "ast_hash": "ec8f9712b8c57c39d609b3f8d7598d9f",
+    "mtime": 1790197548.6933086,
+    "seen": 1790197636.0093288,
+    "ast_hash": "beb3beb8db52bb2357f93cb1761c14af",
     "semantic_hash": ""
   },
   "src/server.ts": {
