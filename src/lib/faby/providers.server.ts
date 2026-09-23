@@ -191,20 +191,25 @@ async function postJson(
   body: unknown,
   timeoutMs: number = TIMEOUT_MS,
 ) {
-  const resposta = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...headers },
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(timeoutMs),
-  });
-  const texto = await resposta.text();
-  let json: unknown = null;
   try {
-    json = JSON.parse(texto);
-  } catch {
-    /* resposta não-JSON */
+    const resposta = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...headers },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+    const texto = await resposta.text();
+    let json: unknown = null;
+    try {
+      json = JSON.parse(texto);
+    } catch {
+      /* resposta não-JSON */
+    }
+    return { ok: resposta.ok, status: resposta.status, json, texto };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    return { ok: false, status: 0, json: null, texto: msg };
   }
-  return { ok: resposta.ok, status: resposta.status, json, texto };
 }
 
 function erroLegivel(status: number, json: unknown, texto: string) {
