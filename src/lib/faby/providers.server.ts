@@ -147,7 +147,8 @@ export function sanitizarHistoricoParaOpenAI(
   const messages: { role: string; content: unknown }[] = [];
   for (const item of filtrados) {
     if (messages.length > 0 && messages[messages.length - 1]!.role === item.role) {
-      messages[messages.length - 1]!.content = `${String(messages[messages.length - 1]!.content)}\n\n${String(item.content)}`;
+      messages[messages.length - 1]!.content =
+        `${String(messages[messages.length - 1]!.content)}\n\n${String(item.content)}`;
     } else {
       messages.push({ ...item });
     }

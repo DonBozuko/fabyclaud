@@ -293,7 +293,9 @@ function IndicadorProgressoConstrucao({ projetoId, modelo }: IndicadorProgressoC
             <Clock className="size-3.5 animate-pulse" />
             {formatarTempo(segundosDecorridos)}
           </span>
-          <span className="text-[10px] font-medium text-muted-foreground">{porcentagemGeral}% concluído</span>
+          <span className="text-[10px] font-medium text-muted-foreground">
+            {porcentagemGeral}% concluído
+          </span>
         </div>
       </div>
 
@@ -939,7 +941,10 @@ function FabyClaud() {
         style={{ backgroundImage: `url(${heroAsset.url})` }}
         aria-hidden
       />
-      <div className="fixed inset-0 -z-10 bg-black/65 backdrop-blur-[6px] pointer-events-none" aria-hidden />
+      <div
+        className="fixed inset-0 -z-10 bg-black/65 backdrop-blur-[6px] pointer-events-none"
+        aria-hidden
+      />
 
       <div className="flex h-screen w-screen gap-3 p-3">
         {/* ===== BARRA LATERAL FUTURISTA ULTRA-MODERNA ===== */}
@@ -1055,7 +1060,9 @@ function FabyClaud() {
                                 ),
                               );
                             }
-                          } catch {}
+                          } catch {
+                            /* ignore */
+                          }
                         }
                         if (projetoId === idParaApagar) {
                           setProjetoId(null);
@@ -1217,7 +1224,8 @@ function FabyClaud() {
                     title="Coloca o projeto no ar e te dá o endereço do site"
                     className="flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-300 transition hover:bg-emerald-500/20 disabled:opacity-60"
                   >
-                    <Globe className="size-3.5 text-emerald-400" /> {publicando ? "Publicando..." : "Publicar"}
+                    <Globe className="size-3.5 text-emerald-400" />{" "}
+                    {publicando ? "Publicando..." : "Publicar"}
                   </button>
                 </>
               ) : null}
@@ -1499,7 +1507,8 @@ function FabyClaud() {
                         />
                         <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground px-1">
                           <span>
-                            Arquivo ativo: <strong className="text-emerald-400">{arquivoAtivo}</strong> (
+                            Arquivo ativo:{" "}
+                            <strong className="text-emerald-400">{arquivoAtivo}</strong> (
                             {(codigoEditando || "").length} caracteres)
                           </span>
                           <span>
@@ -1532,13 +1541,16 @@ function FabyClaud() {
                 {mensagens.length === 0 ? (
                   <div className="rounded-2xl border border-white/10 bg-black/60 p-6 text-center shadow-xl backdrop-blur-md">
                     <div className="mx-auto mb-3 flex size-16 items-center justify-center rounded-2xl overflow-hidden border-2 border-emerald-500/40 shadow-lg shadow-emerald-500/25">
-                      <img src="/mascots.jpg" alt="Faby & Claud" className="size-full object-cover" />
+                      <img
+                        src="/mascots.jpg"
+                        alt="Faby & Claud"
+                        className="size-full object-cover"
+                      />
                     </div>
-                    <p className="text-sm font-bold text-foreground">
-                      Bem-vindo à FabyClaud
-                    </p>
+                    <p className="text-sm font-bold text-foreground">Bem-vindo à FabyClaud</p>
                     <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed max-w-sm mx-auto">
-                      Digite o que você deseja construir: desde calculadoras locais até landing pages completas, painéis SaaS e jogos interativos.
+                      Digite o que você deseja construir: desde calculadoras locais até landing
+                      pages completas, painéis SaaS e jogos interativos.
                     </p>
                   </div>
                 ) : null}
@@ -1564,9 +1576,7 @@ function FabyClaud() {
                             alt="Faby & Claud"
                             className="size-5 shrink-0 rounded-full object-cover border border-emerald-400/50"
                           />
-                          <span className="font-bold text-[11px] text-emerald-400">
-                            FabyClaud
-                          </span>
+                          <span className="font-bold text-[11px] text-emerald-400">FabyClaud</span>
                           {m.modelo ? (
                             <span className="text-[10px] text-muted-foreground/70 font-mono ml-auto">
                               {PROVIDER_LABELS[m.modelo] ?? m.modelo}
@@ -1762,4 +1772,3 @@ function FabyClaud() {
     </div>
   );
 }
-

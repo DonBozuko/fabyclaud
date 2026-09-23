@@ -262,7 +262,8 @@ document.getElementById("btnStart").addEventListener("click", () => {
   });
 
   test("PROVA 8: Protocolo Antigravity Autonomous Software Engineering & Slash Commands /goal e /antigravity", async () => {
-    const { processarComandoBarra, resolverPedidoContextual, montarPrompt } = await import("./builder.server");
+    const { processarComandoBarra, resolverPedidoContextual, montarPrompt } =
+      await import("./builder.server");
     const { AgentManager } = await import("@/agents/AgentManager");
     const { OpenManusReActAgent } = await import("@/agents/OpenManusEngine");
 
@@ -271,7 +272,10 @@ document.getElementById("btnStart").addEventListener("click", () => {
       "index.html": "<!doctype html><html><body><button id='send'>Enviar</button></body></html>",
     });
     assert.match(prompt, /ANTIGRAVITY & DEV BUDDY — AUTONOMOUS SOFTWARE ENGINEERING AGENT/);
-    assert.match(prompt, /ENTENDER → INVESTIGAR → PLANEJAR → IMPLEMENTAR → TESTAR → AUDITAR → CORRIGIR → VALIDAR/);
+    assert.match(
+      prompt,
+      /ENTENDER → INVESTIGAR → PLANEJAR → IMPLEMENTAR → TESTAR → AUDITAR → CORRIGIR → VALIDAR/,
+    );
     assert.match(prompt, /REGRA ROOT CAUSE FIRST & DEBUG PROFUNDO/);
     assert.match(prompt, /NÃO FABRIQUE FUNCIONALIDADE/);
 
@@ -286,10 +290,16 @@ document.getElementById("btnStart").addEventListener("click", () => {
     assert.match(cmdStatus.resposta, /Antigravity Autonomous Software Engineer/);
 
     // 3. Slash command com meta repassa para o pipeline autônomo
-    const cmdGoalComMeta = processarComandoBarra("/goal construa uma calculadora com histórico", {});
+    const cmdGoalComMeta = processarComandoBarra(
+      "/goal construa uma calculadora com histórico",
+      {},
+    );
     assert.equal(cmdGoalComMeta, null, "Comandos com objetivo devem ir para o motor de IA");
 
-    const contextualGoal = resolverPedidoContextual("/goal construa uma calculadora com histórico", []);
+    const contextualGoal = resolverPedidoContextual(
+      "/goal construa uma calculadora com histórico",
+      [],
+    );
     assert.equal(contextualGoal.intencao, "alterar");
     assert.match(contextualGoal.pedidoEfetivo, /MODO AUTÔNOMO DE ENGENHARIA DE SOFTWARE/);
     assert.match(contextualGoal.pedidoEfetivo, /construa uma calculadora com histórico/);
@@ -308,12 +318,24 @@ document.getElementById("btnStart").addEventListener("click", () => {
   });
 
   test("PROVA 9: Detecção Precisa de Verbos de Ação de Engenharia e Prevenção de Falso Positivo em Conversa", async () => {
-    const { ehSaudacaoOuConversaCasual, classificarPedido, classificarPedidoLovable } = await import("./builder.server");
+    const { ehSaudacaoOuConversaCasual, classificarPedido, classificarPedidoLovable } =
+      await import("./builder.server");
 
     // Verbos de ação e engenharia nunca são classificados como simples conversa
-    assert.equal(ehSaudacaoOuConversaCasual("ponha esse mesmo conceito no meu sistema pois parou de funcionar"), false);
-    assert.equal(classificarPedido("ponha esse mesmo conceito no meu sistema pois parou de funcionar"), "alterar");
-    assert.equal(classificarPedidoLovable("ponha esse mesmo conceito no meu sistema pois parou de funcionar"), "correcao");
+    assert.equal(
+      ehSaudacaoOuConversaCasual(
+        "ponha esse mesmo conceito no meu sistema pois parou de funcionar",
+      ),
+      false,
+    );
+    assert.equal(
+      classificarPedido("ponha esse mesmo conceito no meu sistema pois parou de funcionar"),
+      "alterar",
+    );
+    assert.equal(
+      classificarPedidoLovable("ponha esse mesmo conceito no meu sistema pois parou de funcionar"),
+      "correcao",
+    );
 
     assert.equal(ehSaudacaoOuConversaCasual("integre o banco de dados"), false);
     assert.equal(ehSaudacaoOuConversaCasual("refatore o componente de cabeçalho"), false);
@@ -321,7 +343,8 @@ document.getElementById("btnStart").addEventListener("click", () => {
   });
 
   test("PROVA 10: Saneamento de Multi-Turn Chat (Prevenção da Quebra no 2º Turno com Google Gemini e OpenAI)", async () => {
-    const { sanitizarHistoricoParaGoogle, sanitizarHistoricoParaOpenAI } = await import("./providers.server");
+    const { sanitizarHistoricoParaGoogle, sanitizarHistoricoParaOpenAI } =
+      await import("./providers.server");
 
     // Cenário 1: Histórico com mensagens consecutivas de usuário e assistente (desordenadas)
     const historicoDesordenado = [
@@ -367,7 +390,11 @@ document.getElementById("btnStart").addEventListener("click", () => {
       { role: "user" as const, conteudo: "Crie o site" },
       { role: "assistant" as const, conteudo: "<arquivo nome='index.html'>...</arquivo>" },
     ];
-    const contentsTurno2 = sanitizarHistoricoParaGoogle(historicoTurno2, "Mude a cor para azul", []);
+    const contentsTurno2 = sanitizarHistoricoParaGoogle(
+      historicoTurno2,
+      "Mude a cor para azul",
+      [],
+    );
     assert.equal(contentsTurno2.length, 3);
     assert.equal(contentsTurno2[0]!.role, "user");
     assert.equal(contentsTurno2[1]!.role, "model");

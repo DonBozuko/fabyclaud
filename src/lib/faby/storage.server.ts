@@ -84,7 +84,9 @@ interface FabyStorageData {
 
 export function isChaveDeTeste(apiKey?: string | null, userId?: string | null): boolean {
   if (!apiKey || apiKey.trim().length === 0) return true;
-  if (/testkey|fakekey|testresilience|chave-falsa|chave_fake|fake-key|mock|aizasytest/i.test(apiKey)) {
+  if (
+    /testkey|fakekey|testresilience|chave-falsa|chave_fake|fake-key|mock|aizasytest/i.test(apiKey)
+  ) {
     return true;
   }
   if (userId && /^(user-test-|user-prova-|user-original-)/i.test(userId)) {

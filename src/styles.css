@@ -102,7 +102,9 @@
   border: 1px solid rgba(57, 255, 156, 0.16);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.45), 0 0 1px 1px rgba(57, 255, 156, 0.08);
+  box-shadow:
+    0 10px 30px -5px rgba(0, 0, 0, 0.45),
+    0 0 1px 1px rgba(57, 255, 156, 0.08);
 }
 
 @utility panel-glass-subtle {
@@ -261,15 +263,19 @@
 }
 
 @keyframes mascot-glow {
-  0%, 100% {
-    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4), 0 0 25px rgba(6, 182, 212, 0.25);
+  0%,
+  100% {
+    box-shadow:
+      0 0 12px rgba(16, 185, 129, 0.4),
+      0 0 25px rgba(6, 182, 212, 0.25);
   }
   50% {
-    box-shadow: 0 0 22px rgba(16, 185, 129, 0.65), 0 0 35px rgba(217, 70, 239, 0.35);
+    box-shadow:
+      0 0 22px rgba(16, 185, 129, 0.65),
+      0 0 35px rgba(217, 70, 239, 0.35);
   }
 }
 
 .mascot-avatar {
   animation: mascot-glow 3.5s ease-in-out infinite;
 }
-

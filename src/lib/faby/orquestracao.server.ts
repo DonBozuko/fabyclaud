@@ -70,7 +70,7 @@ export function injetarSnapshotVFS(
     "ESTADO REAL E ATUAL DO PROJETO — LEITURA OBRIGATÓRIA:",
     "Fluxo: ENTENDER → INVESTIGAR → PLANEJAR → IMPLEMENTAR → TESTAR → AUDITAR → CORRIGIR → VALIDAR",
     "Princípios: 1) Root Cause First, 2) Preservar código funcional, 3) Zero Mocks / Interatividade Real.",
-    "Para qualquer alteração, SEMPRE devolva o arquivo 100% COMPLETO e REESCRITO nas tags <arquivo nome=\"...\">.",
+    'Para qualquer alteração, SEMPRE devolva o arquivo 100% COMPLETO e REESCRITO nas tags <arquivo nome="...">.',
     "================================================================================",
     snapshotXml,
     "================================================================================",

@@ -205,14 +205,23 @@ body {
     });
 
     const todos = listarProjetosArmazenados([testUserId]);
-    assert.ok(todos.some((p) => p.id === projA), "Projeto A deve constar");
-    assert.ok(todos.some((p) => p.id === projB), "Projeto B deve constar");
+    assert.ok(
+      todos.some((p) => p.id === projA),
+      "Projeto A deve constar",
+    );
+    assert.ok(
+      todos.some((p) => p.id === projB),
+      "Projeto B deve constar",
+    );
 
     // Exclusão de A não afeta B
     apagarProjetoArmazenado(projA);
     const posDelete = listarProjetosArmazenados([testUserId]);
     assert.ok(!posDelete.some((p) => p.id === projA), "Projeto A foi apagado");
-    assert.ok(posDelete.some((p) => p.id === projB), "Projeto B continua intacto");
+    assert.ok(
+      posDelete.some((p) => p.id === projB),
+      "Projeto B continua intacto",
+    );
 
     // Limpeza
     apagarProjetoArmazenado(projB);

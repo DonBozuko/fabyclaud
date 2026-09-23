@@ -143,11 +143,7 @@ export const listarProjetos = createServerFn({ method: "GET" })
     }));
   });
 
-export async function carregarProjetoCompleto(
-  id: string,
-  targetUserIds: string[],
-  context: any,
-) {
+export async function carregarProjetoCompleto(id: string, targetUserIds: string[], context: any) {
   let projeto: any = null;
   try {
     const { data: p } = await context.supabase
@@ -337,25 +333,39 @@ export const apagarProjeto = createServerFn({ method: "POST" })
     apagarProjetoArmazenado(data.id);
     try {
       await context.supabase.from("execucoes_construcao").delete().eq("projeto_id", data.id);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     try {
       await context.supabase.from("backups").delete().eq("projeto_id", data.id);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     try {
       await context.supabase.from("mensagens").delete().eq("projeto_id", data.id);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     try {
       await context.supabase.from("app_dados").delete().eq("projeto_id", data.id);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     try {
       await context.supabase.from("app_dados_privados").delete().eq("projeto_id", data.id);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     try {
       await context.supabase.from("app_perfis").delete().eq("projeto_id", data.id);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     try {
       await context.supabase.from("projetos").delete().eq("id", data.id);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
 
     try {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -366,7 +376,9 @@ export const apagarProjeto = createServerFn({ method: "POST" })
       await supabaseAdmin.from("app_dados_privados").delete().eq("projeto_id", data.id);
       await supabaseAdmin.from("app_perfis").delete().eq("projeto_id", data.id);
       await supabaseAdmin.from("projetos").delete().eq("id", data.id);
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     return { ok: true };
   });
 
