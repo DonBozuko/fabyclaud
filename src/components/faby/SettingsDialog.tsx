@@ -332,23 +332,6 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
             className="w-full rounded-lg border border-border bg-secondary px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
           />
 
-          {provedor === "google" && chave.trim().startsWith("AQ.") ? (
-            <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-2.5 text-xs text-destructive">
-              ⚠️ <strong>Token de Sessão Detectado:</strong> Essa chave começa com &quot;AQ.&quot;,
-              que é um token interno de sessão, não uma chave de API. A chave oficial de API do
-              Google Gemini começa com <strong>AIzaSy</strong>. Pegue sua chave gratuita de API em{" "}
-              <a
-                href="https://aistudio.google.com/apikey"
-                target="_blank"
-                rel="noreferrer"
-                className="underline font-bold"
-              >
-                aistudio.google.com/apikey
-              </a>
-              .
-            </div>
-          ) : null}
-
           <div className="flex gap-2">
             <button
               type="button"

@@ -2714,7 +2714,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
             ? `\n\n> ⚠️ **Motivo da falha das chaves em nuvem:**\n${falhas.map((f) => `> ${f}`).join("\n")}\n\n`
             : "";
 
-          const resposta = `✨ **${aplicativoLocal.nome} criada com sucesso pelo motor local autônomo!**${falhasFormatadas}\n\n${aplicativoLocal.descricao}\n\nTodos os arquivos (\`index.html\`, \`styles.css\`, \`app.js\`) foram gerados e estão 100% funcionais para testar na prévia ao lado.\n\n*💡 Dica: Para usar IA em nuvem de ponta, acesse Configurações (⚙️) e adicione uma chave gratuita válida do Google Gemini (gerada em aistudio.google.com/apikey, começando com AIzaSy) ou do Groq (console.groq.com).*`;
+          const resposta = `✨ **${aplicativoLocal.nome} criada com sucesso pelo motor local autônomo!**${falhasFormatadas}\n\n${aplicativoLocal.descricao}\n\nTodos os arquivos (\`index.html\`, \`styles.css\`, \`app.js\`) foram gerados e estão 100% funcionais para testar na prévia ao lado.\n\n*💡 Dica: Para usar IA em nuvem de ponta, acesse Configurações (⚙️) e adicione uma chave gratuita válida do Google Gemini (aistudio.google.com/apikey, começando com AQ. ou AIzaSy) ou do Groq (console.groq.com).*`;
 
           const novaMsgLocal: MensagemArmazenada = {
             id: crypto.randomUUID(),
@@ -2755,7 +2755,7 @@ export const enviarMensagem = createServerFn({ method: "POST" })
 
         bruto = `Nenhuma conexão de IA concluiu este pedido. Motivo detalhado de cada chave:\n${
           falhas.length ? falhas.join("\n") : `- ${nomeDe(provedorUsado)}: ${bruto}`
-        }\n\n👉 **Como resolver de verdade:**\n1. Abra as **Configurações (⚙️)** no menu superior direito.\n2. Para o **Google Gemini**: pegue sua chave gratuita no **Google AI Studio (aistudio.google.com/apikey)** — a chave correta sempre começa com **AIzaSy**. Chaves que começam com **AQ.** são tokens internos e são recusadas pela API do Gemini.\n3. Ou pegue uma chave gratuita do **Groq (console.groq.com)**.\n4. Clique no botão **Testar** ao lado de cada chave na lista para conferir a resposta em tempo real antes de enviar no chat.`;
+        }\n\n👉 **Como resolver de verdade:**\n1. Abra as **Configurações (⚙️)** no menu superior direito.\n2. Para o **Google Gemini**: pegue sua chave gratuita no **Google AI Studio (aistudio.google.com/apikey)** — o sistema aceita tanto as novas chaves iniciadas com **AQ.** quanto as anteriores iniciadas com **AIzaSy**.\n3. Ou pegue uma chave gratuita do **Groq (console.groq.com)**.\n4. Clique no botão **Testar** ao lado de cada chave na lista para conferir a resposta em tempo real antes de enviar no chat.`;
       }
     }
 

@@ -8,7 +8,7 @@
   "6": "github.functions.ts",
   "7": "react",
   "8": "routeTree.gen.ts",
-  "9": "DirectoryReader",
+  "9": "orquestracao.server.ts",
   "10": "class-variance-authority",
   "11": "pagination.tsx",
   "12": "server.ts",
@@ -33,7 +33,7 @@
   "31": "AgentManager",
   "32": "ferramentas.server.ts",
   "33": "opencode.json",
-  "34": "faby.functions.ts",
+  "34": "client.server.ts",
   "35": "agents/types.ts",
   "36": "Implementação",
   "37": "execucao-isolada.ts",
@@ -73,6 +73,6 @@
   "71": "ambiente.server.ts",
   "72": "@tanstack/react-router",
   "73": "avatar.tsx",
-  "74": "PainelRecursos.tsx",
-  "75": "orquestracao.server.ts"
+  "74": "faby.functions.ts",
+  "75": "CodeModifier"
 }

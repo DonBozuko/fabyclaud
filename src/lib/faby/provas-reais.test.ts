@@ -533,4 +533,59 @@ document.getElementById("btnStart").addEventListener("click", () => {
       "Critérios de aceite devem proibir expressamente começar do zero ou trocar o projeto",
     );
   });
+
+  test("PROVA 13: Compatibilidade Total com Novas Chaves Google (Formato AQ.) & Modelos Atualizados (Groq/OpenRouter)", async () => {
+    const { MODELS, PROVIDER_LABELS, MODELOS_ALTERNATIVOS } = await import("./config");
+    const { respostaComprovaCapacidade } = await import("../faby.functions");
+    const { salvarChaveArmazenada, obterChavesArmazenadas } = await import("./storage.server");
+
+    // 1. Chaves do Google no novo formato oficial 'AQ.' são salvas e recuperadas sem rejeição
+    const testUserId = "user-aq-test-proof-" + Date.now();
+    const chaveAQ = "AQ.VnA0X1yZ_GoogleGeminiOfficialModernAuthKey2026";
+
+    salvarChaveArmazenada({
+      user_id: testUserId,
+      provider: "google",
+      api_key: chaveAQ,
+      api_url: null,
+      testada_ok: true,
+      testada_em: new Date().toISOString(),
+      ultimo_erro: null,
+    });
+
+    const chavesSalvas = obterChavesArmazenadas([testUserId]);
+    const chaveGoogle = chavesSalvas.find((k) => k.provider === "google");
+    assert.ok(chaveGoogle, "Chave do Google deve existir");
+    assert.equal(
+      chaveGoogle.api_key,
+      chaveAQ,
+      "Chave com formato AQ. deve ser preservada na íntegra",
+    );
+    assert.equal(chaveGoogle.testada_ok, true);
+
+    // 2. Modelos ativos de produção para Groq (sem modelos aposentados)
+    assert.equal(MODELS.groq, "llama-3.3-70b-versatile", "Groq padrão deve ser o Llama 3.3 70B");
+    assert.ok(
+      MODELOS_ALTERNATIVOS.groq.includes("llama-3.1-8b-instant"),
+      "Groq deve incluir Llama 3.1 8B como alternativa rápida",
+    );
+    assert.ok(
+      !MODELOS_ALTERNATIVOS.groq.includes("qwen-2.5-coder-32b"),
+      "Modelo aposentado do Groq não deve estar na lista de alternativas",
+    );
+    assert.match(PROVIDER_LABELS.groq, /Llama 3\.3 70B/);
+
+    // 3. Robustez de validação de capacidade para modelos com pensamento ou formatos com espaçamento
+    assert.ok(respostaComprovaCapacidade("FABY_OK|HTML|CSS|JS"), "Deve aceitar formato padrão");
+    assert.ok(
+      respostaComprovaCapacidade("FABY_OK | HTML | CSS | JS"),
+      "Deve aceitar formato com espaços",
+    );
+    assert.ok(
+      respostaComprovaCapacidade(
+        "<think>Raciocínio longo do modelo DeepSeek...</think>\nFABY_OK|HTML|CSS|JS",
+      ),
+      "Deve aceitar resposta com tags de pensamento anteriores",
+    );
+  });
 });

@@ -1,6 +1,6 @@
 export const MODELS = {
   google: "gemini-2.0-flash",
-  groq: "qwen-2.5-coder-32b",
+  groq: "llama-3.3-70b-versatile",
   openrouter: "qwen/qwen-2.5-coder-32b-instruct:free",
   huggingface: "Qwen/Qwen2.5-Coder-32B-Instruct",
   deepseek: "deepseek-chat",
@@ -30,11 +30,10 @@ export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
     "gemini-flash-latest",
   ],
   groq: [
-    "qwen-2.5-coder-32b",
     "llama-3.3-70b-versatile",
+    "llama-3.1-8b-instant",
     "deepseek-r1-distill-llama-70b",
     "openai/gpt-oss-120b",
-    "llama-3.1-8b-instant",
   ],
   openrouter: [
     "qwen/qwen-2.5-coder-32b-instruct:free",
@@ -138,8 +137,8 @@ export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa
     { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
     {
       provedor: "groq",
-      modelo: "qwen-2.5-coder-32b",
-      nomeLegivel: "Qwen 2.5 Coder 32B (Groq)",
+      modelo: "llama-3.3-70b-versatile",
+      nomeLegivel: "Llama 3.3 70B (Groq)",
     },
     {
       provedor: "openrouter",
@@ -246,11 +245,7 @@ export function selecionarMelhorModeloEtapa(
   const escolhido = disponiveis[0] ?? candidatos[0];
   if (!escolhido) return null;
 
-  const ehFraco =
-    escolhido.pid === "zai" ||
-    (escolhido.pid === "google" &&
-      etapa === "construcao" &&
-      !candidatos.some((c) => c.pid === "groq" || c.pid === "openrouter"));
+  const ehFraco = escolhido.pid === "zai";
 
   return {
     pid: escolhido.pid,
@@ -310,7 +305,7 @@ export function ehErroDeModelo(status: number, texto: string) {
 
 export const PROVIDER_LABELS: Record<string, string> = {
   google: "Google Gemini (2.5 Flash / Pro)",
-  groq: "Groq (Qwen 2.5 Coder 32B / Llama 70B)",
+  groq: "Groq (Llama 3.3 70B / Llama 8B / DeepSeek R1)",
   openrouter: "OpenRouter (Qwen Coder / DeepSeek R1 grátis)",
   huggingface: "Hugging Face (Qwen Coder / DeepSeek V3)",
   deepseek: "DeepSeek oficial (V3 / R1 — exige saldo)",

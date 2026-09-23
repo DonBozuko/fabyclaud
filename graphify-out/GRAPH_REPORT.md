@@ -1,7 +1,7 @@
 # Graph Report - Dev Buddy  (2026-09-23)
 
 ## Corpus Check
-- 151 files · ~117,210 words
+- 151 files · ~117,315 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 8 file(s) not represented in the graph (top: (none) 3, .toml 2, .lock 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f75fba61`
+- Built from commit: `30803a0f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -380,11 +380,11 @@ Nodes (6): ref_node_fs_promises, CodeModifier, CodeEdit, descartarPatchesParciai
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `react` connect `react` to `package.json`, `client.server.ts`, `cn`, `sidebar.tsx`, `github.functions.ts`, `__root.tsx`, `avatar.tsx`, `class-variance-authority`, `pagination.tsx`, `navigation-menu.tsx`, `command.tsx`, `menubar.tsx`, `form.tsx`, `auth.tsx`, `carousel.tsx`, `index.tsx`, `lucide-react`, `chart.tsx`?**
-  _High betweenness centrality (0.219) - this node is a cross-community bridge._
+  _High betweenness centrality (0.218) - this node is a cross-community bridge._
 - **Why does `@tanstack/react-start` connect `index.tsx` to `package.json`, `client.server.ts`, `github.functions.ts`, `faby.functions.ts`, `server.ts`, `auth.tsx`?**
-  _High betweenness centrality (0.078) - this node is a cross-community bridge._
+  _High betweenness centrality (0.081) - this node is a cross-community bridge._
 - **Why does `dependencies` connect `dependencies` to `package.json`?**
-  _High betweenness centrality (0.070) - this node is a cross-community bridge._
+  _High betweenness centrality (0.071) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `FabyClaud()` (e.g. with `index.tsx` and `aoFicarOffline()`) actually correct?**
   _`FabyClaud()` has 4 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `$schema`, `plugin`, `repository` to the rest of the system?**

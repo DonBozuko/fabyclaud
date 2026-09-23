@@ -369,7 +369,7 @@ async function chamarGoogle(
   while (tentativas < maxTentativas) {
     tentativas++;
     const { ok, status, json, texto } = await postJson(
-      `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent?key=${encodeURIComponent(key)}`,
       { "x-goog-api-key": key },
       { contents, generationConfig: { temperature: 0.2, maxOutputTokens: 8192 } },
       Math.min(timeoutMs, 85_000),
@@ -381,10 +381,7 @@ async function chamarGoogle(
     }
 
     if (!ok) {
-      let msg = erroLegivel(status, json, texto);
-      if ((status === 400 || status === 401) && !key.startsWith("AIzaSy")) {
-        msg = `${msg} (a chave do Google AI Studio deve começar com 'AIzaSy'. Chaves iniciando com 'AQ.' são tokens internos/OAuth e não funcionam aqui. Pegue a chave de API em aistudio.google.com/apikey)`;
-      }
+      const msg = erroLegivel(status, json, texto);
       return { ok: false, texto: msg, status, bruto: texto };
     }
 
@@ -450,12 +447,13 @@ async function chamarOpenAICompat(
   imagens: Imagem[],
   suportaImagem: boolean,
   timeoutMs: number,
+  headersExtras?: Record<string, string>,
 ): Promise<ResultadoIA> {
   const messages = sanitizarHistoricoParaOpenAI(historico, prompt, imagens, suportaImagem);
 
   const { ok, status, json, texto } = await postJson(
     url,
-    { Authorization: `Bearer ${key}` },
+    { Authorization: `Bearer ${key}`, ...(headersExtras ?? {}) },
     { model: modelo, messages, temperature: 0.2, max_tokens: 8192 },
     timeoutMs,
   );
@@ -491,9 +489,19 @@ export const PROVEDORES_FIXOS = [
 ] as const;
 
 /** Provedores fixos que falam o padrão da OpenAI: endereço + entende imagem. */
-const COMPAT: Record<string, { url: string; imagem: boolean }> = {
+const COMPAT: Record<
+  string,
+  { url: string; imagem: boolean; headersExtras?: Record<string, string> }
+> = {
   groq: { url: "https://api.groq.com/openai/v1/chat/completions", imagem: false },
-  openrouter: { url: "https://openrouter.ai/api/v1/chat/completions", imagem: true },
+  openrouter: {
+    url: "https://openrouter.ai/api/v1/chat/completions",
+    imagem: true,
+    headersExtras: {
+      "HTTP-Referer": "https://fabyclaud.lovable.app",
+      "X-Title": "Dev Buddy",
+    },
+  },
   huggingface: { url: "https://router.huggingface.co/v1/chat/completions", imagem: false },
   deepseek: { url: "https://api.deepseek.com/v1/chat/completions", imagem: false },
   zai: { url: "https://api.z.ai/api/paas/v4/chat/completions", imagem: false },
@@ -544,6 +552,7 @@ export async function chamarProvedorComModelo(
       imagens,
       fixo.imagem,
       timeoutMs,
+      fixo.headersExtras,
     );
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
@@ -615,6 +624,7 @@ export async function chamarProvedor(
           imagens,
           fixo.imagem,
           timeoutMs,
+          fixo.headersExtras,
         );
         if (r.ok) return r;
         ultimo = r;
