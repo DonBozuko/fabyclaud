@@ -34,3 +34,4 @@ dist-ssr
 .kilo*
 .env
 .faby_storage.json*
+.faby_storage_test.json*

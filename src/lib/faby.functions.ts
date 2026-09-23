@@ -16,6 +16,7 @@ import {
   type ChaveArmazenada,
   type ProjetoArmazenado,
   type MensagemArmazenada,
+  isChaveDeTeste,
   obterChavesArmazenadas,
   salvarChaveArmazenada,
   apagarChaveArmazenada,
@@ -418,9 +419,12 @@ export const listarChaves = createServerFn({ method: "GET" })
 
     const diskChaves = obterChavesArmazenadas(targetUserIds);
     for (const k of diskChaves) {
+      if (isChaveDeTeste(k.api_key, k.user_id)) continue;
       const idx = rows.findIndex((r) => r.provider === k.provider);
       if (idx >= 0) {
-        rows[idx] = { ...rows[idx], ...k };
+        if (!isChaveDeTeste(k.api_key, k.user_id)) {
+          rows[idx] = { ...rows[idx], ...k };
+        }
       } else {
         rows.push(k);
       }
@@ -1755,9 +1759,12 @@ export const enviarMensagem = createServerFn({ method: "POST" })
 
     const diskChaves = obterChavesArmazenadas(targetUserIds);
     for (const k of diskChaves) {
+      if (isChaveDeTeste(k.api_key, k.user_id)) continue;
       const idx = chaves.findIndex((r: any) => r.provider === k.provider);
       if (idx >= 0) {
-        chaves[idx] = { ...chaves[idx], ...k };
+        if (!isChaveDeTeste(k.api_key, k.user_id)) {
+          chaves[idx] = { ...chaves[idx], ...k };
+        }
       } else {
         chaves.push(k);
       }

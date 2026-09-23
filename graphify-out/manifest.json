@@ -384,9 +384,9 @@
     "semantic_hash": "8da0ddd7569bac2676b9a5c8edff8a36"
   },
   "src/lib/faby.functions.ts": {
-    "mtime": 1790177278.6975698,
-    "seen": 1790177532.1964784,
-    "ast_hash": "bdb1983c80b0b0303e213a6d0e23e61f",
+    "mtime": 1790180495.963889,
+    "seen": 1790180998.0153215,
+    "ast_hash": "c7e48dfe5a9cde2920c05d7a9d1f96cb",
     "semantic_hash": ""
   },
   "src/lib/faby/aplicativos-locais.server.ts": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "src/routes/index.tsx": {
-    "mtime": 1790177452.6297379,
-    "seen": 1790177532.2014613,
-    "ast_hash": "b6be09d66ab57bf6594c66e345642174",
+    "mtime": 1790180599.8709779,
+    "seen": 1790180998.0208998,
+    "ast_hash": "a312c5e746fbdd4555cf771aa11659ed",
     "semantic_hash": ""
   },
   "src/server.ts": {
@@ -786,21 +786,21 @@
     "semantic_hash": ""
   },
   "src/lib/faby/storage.server.ts": {
-    "mtime": 1790134279.3710434,
-    "seen": 1790177532.1990464,
-    "ast_hash": "e61efb7525783886a4cdd2c35f462f85",
+    "mtime": 1790180791.0536962,
+    "seen": 1790180998.018458,
+    "ast_hash": "e277551f79d5a8321be3b2a3cbb0156d",
     "semantic_hash": ""
   },
   "src/lib/faby/storage.server.test.ts": {
-    "mtime": 1790134351.7604637,
-    "seen": 1790177532.199044,
-    "ast_hash": "d8ec6eb9dd503a87d2184e83ae29986d",
+    "mtime": 1790180814.2674947,
+    "seen": 1790180998.0184555,
+    "ast_hash": "bc05cf1504bb22ad9b6f4316db23b98f",
     "semantic_hash": ""
   },
   "src/lib/faby/provas-reais.test.ts": {
-    "mtime": 1790174977.902516,
-    "seen": 1790177532.1988783,
-    "ast_hash": "4a26a8be2ea95c33c7f6c03d51c826db",
+    "mtime": 1790180833.1527925,
+    "seen": 1790180998.0181186,
+    "ast_hash": "d236fb85109248b3e4126836a41480e4",
     "semantic_hash": ""
   },
   "src/lib/faby/ambiente.server.ts": {
@@ -825,6 +825,12 @@
     "mtime": 1790046866.831976,
     "seen": 1790092138.26056,
     "ast_hash": "a99bb907bb8f7966b7afd28dfef9f3cd",
+    "semantic_hash": ""
+  },
+  "public/mascots.jpg": {
+    "mtime": 1790178277.4755487,
+    "seen": 1790180998.0260293,
+    "ast_hash": "cb7d9f450270ac06fb06aba3bdbd3233",
     "semantic_hash": ""
   }
 }

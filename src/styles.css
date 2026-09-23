@@ -254,7 +254,22 @@
 @media (prefers-reduced-motion: reduce) {
   .thinking-people,
   .thinking-orbit,
-  .thinking-dots span {
+  .thinking-dots span,
+  .mascot-avatar {
     animation: none;
   }
 }
+
+@keyframes mascot-glow {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4), 0 0 25px rgba(6, 182, 212, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(16, 185, 129, 0.65), 0 0 35px rgba(217, 70, 239, 0.35);
+  }
+}
+
+.mascot-avatar {
+  animation: mascot-glow 3.5s ease-in-out infinite;
+}
+

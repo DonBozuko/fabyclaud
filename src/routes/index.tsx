@@ -263,17 +263,17 @@ function IndicadorProgressoConstrucao({ projetoId, modelo }: IndicadorProgressoC
     >
       <div className="flex items-center justify-between border-b border-white/10 pb-3">
         <div className="flex items-center gap-3">
-          <span className="thinking-people" aria-hidden="true">
-            <span className="thinking-orbit" />
-            <span className="thinking-person thinking-person-green">
-              <span className="thinking-head" />
-              <span className="thinking-body" />
+          <div className="relative flex size-12 shrink-0 items-center justify-center">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 opacity-60 blur-md animate-pulse" />
+            <img
+              src="/mascots.jpg"
+              alt="Mascotes Faby & Claud"
+              className="mascot-avatar relative size-12 rounded-full object-cover border-2 border-emerald-400/80 shadow-lg shadow-emerald-500/30"
+            />
+            <span className="absolute -bottom-0.5 -right-0.5 flex size-3.5 items-center justify-center rounded-full bg-emerald-500 border-2 border-black">
+              <span className="size-1.5 rounded-full bg-white animate-ping" />
             </span>
-            <span className="thinking-person thinking-person-cyan">
-              <span className="thinking-head" />
-              <span className="thinking-body" />
-            </span>
-          </span>
+          </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-bold text-foreground">Orquestrando Criação</span>
@@ -945,8 +945,8 @@ function FabyClaud() {
         {/* ===== BARRA LATERAL FUTURISTA ULTRA-MODERNA ===== */}
         <aside className="panel-glass flex w-[260px] shrink-0 flex-col gap-3 rounded-2xl p-3.5 shadow-2xl transition-all duration-300">
           <div className="flex items-center gap-2.5 px-1 py-0.5">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 shadow-lg shadow-emerald-500/30">
-              <Bot className="size-5 text-black stroke-[2.5]" />
+            <div className="relative flex size-10 shrink-0 items-center justify-center rounded-xl overflow-hidden border border-emerald-500/40 shadow-lg shadow-emerald-500/30">
+              <img src="/mascots.jpg" alt="FabyClaud" className="size-full object-cover" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
@@ -1531,8 +1531,8 @@ function FabyClaud() {
               <div ref={areaChat} className="flex-1 space-y-3.5 overflow-y-auto p-4">
                 {mensagens.length === 0 ? (
                   <div className="rounded-2xl border border-white/10 bg-black/60 p-6 text-center shadow-xl backdrop-blur-md">
-                    <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shadow-md">
-                      <Sparkles className="size-6" />
+                    <div className="mx-auto mb-3 flex size-16 items-center justify-center rounded-2xl overflow-hidden border-2 border-emerald-500/40 shadow-lg shadow-emerald-500/25">
+                      <img src="/mascots.jpg" alt="Faby & Claud" className="size-full object-cover" />
                     </div>
                     <p className="text-sm font-bold text-foreground">
                       Bem-vindo à FabyClaud
@@ -1557,6 +1557,23 @@ function FabyClaud() {
                             : "mr-auto border border-destructive/40 bg-destructive/15 text-foreground"
                       }`}
                     >
+                      {m.role === "assistant" && (
+                        <div className="mb-2 flex items-center gap-2 border-b border-white/10 pb-1.5">
+                          <img
+                            src="/mascots.jpg"
+                            alt="Faby & Claud"
+                            className="size-5 shrink-0 rounded-full object-cover border border-emerald-400/50"
+                          />
+                          <span className="font-bold text-[11px] text-emerald-400">
+                            FabyClaud
+                          </span>
+                          {m.modelo ? (
+                            <span className="text-[10px] text-muted-foreground/70 font-mono ml-auto">
+                              {PROVIDER_LABELS[m.modelo] ?? m.modelo}
+                            </span>
+                          ) : null}
+                        </div>
+                      )}
                       {m.conteudo}
                       {(m.anexos as Anexo[] | null)?.length ? (
                         <span className="mt-2 flex flex-wrap gap-2">

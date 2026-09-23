@@ -82,7 +82,31 @@ interface FabyStorageData {
   contasGithub: Record<string, GithubContaArmazenada>; // userId -> GithubContaArmazenada
 }
 
-const STORAGE_FILE = path.resolve(process.cwd(), ".faby_storage.json");
+export function isChaveDeTeste(apiKey?: string | null, userId?: string | null): boolean {
+  if (!apiKey || apiKey.trim().length === 0) return true;
+  if (/testkey|fakekey|testresilience|chave-falsa|chave_fake|fake-key|mock|aizasytest/i.test(apiKey)) {
+    return true;
+  }
+  if (userId && /^(user-test-|user-prova-|user-original-)/i.test(userId)) {
+    return true;
+  }
+  return false;
+}
+
+export function getStorageFile(): string {
+  const customFile = process.env["FABY_STORAGE_FILE"];
+  if (customFile) {
+    return path.resolve(process.cwd(), customFile);
+  }
+  if (
+    process.env["NODE_ENV"] === "test" ||
+    Boolean(process.env["VITEST"]) ||
+    process.env["FABY_STORAGE_TEST_MODE"] === "true"
+  ) {
+    return path.resolve(process.cwd(), ".faby_storage_test.json");
+  }
+  return path.resolve(process.cwd(), ".faby_storage.json");
+}
 
 let memoryState: FabyStorageData = {
   chaves: {},
@@ -99,11 +123,12 @@ let lastMtime = 0;
 
 function carregarDoDisco(): void {
   try {
-    if (fs.existsSync(STORAGE_FILE)) {
-      const stat = fs.statSync(STORAGE_FILE);
+    const file = getStorageFile();
+    if (fs.existsSync(file)) {
+      const stat = fs.statSync(file);
       if (stat.mtimeMs !== lastMtime || lastMtime === 0) {
         lastMtime = stat.mtimeMs;
-        const conteudo = fs.readFileSync(STORAGE_FILE, "utf-8");
+        const conteudo = fs.readFileSync(file, "utf-8");
         if (conteudo.trim()) {
           const dados = JSON.parse(conteudo);
           memoryState = {
@@ -126,10 +151,11 @@ function carregarDoDisco(): void {
 
 function persistirNoDisco(): void {
   try {
+    const file = getStorageFile();
     const json = JSON.stringify(memoryState, null, 2);
-    fs.writeFileSync(STORAGE_FILE, json, "utf-8");
+    fs.writeFileSync(file, json, "utf-8");
     try {
-      const stat = fs.statSync(STORAGE_FILE);
+      const stat = fs.statSync(file);
       lastMtime = stat.mtimeMs;
     } catch {
       // ignore
@@ -163,6 +189,10 @@ function userScopeSet(userIds: string[] = []): Set<string> {
 export function obterChavesArmazenadas(userIds: string[]): ChaveArmazenada[] {
   carregarDoDisco();
   const ids = userScopeSet(userIds);
+  const isTestMode =
+    process.env["NODE_ENV"] === "test" ||
+    Boolean(process.env["VITEST"]) ||
+    process.env["FABY_STORAGE_TEST_MODE"] === "true";
 
   const res: ChaveArmazenada[] = [];
   const vistas = new Set<string>();
@@ -172,6 +202,7 @@ export function obterChavesArmazenadas(userIds: string[]): ChaveArmazenada[] {
     const userChaves = memoryState.chaves[uid];
     if (!userChaves) continue;
     for (const [provider, chave] of Object.entries(userChaves)) {
+      if (!isTestMode && isChaveDeTeste(chave.api_key, chave.user_id)) continue;
       if (!vistas.has(provider)) {
         vistas.add(provider);
         res.push(chave);
@@ -184,6 +215,7 @@ export function obterChavesArmazenadas(userIds: string[]): ChaveArmazenada[] {
     for (const userChaves of Object.values(memoryState.chaves)) {
       if (!userChaves) continue;
       for (const [provider, chave] of Object.entries(userChaves)) {
+        if (!isTestMode && isChaveDeTeste(chave.api_key, chave.user_id)) continue;
         if (!vistas.has(provider)) {
           vistas.add(provider);
           res.push(chave);
@@ -212,7 +244,7 @@ export function obterChavesArmazenadas(userIds: string[]): ChaveArmazenada[] {
     if (!vistas.has(provider)) {
       for (const envName of envNames) {
         const val = process.env[envName];
-        if (val && val.trim()) {
+        if (val && val.trim() && (!isChaveDeTeste(val) || isTestMode)) {
           vistas.add(provider);
           res.push({
             user_id: userIds[0] || "server_env",
@@ -234,6 +266,13 @@ export function obterChavesArmazenadas(userIds: string[]): ChaveArmazenada[] {
 
 export function salvarChaveArmazenada(chave: ChaveArmazenada): void {
   carregarDoDisco();
+  const isTestMode =
+    process.env["NODE_ENV"] === "test" ||
+    Boolean(process.env["VITEST"]) ||
+    process.env["FABY_STORAGE_TEST_MODE"] === "true";
+  if (!isTestMode && isChaveDeTeste(chave.api_key, chave.user_id)) {
+    return;
+  }
   if (!memoryState.chaves[chave.user_id]) {
     memoryState.chaves[chave.user_id] = {};
   }

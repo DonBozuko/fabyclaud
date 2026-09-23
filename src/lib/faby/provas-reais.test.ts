@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
+
+process.env["FABY_STORAGE_TEST_MODE"] = "true";
 import {
   classificarPedidoLovable,
   gerarContratoEntrega,
