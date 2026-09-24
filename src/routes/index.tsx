@@ -1174,7 +1174,7 @@ function FabyClaud() {
                 title="Escolher uma pasta completa do computador"
                 className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-sky-500/40 hover:bg-white/10"
               >
-                <FolderOpen className="size-3.5 text-sky-400" /> Abrir pasta
+                <FolderOpen className="size-3.5 text-sky-400" /> Abrir projeto
               </button>
               <button
                 type="button"
@@ -1524,7 +1524,7 @@ function FabyClaud() {
             </section>
 
             {/* CHAT MODERNO & RESILIENTE */}
-            <section className="panel-glass faby-stage flex min-w-[340px] flex-[1.15] flex-col overflow-hidden rounded-lg border border-primary/40 shadow-2xl">
+            <section className="panel-glass faby-chat-stage flex min-w-[340px] flex-[1.15] flex-col overflow-hidden rounded-lg border border-primary/40 shadow-2xl">
               <div ref={areaChat} className="flex-1 space-y-3.5 overflow-y-auto p-4">
                 {mensagens.length === 0 ? (
                   <div className="faby-toolbar rounded-lg border border-primary/40 p-5 text-center shadow-xl backdrop-blur-md">
