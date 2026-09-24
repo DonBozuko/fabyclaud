@@ -945,9 +945,6 @@ function FabyClaud() {
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="text-sm font-black tracking-tight text-white">FabyClaud</span>
-                <span className="rounded-md bg-emerald-500/20 px-1.5 py-0.2 text-[9px] font-bold text-emerald-300 border border-emerald-500/30">
-                  PRO
-                </span>
               </div>
               <p className="text-[10px] font-medium text-emerald-400/80">Autonomous Dev Studio</p>
             </div>

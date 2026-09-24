@@ -36,15 +36,15 @@
     "semantic_hash": "03832214397d74c77f6ca62942a9a620"
   },
   "src/components/faby/PainelRecursos.tsx": {
-    "mtime": 1789743140.7820592,
-    "seen": 1789841501.3491077,
-    "ast_hash": "5913527f93655fde7b42bb3036e26a80",
+    "mtime": 1790212477.9540637,
+    "seen": 1790212506.524443,
+    "ast_hash": "2bef950784894f51f7bba754ff0b067e",
     "semantic_hash": ""
   },
   "src/components/faby/SettingsDialog.tsx": {
-    "mtime": 1790206814.7672002,
-    "seen": 1790206863.7953231,
-    "ast_hash": "3f65d79928c7829f02bb09fdfa60179f",
+    "mtime": 1790212478.0389273,
+    "seen": 1790212506.5244472,
+    "ast_hash": "a1f24825ef128de49c3ba8c8c21a325a",
     "semantic_hash": ""
   },
   "src/components/ui/accordion.tsx": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "src/routes/index.tsx": {
-    "mtime": 1790197548.6933086,
-    "seen": 1790197636.0093288,
-    "ast_hash": "beb3beb8db52bb2357f93cb1761c14af",
+    "mtime": 1790212373.13705,
+    "seen": 1790212506.5412748,
+    "ast_hash": "19bf7340238f25b68bf9ee4e64d7ad2a",
     "semantic_hash": ""
   },
   "src/server.ts": {
