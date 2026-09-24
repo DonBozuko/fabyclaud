@@ -939,7 +939,7 @@ function FabyClaud() {
         {/* ===== BARRA LATERAL FUTURISTA ULTRA-MODERNA ===== */}
         <aside className="panel-glass flex w-[220px] shrink-0 flex-col gap-3 rounded-lg p-3 shadow-2xl transition-all duration-300">
           <div className="flex items-center gap-2.5 px-1 py-0.5">
-            <div className="relative flex size-10 shrink-0 items-center justify-center rounded-xl overflow-hidden border border-emerald-500/40 shadow-lg shadow-emerald-500/30">
+            <div className="relative flex size-10 shrink-0 items-center justify-center rounded-xl overflow-hidden border border-sky-500/40 shadow-lg shadow-sky-500/30">
               <img src="/mascots.jpg" alt="FabyClaud" className="size-full object-cover" />
             </div>
             <div>
@@ -977,9 +977,9 @@ function FabyClaud() {
             className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.04] px-3 py-2 text-xs font-semibold text-foreground/90 transition hover:bg-white/[0.08]"
           >
             <span className="flex items-center gap-2">
-              <FolderOpen className="size-3.5 text-emerald-400" /> Meus Projetos
+              <FolderOpen className="size-3.5 text-sky-400" /> Meus Projetos
             </span>
-            <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-300 border border-emerald-500/30">
+            <span className="rounded-full bg-sky-500/20 px-2 py-0.5 text-[10px] font-bold text-sky-300 border border-sky-500/30">
               {projetos.data?.length ?? 0}
             </span>
           </button>
@@ -993,7 +993,7 @@ function FabyClaud() {
                     key={p.id}
                     className={`group flex items-center justify-between rounded-xl border px-2.5 py-2 transition-all ${
                       estaAtivo
-                        ? "border-emerald-500/50 bg-emerald-500/15 text-emerald-300 shadow-md shadow-emerald-500/10"
+                        ? "border-sky-500/50 bg-sky-500/15 text-sky-300 shadow-md shadow-sky-500/10"
                         : "border-transparent bg-white/[0.02] text-muted-foreground hover:border-white/10 hover:bg-white/[0.07] hover:text-foreground"
                     }`}
                   >
@@ -1011,12 +1011,12 @@ function FabyClaud() {
                     >
                       <Globe
                         className={`size-3.5 shrink-0 ${
-                          estaAtivo ? "text-emerald-400 animate-pulse" : "text-muted-foreground"
+                          estaAtivo ? "text-sky-400 animate-pulse" : "text-muted-foreground"
                         }`}
                       />
                       <span
                         className={`truncate text-xs ${
-                          estaAtivo ? "font-bold text-emerald-200" : "font-medium"
+                          estaAtivo ? "font-bold text-sky-200" : "font-medium"
                         }`}
                       >
                         {p.nome}
@@ -1091,15 +1091,15 @@ function FabyClaud() {
                 onClick={() => setPainel(pNome)}
                 className={`flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-xs font-medium transition ${
                   painel === pNome
-                    ? "bg-emerald-500/20 text-emerald-300 font-semibold"
-                    : "text-foreground/80 hover:bg-white/[0.08] hover:text-emerald-300"
+                    ? "bg-sky-500/20 text-sky-300 font-semibold"
+                    : "text-foreground/80 hover:bg-white/[0.08] hover:text-sky-300"
                 }`}
               >
                 <span className="flex items-center gap-2.5">
-                  <Icone className="size-4 text-emerald-400/80" /> {nome}
+                  <Icone className="size-4 text-sky-400/80" /> {nome}
                 </span>
                 {pNome === "agentes" && agente ? (
-                  <span className="rounded-md bg-emerald-500/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-emerald-300 border border-emerald-500/30">
+                  <span className="rounded-md bg-sky-500/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-sky-300 border border-sky-500/30">
                     Ativo
                   </span>
                 ) : null}
@@ -1172,18 +1172,18 @@ function FabyClaud() {
                 type="button"
                 onClick={() => inputPasta.current?.click()}
                 title="Escolher uma pasta completa do computador"
-                className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-emerald-500/40 hover:bg-white/10"
+                className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-sky-500/40 hover:bg-white/10"
               >
-                <FolderOpen className="size-3.5 text-emerald-400" /> Abrir pasta
+                <FolderOpen className="size-3.5 text-sky-400" /> Abrir pasta
               </button>
               <button
                 type="button"
                 onClick={() => inputZip.current?.click()}
                 aria-label="Abrir projeto em ZIP"
                 title="Abrir projeto por arquivo ZIP"
-                className="flex size-[32px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-emerald-500/40 hover:bg-white/10"
+                className="flex size-[32px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-sky-500/40 hover:bg-white/10"
               >
-                <FileArchive className="size-3.5 text-emerald-400" />
+                <FileArchive className="size-3.5 text-sky-400" />
               </button>
               {Object.keys(arquivos).length ? (
                 <>
@@ -1194,25 +1194,25 @@ function FabyClaud() {
                         toast.error("Esse projeto ainda não tem index.html.");
                     }}
                     title="Abre a prévia do projeto numa aba nova"
-                    className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-emerald-500/40 hover:bg-white/10"
+                    className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-sky-500/40 hover:bg-white/10"
                   >
-                    <ExternalLink className="size-3.5 text-emerald-400" /> Prévia
+                    <ExternalLink className="size-3.5 text-sky-400" /> Prévia
                   </button>
                   <button
                     type="button"
                     onClick={() => void baixarProjetoZip(projeto.data?.nome ?? "projeto", arquivos)}
-                    className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-emerald-500/40 hover:bg-white/10"
+                    className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-sky-500/40 hover:bg-white/10"
                   >
-                    <Download className="size-3.5 text-emerald-400" /> Baixar
+                    <Download className="size-3.5 text-sky-400" /> Baixar
                   </button>
                   <button
                     type="button"
                     disabled={publicando}
                     onClick={() => void publicarSite()}
                     title="Coloca o projeto no ar e te dá o endereço do site"
-                    className="flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-300 transition hover:bg-emerald-500/20 disabled:opacity-60"
+                    className="flex items-center gap-1.5 rounded-xl border border-sky-500/40 bg-sky-500/10 px-3 py-1.5 text-xs font-bold text-sky-300 transition hover:bg-sky-500/20 disabled:opacity-60"
                   >
-                    <Globe className="size-3.5 text-emerald-400" />{" "}
+                    <Globe className="size-3.5 text-sky-400" />{" "}
                     {publicando ? "Publicando..." : "Publicar"}
                   </button>
                 </>
@@ -1225,7 +1225,7 @@ function FabyClaud() {
                 className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition ${
                   duelo
                     ? "border-primary bg-primary text-primary-foreground shadow-glow"
-                    : "border-white/10 bg-white/5 text-foreground hover:border-emerald-500/40 hover:bg-white/10"
+                    : "border-white/10 bg-white/5 text-foreground hover:border-sky-500/40 hover:bg-white/10"
                 }`}
               >
                 <Swords className="size-3.5" /> Duelo
@@ -1234,7 +1234,7 @@ function FabyClaud() {
                 value={modelo}
                 onChange={(e) => setModelo(e.target.value)}
                 aria-label="Escolher a IA"
-                className="rounded-xl border border-white/10 bg-black/60 px-3 py-1.5 text-xs font-semibold text-emerald-300 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 cursor-pointer"
+                className="rounded-xl border border-white/10 bg-black/60 px-3 py-1.5 text-xs font-semibold text-sky-300 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 cursor-pointer"
               >
                 {opcoesModelo.map((o) => (
                   <option key={o.id} value={o.id}>
@@ -1246,9 +1246,9 @@ function FabyClaud() {
                 type="button"
                 aria-label="Configurações"
                 onClick={() => setConfigAberta(true)}
-                className="flex size-[32px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-emerald-500/40 hover:bg-white/10"
+                className="flex size-[32px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-sky-500/40 hover:bg-white/10"
               >
-                <Settings className="size-4 text-emerald-400 hover:rotate-90 transition-transform duration-300" />
+                <Settings className="size-4 text-sky-400 hover:rotate-90 transition-transform duration-300" />
               </button>
             </div>
           </header>
@@ -1299,9 +1299,9 @@ function FabyClaud() {
                 title={item.detalhe}
               >
                 {item.pronta ? (
-                  <CheckCircle2 className="size-3.5 text-emerald-400" />
+                  <CheckCircle2 className="size-3.5 text-sky-400" />
                 ) : (
-                  <CircleAlert className="size-3.5 text-emerald-400/50" />
+                  <CircleAlert className="size-3.5 text-sky-400/50" />
                 )}
                 <strong className="text-foreground">{item.nome}</strong>
               </span>
@@ -1310,7 +1310,7 @@ function FabyClaud() {
               <button
                 type="button"
                 onClick={() => setConfigAberta(true)}
-                className="ml-auto font-bold text-emerald-400 underline hover:brightness-125"
+                className="ml-auto font-bold text-sky-400 underline hover:brightness-125"
               >
                 Conectar Chave Grátis
               </button>
@@ -1356,7 +1356,7 @@ function FabyClaud() {
                       title="Visualização Desktop"
                       className={`rounded-lg p-1.5 text-xs transition ${
                         viewport === "desktop"
-                          ? "bg-emerald-500/20 text-emerald-300 font-bold"
+                          ? "bg-sky-500/20 text-sky-300 font-bold"
                           : "text-muted-foreground hover:text-foreground"
                       }`}
                     >
@@ -1368,7 +1368,7 @@ function FabyClaud() {
                       title="Visualização Tablet (768px)"
                       className={`rounded-lg p-1.5 text-xs transition ${
                         viewport === "tablet"
-                          ? "bg-emerald-500/20 text-emerald-300 font-bold"
+                          ? "bg-sky-500/20 text-sky-300 font-bold"
                           : "text-muted-foreground hover:text-foreground"
                       }`}
                     >
@@ -1380,7 +1380,7 @@ function FabyClaud() {
                       title="Visualização Mobile (375px)"
                       className={`rounded-lg p-1.5 text-xs transition ${
                         viewport === "mobile"
-                          ? "bg-emerald-500/20 text-emerald-300 font-bold"
+                          ? "bg-sky-500/20 text-sky-300 font-bold"
                           : "text-muted-foreground hover:text-foreground"
                       }`}
                     >
@@ -1401,13 +1401,13 @@ function FabyClaud() {
                       }}
                       className="flex items-center gap-1 rounded-xl border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-semibold text-foreground hover:bg-white/10"
                     >
-                      <Copy className="size-3.5 text-emerald-400" /> Copiar
+                      <Copy className="size-3.5 text-sky-400" /> Copiar
                     </button>
                     <button
                       type="button"
                       disabled={salvandoArquivo || !arquivoAtivo}
                       onClick={() => void salvarCodigoManual()}
-                      className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-3 py-1.5 text-xs font-bold text-black shadow-md shadow-emerald-500/25 transition hover:brightness-110 disabled:opacity-50"
+                      className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 px-3 py-1.5 text-xs font-bold text-black shadow-md shadow-sky-500/25 transition hover:brightness-110 disabled:opacity-50"
                     >
                       <Save className="size-3.5" />{" "}
                       {salvandoArquivo ? "Salvando..." : "Salvar alterações"}
@@ -1438,7 +1438,7 @@ function FabyClaud() {
                     </div>
                   ) : (
                     <div className="max-w-[320px] p-8 text-center text-muted-foreground">
-                      <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shadow-lg shadow-emerald-500/10">
+                      <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 shadow-lg shadow-sky-500/10">
                         <Wrench className="size-7" />
                       </div>
                       <h2 className="mb-2 text-base font-bold text-foreground">
@@ -1447,7 +1447,7 @@ function FabyClaud() {
                       {Object.keys(arquivos).length ? (
                         <p className="text-xs leading-relaxed">
                           {Object.keys(arquivos).length} arquivo(s) disponíveis. Clique na aba{" "}
-                          <strong className="text-emerald-400">Código Fonte</strong> para editar.
+                          <strong className="text-sky-400">Código Fonte</strong> para editar.
                         </p>
                       ) : (
                         <p className="text-xs leading-relaxed">
@@ -1474,11 +1474,11 @@ function FabyClaud() {
                             }}
                             className={`flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-mono transition ${
                               arquivoAtivo === nome
-                                ? "bg-emerald-500/20 font-bold text-emerald-300 border border-emerald-500/40 shadow-sm"
+                                ? "bg-sky-500/20 font-bold text-sky-300 border border-sky-500/40 shadow-sm"
                                 : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
                             }`}
                           >
-                            <FileCode className="size-3.5 text-emerald-400" />
+                            <FileCode className="size-3.5 text-sky-400" />
                             {nome}
                           </button>
                         ))}
@@ -1490,13 +1490,13 @@ function FabyClaud() {
                           value={codigoEditando}
                           onChange={(e) => setCodigoEditando(e.target.value)}
                           spellCheck={false}
-                          className="size-full resize-none rounded-xl border border-white/10 bg-black/90 p-4 font-mono text-xs leading-relaxed text-emerald-300 outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500 shadow-inner"
+                          className="size-full resize-none rounded-xl border border-white/10 bg-black/90 p-4 font-mono text-xs leading-relaxed text-sky-300 outline-none focus:border-sky-500/60 focus:ring-1 focus:ring-sky-500 shadow-inner"
                           placeholder="Selecione um arquivo para editar seu código..."
                         />
                         <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground px-1">
                           <span>
                             Arquivo ativo:{" "}
-                            <strong className="text-emerald-400">{arquivoAtivo}</strong> (
+                            <strong className="text-sky-400">{arquivoAtivo}</strong> (
                             {(codigoEditando || "").length} caracteres)
                           </span>
                           <span>
@@ -1528,7 +1528,7 @@ function FabyClaud() {
               <div ref={areaChat} className="flex-1 space-y-3.5 overflow-y-auto p-4">
                 {mensagens.length === 0 ? (
                   <div className="faby-toolbar rounded-lg border border-primary/40 p-5 text-center shadow-xl backdrop-blur-md">
-                    <div className="mx-auto mb-3 flex size-16 items-center justify-center rounded-2xl overflow-hidden border-2 border-emerald-500/40 shadow-lg shadow-emerald-500/25">
+                    <div className="mx-auto mb-3 flex size-16 items-center justify-center rounded-2xl overflow-hidden border-2 border-sky-500/40 shadow-lg shadow-sky-500/25">
                       <img
                         src="/mascots.jpg"
                         alt="Faby & Claud"
@@ -1550,7 +1550,7 @@ function FabyClaud() {
                       key={m.id}
                       className={`max-w-[88%] whitespace-pre-wrap rounded-2xl px-4 py-3 text-xs leading-relaxed shadow-lg transition-all ${
                         m.role === "user"
-                          ? "ml-auto bg-gradient-to-r from-emerald-500 to-teal-600 text-black font-semibold shadow-emerald-500/20"
+                          ? "ml-auto bg-gradient-to-r from-sky-500 to-blue-600 text-black font-semibold shadow-sky-500/20"
                           : m.ok
                             ? "mr-auto border border-white/10 bg-black/75 text-foreground backdrop-blur-md"
                             : "mr-auto border border-destructive/40 bg-destructive/15 text-foreground"
@@ -1561,9 +1561,9 @@ function FabyClaud() {
                           <img
                             src="/mascots.jpg"
                             alt="Faby & Claud"
-                            className="size-5 shrink-0 rounded-full object-cover border border-emerald-400/50"
+                            className="size-5 shrink-0 rounded-full object-cover border border-sky-400/50"
                           />
-                          <span className="font-bold text-[11px] text-emerald-400">FabyClaud</span>
+                          <span className="font-bold text-[11px] text-sky-400">FabyClaud</span>
                           {m.modelo ? (
                             <span className="text-[10px] text-muted-foreground/70 font-mono ml-auto">
                               {PROVIDER_LABELS[m.modelo] ?? m.modelo}
@@ -1603,7 +1603,7 @@ function FabyClaud() {
                                 setTexto(sugestao);
                                 campoTexto.current?.focus();
                               }}
-                              className="flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/15 px-2.5 py-1 text-xs font-medium text-emerald-300 transition hover:bg-emerald-500 hover:text-black"
+                              className="flex items-center gap-1.5 rounded-xl border border-sky-500/40 bg-sky-500/15 px-2.5 py-1 text-xs font-medium text-sky-300 transition hover:bg-sky-500 hover:text-black"
                             >
                               <Sparkles className="size-3 shrink-0" />
                               <span>{sugestao}</span>
@@ -1621,7 +1621,7 @@ function FabyClaud() {
                 })}
 
                 {pendente ? (
-                  <div className="ml-auto max-w-[88%] whitespace-pre-wrap rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-3 text-xs leading-relaxed text-black font-semibold opacity-90 shadow-md">
+                  <div className="ml-auto max-w-[88%] whitespace-pre-wrap rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 px-4 py-3 text-xs leading-relaxed text-black font-semibold opacity-90 shadow-md">
                     {pendente}
                     {pendenteAnexos.length ? (
                       <span className="mt-2 flex flex-wrap gap-2">
@@ -1701,9 +1701,9 @@ function FabyClaud() {
                   aria-label="Anexar arquivo"
                   title="Anexar imagem, arquivo de código ou um .zip do projeto"
                   onClick={() => inputArquivo.current?.click()}
-                  className="flex size-[42px] shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-emerald-500/40 hover:bg-white/10"
+                  className="flex size-[42px] shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-foreground transition hover:border-sky-500/40 hover:bg-white/10"
                 >
-                  <Paperclip className="size-4 text-emerald-400" />
+                  <Paperclip className="size-4 text-sky-400" />
                 </button>
                 <textarea
                   ref={campoTexto}
