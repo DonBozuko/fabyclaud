@@ -439,7 +439,7 @@ document.getElementById("btnStart").addEventListener("click", () => {
       !ORDEM_QUALIDADE.includes("antigravity" as any),
       "Antigravity não deve ser duplicado como provedor externo",
     );
-    assert.equal(PROVIDER_LABELS.google, "Google Gemini (2.5 Flash / Pro)");
+    assert.equal(PROVIDER_LABELS["google"], "Google Gemini (2.5 Flash / Pro)");
 
     // 4. Tolerância robusta em teste de capacidade
     assert.ok(respostaComprovaCapacidade("FABY_OK|HTML|CSS|JS"));
@@ -566,14 +566,14 @@ document.getElementById("btnStart").addEventListener("click", () => {
     // 2. Modelos ativos de produção para Groq (sem modelos aposentados)
     assert.equal(MODELS.groq, "llama-3.3-70b-versatile", "Groq padrão deve ser o Llama 3.3 70B");
     assert.ok(
-      MODELOS_ALTERNATIVOS.groq.includes("llama-3.1-8b-instant"),
+      (MODELOS_ALTERNATIVOS["groq"] ?? []).includes("llama-3.1-8b-instant"),
       "Groq deve incluir Llama 3.1 8B como alternativa rápida",
     );
     assert.ok(
-      !MODELOS_ALTERNATIVOS.groq.includes("qwen-2.5-coder-32b"),
+      !(MODELOS_ALTERNATIVOS["groq"] ?? []).includes("qwen-2.5-coder-32b"),
       "Modelo aposentado do Groq não deve estar na lista de alternativas",
     );
-    assert.match(PROVIDER_LABELS.groq, /Llama 3\.3 70B/);
+    assert.match(PROVIDER_LABELS["groq"] ?? "", /Llama 3\.3 70B/);
 
     // 3. Robustez de validação de capacidade para modelos com pensamento ou formatos com espaçamento
     assert.ok(respostaComprovaCapacidade("FABY_OK|HTML|CSS|JS"), "Deve aceitar formato padrão");
@@ -596,7 +596,7 @@ document.getElementById("btnStart").addEventListener("click", () => {
 
     // 1. Modelos do Groq não contêm modelos com limite minúsculo (openai/gpt-oss-120b com TPM 8k)
     assert.ok(
-      !MODELOS_ALTERNATIVOS.groq.includes("openai/gpt-oss-120b"),
+      !(MODELOS_ALTERNATIVOS["groq"] ?? []).includes("openai/gpt-oss-120b"),
       "openai/gpt-oss-120b não deve estar nas alternativas do Groq",
     );
     for (const etapa of Object.keys(MODELOS_POR_ETAPA) as (keyof typeof MODELOS_POR_ETAPA)[]) {
