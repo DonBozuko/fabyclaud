@@ -431,6 +431,9 @@ export function montarPrompt(
         "--- Memória deste projeto (o que já foi feito e decidido) ---",
         extras.notas.trim(),
         "Use isso como verdade sobre o histórico: não repita algo já entregue, não desfaça decisões e não volte a propor caminhos que já falharam aqui.",
+        "CONTINUIDADE DO OBJETIVO: mantenha o pedido atual como meta principal; não troque o projeto, a tecnologia, o escopo ou a solução por iniciativa própria. Antes de agir, identifique o que já está concluído, o que continua pendente e quais decisões devem ser preservadas.",
+        "Trabalhe em etapas coerentes com essa meta, preserve o que já funciona e altere somente o necessário. Se faltar informação essencial ou houver impedimento real, explique especificamente o bloqueio e pergunte apenas o necessário; não invente conclusão nem declare concluído algo que não foi entregue.",
+        "Ao registrar o histórico ao final, anote de forma breve o objetivo, as decisões relevantes, o que foi realmente alterado e as pendências — sem tratar hipóteses ou promessas como fatos.",
       ].join("\n"),
     );
   }
