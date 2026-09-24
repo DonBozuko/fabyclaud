@@ -951,9 +951,7 @@ function FabyClaud() {
                 <span className="text-base font-black tracking-normal text-foreground">
                   FabyClaud
                 </span>
-                <span className="rounded-full bg-primary px-2 py-0.5 text-[9px] font-black text-primary-foreground">
-                  GRÁTIS
-                </span>
+                
               </div>
               <p className="text-[10px] font-medium text-muted-foreground">
                 Criação com capacidades verificadas.
@@ -1149,9 +1147,7 @@ function FabyClaud() {
               <div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-base font-black text-foreground">FabyClaud</span>
-                  <span className="rounded-full bg-primary px-2 py-0.5 text-[9px] font-black text-primary-foreground">
-                    GRÁTIS
-                  </span>
+                  
                 </div>
                 <p className="text-[10px] text-muted-foreground">
                   Criação com capacidades verificadas.
