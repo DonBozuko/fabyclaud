@@ -249,7 +249,7 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
 
           {provedor !== "omniroute" && PROVIDER_LINKS[provedor] ? (
             <p className="text-xs text-muted-foreground">
-              Pegue sua chave grátis em{" "}
+              Pegue sua chave em{" "}
               <a
                 href={PROVIDER_LINKS[provedor]}
                 target="_blank"
@@ -481,9 +481,9 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
           </ul>
 
           <div className="rounded-xl border border-border bg-secondary/50 p-3">
-            <p className="text-xs font-semibold">Pegar chaves grátis</p>
+            <p className="text-xs font-semibold">Pegar chaves</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Clique, crie a conta grátis, copie a chave e cole aqui em cima.
+              Clique, crie a conta, copie a chave e cole aqui em cima.
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {Object.keys(MODELS)
