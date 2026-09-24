@@ -53,44 +53,12 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
     setOmniPronta(local.pronta);
   }, []);
 
-  // Sincronização automática resiliente: se o navegador guardou chaves localmente mas o servidor
-  // ainda não as listou, restaura-as automaticamente para o usuário nunca perder acesso
-  useEffect(() => {
-    if (typeof window !== "undefined" && chaves.data) {
-      try {
-        const salvas = JSON.parse(localStorage.getItem("faby_local_keys") || "{}");
-        for (const [prov, info] of Object.entries(salvas)) {
-          const dados = info as { key?: string; api_url?: string };
-          if (dados?.key && !chaves.data.some((k: any) => k.provider === prov)) {
-            salvar({
-              data: {
-                provider: prov,
-                key: dados.key,
-                api_url: prov === "omniroute" ? dados.api_url || "" : "",
-              },
-            })
-              .then(() => {
-                void queryClient.invalidateQueries({ queryKey: ["chaves"] });
-                void queryClient.invalidateQueries({ queryKey: ["capacidades"] });
-              })
-              .catch(() => {});
-          }
-        }
-      } catch {
-        // ignore
-      }
-    }
-  }, [chaves.data, queryClient, salvar]);
-
   const salvarMut = useMutation({
     mutationFn: async () => {
       if (typeof window !== "undefined") {
         try {
           const salvas = JSON.parse(localStorage.getItem("faby_local_keys") || "{}");
-          salvas[provedor] = {
-            key: chave.trim(),
-            api_url: provedor === "omniroute" ? omniUrl : "",
-          };
+          salvas[provedor] = { key: chave.trim(), api_url: provedor === "omniroute" ? omniUrl : "" };
           localStorage.setItem("faby_local_keys", JSON.stringify(salvas));
         } catch {
           // ignore
@@ -249,7 +217,7 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
 
           {provedor !== "omniroute" && PROVIDER_LINKS[provedor] ? (
             <p className="text-xs text-muted-foreground">
-              Pegue sua chave em{" "}
+              Pegue sua chave grátis em{" "}
               <a
                 href={PROVIDER_LINKS[provedor]}
                 target="_blank"
@@ -355,12 +323,11 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
             {omniPronta ? (
               <li className="flex items-center justify-between rounded-lg border border-border bg-secondary px-3 py-2 text-xs">
                 <span>
-                  OmniRoute local —{" "}
-                  <span className="text-primary font-medium">✓ pronta neste navegador</span>
+                  OmniRoute local — <span className="text-primary">✓ pronta neste navegador</span>
                 </span>
                 <button
                   type="button"
-                  className="text-destructive hover:underline text-xs"
+                  className="text-destructive"
                   onClick={() => {
                     apagarOmniRouteLocal();
                     setOmniPronta(false);
@@ -375,104 +342,32 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
               .map((k: any) => (
                 <li
                   key={k.provider}
-                  className="flex items-center justify-between gap-2 rounded-lg border border-border bg-secondary px-3 py-2 text-xs"
+                  className="flex items-center justify-between rounded-lg border border-border bg-secondary px-3 py-2 text-xs"
                 >
-                  <div className="flex flex-col gap-0.5 min-w-0">
-                    <span className="flex items-center gap-1.5 flex-wrap">
-                      <strong className="text-foreground">
-                        {PROVIDER_LABELS[k.provider] ?? k.provider}
-                      </strong>
-                      <span className="text-muted-foreground">{k.mascara}</span>
-                      {k.provider === "omniroute" && k.api_url ? (
-                        <span className="inline-flex items-center gap-1 text-primary">
-                          <Check className="size-3" /> endereço configurado
-                        </span>
-                      ) : null}
-                      {k.testada_ok ? (
-                        <span className="rounded bg-primary/20 px-1.5 py-0.5 text-[11px] font-medium text-primary">
-                          ✓ pronta
-                        </span>
-                      ) : k.ultimo_erro ? (
-                        <span className="rounded bg-destructive/20 px-1.5 py-0.5 text-[11px] font-medium text-destructive">
-                          ✗ falhou
-                        </span>
-                      ) : (
-                        <span className="rounded bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground">
-                          • não testada
-                        </span>
-                      )}
-                    </span>
-                    {k.ultimo_erro && !k.testada_ok ? (
-                      <span className="text-[11px] text-destructive break-words mt-0.5">
-                        {k.ultimo_erro}
+                  <span>
+                    {PROVIDER_LABELS[k.provider] ?? k.provider} —{" "}
+                    <span className="text-muted-foreground">{k.mascara}</span>
+                    {k.provider === "omniroute" && k.api_url ? (
+                      <span className="ml-1 inline-flex items-center gap-1 text-primary">
+                        <Check className="size-3" /> endereço configurado
                       </span>
                     ) : null}
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button
-                      type="button"
-                      disabled={testando}
-                      className="text-primary hover:underline font-medium text-xs disabled:opacity-50"
-                      onClick={async () => {
-                        setProvedor(k.provider);
-                        setTestando(true);
-                        try {
-                          const r = await testar({
-                            data: {
-                              provider: k.provider,
-                              key: "",
-                              api_url: k.api_url || "",
-                            },
-                          });
-                          if (r.ok) toast.success(r.msg);
-                          else toast.error(r.msg);
-                          void queryClient.invalidateQueries({ queryKey: ["chaves"] });
-                          void queryClient.invalidateQueries({ queryKey: ["capacidades"] });
-                        } catch {
-                          toast.error("Erro ao testar chave.");
-                        } finally {
-                          setTestando(false);
-                        }
-                      }}
+                    <span
+                      className={`ml-1 ${k.testada_ok ? "text-primary" : "text-muted-foreground"}`}
                     >
-                      testar
-                    </button>
-                    <button
-                      type="button"
-                      className="text-destructive hover:underline text-xs"
-                      onClick={async () => {
-                        if (typeof window !== "undefined") {
-                          try {
-                            const salvas = JSON.parse(
-                              localStorage.getItem("faby_local_keys") || "{}",
-                            );
-                            delete salvas[k.provider];
-                            if (k.provider === "google") {
-                              delete salvas["antigravity"];
-                            }
-                            localStorage.setItem("faby_local_keys", JSON.stringify(salvas));
-                          } catch {
-                            // ignore
-                          }
-                        }
-                        await remover({ data: { provider: k.provider } });
-                        if (k.provider === "google") {
-                          try {
-                            await remover({ data: { provider: "antigravity" } });
-                          } catch {
-                            // ignore
-                          }
-                        }
-                        toast.success(
-                          `${PROVIDER_LABELS[k.provider] ?? k.provider} removido com sucesso.`,
-                        );
-                        await queryClient.invalidateQueries({ queryKey: ["chaves"] });
-                        await queryClient.invalidateQueries({ queryKey: ["capacidades"] });
-                      }}
-                    >
-                      remover
-                    </button>
-                  </div>
+                      {k.testada_ok ? "✓ pronta" : "• precisa testar"}
+                    </span>
+                  </span>
+                  <button
+                    type="button"
+                    className="text-destructive"
+                    onClick={async () => {
+                      await remover({ data: { provider: k.provider } });
+                      void queryClient.invalidateQueries({ queryKey: ["chaves"] });
+                    }}
+                  >
+                    remover
+                  </button>
                 </li>
               ))}
             {chaves.data && chaves.data.length === 0 ? (
@@ -481,31 +376,26 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
           </ul>
 
           <div className="rounded-xl border border-border bg-secondary/50 p-3">
-            <p className="text-xs font-semibold">Pegar chaves</p>
+            <p className="text-xs font-semibold">Pegar chaves grátis</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Clique, crie a conta, copie a chave e cole aqui em cima.
+              Clique, crie a conta grátis, copie a chave e cole aqui em cima.
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {Object.keys(MODELS)
                 .filter((id) => id !== "omniroute" && PROVIDER_LINKS[id])
-                .map((id) => {
-                  const pronta = (chaves.data ?? []).some(
-                    (k: any) => k.provider === id && k.testada_ok,
-                  );
-                  return (
-                    <a
-                      key={id}
-                      href={PROVIDER_LINKS[id]}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={() => selecionarProvedor(id)}
-                      className="rounded-lg border border-border px-2.5 py-1.5 text-xs transition hover:bg-accent"
-                    >
-                      {PROVIDER_LABELS[id] ?? id}
-                      {pronta ? " ✓ pronta" : ""}
-                    </a>
-                  );
-                })}
+                .map((id) => (
+                  <a
+                    key={id}
+                    href={PROVIDER_LINKS[id]}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => selecionarProvedor(id)}
+                    className="rounded-lg border border-border px-2.5 py-1.5 text-xs transition hover:bg-accent"
+                  >
+                    {PROVIDER_LABELS[id] ?? id}
+                    {(chaves.data ?? []).some((k: any) => k.provider === id) ? " ✓" : ""}
+                  </a>
+                ))}
             </div>
           </div>
         </section>
