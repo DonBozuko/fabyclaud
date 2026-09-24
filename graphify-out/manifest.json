@@ -360,14 +360,14 @@
     "semantic_hash": "d05be20476d3287ad487690a4cf98029"
   },
   "src/integrations/supabase/previewAuthStorage.ts": {
-    "mtime": 1790181734.2106483,
-    "seen": 1790182034.460529,
-    "ast_hash": "9e38ebed5a8b84b7c47412a25dd07052",
+    "mtime": 1790216735.0911198,
+    "seen": 1790216756.4456155,
+    "ast_hash": "51bfab94e67691b16733212287abdc42",
     "semantic_hash": ""
   },
   "src/integrations/supabase/types.ts": {
-    "mtime": 1790181670.2085938,
-    "seen": 1790182034.460533,
+    "mtime": 1790216735.1483736,
+    "seen": 1790216756.445628,
     "ast_hash": "5975cbd3dd4da278afcbeb60f6cd1964",
     "semantic_hash": ""
   },
@@ -384,9 +384,9 @@
     "semantic_hash": "8da0ddd7569bac2676b9a5c8edff8a36"
   },
   "src/lib/faby.functions.ts": {
-    "mtime": 1790208655.1923068,
-    "seen": 1790209058.9201577,
-    "ast_hash": "55cc9ac98c8fee245f5a5ba056694d23",
+    "mtime": 1790216678.869787,
+    "seen": 1790216756.4467971,
+    "ast_hash": "aab66c38b9f031ecc461c3965b98d072",
     "semantic_hash": ""
   },
   "src/lib/faby/aplicativos-locais.server.ts": {
@@ -408,9 +408,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/builder.server.ts": {
-    "mtime": 1790208979.894435,
-    "seen": 1790209058.9208467,
-    "ast_hash": "38b37580a60e20861e35a003d2037ee8",
+    "mtime": 1790216661.2393236,
+    "seen": 1790216756.4483194,
+    "ast_hash": "8ac1f233c7aa3995a351ed484b53ab7f",
     "semantic_hash": ""
   },
   "src/lib/faby/config.ts": {
@@ -474,9 +474,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/providers.server.ts": {
-    "mtime": 1790208567.262963,
-    "seen": 1790209058.9225583,
-    "ast_hash": "60aed92a098087eb1484082ffe2bc76a",
+    "mtime": 1790216601.5804026,
+    "seen": 1790216756.4531472,
+    "ast_hash": "ccfac2f60aa102ff8da3b27ee24e6744",
     "semantic_hash": ""
   },
   "src/lib/faby/upload.ts": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "src/routes/index.tsx": {
-    "mtime": 1790212373.13705,
-    "seen": 1790212506.5412748,
-    "ast_hash": "19bf7340238f25b68bf9ee4e64d7ad2a",
+    "mtime": 1790216737.477399,
+    "seen": 1790216756.4607975,
+    "ast_hash": "86e924aee9501690a3f59270a493abd6",
     "semantic_hash": ""
   },
   "src/server.ts": {
@@ -798,9 +798,9 @@
     "semantic_hash": ""
   },
   "src/lib/faby/provas-reais.test.ts": {
-    "mtime": 1790208841.138404,
-    "seen": 1790209058.9225557,
-    "ast_hash": "43b15c416113033adc1a7e17a022435a",
+    "mtime": 1790216736.5289745,
+    "seen": 1790216756.453141,
+    "ast_hash": "d45f901b1ea1d17471d15574dd8990ca",
     "semantic_hash": ""
   },
   "src/lib/faby/ambiente.server.ts": {

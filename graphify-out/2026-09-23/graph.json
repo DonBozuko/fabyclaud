@@ -885,7 +885,7 @@
       "file_type": "code",
       "norm_label": "compositetypes",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L760"
+      "source_location": "L771"
     },
     {
       "id": "src_integrations_supabase_types_database",
@@ -898,7 +898,7 @@
       "file_type": "code",
       "norm_label": "database",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L3"
+      "source_location": "L9"
     },
     {
       "id": "src_integrations_supabase_types_databasewithoutinternals",
@@ -911,7 +911,7 @@
       "file_type": "code",
       "norm_label": "databasewithoutinternals",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L665"
+      "source_location": "L671"
     },
     {
       "id": "src_integrations_supabase_types_defaultschema",
@@ -924,7 +924,7 @@
       "file_type": "code",
       "norm_label": "defaultschema",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L667"
+      "source_location": "L673"
     },
     {
       "id": "src_integrations_supabase_types_enums",
@@ -937,7 +937,7 @@
       "file_type": "code",
       "norm_label": "enums",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L744"
+      "source_location": "L754"
     },
     {
       "id": "src_integrations_supabase_types_json",
@@ -963,7 +963,7 @@
       "file_type": "code",
       "norm_label": "tables",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L669"
+      "source_location": "L675"
     },
     {
       "id": "src_integrations_supabase_types_tablesinsert",
@@ -976,7 +976,7 @@
       "file_type": "code",
       "norm_label": "tablesinsert",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L696"
+      "source_location": "L704"
     },
     {
       "id": "src_integrations_supabase_types_tablesupdate",
@@ -989,7 +989,7 @@
       "file_type": "code",
       "norm_label": "tablesupdate",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L720"
+      "source_location": "L729"
     },
     {
       "id": "src_lib_faby_ambiente_estadoambiente",
@@ -12143,7 +12143,7 @@
       "file_type": "code",
       "norm_label": "constants",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L776"
+      "source_location": "L788"
     },
     {
       "id": "src_lib_faby_ambiente",
@@ -20528,7 +20528,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L1116",
+      "source_location": "L1114",
       "weight": 1.0
     },
     {
@@ -20540,7 +20540,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L1194",
+      "source_location": "L1193",
       "weight": 1.0
     },
     {
@@ -20552,7 +20552,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L1204",
+      "source_location": "L1203",
       "weight": 1.0
     },
     {
@@ -20564,7 +20564,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/index.tsx",
-      "source_location": "L1549",
+      "source_location": "L1547",
       "weight": 1.0
     },
     {
@@ -36385,24 +36385,13 @@
     },
     {
       "source": "src_integrations_supabase_types",
-      "target": "src_integrations_supabase_types_database",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L3",
-      "weight": 1.0
-    },
-    {
-      "source": "src_integrations_supabase_types",
       "target": "src_integrations_supabase_types_databasewithoutinternals",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L665",
+      "source_location": "L671",
       "weight": 1.0
     },
     {
@@ -36413,7 +36402,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L667",
+      "source_location": "L673",
       "weight": 1.0
     },
     {
@@ -36424,7 +36413,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L669",
+      "source_location": "L675",
       "weight": 1.0
     },
     {
@@ -36435,7 +36424,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L696",
+      "source_location": "L704",
       "weight": 1.0
     },
     {
@@ -36446,7 +36435,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L720",
+      "source_location": "L729",
       "weight": 1.0
     },
     {
@@ -36457,7 +36446,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L744",
+      "source_location": "L754",
       "weight": 1.0
     },
     {
@@ -36468,7 +36457,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L760",
+      "source_location": "L771",
       "weight": 1.0
     },
     {
@@ -36479,7 +36468,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L776",
+      "source_location": "L788",
+      "weight": 1.0
+    },
+    {
+      "source": "src_integrations_supabase_types",
+      "target": "src_integrations_supabase_types_database",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/integrations/supabase/types.ts",
+      "source_location": "L9",
       "weight": 1.0
     },
     {
@@ -42169,5 +42169,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d44c27b00b992e7d0100970ee341e570864f3ce6"
+  "built_at_commit": "5b9c8ee049ed6594b71a8b736f537faa2e7b6b2a"
 }

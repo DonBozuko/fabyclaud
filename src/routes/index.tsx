@@ -547,9 +547,16 @@ function FabyClaud() {
     enabled: Boolean(projetoId) && logado,
   });
 
-  // Se o projetoId salvo não for encontrado, limpa a referência e seleciona o mais recente
+  // Se o projetoId salvo não for encontrado na lista definitiva, seleciona o mais recente
   useEffect(() => {
-    if (projetoId && projeto.data === null && !projeto.isLoading) {
+    if (
+      projetoId &&
+      projeto.data === null &&
+      !projeto.isLoading &&
+      projetos.data &&
+      projetos.data.length > 0 &&
+      !projetos.data.some((p: any) => p.id === projetoId)
+    ) {
       if (typeof window !== "undefined") {
         localStorage.removeItem("faby_active_project_id");
       }
@@ -930,10 +937,7 @@ function FabyClaud() {
         style={{ backgroundImage: `url(${heroAsset.url})` }}
         aria-hidden
       />
-      <div
-        className="fixed inset-0 -z-10 bg-background/28 pointer-events-none"
-        aria-hidden
-      />
+      <div className="fixed inset-0 -z-10 bg-background/28 pointer-events-none" aria-hidden />
 
       <div className="faby-layout flex h-screen w-screen gap-2 p-2">
         {/* ===== BARRA LATERAL FUTURISTA ULTRA-MODERNA ===== */}
@@ -944,10 +948,16 @@ function FabyClaud() {
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="text-base font-black tracking-normal text-foreground">FabyClaud</span>
-                <span className="rounded-full bg-primary px-2 py-0.5 text-[9px] font-black text-primary-foreground">GRÁTIS</span>
+                <span className="text-base font-black tracking-normal text-foreground">
+                  FabyClaud
+                </span>
+                <span className="rounded-full bg-primary px-2 py-0.5 text-[9px] font-black text-primary-foreground">
+                  GRÁTIS
+                </span>
               </div>
-              <p className="text-[10px] font-medium text-muted-foreground">Criação com capacidades verificadas.</p>
+              <p className="text-[10px] font-medium text-muted-foreground">
+                Criação com capacidades verificadas.
+              </p>
             </div>
           </div>
 
@@ -1131,13 +1141,21 @@ function FabyClaud() {
           {/* Header Superior Moderno */}
           <header className="panel-glass flex items-center justify-between rounded-lg px-3 py-2 shadow-xl">
             <div className="flex items-center gap-2">
-              <img src="/mascots.jpg" alt="FabyClaud" className="size-8 rounded-lg object-cover border border-primary/50" />
+              <img
+                src="/mascots.jpg"
+                alt="FabyClaud"
+                className="size-8 rounded-lg object-cover border border-primary/50"
+              />
               <div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-base font-black text-foreground">FabyClaud</span>
-                  <span className="rounded-full bg-primary px-2 py-0.5 text-[9px] font-black text-primary-foreground">GRÁTIS</span>
+                  <span className="rounded-full bg-primary px-2 py-0.5 text-[9px] font-black text-primary-foreground">
+                    GRÁTIS
+                  </span>
                 </div>
-                <p className="text-[10px] text-muted-foreground">Criação com capacidades verificadas.</p>
+                <p className="text-[10px] text-muted-foreground">
+                  Criação com capacidades verificadas.
+                </p>
               </div>
             </div>
 
@@ -1495,9 +1513,8 @@ function FabyClaud() {
                         />
                         <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground px-1">
                           <span>
-                            Arquivo ativo:{" "}
-                            <strong className="text-sky-400">{arquivoAtivo}</strong> (
-                            {(codigoEditando || "").length} caracteres)
+                            Arquivo ativo: <strong className="text-sky-400">{arquivoAtivo}</strong>{" "}
+                            ({(codigoEditando || "").length} caracteres)
                           </span>
                           <span>
                             Clique em <strong>Salvar alterações</strong> para atualizar a prévia.
@@ -1537,7 +1554,8 @@ function FabyClaud() {
                     </div>
                     <p className="text-sm font-bold text-foreground">Olá! Sou a FabyCloud</p>
                     <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed max-w-sm mx-auto">
-                      Peça uma calculadora sem chave, ou conecte uma IA testada para projetos personalizados.
+                      Peça uma calculadora sem chave, ou conecte uma IA testada para projetos
+                      personalizados.
                     </p>
                   </div>
                 ) : null}

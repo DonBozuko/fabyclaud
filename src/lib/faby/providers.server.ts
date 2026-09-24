@@ -198,7 +198,7 @@ function resumirTexto(texto: string, limite: number) {
 }
 
 function limiteEntrada(url: string) {
-  if (/api\.groq\.com/i.test(url)) return 18_000;
+  if (/api\.groq\.com/i.test(url)) return 14_000;
   if (/api\.z\.ai/i.test(url)) return 32_000;
   if (/router\.huggingface\.co/i.test(url)) return 40_000;
   return 52_000;
@@ -241,7 +241,7 @@ function erroLegivel(status: number, json: unknown, texto: string) {
         : null;
   const mensagemDireta = (json as { message?: unknown })?.message;
   const respostaHtml = /<!doctype html|<html[\s>]/i.test(texto);
-  const base =
+  let base =
     msg ||
     (typeof mensagemDireta === "string" ? mensagemDireta : null) ||
     (respostaHtml
@@ -252,6 +252,10 @@ function erroLegivel(status: number, json: unknown, texto: string) {
     return status === 422
       ? "o endereço configurado não é a API do OmniRoute ou o túnel expirou; abra o OmniRoute pelo terminal e copie o HTTPS atual mostrado em Túneis"
       : `o endereço respondeu com uma página web em vez da API (${status})`;
+  }
+  if (base.includes("Expected OAuth 2 access token") || base.includes("API key not valid")) {
+    base =
+      "chave do Google Gemini não reconhecida ou inativa no Google AI Studio (verifique se copiou a chave completa em aistudio.google.com/apikey)";
   }
   if (status === 401) return `chave inválida (${base})`;
   if (status === 402) return `esse serviço exige saldo ou créditos (${base})`;
@@ -280,17 +284,31 @@ async function descobrirModelos(url: string, key: string) {
   if (!alvo) return [];
   try {
     const resposta = await fetch(alvo, {
-      headers: { Authorization: `Bearer ${key}`, Accept: "application/json" },
+      headers: { Authorization: `Bearer ${key.trim()}`, Accept: "application/json" },
     });
     if (!resposta.ok) return [];
     const json = (await resposta.json()) as { data?: { id?: string }[] };
+    const isGroq = /api\.groq\.com/i.test(url);
     const ids = (json.data ?? [])
       .map((m) => m.id?.trim())
-      .filter((id): id is string => Boolean(id));
+      .filter((id): id is string => Boolean(id))
+      .filter((id) => {
+        const nome = id.toLowerCase();
+        // Descarta modelos com limite microscópico de TPM (ex: 8k) ou de moderação/áudio no Groq
+        if (isGroq) {
+          if (
+            /gpt-oss|guard|safeguard|whisper|moderation|distil-whisper|embed|vision/i.test(nome) ||
+            nome.startsWith("openai/")
+          ) {
+            return false;
+          }
+        }
+        return true;
+      });
     const pontos = (id: string) => {
       const nome = id.toLowerCase();
       let total = 0;
-      if (/coder|coding|code|devstral|gpt-oss/.test(nome)) total -= 50;
+      if (/coder|coding|code|devstral/.test(nome)) total -= 50;
       if (/free|flash|small|mini/.test(nome)) total -= 20;
       if (/instruct|chat/.test(nome)) total -= 10;
       if (/vision|embed|audio|image|rerank|moderation/.test(nome)) total += 80;
@@ -303,14 +321,16 @@ async function descobrirModelos(url: string, key: string) {
 }
 
 async function descobrirModelosGoogle(key: string): Promise<string[]> {
+  const chaveLimpa = key.trim();
+  const ehOAuth = chaveLimpa.startsWith("ya29.");
+  const url = ehOAuth
+    ? `https://generativelanguage.googleapis.com/v1beta/models`
+    : `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(chaveLimpa)}`;
+  const headers = ehOAuth
+    ? { Authorization: `Bearer ${chaveLimpa}`, Accept: "application/json" }
+    : { "x-goog-api-key": chaveLimpa, Accept: "application/json" };
   try {
-    const resposta = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models?key=${key}`,
-      {
-        headers: { "x-goog-api-key": key, Accept: "application/json" },
-        signal: AbortSignal.timeout(10_000),
-      },
-    );
+    const resposta = await fetch(url, { headers, signal: AbortSignal.timeout(10_000) });
     if (!resposta.ok) return [];
     const json = (await resposta.json()) as {
       models?: { name?: string; supportedGenerationMethods?: string[] }[];
@@ -360,16 +380,20 @@ async function chamarGoogle(
   timeoutMs: number,
   modelo: string = MODELS.google,
 ): Promise<ResultadoIA> {
+  const chaveLimpa = key.trim();
   const modeloLimpo = modelo.replace(/^models\//, "").trim();
   const contents = sanitizarHistoricoParaGoogle(historico, prompt, imagens);
 
-  // Dual-Auth: chaves 'AQ.' ou 'ya29.' são tokens OAuth2/Bearer; 'AIzaSy' são API keys do Google.
-  const ehBearer = key.startsWith("AQ.") || key.startsWith("ya29.");
-  const urlBearer = `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent`;
-  const urlApiKey = `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent?key=${encodeURIComponent(key)}`;
+  // Somente tokens 'ya29.' são OAuth 2.0 Access Tokens (Google Cloud/Firebase).
+  // Chaves do Google AI Studio ('AQ.' ou 'AIzaSy') são API Keys e usam x-goog-api-key e ?key=.
+  const ehOAuth = chaveLimpa.startsWith("ya29.");
+  const urlOAuth = `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent`;
+  const urlApiKey = `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent?key=${encodeURIComponent(chaveLimpa)}`;
 
-  const url = ehBearer ? urlBearer : urlApiKey;
-  const headers = ehBearer ? { Authorization: `Bearer ${key}` } : { "x-goog-api-key": key };
+  const url = ehOAuth ? urlOAuth : urlApiKey;
+  const headers = ehOAuth
+    ? { Authorization: `Bearer ${chaveLimpa}` }
+    : { "x-goog-api-key": chaveLimpa };
 
   // Retry rápido com espera curta em caso de 503
   let tentativas = 0;
@@ -385,10 +409,10 @@ async function chamarGoogle(
 
     // Se falhar por autenticação (401/400) com formato incompatível, tenta a alternativa oposta
     if (!ok && (status === 401 || status === 400)) {
-      const urlAlternativa = ehBearer ? urlApiKey : urlBearer;
-      const headersAlternativa = ehBearer
-        ? { "x-goog-api-key": key }
-        : { Authorization: `Bearer ${key}` };
+      const urlAlternativa = ehOAuth ? urlApiKey : urlOAuth;
+      const headersAlternativa = ehOAuth
+        ? { "x-goog-api-key": chaveLimpa }
+        : { Authorization: `Bearer ${chaveLimpa}` };
 
       const alt = await postJson(
         urlAlternativa,
@@ -480,7 +504,9 @@ async function chamarOpenAICompat(
 ): Promise<ResultadoIA> {
   const teto = limiteEntrada(url);
   const promptAjustado = prompt.length > teto ? resumirTexto(prompt, teto) : prompt;
-  const limiteTurnos = /api\.groq\.com/i.test(url) ? 3 : 6;
+  const isGroq = /api\.groq\.com/i.test(url);
+  const maxTokens = isGroq ? 4096 : 8192;
+  const limiteTurnos = isGroq ? 2 : 6;
   const messages = sanitizarHistoricoParaOpenAI(
     historico,
     promptAjustado,
@@ -491,8 +517,8 @@ async function chamarOpenAICompat(
 
   const { ok, status, json, texto } = await postJson(
     url,
-    { Authorization: `Bearer ${key}`, ...(headersExtras ?? {}) },
-    { model: modelo, messages, temperature: 0.2, max_tokens: 8192 },
+    { Authorization: `Bearer ${key.trim()}`, ...(headersExtras ?? {}) },
+    { model: modelo, messages, temperature: 0.2, max_tokens: maxTokens },
     timeoutMs,
   );
   if (!ok) return { ok: false, texto: erroLegivel(status, json, texto), status, bruto: texto };

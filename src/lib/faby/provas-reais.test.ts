@@ -639,4 +639,26 @@ document.getElementById("btnStart").addEventListener("click", () => {
       "Instrução deve proibir expressamente telas em branco ou esqueléticas",
     );
   });
+
+  test("PROVA 15: Google Gemini AQ. Auth, Proteção de TPM Groq e Entrega de Código Obrigatória", async () => {
+    const { INSTRUCAO_PROJETO } = await import("./builder.server");
+
+    // 1. Diretriz do Prompt exige entrega de código em edições e proíbe respostas apenas com texto ou perguntas
+    assert.ok(
+      INSTRUCAO_PROJETO.includes(
+        "OBRIGATORIEDADE DE CÓDIGO EM TODA CRIAÇÃO, EDIÇÃO OU CONFIRMAÇÃO",
+      ),
+      "Instrução deve exigir código em qualquer alteração ou confirmação",
+    );
+    assert.ok(
+      INSTRUCAO_PROJETO.includes(
+        "PROIBIÇÃO ABSOLUTA DE RESPOSTAS APENAS CONVERSACIONAIS OU COM LISTAS SEM CÓDIGO",
+      ),
+      "Instrução deve proibir respostas apenas conversacionais sem código",
+    );
+    assert.ok(
+      INSTRUCAO_PROJETO.includes("A EXPLICAÇÃO VEM SEMPRE NO FINAL"),
+      "Explicações devem vir sempre após os arquivos de código",
+    );
+  });
 });

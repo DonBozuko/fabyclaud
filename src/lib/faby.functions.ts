@@ -2632,9 +2632,33 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           candidato.apiUrl,
           modeloDesejado,
         );
-        ok = r.ok;
-        bruto = r.texto;
-        if (ok) {
+        const arquivosEntregues = exigeArquivos ? extrairArquivos(r.texto).arquivos : {};
+        let entregouObrigatorios = !exigeArquivos || Object.keys(arquivosEntregues).length > 0;
+
+        // Se a IA respondeu apenas com texto conversacional mas o pedido exigia arquivos,
+        // faz uma tentativa rápida de recuperação direta com o mesmo modelo
+        if (ok && !entregouObrigatorios) {
+          const recuperacao = await chamarProvedor(
+            candidato.pid,
+            `${promptFinal}\n\n⚠️ REQUISITO OBRIGATÓRIO DE ENGENHARIA: Você explicou melhorias em texto mas NÃO incluiu as tags com os arquivos completos do projeto. Entregue AGORA os arquivos completos implementados dentro das tags <arquivo nome="..."> (<arquivo nome="index.html">, <arquivo nome="styles.css">, <arquivo nome="app.js">).`,
+            historico,
+            candidato.key,
+            imagens,
+            provedoresCustom,
+            45_000,
+            candidato.apiUrl,
+            modeloDesejado,
+          );
+          if (
+            recuperacao.ok &&
+            Object.keys(extrairArquivos(recuperacao.texto).arquivos).length > 0
+          ) {
+            bruto = recuperacao.texto;
+            entregouObrigatorios = true;
+          }
+        }
+
+        if (ok && entregouObrigatorios) {
           usada = { pid: candidato.pid, key: candidato.key, apiUrl: candidato.apiUrl };
           equipeUtilizada[etapaAtual === "planejamento" ? "planejamento" : "construcao"] =
             (candidato.pid === especialistaConstrucao?.pid
@@ -2660,7 +2684,10 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           }
           break;
         }
-        falhas.push(`- ${nomeDe(candidato.pid)}: ${r.texto}`);
+        const motivoFalha = !ok
+          ? r.texto
+          : "respondeu em texto conversacional mas não entregou os arquivos de código solicitados";
+        falhas.push(`- ${nomeDe(candidato.pid)}: ${motivoFalha}`);
         salvarChaveArmazenada({
           user_id: context.userId,
           provider: candidato.pid,
@@ -2668,12 +2695,12 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           api_url: candidato.apiUrl || null,
           testada_ok: false,
           testada_em: new Date().toISOString(),
-          ultimo_erro: r.texto.slice(0, 300),
+          ultimo_erro: motivoFalha.slice(0, 300),
         });
         try {
           await context.supabase
             .from("chaves_ia")
-            .update({ ultimo_erro: r.texto.slice(0, 300), testada_ok: false })
+            .update({ ultimo_erro: motivoFalha.slice(0, 300), testada_ok: false })
             .eq("provider", candidato.pid);
         } catch {
           // ignore
