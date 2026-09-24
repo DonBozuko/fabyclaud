@@ -53,35 +53,6 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
     setOmniPronta(local.pronta);
   }, []);
 
-  // Sincronização automática resiliente: se o navegador guardou chaves localmente mas o servidor
-  // ainda não as listou, restaura-as automaticamente para o usuário nunca perder acesso
-  useEffect(() => {
-    if (typeof window !== "undefined" && chaves.data) {
-      try {
-        const salvas = JSON.parse(localStorage.getItem("faby_local_keys") || "{}");
-        for (const [prov, info] of Object.entries(salvas)) {
-          const dados = info as { key?: string; api_url?: string };
-          if (dados?.key && !chaves.data.some((k: any) => k.provider === prov)) {
-            salvar({
-              data: {
-                provider: prov,
-                key: dados.key,
-                api_url: prov === "omniroute" ? dados.api_url || "" : "",
-              },
-            })
-              .then(() => {
-                void queryClient.invalidateQueries({ queryKey: ["chaves"] });
-                void queryClient.invalidateQueries({ queryKey: ["capacidades"] });
-              })
-              .catch(() => {});
-          }
-        }
-      } catch {
-        // ignore
-      }
-    }
-  }, [chaves.data, queryClient, salvar]);
-
   const salvarMut = useMutation({
     mutationFn: async () => {
       if (typeof window !== "undefined") {
@@ -296,16 +267,4 @@ export function SettingsDialog({ onClose }: { onClose: () => void }) {
                 href="http://localhost:20128/home"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 font-semibold text-primary underline"
-              >
-                Abrir painel local <ExternalLink className="size-3" />
-              </a>
-              <p>
-                Use o endereço local abaixo neste computador. Não precisa baixar repositório nem
-                criar túnel. HTTPS público é necessário apenas para usar a ponte em outro aparelho.
-              </p>
-              <p>
-                Se o teste mostrar “navegador bloqueou”, abra “Compartilhamento” no OmniRoute e
-                permita o endereço do FabyClaud. Isso libera somente a comunicação local.
-              </p>
-              <input
+                className="inline-flex items-center gap-
