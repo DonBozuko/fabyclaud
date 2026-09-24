@@ -259,19 +259,19 @@ function IndicadorProgressoConstrucao({ projetoId, modelo }: IndicadorProgressoC
     <div
       role="status"
       aria-live="polite"
-      className="mr-auto w-full max-w-xl rounded-2xl border border-primary/30 bg-black/80 p-4 shadow-2xl backdrop-blur-xl transition-all duration-300"
+      className="mr-auto w-full max-w-xl rounded-xl border border-primary/40 bg-card/90 p-4 shadow-2xl backdrop-blur-xl transition-all duration-300"
     >
       <div className="flex items-center justify-between border-b border-white/10 pb-3">
         <div className="flex items-center gap-3">
           <div className="relative flex size-12 shrink-0 items-center justify-center">
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 opacity-60 blur-md animate-pulse" />
+            <div className="absolute inset-0 rounded-full bg-primary opacity-50 blur-md animate-pulse" />
             <img
               src="/mascots.jpg"
               alt="Mascotes Faby & Claud"
-              className="mascot-avatar relative size-12 rounded-full object-cover border-2 border-emerald-400/80 shadow-lg shadow-emerald-500/30"
+              className="mascot-avatar relative size-12 rounded-full object-cover border-2 border-primary/80 shadow-lg shadow-primary/30"
             />
-            <span className="absolute -bottom-0.5 -right-0.5 flex size-3.5 items-center justify-center rounded-full bg-emerald-500 border-2 border-black">
-              <span className="size-1.5 rounded-full bg-white animate-ping" />
+            <span className="absolute -bottom-0.5 -right-0.5 flex size-3.5 items-center justify-center rounded-full bg-primary border-2 border-background">
+              <span className="size-1.5 rounded-full bg-primary-foreground animate-ping" />
             </span>
           </div>
           <div>
@@ -301,7 +301,7 @@ function IndicadorProgressoConstrucao({ projetoId, modelo }: IndicadorProgressoC
 
       <div className="my-3 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-teal-400 transition-all duration-500 shadow-[0_0_12px_rgba(57,255,156,0.8)]"
+          className="h-full rounded-full bg-primary transition-all duration-500 shadow-glow"
           style={{ width: `${porcentagemGeral}%` }}
         />
       </div>
@@ -326,7 +326,7 @@ function IndicadorProgressoConstrucao({ projetoId, modelo }: IndicadorProgressoC
               <div
                 className={`flex size-6 shrink-0 items-center justify-center rounded-lg ${
                   isConcluida
-                    ? "bg-emerald-500 text-black font-bold shadow-sm"
+                    ? "bg-primary text-primary-foreground font-bold shadow-sm"
                     : isAtiva
                       ? "bg-primary/20 text-primary border border-primary/40"
                       : "bg-white/5 text-muted-foreground"
@@ -919,34 +919,35 @@ function FabyClaud() {
   }
 
   if (!pronto || !logado) {
-    return <div className="min-h-screen bg-black" />;
+    return <div className="min-h-screen bg-background" />;
   }
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden text-foreground antialiased select-none font-sans">
+    <div className="faby-shell relative h-screen w-screen overflow-hidden text-foreground antialiased select-none font-sans">
       {/* Imagem de Fundo (Homem de Capuz / Matrix) com Overlay de Profundidade */}
       <div
-        className="fixed inset-0 -z-20 bg-cover bg-[center_25%] bg-no-repeat transition-all duration-700 pointer-events-none scale-105"
+        className="fixed inset-0 -z-20 bg-cover bg-center bg-no-repeat pointer-events-none"
         style={{ backgroundImage: `url(${heroAsset.url})` }}
         aria-hidden
       />
       <div
-        className="fixed inset-0 -z-10 bg-black/65 backdrop-blur-[6px] pointer-events-none"
+        className="fixed inset-0 -z-10 bg-background/28 pointer-events-none"
         aria-hidden
       />
 
-      <div className="flex h-screen w-screen gap-3 p-3">
+      <div className="faby-layout flex h-screen w-screen gap-2 p-2">
         {/* ===== BARRA LATERAL FUTURISTA ULTRA-MODERNA ===== */}
-        <aside className="panel-glass flex w-[260px] shrink-0 flex-col gap-3 rounded-2xl p-3.5 shadow-2xl transition-all duration-300">
+        <aside className="panel-glass flex w-[220px] shrink-0 flex-col gap-3 rounded-lg p-3 shadow-2xl transition-all duration-300">
           <div className="flex items-center gap-2.5 px-1 py-0.5">
             <div className="relative flex size-10 shrink-0 items-center justify-center rounded-xl overflow-hidden border border-emerald-500/40 shadow-lg shadow-emerald-500/30">
               <img src="/mascots.jpg" alt="FabyClaud" className="size-full object-cover" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="text-sm font-black tracking-tight text-white">FabyClaud</span>
+                <span className="text-base font-black tracking-normal text-foreground">FabyClaud</span>
+                <span className="rounded-full bg-primary px-2 py-0.5 text-[9px] font-black text-primary-foreground">GRÁTIS</span>
               </div>
-              <p className="text-[10px] font-medium text-emerald-400/80">Autonomous Dev Studio</p>
+              <p className="text-[10px] font-medium text-muted-foreground">Criação com capacidades verificadas.</p>
             </div>
           </div>
 
@@ -964,7 +965,7 @@ function FabyClaud() {
               setAbaPrincipal("previa");
               campoTexto.current?.focus();
             }}
-            className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 py-2.5 text-xs font-bold text-black shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:scale-[1.02] hover:brightness-110 active:scale-[0.98]"
+            className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-lg bg-primary py-2.5 text-xs font-bold text-primary-foreground shadow-glow transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
           >
             <span className="absolute inset-0 bg-white/20 opacity-0 transition-opacity group-hover:opacity-100" />
             <Plus className="size-4 stroke-[3]" /> Novo Projeto
@@ -1128,14 +1129,15 @@ function FabyClaud() {
         {/* ===== ÁREA PRINCIPAL ===== */}
         <div className="flex min-w-0 flex-1 flex-col gap-3">
           {/* Header Superior Moderno */}
-          <header className="panel-glass flex items-center justify-between rounded-2xl px-4 py-2 shadow-xl">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-foreground">Status do Estúdio:</span>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-bold text-emerald-400 border border-emerald-500/20">
-                  <span className="size-1.5 rounded-full bg-emerald-400 animate-ping" />
-                  Online & Operacional
-                </span>
+          <header className="panel-glass flex items-center justify-between rounded-lg px-3 py-2 shadow-xl">
+            <div className="flex items-center gap-2">
+              <img src="/mascots.jpg" alt="FabyClaud" className="size-8 rounded-lg object-cover border border-primary/50" />
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-base font-black text-foreground">FabyClaud</span>
+                  <span className="rounded-full bg-primary px-2 py-0.5 text-[9px] font-black text-primary-foreground">GRÁTIS</span>
+                </div>
+                <p className="text-[10px] text-muted-foreground">Criação com capacidades verificadas.</p>
               </div>
             </div>
 
@@ -1222,7 +1224,7 @@ function FabyClaud() {
                 title="Várias IAs respondem ao mesmo tempo e a melhor resposta vence"
                 className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition ${
                   duelo
-                    ? "border-emerald-400 bg-gradient-to-r from-emerald-500 to-teal-600 text-black shadow-lg shadow-emerald-500/30"
+                    ? "border-primary bg-primary text-primary-foreground shadow-glow"
                     : "border-white/10 bg-white/5 text-foreground hover:border-emerald-500/40 hover:bg-white/10"
                 }`}
               >
@@ -1263,30 +1265,30 @@ function FabyClaud() {
 
           {/* Capacidades da IA */}
           <section
-            className="panel-glass flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-xl px-4 py-1.5 text-[11px]"
+            className="panel-glass flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-lg px-3 py-1.5 text-[11px]"
             aria-label="Capacidades disponíveis"
           >
-            <span className="font-bold text-foreground">Módulos:</span>
+            <span className="font-bold text-foreground">Agora:</span>
             {[
               {
-                nome: "IA Construtora",
+                nome: "IA & conexão(ões) testada(s)",
                 pronta: capacidades.data?.ia.pronta ?? false,
                 detalhe: capacidades.data?.ia.pronta
                   ? `${capacidades.data.ia.provedores.length} conexão(ões) ativa(s)`
                   : "pronta para conexões",
               },
               {
-                nome: "Pesquisa Web",
+                nome: "Busca pública e limitada",
                 pronta: capacidades.data?.busca.pronta ?? false,
                 detalhe: "pública e ativa",
               },
               {
-                nome: "Gerador de Imagens",
+                nome: "Imagem qualidade variável",
                 pronta: capacidades.data?.imagem.pronta ?? false,
                 detalhe: "ativo no chat",
               },
               {
-                nome: "Banco de Dados",
+                nome: "Dados públicos e privados com login",
                 pronta: capacidades.data?.dados.pronta ?? false,
                 detalhe: "VFS persistente",
               },
@@ -1318,31 +1320,31 @@ function FabyClaud() {
           {/* Painéis Principais (Prévia / Código na Esquerda, Chat na Direita) */}
           <div className="flex min-h-0 flex-1 gap-3">
             {/* ÁREA DE PRÉVIA OU CÓDIGO */}
-            <section className="panel-glass relative flex min-w-[340px] flex-1 flex-col overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+            <section className="panel-glass faby-stage relative flex min-w-[340px] flex-1 flex-col overflow-hidden rounded-lg border border-primary/40 shadow-2xl">
               {/* Barra de controle de abas e viewport */}
-              <div className="flex items-center justify-between border-b border-white/10 bg-black/40 px-3 py-2">
-                <div className="flex items-center gap-1 rounded-xl bg-black/50 p-1 border border-white/10">
+              <div className="faby-toolbar flex items-center justify-between border-b px-3 py-2">
+                <div className="flex items-center gap-1 rounded-lg bg-background/30 p-1 border border-primary/20">
                   <button
                     type="button"
                     onClick={() => setAbaPrincipal("previa")}
                     className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
                       abaPrincipal === "previa"
-                        ? "bg-emerald-500 text-black shadow-md shadow-emerald-500/20"
+                        ? "bg-primary text-primary-foreground shadow-glow"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    <Eye className="size-3.5" /> Prévia Interativa
+                    <Eye className="size-3.5" /> Prévia
                   </button>
                   <button
                     type="button"
                     onClick={() => setAbaPrincipal("codigo")}
                     className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
                       abaPrincipal === "codigo"
-                        ? "bg-emerald-500 text-black shadow-md shadow-emerald-500/20"
+                        ? "bg-primary text-primary-foreground shadow-glow"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    <Code2 className="size-3.5" /> Código Fonte ({nomesArquivos.length})
+                    <Code2 className="size-3.5" /> Código ({nomesArquivos.length})
                   </button>
                 </div>
 
@@ -1416,7 +1418,7 @@ function FabyClaud() {
 
               {/* Conteúdo da Aba */}
               {abaPrincipal === "previa" ? (
-                <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-black/40 p-2">
+                <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-background/18 p-2">
                   {previewComSonda ? (
                     <div
                       className={`h-full transition-all duration-300 overflow-hidden rounded-xl shadow-2xl border border-white/10 ${
@@ -1440,7 +1442,7 @@ function FabyClaud() {
                         <Wrench className="size-7" />
                       </div>
                       <h2 className="mb-2 text-base font-bold text-foreground">
-                        {Object.keys(arquivos).length ? "Arquivos Prontos" : "Prévia do Projeto"}
+                        {Object.keys(arquivos).length ? "Arquivos Prontos" : "Prévia do projeto"}
                       </h2>
                       {Object.keys(arquivos).length ? (
                         <p className="text-xs leading-relaxed">
@@ -1449,7 +1451,7 @@ function FabyClaud() {
                         </p>
                       ) : (
                         <p className="text-xs leading-relaxed">
-                          Peça qualquer aplicação, site ou ferramenta no chat ao lado para começar.
+                          Abra uma pasta, envie um ZIP ou peça um site no chat para começar.
                         </p>
                       )}
                     </div>
@@ -1522,10 +1524,10 @@ function FabyClaud() {
             </section>
 
             {/* CHAT MODERNO & RESILIENTE */}
-            <section className="panel-glass flex min-w-[340px] flex-[1.15] flex-col overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+            <section className="panel-glass faby-stage flex min-w-[340px] flex-[1.15] flex-col overflow-hidden rounded-lg border border-primary/40 shadow-2xl">
               <div ref={areaChat} className="flex-1 space-y-3.5 overflow-y-auto p-4">
                 {mensagens.length === 0 ? (
-                  <div className="rounded-2xl border border-white/10 bg-black/60 p-6 text-center shadow-xl backdrop-blur-md">
+                  <div className="faby-toolbar rounded-lg border border-primary/40 p-5 text-center shadow-xl backdrop-blur-md">
                     <div className="mx-auto mb-3 flex size-16 items-center justify-center rounded-2xl overflow-hidden border-2 border-emerald-500/40 shadow-lg shadow-emerald-500/25">
                       <img
                         src="/mascots.jpg"
@@ -1533,10 +1535,9 @@ function FabyClaud() {
                         className="size-full object-cover"
                       />
                     </div>
-                    <p className="text-sm font-bold text-foreground">Bem-vindo à FabyClaud</p>
+                    <p className="text-sm font-bold text-foreground">Olá! Sou a FabyCloud</p>
                     <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed max-w-sm mx-auto">
-                      Digite o que você deseja construir: desde calculadoras locais até landing
-                      pages completas, painéis SaaS e jogos interativos.
+                      Peça uma calculadora sem chave, ou conecte uma IA testada para projetos personalizados.
                     </p>
                   </div>
                 ) : null}
@@ -1680,7 +1681,7 @@ function FabyClaud() {
                   e.preventDefault();
                   enviarAgora();
                 }}
-                className="flex items-end gap-2 border-t border-white/10 bg-black/60 p-3"
+                className="faby-toolbar flex items-end gap-2 border-t p-3"
               >
                 <input
                   ref={inputArquivo}
@@ -1715,13 +1716,13 @@ function FabyClaud() {
                       enviarAgora();
                     }
                   }}
-                  placeholder="Descreva o que deseja criar ou modificar..."
-                  className="max-h-32 min-h-[42px] flex-1 resize-none rounded-xl border border-white/10 bg-black/80 px-3.5 py-2.5 text-xs text-foreground outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500 shadow-inner placeholder:text-muted-foreground/60"
+                  placeholder="Digite sua mensagem..."
+                  className="max-h-32 min-h-[42px] flex-1 resize-none rounded-lg border border-primary/50 bg-background/70 px-3.5 py-2.5 text-xs text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-inner placeholder:text-muted-foreground"
                 />
                 <button
                   type="submit"
                   disabled={mandar.isPending}
-                  className="flex h-[42px] shrink-0 items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-4 text-xs font-bold text-black shadow-lg shadow-emerald-500/25 transition hover:brightness-110 active:scale-95 disabled:opacity-50"
+                  className="flex h-[42px] shrink-0 items-center gap-1.5 rounded-lg bg-primary px-4 text-xs font-bold text-primary-foreground shadow-glow transition hover:brightness-110 active:scale-95 disabled:opacity-50"
                 >
                   <Send className="size-3.5" /> Enviar
                 </button>
