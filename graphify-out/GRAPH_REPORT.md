@@ -1,17 +1,17 @@
 # Graph Report - Dev Buddy  (2026-09-23)
 
 ## Corpus Check
-- 151 files · ~117,315 words
+- 151 files · ~119,575 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 8 file(s) not represented in the graph (top: (none) 3, .toml 2, .lock 1)
 
 ## Summary
-- 1215 nodes · 2416 edges · 76 communities (63 shown, 13 thin omitted)
+- 1215 nodes · 2418 edges · 76 communities (63 shown, 13 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 16 edges (avg confidence: 0.84)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `30803a0f`
+- Built from commit: `d44c27b0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -185,7 +185,7 @@ Nodes (8): @radix-ui/react-navigation-menu, NavigationMenu, NavigationMenuConten
 
 ### Community 16 - "providers.server.ts"
 Cohesion: 0.09
-Nodes (34): ehErroDeModelo(), MODELOS_ALTERNATIVOS, Db, Estado, extrairRegras(), obterEstadoEscola(), promptEstudo(), registrarNotaEscola() (+26 more)
+Nodes (35): ehErroDeModelo(), MODELOS_ALTERNATIVOS, Db, Estado, extrairRegras(), obterEstadoEscola(), promptEstudo(), registrarNotaEscola() (+27 more)
 
 ### Community 17 - "command.tsx"
 Cohesion: 0.11
@@ -373,7 +373,7 @@ Nodes (6): ref_node_fs_promises, CodeModifier, CodeEdit, descartarPatchesParciai
 
 ## Knowledge Gaps
 - **343 isolated node(s):** `$schema`, `plugin`, `repository`, `branch`, `description` (+338 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 468 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 467 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions

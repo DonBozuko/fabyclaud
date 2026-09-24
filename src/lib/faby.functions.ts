@@ -2202,7 +2202,12 @@ export const enviarMensagem = createServerFn({ method: "POST" })
       };
     }
 
-    if (aplicativoLocal && !candidatos.length) {
+    if (
+      aplicativoLocal &&
+      !candidatos.length &&
+      projetoNovo &&
+      !Object.keys(arquivosAtuais).length
+    ) {
       const problemas = auditarArquivos(aplicativoLocal.arquivos);
       const criticos = problemasCriticos(problemas);
       if (criticos.length) {
@@ -2678,7 +2683,8 @@ export const enviarMensagem = createServerFn({ method: "POST" })
         nota = `(atendido por ${nomeDe(provedorUsado)}; motivo de cada troca:\n${falhas.join("\n")}\n)`;
       }
       if (!ok) {
-        if (aplicativoLocal) {
+        const ehCriacaoTotal = projetoNovo && !Object.keys(arquivosAtuais).length;
+        if (aplicativoLocal && ehCriacaoTotal) {
           const projExistente = obterProjetoArmazenado(projetoId!, targetUserIds);
           const nomeFinal =
             (projExistente && !projetoNovo ? projExistente.nome : null) || aplicativoLocal.nome;

@@ -39,4 +39,3 @@ Rules:
 3. **Sincronização da Equipe de IAs (Mecânicos Trabalhando em Conjunto):**
    - Múltiplas IAs operam como um time de mecânicos integrados: a IA que assume a rodada seguinte NUNCA pode recomeçar do zero ou desmanchar componentes, classes CSS e lógicas criadas pela IA anterior.
    - O histórico de chat multi-turn deve preservar as decisões arquiteturais e o sumário de arquivos, mantendo a integridade sintática e a continuidade entre turnos.
-

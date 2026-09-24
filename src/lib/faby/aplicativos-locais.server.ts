@@ -1142,7 +1142,585 @@ renderTasks();`,
     };
   }
 
-  // 4. Fallback Dinâmico Inteligente para qualquer outro pedido
+  // 4. Tributo a Seriados e Turma do Chaves
+  if (/\b(chaves|turma\s+do\s+chaves|seriado|vila\s+do\s+chaves|chapolin)\b/i.test(limpo)) {
+    return {
+      nome: "Seriado - Turma do Chaves",
+      descricao:
+        "Tributo completo e interativo à clássica Turma do Chaves: episódios memoráveis, galeria de moradores da vila, frases célebres com síntese de voz e alternador de tema Clássico vs. Moderno.",
+      arquivos: {
+        "index.html": `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📺 Tributo - A Turma do Chaves</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="dark">
+  <div class="layout">
+    <header class="header">
+      <div class="brand">
+        <span class="icon">📺</span>
+        <div>
+          <h1>A Turma do Chaves</h1>
+          <p class="subtitle">Tributo à Vila Mais Amada da Televisão</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="themeToggle" class="btn-theme" title="Alternar Tema">
+          <span id="themeIcon">☀️</span> Modo Clássico
+        </button>
+        <button id="btnFraseRandom" class="btn-primary">
+          🔊 Frase do Dia
+        </button>
+      </div>
+    </header>
+
+    <div class="controls-bar">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Pesquisar episódios ou personagens..." aria-label="Pesquisa">
+      </div>
+      <div class="filter-tags" id="filterTags">
+        <button class="tag active" data-filter="todos">Todos</button>
+        <button class="tag" data-filter="classicos">Clássicos</button>
+        <button class="tag" data-filter="acapulco">Viagens</button>
+        <button class="tag" data-filter="escola">Escolinha</button>
+      </div>
+    </div>
+
+    <section class="banner-vila">
+      <div class="banner-content">
+        <h2>"Isso, isso, isso!"</h2>
+        <p id="fraseDestaque">"Foi sem querer querendo!" — Chaves</p>
+      </div>
+      <button class="btn-sound" onclick="ouvirFraseAtual()">Tocar Áudio 🔊</button>
+    </section>
+
+    <section class="section-title">
+      <h2>Episódios Inesquecíveis</h2>
+      <span class="badge" id="epCount">6 Episódios</span>
+    </section>
+
+    <div class="episodes-grid" id="episodesGrid"></div>
+
+    <section class="section-title" style="margin-top: 36px;">
+      <h2>Moradores da Vila</h2>
+    </section>
+    <div class="characters-grid" id="charactersGrid"></div>
+
+    <!-- Modal de Detalhes -->
+    <div id="modalDetalhes" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="modal-content">
+        <button class="modal-close" id="modalClose">&times;</button>
+        <h3 id="modalTitulo">Detalhes do Episódio</h3>
+        <p id="modalDescricao" class="modal-desc"></p>
+        <div id="modalMeta" class="modal-meta"></div>
+        <div class="modal-actions">
+          <button class="btn-primary" onclick="fecharModal()">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>`,
+        "styles.css": `:root {
+  --bg: #0b0f19;
+  --surface: #131b2e;
+  --surface-hover: #1e293b;
+  --border: rgba(255, 255, 255, 0.1);
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --accent: #f59e0b;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --radius: 16px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="light"] {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-hover: #f1f5f9;
+  --border: #e2e8f0;
+  --primary: #059669;
+  --primary-hover: #047857;
+  --accent: #d97706;
+  --text: #0f172a;
+  --text-muted: #64748b;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.layout {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand .icon {
+  font-size: 36px;
+}
+.brand h1 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-theme, .btn-primary, .btn-sound {
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+}
+
+.btn-theme {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-theme:hover {
+  background: var(--surface-hover);
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+.btn-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.controls-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.search-box input {
+  font-family: inherit;
+  font-size: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 16px;
+  border-radius: 12px;
+  width: 280px;
+  outline: none;
+  transition: var(--transition);
+}
+.search-box input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.filter-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tag {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.tag.active, .tag:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.banner-vila {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(245, 158, 11, 0.15));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.banner-content h2 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.banner-content p {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+.btn-sound {
+  background: var(--accent);
+  color: #000;
+}
+.btn-sound:hover {
+  filter: brightness(1.1);
+  transform: scale(1.03);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.section-title h2 {
+  font-size: 18px;
+  font-weight: 700;
+}
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--primary);
+}
+
+.episodes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+}
+.ep-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.ep-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+.ep-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+.ep-icon {
+  font-size: 26px;
+}
+.ep-ano {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--border);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.ep-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.ep-card p {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.ep-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.characters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 14px;
+}
+.char-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 12px;
+  text-align: center;
+  transition: var(--transition);
+  cursor: pointer;
+}
+.char-card:hover {
+  background: var(--surface-hover);
+  transform: translateY(-2px);
+}
+.char-avatar {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+.char-name {
+  font-size: 13px;
+  font-weight: 700;
+}
+.char-role {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+.modal-overlay.hidden { display: none; }
+.modal-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-width: 500px;
+  width: 100%;
+  padding: 28px;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.modal-content h3 { font-size: 20px; font-weight: 800; margin-bottom: 12px; }
+.modal-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+.modal-meta { font-size: 12px; color: var(--text-muted); padding: 12px; background: var(--bg); border-radius: 8px; margin-bottom: 20px; }
+.modal-actions { display: flex; justify-content: flex-end; }`,
+        "app.js": `const episodios = [
+  { id: 1, categoria: "classicos", icone: "👒", titulo: "O Ladrão da Vila", ano: "1976", desc: "Objetos começam a sumir na vila e todos suspeitam do Chaves, até que o verdadeiro culpado é revelado em uma lição emocionante de perdão.", personagens: "Chaves, Seu Madruga, Quico, Dona Florinda" },
+  { id: 2, categoria: "acapulco", icone: "🏖️", titulo: "Vamos Todos a Acapulco", ano: "1977", desc: "A vila inteira viaja para as praias de Acapulco após Dona Clotilde ganhar um concurso. Um dos especiais mais marcantes de toda a série.", personagens: "Chaves, Seu Madruga, Quico, Dona Florinda, Prof. Girafales" },
+  { id: 3, categoria: "classicos", icone: "🎶", titulo: "O Festival da Boa Vizinhança", ano: "1976", desc: "Os moradores se reúnem no pátio para um sarau de talentos com poemas clássicos do Seu Madruga e canções memoráveis.", personagens: "Todos os moradores" },
+  { id: 4, categoria: "escola", icone: "📚", titulo: "Aulinha do Professor Girafales", ano: "1975", desc: "O Professor Girafales tenta ensinar geografia e história, mas é interrompido pelas respostas hilárias das crianças.", personagens: "Prof. Girafales, Chaves, Quico, Chiquinha, Nhonho, Godinez" },
+  { id: 5, categoria: "classicos", icone: "👻", titulo: "Os Espíritos Zombeteiros", ano: "1977", desc: "Seu Madruga sonâmbulo coloca pratos no pátio e todos pensam que a vila está assombrada por fantasmas.", personagens: "Chaves, Seu Madruga, Bruxa do 71, Dona Florinda" },
+  { id: 6, categoria: "classicos", icone: "🏠", titulo: "O Despejo do Seu Madruga", ano: "1977", desc: "Com 14 meses de aluguel atrasado, Seu Madruga tem seus móveis colocados no pátio pelo Senhor Barriga.", personagens: "Seu Madruga, Sr. Barriga, Chaves, Quico" }
+];
+
+const frases = [
+  { fala: "Foi sem querer querendo!", autor: "Chaves" },
+  { fala: "Isso, isso, isso!", autor: "Chaves" },
+  { fala: "Ninguém tem paciência comigo!", autor: "Chaves" },
+  { fala: "Não há trabalho ruim, o ruim é ter que trabalhar!", autor: "Seu Madruga" },
+  { fala: "A vingança nunca é plena, mata a alma e a envenena.", autor: "Seu Madruga" },
+  { fala: "Você não vai com a minha cara?!", autor: "Quico" },
+  { fala: "Cale-se, você me deixa louco!", autor: "Quico" },
+  { fala: "Não gostaria de entrar e tomar uma xícara de café?", autor: "Dona Florinda" },
+  { fala: "Tá tá tá tá tá!", autor: "Professor Girafales" },
+  { fala: "Tinha que ser o Chaves de novo!", autor: "Senhor Barriga" }
+];
+
+const personagens = [
+  { nome: "Chaves", papel: "O menino do barril", emoji: "👦" },
+  { nome: "Seu Madruga", papel: "14 meses de aluguel", emoji: "🧔" },
+  { nome: "Quico", papel: "O bochechudo", emoji: "🧒" },
+  { nome: "Dona Florinda", papel: "A dona da casa 14", emoji: "👩" },
+  { nome: "Prof. Girafales", papel: "O mestre Linguiça", emoji: "👨‍🏫" },
+  { nome: "Sr. Barriga", papel: "O dono da vila", emoji: "💼" },
+  { nome: "Dona Clotilde", papel: "A Bruxa do 71", emoji: "🧙‍♀️" }
+];
+
+let fraseAtualIndex = 0;
+
+function renderEpisodios(lista) {
+  const container = document.getElementById("episodesGrid");
+  if (!container) return;
+  document.getElementById("epCount").textContent = lista.length + " Episódio(s)";
+  
+  if (!lista.length) {
+    container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 32px; color: var(--text-muted)">Nenhum episódio encontrado para esta busca.</div>';
+    return;
+  }
+
+  container.innerHTML = lista.map(ep => \`
+    <article class="ep-card" onclick="abrirModal(\${ep.id})">
+      <div>
+        <div class="ep-header">
+          <span class="ep-icon">\${ep.icone}</span>
+          <span class="ep-ano">\${ep.ano}</span>
+        </div>
+        <h3>\${ep.titulo}</h3>
+        <p>\${ep.desc}</p>
+      </div>
+      <div class="ep-footer">
+        <span>Ver sinopse completa &rarr;</span>
+      </div>
+    </article>
+  \`).join("");
+}
+
+function renderPersonagens() {
+  const container = document.getElementById("charactersGrid");
+  if (!container) return;
+  container.innerHTML = personagens.map(c => \`
+    <div class="char-card" onclick="falarNome('\${c.nome}')">
+      <div class="char-avatar">\${c.emoji}</div>
+      <div class="char-name">\${c.nome}</div>
+      <div class="char-role">\${c.role || c.papel}</div>
+    </div>
+  \`).join("");
+}
+
+window.abrirModal = function(id) {
+  const ep = episodios.find(e => e.id === id);
+  if (!ep) return;
+  document.getElementById("modalTitulo").textContent = ep.icone + " " + ep.titulo;
+  document.getElementById("modalDescricao").textContent = ep.desc;
+  document.getElementById("modalMeta").innerHTML = "<strong>Ano:</strong> " + ep.ano + "<br><strong>Personagens principais:</strong> " + ep.personagens;
+  document.getElementById("modalDetalhes").classList.remove("hidden");
+};
+
+window.fecharModal = function() {
+  document.getElementById("modalDetalhes").classList.add("hidden");
+};
+
+document.getElementById("modalClose")?.addEventListener("click", fecharModal);
+
+// Toggle de Tema: Clássico (Vila) vs Moderno (Escuro)
+const themeBtn = document.getElementById("themeToggle");
+const themeIcon = document.getElementById("themeIcon");
+
+themeBtn?.addEventListener("click", () => {
+  const current = document.body.getAttribute("data-theme") || "dark";
+  const next = current === "dark" ? "light" : "dark";
+  document.body.setAttribute("data-theme", next);
+  if (next === "light") {
+    themeBtn.innerHTML = '<span id="themeIcon">🌙</span> Modo Moderno';
+  } else {
+    themeBtn.innerHTML = '<span id="themeIcon">☀️</span> Modo Clássico';
+  }
+});
+
+// Busca reativa
+document.getElementById("searchInput")?.addEventListener("input", (e) => {
+  const q = e.target.value.toLowerCase().trim();
+  const filtrados = episodios.filter(ep => 
+    ep.titulo.toLowerCase().includes(q) || 
+    ep.desc.toLowerCase().includes(q) ||
+    ep.personagens.toLowerCase().includes(q)
+  );
+  renderEpisodios(filtrados);
+});
+
+// Filtros por Categoria
+document.querySelectorAll(".tag").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tag").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const filtro = btn.getAttribute("data-filter");
+    if (filtro === "todos") {
+      renderEpisodios(episodios);
+    } else {
+      renderEpisodios(episodios.filter(e => e.categoria === filtro));
+    }
+  });
+});
+
+// Frases e Síntese de Voz Nativa
+window.ouvirFraseAtual = function() {
+  const item = frases[fraseAtualIndex];
+  if ("speechSynthesis" in window) {
+    const utter = new SpeechSynthesisUtterance(item.fala);
+    utter.lang = "pt-BR";
+    window.speechSynthesis.speak(utter);
+  }
+};
+
+window.falarNome = function(nome) {
+  if ("speechSynthesis" in window) {
+    const utter = new SpeechSynthesisUtterance(nome);
+    utter.lang = "pt-BR";
+    window.speechSynthesis.speak(utter);
+  }
+};
+
+document.getElementById("btnFraseRandom")?.addEventListener("click", () => {
+  fraseAtualIndex = (fraseAtualIndex + 1) % frases.length;
+  const item = frases[fraseAtualIndex];
+  const el = document.getElementById("fraseDestaque");
+  if (el) {
+    el.textContent = '"' + item.fala + '" — ' + item.autor;
+  }
+  ouvirFraseAtual();
+});
+
+// Inicialização
+renderEpisodios(episodios);
+renderPersonagens();`,
+      },
+    };
+  }
+
+  // 5. Fallback Dinâmico Inteligente para qualquer outro pedido
   const tituloApp =
     limpo
       .slice(0, 40)

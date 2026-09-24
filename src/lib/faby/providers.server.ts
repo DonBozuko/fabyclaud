@@ -363,17 +363,46 @@ async function chamarGoogle(
   const modeloLimpo = modelo.replace(/^models\//, "").trim();
   const contents = sanitizarHistoricoParaGoogle(historico, prompt, imagens);
 
+  // Dual-Auth: chaves 'AQ.' ou 'ya29.' são tokens OAuth2/Bearer; 'AIzaSy' são API keys do Google.
+  const ehBearer = key.startsWith("AQ.") || key.startsWith("ya29.");
+  const urlBearer = `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent`;
+  const urlApiKey = `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent?key=${encodeURIComponent(key)}`;
+
+  const url = ehBearer ? urlBearer : urlApiKey;
+  const headers = ehBearer ? { Authorization: `Bearer ${key}` } : { "x-goog-api-key": key };
+
   // Retry rápido com espera curta em caso de 503
   let tentativas = 0;
   const maxTentativas = 2;
   while (tentativas < maxTentativas) {
     tentativas++;
-    const { ok, status, json, texto } = await postJson(
-      `https://generativelanguage.googleapis.com/v1beta/models/${modeloLimpo}:generateContent?key=${encodeURIComponent(key)}`,
-      { "x-goog-api-key": key },
+    let { ok, status, json, texto } = await postJson(
+      url,
+      headers,
       { contents, generationConfig: { temperature: 0.2, maxOutputTokens: 8192 } },
       Math.min(timeoutMs, 85_000),
     );
+
+    // Se falhar por autenticação (401/400) com formato incompatível, tenta a alternativa oposta
+    if (!ok && (status === 401 || status === 400)) {
+      const urlAlternativa = ehBearer ? urlApiKey : urlBearer;
+      const headersAlternativa = ehBearer
+        ? { "x-goog-api-key": key }
+        : { Authorization: `Bearer ${key}` };
+
+      const alt = await postJson(
+        urlAlternativa,
+        headersAlternativa,
+        { contents, generationConfig: { temperature: 0.2, maxOutputTokens: 8192 } },
+        Math.min(timeoutMs, 85_000),
+      );
+      if (alt.ok) {
+        ok = alt.ok;
+        status = alt.status;
+        json = alt.json;
+        texto = alt.texto;
+      }
+    }
 
     if (status === 503 && tentativas < maxTentativas) {
       await new Promise((resolve) => setTimeout(resolve, 800));
@@ -449,7 +478,16 @@ async function chamarOpenAICompat(
   timeoutMs: number,
   headersExtras?: Record<string, string>,
 ): Promise<ResultadoIA> {
-  const messages = sanitizarHistoricoParaOpenAI(historico, prompt, imagens, suportaImagem);
+  const teto = limiteEntrada(url);
+  const promptAjustado = prompt.length > teto ? resumirTexto(prompt, teto) : prompt;
+  const limiteTurnos = /api\.groq\.com/i.test(url) ? 3 : 6;
+  const messages = sanitizarHistoricoParaOpenAI(
+    historico,
+    promptAjustado,
+    imagens,
+    suportaImagem,
+    limiteTurnos,
+  );
 
   const { ok, status, json, texto } = await postJson(
     url,

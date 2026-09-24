@@ -588,4 +588,55 @@ document.getElementById("btnStart").addEventListener("click", () => {
       "Deve aceitar resposta com tags de pensamento anteriores",
     );
   });
+
+  test("PROVA 14: Dual-Auth Google Gemini, Proteção de Tokens Groq & Template Rico Lovable", async () => {
+    const { MODELS, MODELOS_ALTERNATIVOS, MODELOS_POR_ETAPA } = await import("./config");
+    const { aplicativoLocalParaPedido } = await import("./aplicativos-locais.server");
+    const { INSTRUCAO_PROJETO } = await import("./builder.server");
+
+    // 1. Modelos do Groq não contêm modelos com limite minúsculo (openai/gpt-oss-120b com TPM 8k)
+    assert.ok(
+      !MODELOS_ALTERNATIVOS.groq.includes("openai/gpt-oss-120b"),
+      "openai/gpt-oss-120b não deve estar nas alternativas do Groq",
+    );
+    for (const etapa of Object.keys(MODELOS_POR_ETAPA) as (keyof typeof MODELOS_POR_ETAPA)[]) {
+      const modelosGroq = MODELOS_POR_ETAPA[etapa].filter((m) => m.provedor === "groq");
+      for (const m of modelosGroq) {
+        assert.notEqual(
+          m.modelo,
+          "openai/gpt-oss-120b",
+          `Etapa ${etapa} não deve conter openai/gpt-oss-120b no Groq`,
+        );
+      }
+    }
+
+    // 2. Template Rico de Homenagem a Turma do Chaves com Toggle de Tema e Recursos Reais
+    const appChaves = aplicativoLocalParaPedido("crie um sereado em homenagem a turma do chaves");
+    assert.ok(appChaves, "Deve gerar aplicação dedicada para tributo do Chaves");
+    assert.ok(appChaves.arquivos["index.html"], "Deve conter index.html completo");
+    assert.ok(appChaves.arquivos["styles.css"], "Deve conter styles.css completo");
+    assert.ok(appChaves.arquivos["app.js"], "Deve conter app.js completo");
+    assert.ok(
+      appChaves.arquivos["index.html"].includes("A Turma do Chaves"),
+      "index.html deve conter título rico",
+    );
+    assert.ok(
+      appChaves.arquivos["index.html"].includes("themeToggle"),
+      "index.html deve conter toggle de tema clássico/moderno",
+    );
+    assert.ok(
+      appChaves.arquivos["app.js"].includes("renderEpisodios"),
+      "app.js deve renderizar episódios interativos",
+    );
+
+    // 3. Diretriz do Prompt exige código completo primeiro, proibindo esqueletos brancos
+    assert.ok(
+      INSTRUCAO_PROJETO.includes("ENTREGAR CÓDIGO 100% COMPLETO PRIMEIRO"),
+      "Instrução do projeto deve priorizar código rico completo primeiro",
+    );
+    assert.ok(
+      INSTRUCAO_PROJETO.includes("PROIBIÇÃO ABSOLUTA DE TELAS EM BRANCO OU ESQUELÉTICAS"),
+      "Instrução deve proibir expressamente telas em branco ou esqueléticas",
+    );
+  });
 });
