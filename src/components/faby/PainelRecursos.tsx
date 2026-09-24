@@ -37,7 +37,7 @@ const TITULOS: Record<PainelNome, { titulo: string; sub: string }> = {
   },
   escola: {
     titulo: "Escola das IAs",
-    sub: "Estudo todo dia com suas chaves: cada ciclo vale um ano de amadurecimento.",
+    sub: "Estudo todo dia com suas chaves gratuitas: cada ciclo vale um ano de amadurecimento.",
   },
   agentes: { titulo: "Agentes", sub: "Especialistas que mudam o jeito da IA trabalhar." },
   prompts: { titulo: "Prompts", sub: "Pedidos prontos e testados para começar rápido." },
@@ -232,7 +232,7 @@ function Escola() {
 
       <p className="text-xs text-muted-foreground">
         Cada ciclo de estudo equivale a um ano de amadurecimento: as IAs estudam um tema com suas
-        chaves, transformam o que aprenderam em regras curtas e passam a seguir essas
+        chaves gratuitas, transformam o que aprenderam em regras curtas e passam a seguir essas
         regras em todas as respostas. Cada defeito real que a conferência pega também entra aqui,
         para não se repetir.
       </p>
@@ -272,4 +272,465 @@ function Escola() {
           >
             <div className="min-w-0 flex-1">
               <p className="text-xs">{l.regra}</p>
-              <p className="mt-0.5 text-[10px
+              <p className="mt-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
+                {l.origem === "falha" ? "aprendido com erro real" : l.tema}
+              </p>
+            </div>
+            <button
+              type="button"
+              aria-label="Apagar lição"
+              onClick={async () => {
+                await remover({ data: { id: l.id } });
+                void queryClient.invalidateQueries({ queryKey: ["escola"] });
+              }}
+              className="rounded-md border border-border px-2 py-1 text-[10px] text-muted-foreground transition hover:text-destructive"
+            >
+              Apagar
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Agentes ---------------- */
+function Agentes({
+  agente,
+  onAgente,
+}: {
+  agente: string | null;
+  onAgente: (i: string | null) => void;
+}) {
+  const queryClient = useQueryClient();
+  const buscar = useServerFn(listarAgentes);
+  const criar = useServerFn(criarAgente);
+  const remover = useServerFn(apagarAgente);
+  const meus = useQuery({ queryKey: ["agentes"], queryFn: () => buscar() });
+
+  const [nome, setNome] = useState("");
+  const [instrucoes, setInstrucoes] = useState("");
+
+  const criarMut = useMutation({
+    mutationFn: () => criar({ data: { nome, instrucoes } }),
+    onSuccess: () => {
+      toast.success("Agente criado.");
+      setNome("");
+      setInstrucoes("");
+      void queryClient.invalidateQueries({ queryKey: ["agentes"] });
+    },
+    onError: () => toast.error("Confira o nome e as instruções (mínimo 10 letras)."),
+  });
+
+  const lista = [
+    ...AGENTES_PRONTOS,
+    ...((meus.data ?? []) as any[]).map((a) => ({ ...a, pronto: false as const })),
+  ];
+
+  return (
+    <div className="space-y-4">
+      <button
+        type="button"
+        onClick={() => onAgente(null)}
+        className={`w-full rounded-lg border px-3 py-2.5 text-left text-sm transition ${
+          agente
+            ? "border-border bg-secondary hover:bg-accent"
+            : "border-border bg-accent text-primary"
+        }`}
+      >
+        FabyClaud padrão {agente ? "" : "• ativo"}
+      </button>
+
+      {lista.map((a: any) => (
+        <div key={a.id} className="rounded-xl border border-border bg-secondary/50 p-3">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm font-semibold">
+              {a.nome} {agente === a.id ? <span className="text-primary">• ativo</span> : null}
+            </p>
+            <div className="flex gap-1.5">
+              <button type="button" className={botaoLeve} onClick={() => onAgente(a.id)}>
+                {agente === a.id ? "Usando" : "Usar"}
+              </button>
+              {!a.pronto ? (
+                <button
+                  type="button"
+                  className="text-xs text-destructive"
+                  onClick={async () => {
+                    await remover({ data: { id: a.id } });
+                    if (agente === a.id) onAgente(null);
+                    void queryClient.invalidateQueries({ queryKey: ["agentes"] });
+                  }}
+                >
+                  apagar
+                </button>
+              ) : null}
+            </div>
+          </div>
+          <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{a.instrucoes}</p>
+        </div>
+      ))}
+
+      <div className="space-y-2 border-t border-border pt-4">
+        <h3 className="text-sm font-semibold text-primary">Criar seu agente</h3>
+        <input
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+          placeholder="Nome (ex: Especialista em e-commerce)"
+          className={campo}
+        />
+        <textarea
+          rows={4}
+          value={instrucoes}
+          onChange={(e) => setInstrucoes(e.target.value)}
+          placeholder="Como ele deve trabalhar, o que sempre fazer e o que nunca fazer."
+          className={`${campo} resize-none`}
+        />
+        <button
+          type="button"
+          className={botao}
+          disabled={criarMut.isPending || !nome || instrucoes.length < 10}
+          onClick={() => criarMut.mutate()}
+        >
+          Criar agente
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Prompts ---------------- */
+function Prompts({ onUsar }: { onUsar: (texto: string) => void }) {
+  const queryClient = useQueryClient();
+  const buscar = useServerFn(listarPrompts);
+  const criar = useServerFn(criarPrompt);
+  const remover = useServerFn(apagarPrompt);
+  const meus = useQuery({ queryKey: ["prompts"], queryFn: () => buscar() });
+
+  const [titulo, setTitulo] = useState("");
+  const [texto, setTexto] = useState("");
+
+  const criarMut = useMutation({
+    mutationFn: () => criar({ data: { titulo, texto } }),
+    onSuccess: () => {
+      toast.success("Prompt salvo.");
+      setTitulo("");
+      setTexto("");
+      void queryClient.invalidateQueries({ queryKey: ["prompts"] });
+    },
+    onError: () => toast.error("Confira o título e o texto do prompt."),
+  });
+
+  const lista = [
+    ...PROMPTS_PRO,
+    ...((meus.data ?? []) as any[]).map((p) => ({ ...p, pronto: false as const })),
+  ];
+
+  return (
+    <div className="space-y-3">
+      {lista.map((p: any) => (
+        <div key={p.id} className="rounded-xl border border-border bg-secondary/50 p-3">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm font-semibold">{p.titulo}</p>
+            <div className="flex gap-1.5">
+              <button type="button" className={botaoLeve} onClick={() => onUsar(p.texto)}>
+                Usar
+              </button>
+              {!p.pronto ? (
+                <button
+                  type="button"
+                  className="text-xs text-destructive"
+                  onClick={async () => {
+                    await remover({ data: { id: p.id } });
+                    void queryClient.invalidateQueries({ queryKey: ["prompts"] });
+                  }}
+                >
+                  apagar
+                </button>
+              ) : null}
+            </div>
+          </div>
+          <p className="mt-1.5 line-clamp-3 whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
+            {p.texto}
+          </p>
+        </div>
+      ))}
+
+      <div className="space-y-2 border-t border-border pt-4">
+        <h3 className="text-sm font-semibold text-primary">Salvar um prompt seu</h3>
+        <input
+          value={titulo}
+          onChange={(e) => setTitulo(e.target.value)}
+          placeholder="Título"
+          className={campo}
+        />
+        <textarea
+          rows={4}
+          value={texto}
+          onChange={(e) => setTexto(e.target.value)}
+          placeholder="Texto do pedido"
+          className={`${campo} resize-none`}
+        />
+        <button
+          type="button"
+          className={botao}
+          disabled={criarMut.isPending || !titulo || texto.length < 5}
+          onClick={() => criarMut.mutate()}
+        >
+          Salvar prompt
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Docs ---------------- */
+function Docs({
+  projetoId,
+  arquivos,
+  onAtualizar,
+}: {
+  projetoId: string | null;
+  arquivos: Record<string, string>;
+  onAtualizar: () => void;
+}) {
+  const gerar = useServerFn(gerarDocumentacao);
+  const doc = arquivos["DOCUMENTACAO.md"] ?? "";
+
+  const mut = useMutation({
+    mutationFn: () => gerar({ data: { projeto_id: projetoId! } }),
+    onSuccess: (r: any) => {
+      if (!r.ok) {
+        toast.error(r.msg ?? "Não conseguimos gerar agora.");
+        return;
+      }
+      toast.success("Documentação criada e salva no projeto.");
+      onAtualizar();
+    },
+    onError: () => toast.error("Não conseguimos gerar agora."),
+  });
+
+  if (!projetoId) return <SemProjeto />;
+
+  function baixar() {
+    const url = URL.createObjectURL(new Blob([doc], { type: "text/markdown;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "DOCUMENTACAO.md";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="flex gap-2">
+        <button
+          type="button"
+          className={botao}
+          disabled={mut.isPending}
+          onClick={() => mut.mutate()}
+        >
+          {mut.isPending ? "Escrevendo..." : doc ? "Gerar de novo" : "Gerar documentação"}
+        </button>
+        {doc ? (
+          <button type="button" className={botaoLeve} onClick={baixar}>
+            Baixar .md
+          </button>
+        ) : null}
+      </div>
+      {doc ? (
+        <pre className="max-h-[50vh] overflow-auto whitespace-pre-wrap rounded-xl border border-border bg-secondary/50 p-3 text-xs leading-relaxed">
+          {doc}
+        </pre>
+      ) : (
+        <p className="text-xs text-muted-foreground">
+          A IA lê o código do projeto e escreve o manual: telas, arquivos, como publicar e como
+          personalizar.
+        </p>
+      )}
+    </div>
+  );
+}
+
+/* ---------------- Backups ---------------- */
+function Backups({
+  projetoId,
+  onAtualizar,
+}: {
+  projetoId: string | null;
+  onAtualizar: () => void;
+}) {
+  const queryClient = useQueryClient();
+  const buscar = useServerFn(listarBackups);
+  const criar = useServerFn(criarBackup);
+  const restaurar = useServerFn(restaurarBackup);
+  const remover = useServerFn(apagarBackup);
+
+  const lista = useQuery({
+    queryKey: ["backups", projetoId],
+    queryFn: () => buscar({ data: { projeto_id: projetoId! } }),
+    enabled: Boolean(projetoId),
+  });
+
+  if (!projetoId) return <SemProjeto />;
+
+  async function recarregar() {
+    await queryClient.invalidateQueries({ queryKey: ["backups", projetoId] });
+  }
+
+  return (
+    <div className="space-y-3">
+      <button
+        type="button"
+        className={botao}
+        onClick={async () => {
+          const r = (await criar({
+            data: { projeto_id: projetoId!, rotulo: "Cópia manual" },
+          })) as any;
+          if (!r.ok) toast.error(r.msg ?? "Não deu.");
+          else toast.success("Cópia guardada.");
+          await recarregar();
+        }}
+      >
+        Guardar cópia agora
+      </button>
+      <p className="text-xs text-muted-foreground">
+        O sistema também guarda uma cópia automática antes de cada alteração feita pela IA.
+      </p>
+
+      <ul className="space-y-1.5">
+        {(lista.data ?? []).map((b: any) => (
+          <li
+            key={b.id}
+            className="flex items-center justify-between gap-2 rounded-lg border border-border bg-secondary px-3 py-2 text-xs"
+          >
+            <span className="min-w-0 flex-1 truncate">
+              {b.rotulo || "Cópia"}{" "}
+              <span className="text-muted-foreground">
+                — {new Date(b.created_at).toLocaleString("pt-BR")} • {b.qtd} arquivo(s)
+              </span>
+            </span>
+            <button
+              type="button"
+              className={botaoLeve}
+              onClick={async () => {
+                const r = (await restaurar({ data: { id: b.id } })) as any;
+                if (!r.ok) toast.error(r.msg ?? "Não deu.");
+                else toast.success("Projeto restaurado.");
+                onAtualizar();
+                await recarregar();
+              }}
+            >
+              restaurar
+            </button>
+            <button
+              type="button"
+              className="text-destructive"
+              onClick={async () => {
+                await remover({ data: { id: b.id } });
+                await recarregar();
+              }}
+            >
+              apagar
+            </button>
+          </li>
+        ))}
+        {lista.data && lista.data.length === 0 ? (
+          <li className="text-xs text-muted-foreground">Nenhuma cópia ainda.</li>
+        ) : null}
+      </ul>
+    </div>
+  );
+}
+
+/* ---------------- Workspace ---------------- */
+function Workspace({
+  projetoId,
+  arquivos,
+  onAtualizar,
+}: {
+  projetoId: string | null;
+  arquivos: Record<string, string>;
+  onAtualizar: () => void;
+}) {
+  const salvar = useServerFn(salvarArquivo);
+  const remover = useServerFn(apagarArquivo);
+  const nomes = Object.keys(arquivos);
+  const [ativo, setAtivo] = useState(nomes[0] ?? "");
+  const [conteudo, setConteudo] = useState(arquivos[nomes[0] ?? ""] ?? "");
+
+  useEffect(() => {
+    const nome = nomes.includes(ativo) ? ativo : (nomes[0] ?? "");
+    setAtivo(nome);
+    setConteudo(arquivos[nome] ?? "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projetoId, nomes.join("|")]);
+
+  if (!projetoId) return <SemProjeto />;
+  if (!nomes.length) {
+    return (
+      <p className="text-sm text-muted-foreground">
+        Esse projeto ainda não tem arquivos. Peça um site no chat e eles aparecem aqui.
+      </p>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-1.5">
+        {nomes.map((n) => (
+          <button
+            key={n}
+            type="button"
+            onClick={() => {
+              setAtivo(n);
+              setConteudo(arquivos[n] ?? "");
+            }}
+            className={`rounded-lg border px-2.5 py-1.5 text-xs transition ${
+              ativo === n ? "border-border bg-accent text-primary" : "border-border bg-secondary"
+            }`}
+          >
+            {n}
+          </button>
+        ))}
+      </div>
+
+      <textarea
+        rows={14}
+        value={conteudo}
+        onChange={(e) => setConteudo(e.target.value)}
+        spellCheck={false}
+        className={`${campo} resize-none font-mono text-[11px] leading-relaxed`}
+      />
+
+      <div className="flex gap-2">
+        <button
+          type="button"
+          className={botao}
+          onClick={async () => {
+            const r = (await salvar({
+              data: { projeto_id: projetoId, nome: ativo, conteudo },
+            })) as any;
+            if (!r.ok) toast.error(r.msg ?? "Não deu.");
+            else toast.success("Arquivo salvo.");
+            onAtualizar();
+          }}
+        >
+          Salvar arquivo
+        </button>
+        <button
+          type="button"
+          className={botaoLeve}
+          onClick={async () => {
+            await remover({ data: { projeto_id: projetoId, nome: ativo } });
+            toast.success("Arquivo apagado.");
+            onAtualizar();
+          }}
+        >
+          Apagar arquivo
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default PainelRecursos;
