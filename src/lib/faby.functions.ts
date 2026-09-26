@@ -1479,8 +1479,9 @@ export const salvarArquivo = createServerFn({ method: "POST" })
         .update({ arquivos: arquivos as unknown as never, updated_at: new Date().toISOString() })
         .eq("id", data.projeto_id);
       if (!error) salvou = true;
-    } catch {
-      // ignore
+      else motivoFalha = error.message;
+    } catch (erro: any) {
+      motivoFalha = erro?.message ?? String(erro);
     }
 
     if (!salvou) {
@@ -1491,12 +1492,20 @@ export const salvarArquivo = createServerFn({ method: "POST" })
           .update({ arquivos: arquivos as unknown as never, updated_at: new Date().toISOString() })
           .eq("id", data.projeto_id);
         if (!adminErr) salvou = true;
-      } catch {
-        // ignore
+        else motivoFalha = adminErr.message;
+      } catch (erro: any) {
+        motivoFalha = erro?.message ?? String(erro);
       }
     }
 
-    return { ok: true, arquivos };
+    // Nunca dizer "salvo" sem ter gravado em algum lugar de verdade.
+    if (!salvou && !pExistente) {
+      throw new Error(
+        `Não consegui salvar o arquivo "${data.nome.trim()}": ${motivoFalha || "o banco não confirmou a gravação"}`,
+      );
+    }
+
+    return { ok: true, arquivos, gravado_no_banco: salvou };
   });
 
 export const apagarArquivo = createServerFn({ method: "POST" })
