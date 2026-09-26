@@ -1473,6 +1473,7 @@ export const salvarArquivo = createServerFn({ method: "POST" })
     }
 
     let salvou = false;
+    let motivoFalha = "";
     try {
       const { error } = await context.supabase
         .from("projetos")
