@@ -1283,15 +1283,24 @@ export const criarBackup = createServerFn({ method: "POST" })
       });
       if (error) {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        await supabaseAdmin.from("backups").insert({
+        const { error: erroAdmin } = await supabaseAdmin.from("backups").insert({
           user_id: context.userId,
           projeto_id: data.projeto_id,
           rotulo: data.rotulo || "Cópia manual",
           arquivos: arquivos as unknown as never,
         });
+        if (erroAdmin) {
+          return {
+            ok: false,
+            msg: `Não consegui salvar a cópia de segurança no banco: ${erroAdmin.message}`,
+          };
+        }
       }
-    } catch {
-      // ignore
+    } catch (erro: any) {
+      return {
+        ok: false,
+        msg: `Não consegui salvar a cópia de segurança: ${erro?.message ?? erro}`,
+      };
     }
     return { ok: true };
   });
