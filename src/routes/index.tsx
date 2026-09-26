@@ -126,33 +126,41 @@ function FabyClaud() {
   const [pronto, setPronto] = useState(false);
   const [logado, setLogado] = useState(false);
 
+  // A conta real do Supabase tem prioridade absoluta sobre a sessão local.
+  // Se checarmos a sessão local primeiro, o sistema entra em modo local e
+  // esconde os projetos e as chaves que já estão na conta da pessoa.
   useEffect(() => {
-    if (typeof window !== "undefined" && localStorage.getItem("faby_user_session")) {
-      setLogado(true);
+    let ativo = true;
+
+    const decidir = (temContaReal: boolean) => {
+      if (!ativo) return;
+      if (temContaReal || temSessaoLocal()) {
+        setLogado(true);
+      } else {
+        setLogado(false);
+        void navigate({ to: "/auth" });
+      }
       setPronto(true);
-      return;
-    }
+    };
 
     const { data } = supabase.auth.onAuthStateChange((_e: any, sessao: any) => {
-      if (sessao) {
-        setLogado(true);
-      } else if (typeof window !== "undefined" && !localStorage.getItem("faby_user_session")) {
-        setLogado(false);
-        void navigate({ to: "/auth" });
-      }
+      decidir(Boolean(sessao));
     });
 
-    void supabase.auth.getSession().then(({ data }: { data: { session: any } }) => {
-      if (data?.session) {
-        setLogado(true);
-      } else if (typeof window !== "undefined" && !localStorage.getItem("faby_user_session")) {
-        setLogado(false);
-        void navigate({ to: "/auth" });
-      }
-      setPronto(true);
-    });
+    void supabase.auth
+      .getSession()
+      .then(({ data: sessaoAtual }: { data: { session: any } }) => {
+        decidir(Boolean(sessaoAtual?.session));
+      })
+      .catch((erro: unknown) => {
+        console.warn("[FabyClaud] Não consegui confirmar a conta no servidor.", erro);
+        decidir(false);
+      });
 
-    return () => data.subscription.unsubscribe();
+    return () => {
+      ativo = false;
+      data.subscription.unsubscribe();
+    };
   }, [navigate]);
 
   const buscarProjetos = useServerFn(listarProjetos);
