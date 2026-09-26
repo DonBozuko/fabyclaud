@@ -71,6 +71,19 @@ export function garantirSessaoLocal(): SessaoLocal {
   return nova;
 }
 
+/** Diz se já existe uma sessão local salva, sem criar uma nova. */
+export function temSessaoLocal(): boolean {
+  if (typeof window === "undefined") return false;
+  const bruto = window.localStorage.getItem(CHAVE_SESSAO_LOCAL);
+  if (!bruto) return false;
+  try {
+    const salva = JSON.parse(bruto) as Partial<SessaoLocal>;
+    return typeof salva?.id === "string" && salva.id.length > 0;
+  } catch {
+    return false;
+  }
+}
+
 /** Identificador do usuário em uso: conta real quando existir, senão a sessão local. */
 export function idUsuarioAtual(idContaReal?: string | null): string {
   if (idContaReal) return idContaReal;

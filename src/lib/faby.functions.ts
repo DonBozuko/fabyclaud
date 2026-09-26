@@ -1247,8 +1247,10 @@ export const listarBackups = createServerFn({ method: "GET" })
         created_at: b.created_at,
         qtd: Object.keys((b.arquivos as Record<string, string>) ?? {}).length,
       }));
-    } catch {
-      return [];
+    } catch (erro: any) {
+      throw new Error(
+        `Não consegui ler as cópias de segurança deste projeto: ${erro?.message ?? erro}`,
+      );
     }
   });
 
