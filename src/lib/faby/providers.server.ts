@@ -438,14 +438,50 @@ async function chamarGoogle(
       return { ok: false, texto: msg, status, bruto: texto };
     }
 
-    const partes = (json as { candidates?: { content?: { parts?: { text?: string }[] } }[] })
-      ?.candidates?.[0]?.content?.parts;
-    const saida = (partes ?? [])
+    type RespostaGoogle = {
+      candidates?: { content?: { parts?: { text?: string }[] }; finishReason?: string }[];
+    };
+    const candidato = (json as RespostaGoogle)?.candidates?.[0];
+    let acumulado = (candidato?.content?.parts ?? [])
       .map((p) => p.text ?? "")
       .join("")
       .trim();
-    if (!saida) return { ok: false, texto: "a IA devolveu uma resposta vazia" };
-    return { ok: true, texto: saida };
+    if (!acumulado) return { ok: false, texto: "a IA devolveu uma resposta vazia" };
+
+    // Resposta cortada pelo limite de saída: pede a continuação exata.
+    let motivo = candidato?.finishReason ?? "";
+    let rodadas = 0;
+    while (motivo === "MAX_TOKENS" && rodadas < 2) {
+      rodadas++;
+      const continuacao = await postJson(
+        url,
+        headers,
+        {
+          contents: [
+            ...contents,
+            { role: "model", parts: [{ text: acumulado }] },
+            {
+              role: "user",
+              parts: [
+                {
+                  text: "Sua resposta foi cortada por limite de tamanho. Continue EXATAMENTE do caractere onde parou, sem repetir nada e sem reiniciar o arquivo.",
+                },
+              ],
+            },
+          ],
+          generationConfig: { temperature: 0.2, maxOutputTokens: 8192 },
+        },
+        Math.min(timeoutMs, 85_000),
+      );
+      if (!continuacao.ok) break;
+      const seguinte = (continuacao.json as RespostaGoogle)?.candidates?.[0];
+      const parte = (seguinte?.content?.parts ?? []).map((p) => p.text ?? "").join("");
+      if (!parte.trim()) break;
+      acumulado += parte;
+      motivo = seguinte?.finishReason ?? "";
+    }
+
+    return { ok: true, texto: acumulado };
   }
 
   return { ok: false, status: 503, texto: "Google Gemini sobrecarregado (503) após tentativas" };
@@ -515,19 +551,57 @@ async function chamarOpenAICompat(
     limiteTurnos,
   );
 
+  const cabecalhos = { Authorization: `Bearer ${key.trim()}`, ...(headersExtras ?? {}) };
+
   const { ok, status, json, texto } = await postJson(
     url,
-    { Authorization: `Bearer ${key.trim()}`, ...(headersExtras ?? {}) },
+    cabecalhos,
     { model: modelo, messages, temperature: 0.2, max_tokens: maxTokens },
     timeoutMs,
   );
   if (!ok) return { ok: false, texto: erroLegivel(status, json, texto), status, bruto: texto };
 
-  const saida = (
-    json as { choices?: { message?: { content?: string } }[] }
-  )?.choices?.[0]?.message?.content?.trim();
-  if (!saida) return { ok: false, texto: "a IA devolveu uma resposta vazia" };
-  return { ok: true, texto: saida };
+  type RespostaCompat = {
+    choices?: { message?: { content?: string }; finish_reason?: string }[];
+  };
+  const primeira = (json as RespostaCompat)?.choices?.[0];
+  let acumulado = primeira?.message?.content?.trim() ?? "";
+  if (!acumulado) return { ok: false, texto: "a IA devolveu uma resposta vazia" };
+
+  // Modelos gratuitos cortam a resposta no meio de um arquivo (finish_reason = length).
+  // Nesse caso pedimos a continuação exata em vez de entregar código incompleto.
+  let motivo = primeira?.finish_reason ?? "";
+  let rodadas = 0;
+  while (motivo === "length" && rodadas < 2) {
+    rodadas++;
+    const continuacao = await postJson(
+      url,
+      cabecalhos,
+      {
+        model: modelo,
+        messages: [
+          ...messages,
+          { role: "assistant", content: acumulado },
+          {
+            role: "user",
+            content:
+              "Sua resposta foi cortada por limite de tamanho. Continue EXATAMENTE do caractere onde parou, sem repetir nada do que já escreveu, sem comentários e sem reiniciar o arquivo.",
+          },
+        ],
+        temperature: 0.2,
+        max_tokens: maxTokens,
+      },
+      timeoutMs,
+    );
+    if (!continuacao.ok) break;
+    const seguinte = (continuacao.json as RespostaCompat)?.choices?.[0];
+    const parte = seguinte?.message?.content ?? "";
+    if (!parte.trim()) break;
+    acumulado += parte;
+    motivo = seguinte?.finish_reason ?? "";
+  }
+
+  return { ok: true, texto: acumulado };
 }
 
 /** Google Antigravity Agent: executa com os modelos mais rápidos e recentes do Google Gemini. */

@@ -1,3 +1,4 @@
+import { temSessaoLocal } from "@/lib/faby/sessao-local";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
@@ -590,10 +591,7 @@ function FabyClaud() {
                 <Bot className="size-5 text-primary" />
               </span>
               <div>
-                <h1 className="flex items-center gap-2 text-lg font-semibold">
-                  FabyClaud
-                  
-                </h1>
+                <h1 className="flex items-center gap-2 text-lg font-semibold">FabyClaud</h1>
                 <p className="text-xs text-muted-foreground">
                   Criação com capacidades verificadas.
                 </p>
