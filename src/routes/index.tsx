@@ -1,3 +1,4 @@
+import { temSessaoLocal } from "@/lib/faby/sessao-local";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
