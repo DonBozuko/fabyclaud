@@ -330,31 +330,64 @@ function FabyClaud() {
     [errosPreview, problemasQualidade],
   );
 
+  // Ciclo testar → corrigir → testar de novo, com limite para não gastar chamadas à toa.
+  const LIMITE_RODADAS = 3;
+  const rodadasConserto = useRef<Record<string, number>>({});
+  const [rodadaAtual, setRodadaAtual] = useState(0);
+  const [conferidoAposConserto, setConferidoAposConserto] = useState(false);
+
+  useEffect(() => {
+    setRodadaAtual(projetoId ? (rodadasConserto.current[projetoId] ?? 0) : 0);
+    setConferidoAposConserto(false);
+  }, [projetoId]);
+
+  // Auditoria limpa depois de um conserto = prova de que corrigiu; zera o contador.
+  useEffect(() => {
+    const pid = projetoIdRef.current;
+    if (!pid || !auditoria || problemasPrevia.length) return;
+    if ((rodadasConserto.current[pid] ?? 0) > 0) {
+      setConferidoAposConserto(true);
+      rodadasConserto.current[pid] = 0;
+      setRodadaAtual(0);
+    }
+  }, [auditoria, problemasPrevia.length]);
+
   function consertarErrosDaPrevia(automatico = false) {
     if (!problemasPrevia.length || mandar.isPending || !projetoIdRef.current) return;
     const currentProj = projetoIdRef.current;
+    const feitas = rodadasConserto.current[currentProj] ?? 0;
+    if (automatico && feitas >= LIMITE_RODADAS) return;
     const assinatura = `${currentProj}::${problemasPrevia.join("|")}`;
-    if (consertosFeitos.current.has(assinatura)) return;
+    if (automatico && consertosFeitos.current.has(assinatura)) return;
     consertosFeitos.current.add(assinatura);
+    const rodada = automatico ? feitas + 1 : 1;
+    rodadasConserto.current[currentProj] = rodada;
+    setRodadaAtual(rodada);
+    setConferidoAposConserto(false);
     const prompt = [
-      "O controle de qualidade abriu o projeto no navegador, clicou em cada botão e encontrou estes problemas reais:",
+      `O controle de qualidade abriu o projeto no navegador, clicou em cada botão e encontrou estes problemas reais (tentativa ${rodada} de ${LIMITE_RODADAS}):`,
       ...problemasPrevia.map((e) => `- ${e}`),
       "",
       "Corrija a causa de cada item nos arquivos do projeto, mantendo toda a lógica e o visual que já funcionavam.",
       "Botão sem ação precisa ganhar comportamento de verdade (abrir tela, salvar, filtrar, validar), não um alerta vazio.",
       "Entregue os arquivos completos alterados. Não invente correção sem olhar o item citado.",
+      rodada > 1
+        ? "A correção anterior NÃO resolveu. Mude a abordagem em vez de repetir a mesma alteração."
+        : "",
       automatico ? "(conserto disparado automaticamente pelo controle de qualidade)" : "",
     ]
       .filter(Boolean)
       .join("\n");
-    setPendente("Consertando o que o controle de qualidade encontrou");
+    setPendente(
+      `Consertando o que o controle de qualidade encontrou (tentativa ${rodada} de ${LIMITE_RODADAS})`,
+    );
     setPendenteAnexos([]);
     setErrosPreview([]);
     setAuditoria(null);
     mandar.mutate({ prompt, anexos: [] });
   }
 
-  // Auto-correção inteligente (Self-Healing): dispara automaticamente quando o controle de qualidade acha falhas reais
+  // Auto-correção: dispara sozinha quando a prévia acusa falhas reais, até o limite de tentativas.
   useEffect(() => {
     if (problemasPrevia.length > 0 && !mandar.isPending) {
       const timer = setTimeout(() => {
@@ -364,6 +397,8 @@ function FabyClaud() {
     }
     return undefined;
   }, [problemasPrevia]);
+
+  const esgotouTentativas = rodadaAtual >= LIMITE_RODADAS && problemasPrevia.length > 0;
 
   useEffect(() => {
     areaChat.current?.scrollTo({ top: areaChat.current.scrollHeight, behavior: "smooth" });
@@ -778,6 +813,17 @@ function FabyClaud() {
                           <li key={e}>• {e}</li>
                         ))}
                       </ul>
+                      {esgotouTentativas ? (
+                        <p className="mt-1 text-[11px] text-foreground">
+                          Tentei consertar sozinho {LIMITE_RODADAS} vezes e ainda não resolveu.
+                          Parei para não gastar suas chamadas. Descreva o problema no chat ou clique
+                          abaixo para tentar mais uma vez.
+                        </p>
+                      ) : rodadaAtual > 0 ? (
+                        <p className="mt-1 text-[11px] text-muted-foreground">
+                          Conserto automático: tentativa {rodadaAtual} de {LIMITE_RODADAS}.
+                        </p>
+                      ) : null}
                       <button
                         type="button"
                         onClick={() => consertarErrosDaPrevia(false)}
@@ -789,8 +835,9 @@ function FabyClaud() {
                     </div>
                   ) : auditoria ? (
                     <div className="w-full border-b border-border bg-primary/10 px-3 py-1.5 text-left text-[11px] text-muted-foreground">
+                      {conferidoAposConserto ? "Conserto conferido: " : ""}
                       Testei {auditoria.total} botão(ões)/link(s) desta tela clicando um por um:
-                      todos responderam.
+                      todos responderam, sem erros.
                     </div>
                   ) : null}
                   <iframe
