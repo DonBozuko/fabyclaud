@@ -378,7 +378,9 @@ function FabyClaud() {
     ]
       .filter(Boolean)
       .join("\n");
-    setPendente(`Consertando o que o controle de qualidade encontrou (tentativa ${rodada} de ${LIMITE_RODADAS})`);
+    setPendente(
+      `Consertando o que o controle de qualidade encontrou (tentativa ${rodada} de ${LIMITE_RODADAS})`,
+    );
     setPendenteAnexos([]);
     setErrosPreview([]);
     setAuditoria(null);
@@ -813,9 +815,9 @@ function FabyClaud() {
                       </ul>
                       {esgotouTentativas ? (
                         <p className="mt-1 text-[11px] text-foreground">
-                          Tentei consertar sozinho {LIMITE_RODADAS} vezes e ainda não resolveu. Parei
-                          para não gastar suas chamadas. Descreva o problema no chat ou clique abaixo
-                          para tentar mais uma vez.
+                          Tentei consertar sozinho {LIMITE_RODADAS} vezes e ainda não resolveu.
+                          Parei para não gastar suas chamadas. Descreva o problema no chat ou clique
+                          abaixo para tentar mais uma vez.
                         </p>
                       ) : rodadaAtual > 0 ? (
                         <p className="mt-1 text-[11px] text-muted-foreground">
