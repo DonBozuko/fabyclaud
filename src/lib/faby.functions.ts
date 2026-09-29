@@ -2653,8 +2653,13 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           candidato.apiUrl,
           modeloDesejado,
         );
+        // A resposta real da IA precisa ser aceita aqui. Sem estas duas linhas o
+        // motor tratava toda resposta boa como falha e caía no modelo genérico.
+        ok = r.ok;
+        if (r.ok) bruto = r.texto;
         const arquivosEntregues = exigeArquivos ? extrairArquivos(r.texto).arquivos : {};
         let entregouObrigatorios = !exigeArquivos || Object.keys(arquivosEntregues).length > 0;
+
 
         // Se a IA respondeu apenas com texto conversacional mas o pedido exigia arquivos,
         // faz uma tentativa rápida de recuperação direta com o mesmo modelo
