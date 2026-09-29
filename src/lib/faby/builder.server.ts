@@ -914,7 +914,26 @@ export function extrairArquivos(resposta: string): {
     };
   }
 
+  // Último fallback honesto: a IA entregou marcação solta (ex: <canvas>, <div>,
+  // <style>, <script>) sem <html> e sem tags de arquivo. Em vez de descartar o
+  // trabalho real e cair num modelo genérico, montamos o index.html com ela.
+  const marcacaoSolta = resposta.match(
+    /<(?:canvas|div|section|main|header|body|style|script|svg|form|table)[\s>][\s\S]*$/i,
+  );
+  if (marcacaoSolta) {
+    const trecho = marcacaoSolta[0].replace(/```[\s\S]*$/, "").trim();
+    const aberturas = (trecho.match(/<[a-z][a-z0-9-]*[\s>]/gi) ?? []).length;
+    if (trecho.length > 120 && aberturas >= 3) {
+      const html = `<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>Projeto</title>\n<link rel="stylesheet" href="styles.css">\n</head>\n<body>\n${trecho}\n<script src="app.js"></script>\n</body>\n</html>`;
+      return {
+        arquivos: { "index.html": html },
+        texto: texto || "Projeto atualizado com a nova versão!",
+      };
+    }
+  }
+
   return { arquivos: {}, texto: limparPensamento(resposta) || resposta.trim() };
+
 }
 
 function crc32(texto: string) {
