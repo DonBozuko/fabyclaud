@@ -95,114 +95,74 @@ export interface ContratoEntrega {
  */
 export const MODELOS_POR_ETAPA: Record<EtapaOrquestracao, PreferenciaModeloEtapa[]> = {
   diagnostico: [
-    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
-    { provedor: "groq", modelo: "llama-3.3-70b-versatile", nomeLegivel: "Llama 3.3 70B (Groq)" },
-    {
-      provedor: "openrouter",
-      modelo: "deepseek/deepseek-chat:free",
-      nomeLegivel: "DeepSeek V3 (OpenRouter)",
-    },
+    { provedor: "google", modelo: "gemini-flash-latest", nomeLegivel: "Gemini Flash (atual)" },
+    { provedor: "groq", modelo: "qwen/qwen3.8-27b", nomeLegivel: "Qwen 3.8 27B (Groq)" },
+    { provedor: "openrouter", modelo: "qwen/qwen3.8-27b:free", nomeLegivel: "Qwen 3.8 (OpenRouter)" },
   ],
   planejamento: [
-    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
+    { provedor: "google", modelo: "gemini-flash-latest", nomeLegivel: "Gemini Flash (atual)" },
+    { provedor: "google", modelo: "gemini-pro-latest", nomeLegivel: "Gemini Pro (atual)" },
     {
       provedor: "openrouter",
-      modelo: "deepseek/deepseek-r1:free",
-      nomeLegivel: "DeepSeek R1 (OpenRouter)",
+      modelo: "nvidia/nemotron-3-super-120b-a12b:free",
+      nomeLegivel: "Nemotron 3 Super (OpenRouter)",
     },
     { provedor: "deepseek", modelo: "deepseek-reasoner", nomeLegivel: "DeepSeek Reasoner" },
-    { provedor: "google", modelo: "gemini-2.5-pro", nomeLegivel: "Gemini 2.5 Pro" },
-    {
-      provedor: "groq",
-      modelo: "deepseek-r1-distill-llama-70b",
-      nomeLegivel: "DeepSeek R1 70B (Groq)",
-    },
-    { provedor: "groq", modelo: "llama-3.3-70b-versatile", nomeLegivel: "Llama 3.3 70B (Groq)" },
+    { provedor: "groq", modelo: "openai/gpt-oss-120b", nomeLegivel: "GPT-OSS 120B (Groq)" },
     { provedor: "huggingface", modelo: "deepseek-ai/DeepSeek-R1", nomeLegivel: "DeepSeek R1 (HF)" },
   ],
   arquitetura: [
-    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
-    {
-      provedor: "openrouter",
-      modelo: "deepseek/deepseek-r1:free",
-      nomeLegivel: "DeepSeek R1 (OpenRouter)",
-    },
-    {
-      provedor: "groq",
-      modelo: "deepseek-r1-distill-llama-70b",
-      nomeLegivel: "DeepSeek R1 70B (Groq)",
-    },
-    { provedor: "google", modelo: "gemini-2.5-pro", nomeLegivel: "Gemini 2.5 Pro" },
+    { provedor: "google", modelo: "gemini-flash-latest", nomeLegivel: "Gemini Flash (atual)" },
+    { provedor: "google", modelo: "gemini-pro-latest", nomeLegivel: "Gemini Pro (atual)" },
+    { provedor: "groq", modelo: "openai/gpt-oss-120b", nomeLegivel: "GPT-OSS 120B (Groq)" },
   ],
   construcao: [
-    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
-    {
-      provedor: "groq",
-      modelo: "llama-3.3-70b-versatile",
-      nomeLegivel: "Llama 3.3 70B (Groq)",
-    },
+    { provedor: "google", modelo: "gemini-flash-latest", nomeLegivel: "Gemini Flash (atual)" },
+    { provedor: "groq", modelo: "qwen/qwen3.8-27b", nomeLegivel: "Qwen 3.8 27B (Groq)" },
+    { provedor: "groq", modelo: "openai/gpt-oss-120b", nomeLegivel: "GPT-OSS 120B (Groq)" },
     {
       provedor: "openrouter",
-      modelo: "qwen/qwen-2.5-coder-32b-instruct:free",
-      nomeLegivel: "Qwen 2.5 Coder 32B (OpenRouter)",
+      modelo: "cohere/north-mini-code:free",
+      nomeLegivel: "North Mini Code (OpenRouter)",
     },
-    {
-      provedor: "openrouter",
-      modelo: "deepseek/deepseek-chat:free",
-      nomeLegivel: "DeepSeek V3 (OpenRouter)",
-    },
+    { provedor: "openrouter", modelo: "qwen/qwen3.8-27b:free", nomeLegivel: "Qwen 3.8 (OpenRouter)" },
     {
       provedor: "huggingface",
       modelo: "Qwen/Qwen2.5-Coder-32B-Instruct",
       nomeLegivel: "Qwen 2.5 Coder (HF)",
     },
-    { provedor: "google", modelo: "gemini-2.0-flash", nomeLegivel: "Gemini 2.0 Flash" },
-    { provedor: "google", modelo: "gemini-2.5-pro", nomeLegivel: "Gemini 2.5 Pro" },
+    { provedor: "google", modelo: "gemini-3.8-flash", nomeLegivel: "Gemini 3.8 Flash" },
     { provedor: "deepseek", modelo: "deepseek-chat", nomeLegivel: "DeepSeek V3" },
-    { provedor: "groq", modelo: "llama-3.3-70b-versatile", nomeLegivel: "Llama 3.3 70B (Groq)" },
   ],
   revisao: [
-    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
-    {
-      provedor: "openrouter",
-      modelo: "deepseek/deepseek-r1:free",
-      nomeLegivel: "DeepSeek R1 (OpenRouter)",
-    },
-    { provedor: "groq", modelo: "llama-3.3-70b-versatile", nomeLegivel: "Llama 3.3 70B (Groq)" },
-    { provedor: "groq", modelo: "llama-3.1-8b-instant", nomeLegivel: "Llama 3.1 8B (Groq)" },
-    { provedor: "google", modelo: "gemini-2.5-pro", nomeLegivel: "Gemini 2.5 Pro" },
+    { provedor: "google", modelo: "gemini-flash-latest", nomeLegivel: "Gemini Flash (atual)" },
+    { provedor: "groq", modelo: "openai/gpt-oss-120b", nomeLegivel: "GPT-OSS 120B (Groq)" },
+    { provedor: "openrouter", modelo: "qwen/qwen3.8-27b:free", nomeLegivel: "Qwen 3.8 (OpenRouter)" },
+    { provedor: "google", modelo: "gemini-pro-latest", nomeLegivel: "Gemini Pro (atual)" },
     { provedor: "deepseek", modelo: "deepseek-reasoner", nomeLegivel: "DeepSeek Reasoner" },
     { provedor: "huggingface", modelo: "deepseek-ai/DeepSeek-V3", nomeLegivel: "DeepSeek V3 (HF)" },
   ],
   teste: [
-    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
-    {
-      provedor: "groq",
-      modelo: "llama-3.3-70b-versatile",
-      nomeLegivel: "Llama 3.3 70B (Groq)",
-    },
+    { provedor: "google", modelo: "gemini-flash-latest", nomeLegivel: "Gemini Flash (atual)" },
+    { provedor: "groq", modelo: "qwen/qwen3.8-27b", nomeLegivel: "Qwen 3.8 27B (Groq)" },
   ],
   correcao: [
-    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
-    {
-      provedor: "groq",
-      modelo: "llama-3.3-70b-versatile",
-      nomeLegivel: "Llama 3.3 70B (Groq)",
-    },
+    { provedor: "google", modelo: "gemini-flash-latest", nomeLegivel: "Gemini Flash (atual)" },
+    { provedor: "groq", modelo: "qwen/qwen3.8-27b", nomeLegivel: "Qwen 3.8 27B (Groq)" },
+    { provedor: "groq", modelo: "openai/gpt-oss-120b", nomeLegivel: "GPT-OSS 120B (Groq)" },
   ],
-  entrega: [{ provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" }],
+  entrega: [
+    { provedor: "google", modelo: "gemini-flash-latest", nomeLegivel: "Gemini Flash (atual)" },
+  ],
   conversa: [
-    { provedor: "google", modelo: "gemini-2.5-flash", nomeLegivel: "Gemini 2.5 Flash" },
-    { provedor: "groq", modelo: "llama-3.1-8b-instant", nomeLegivel: "Llama 3.1 8B Instant" },
+    { provedor: "google", modelo: "gemini-flash-latest", nomeLegivel: "Gemini Flash (atual)" },
+    { provedor: "groq", modelo: "openai/gpt-oss-20b", nomeLegivel: "GPT-OSS 20B (Groq)" },
+    { provedor: "google", modelo: "gemini-3.1-flash-lite", nomeLegivel: "Gemini 3.1 Flash Lite" },
     { provedor: "zai", modelo: "glm-4-flash", nomeLegivel: "GLM-4 Flash" },
-    { provedor: "google", modelo: "gemini-2.0-flash", nomeLegivel: "Gemini 2.0 Flash" },
-    {
-      provedor: "openrouter",
-      modelo: "meta-llama/llama-3.3-70b-instruct:free",
-      nomeLegivel: "Llama 3.3 (OpenRouter)",
-    },
+    { provedor: "openrouter", modelo: "qwen/qwen3.8-27b:free", nomeLegivel: "Qwen 3.8 (OpenRouter)" },
   ],
 };
+
 
 /** Seleciona a melhor IA configurada para uma etapa específica de engenharia. */
 export function selecionarMelhorModeloEtapa(
