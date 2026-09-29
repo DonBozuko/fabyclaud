@@ -1,7 +1,13 @@
+/**
+ * Modelos conferidos ao vivo nas APIs em 29/09/2026. Os antigos (gemini-2.0/2.5,
+ * llama-3.x no Groq, qwen-2.5-coder e deepseek:free no OpenRouter) foram aposentados
+ * pelos provedores e devolvem 404 — por isso o motor "dizia chave inválida" sem culpa
+ * da chave. Mantenha esta lista igual ao que a API realmente serve.
+ */
 export const MODELS = {
-  google: "gemini-2.0-flash",
-  groq: "llama-3.3-70b-versatile",
-  openrouter: "qwen/qwen-2.5-coder-32b-instruct:free",
+  google: "gemini-flash-latest",
+  groq: "qwen/qwen3.8-27b",
+  openrouter: "qwen/qwen3.8-27b:free",
   huggingface: "Qwen/Qwen2.5-Coder-32B-Instruct",
   deepseek: "deepseek-chat",
   zai: "glm-4-flash",
@@ -15,27 +21,26 @@ export const MODELS = {
  */
 export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
   antigravity: [
-    "gemini-2.0-flash",
-    "gemini-2.5-flash",
-    "gemini-1.5-flash",
-    "gemini-2.5-pro",
-    "gemini-1.5-pro",
+    "antigravity-preview-latest",
+    "gemini-flash-latest",
+    "gemini-3.8-flash",
+    "gemini-3.5-flash",
   ],
   google: [
-    "gemini-2.0-flash",
-    "gemini-2.5-flash",
-    "gemini-1.5-flash",
-    "gemini-2.5-pro",
-    "gemini-1.5-pro",
     "gemini-flash-latest",
+    "gemini-3.8-flash",
+    "gemini-3.7-flash",
+    "gemini-3.5-flash",
+    "gemini-3.1-flash-lite",
+    "gemini-pro-latest",
   ],
-  groq: ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "deepseek-r1-distill-llama-70b"],
+  groq: ["qwen/qwen3.8-27b", "openai/gpt-oss-120b", "openai/gpt-oss-20b"],
   openrouter: [
-    "qwen/qwen-2.5-coder-32b-instruct:free",
-    "deepseek/deepseek-r1:free",
-    "deepseek/deepseek-chat:free",
-    "meta-llama/llama-3.3-70b-instruct:free",
-    "mistralai/mistral-small-24b-instruct-2501:free",
+    "qwen/qwen3.8-27b:free",
+    "cohere/north-mini-code:free",
+    "nvidia/nemotron-3-super-120b-a12b:free",
+    "google/gemma-4-31b-it:free",
+    "thinkingmachines/inkling:free",
   ],
   huggingface: [
     "Qwen/Qwen2.5-Coder-32B-Instruct",
@@ -49,6 +54,7 @@ export const MODELOS_ALTERNATIVOS: Record<string, string[]> = {
   /** O OmniRoute oficial escolhe somente entre os provedores conectados pelo usuário. */
   omniroute: ["auto/coding", "auto/smart", "auto/fast"],
 };
+
 
 export type EtapaOrquestracao =
   | "diagnostico"
