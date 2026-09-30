@@ -198,11 +198,14 @@ function resumirTexto(texto: string, limite: number) {
 }
 
 function limiteEntrada(url: string) {
-  if (/api\.groq\.com/i.test(url)) return 14_000;
+  // Limites conferidos ao vivo: os modelos atuais do Groq têm 131k de contexto,
+  // então 14 mil caracteres cortava o projeto sem necessidade.
+  if (/api\.groq\.com/i.test(url)) return 60_000;
   if (/api\.z\.ai/i.test(url)) return 32_000;
   if (/router\.huggingface\.co/i.test(url)) return 40_000;
   return 52_000;
 }
+
 
 async function postJson(
   url: string,
