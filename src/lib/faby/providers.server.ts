@@ -287,34 +287,35 @@ async function descobrirModelos(url: string, key: string) {
       headers: { Authorization: `Bearer ${key.trim()}`, Accept: "application/json" },
     });
     if (!resposta.ok) return [];
-    const json = (await resposta.json()) as { data?: { id?: string }[] };
-    const isGroq = /api\.groq\.com/i.test(url);
+    const json = (await resposta.json()) as {
+      data?: { id?: string; context_window?: number; context_length?: number }[];
+    };
     const ids = (json.data ?? [])
+      .filter((m) => {
+        // Modelos de contexto minúsculo (guardas, áudio, 4k) devolvem
+        // "Please reduce the length of the messages" e queimam a chamada à toa.
+        const janela = m.context_window ?? m.context_length ?? 0;
+        return janela === 0 || janela >= 32_000;
+      })
       .map((m) => m.id?.trim())
       .filter((id): id is string => Boolean(id))
       .filter((id) => {
         const nome = id.toLowerCase();
-        // Descarta modelos com limite microscópico de TPM (ex: 8k) ou de moderação/áudio no Groq
-        if (isGroq) {
-          if (
-            /gpt-oss|guard|safeguard|whisper|moderation|distil-whisper|embed|vision/i.test(nome) ||
-            nome.startsWith("openai/")
-          ) {
-            return false;
-          }
-        }
-        return true;
+        // Só descarta o que não serve para escrever código (áudio, moderação, imagem).
+        return !/guard|safeguard|whisper|moderation|orpheus|embed|rerank|tts|vision/i.test(nome);
       });
     const pontos = (id: string) => {
       const nome = id.toLowerCase();
       let total = 0;
       if (/coder|coding|code|devstral/.test(nome)) total -= 50;
+      if (/qwen|gpt-oss|nemotron|deepseek|llama/.test(nome)) total -= 30;
       if (/free|flash|small|mini/.test(nome)) total -= 20;
       if (/instruct|chat/.test(nome)) total -= 10;
       if (/vision|embed|audio|image|rerank|moderation/.test(nome)) total += 80;
       return total;
     };
     return ids.sort((a, b) => pontos(a) - pontos(b)).slice(0, 8);
+
   } catch {
     return [];
   }
