@@ -563,17 +563,18 @@ document.getElementById("btnStart").addEventListener("click", () => {
     );
     assert.equal(chaveGoogle.testada_ok, true);
 
-    // 2. Modelos ativos de produção para Groq (sem modelos aposentados)
-    assert.equal(MODELS.groq, "llama-3.3-70b-versatile", "Groq padrão deve ser o Llama 3.3 70B");
+    // 2. Modelos ativos de produção para Groq (conferidos ao vivo em 29/09/2026)
+    assert.equal(MODELS.groq, "qwen/qwen3.8-27b", "Groq padrão deve ser o Qwen 3.8 27B");
     assert.ok(
-      (MODELOS_ALTERNATIVOS["groq"] ?? []).includes("llama-3.1-8b-instant"),
-      "Groq deve incluir Llama 3.1 8B como alternativa rápida",
+      (MODELOS_ALTERNATIVOS["groq"] ?? []).includes("openai/gpt-oss-120b"),
+      "Groq deve incluir o GPT-OSS 120B como alternativa forte",
     );
     assert.ok(
-      !(MODELOS_ALTERNATIVOS["groq"] ?? []).includes("qwen-2.5-coder-32b"),
-      "Modelo aposentado do Groq não deve estar na lista de alternativas",
+      !(MODELOS_ALTERNATIVOS["groq"] ?? []).some((m) => m.startsWith("llama-3")),
+      "Modelos Llama 3.x aposentados do Groq não devem estar na lista",
     );
-    assert.match(PROVIDER_LABELS["groq"] ?? "", /Llama 3\.3 70B/);
+    assert.match(PROVIDER_LABELS["groq"] ?? "", /Qwen 3\.8/);
+
 
     // 3. Robustez de validação de capacidade para modelos com pensamento ou formatos com espaçamento
     assert.ok(respostaComprovaCapacidade("FABY_OK|HTML|CSS|JS"), "Deve aceitar formato padrão");
