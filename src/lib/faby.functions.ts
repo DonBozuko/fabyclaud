@@ -2714,23 +2714,34 @@ export const enviarMensagem = createServerFn({ method: "POST" })
           ? r.texto
           : "respondeu em texto conversacional mas não entregou os arquivos de código solicitados";
         falhas.push(`- ${nomeDe(candidato.pid)}: ${motivoFalha}`);
+        // Falha passageira (limite grátis, demora, modelo fora do ar, tamanho) não é
+        // problema da chave: marcar como inválida fazia o sistema pedir chave nova sem motivo.
+        const falhaPassageira =
+          /limite gratuito|tente novamente|demor|timeout|timed out|aborted|reduce the length|indisponível|aposentado|high demand|overload|capacity|503|502|504|429/i.test(
+            motivoFalha,
+          );
         salvarChaveArmazenada({
           user_id: context.userId,
           provider: candidato.pid,
           api_key: candidato.key,
           api_url: candidato.apiUrl || null,
-          testada_ok: false,
+          testada_ok: falhaPassageira ? true : false,
           testada_em: new Date().toISOString(),
           ultimo_erro: motivoFalha.slice(0, 300),
         });
         try {
           await context.supabase
             .from("chaves_ia")
-            .update({ ultimo_erro: motivoFalha.slice(0, 300), testada_ok: false })
+            .update(
+              falhaPassageira
+                ? { ultimo_erro: motivoFalha.slice(0, 300) }
+                : { ultimo_erro: motivoFalha.slice(0, 300), testada_ok: false },
+            )
             .eq("provider", candidato.pid);
         } catch {
           // ignore
         }
+
       }
       if (ok && falhas.length) {
         nota = `(atendido por ${nomeDe(provedorUsado)}; motivo de cada troca:\n${falhas.join("\n")}\n)`;
