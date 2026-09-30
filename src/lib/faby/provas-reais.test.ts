@@ -439,7 +439,7 @@ document.getElementById("btnStart").addEventListener("click", () => {
       !ORDEM_QUALIDADE.includes("antigravity" as any),
       "Antigravity não deve ser duplicado como provedor externo",
     );
-    assert.equal(PROVIDER_LABELS["google"], "Google Gemini (2.5 Flash / Pro)");
+    assert.equal(PROVIDER_LABELS["google"], "Google Gemini (Flash atual / Pro)");
 
     // 4. Tolerância robusta em teste de capacidade
     assert.ok(respostaComprovaCapacidade("FABY_OK|HTML|CSS|JS"));
