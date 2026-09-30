@@ -595,21 +595,21 @@ document.getElementById("btnStart").addEventListener("click", () => {
     const { aplicativoLocalParaPedido } = await import("./aplicativos-locais.server");
     const { INSTRUCAO_PROJETO } = await import("./builder.server");
 
-    // 1. Modelos do Groq não contêm modelos com limite minúsculo (openai/gpt-oss-120b com TPM 8k)
+    // 1. Nenhum modelo aposentado do Groq (Llama 3.x saiu do ar em 2026)
     assert.ok(
-      !(MODELOS_ALTERNATIVOS["groq"] ?? []).includes("openai/gpt-oss-120b"),
-      "openai/gpt-oss-120b não deve estar nas alternativas do Groq",
+      !(MODELOS_ALTERNATIVOS["groq"] ?? []).includes("llama-3.3-70b-versatile"),
+      "llama-3.3-70b-versatile foi aposentado e não deve estar nas alternativas do Groq",
     );
     for (const etapa of Object.keys(MODELOS_POR_ETAPA) as (keyof typeof MODELOS_POR_ETAPA)[]) {
       const modelosGroq = MODELOS_POR_ETAPA[etapa].filter((m) => m.provedor === "groq");
       for (const m of modelosGroq) {
-        assert.notEqual(
-          m.modelo,
-          "openai/gpt-oss-120b",
-          `Etapa ${etapa} não deve conter openai/gpt-oss-120b no Groq`,
+        assert.ok(
+          !m.modelo.startsWith("llama-3"),
+          `Etapa ${etapa} não deve usar modelo Llama 3.x aposentado no Groq`,
         );
       }
     }
+
 
     // 2. Template Rico de Homenagem a Turma do Chaves com Toggle de Tema e Recursos Reais
     const appChaves = aplicativoLocalParaPedido("crie um sereado em homenagem a turma do chaves");
