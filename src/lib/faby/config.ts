@@ -265,9 +265,10 @@ export function ehErroDeModelo(status: number, texto: string) {
 }
 
 export const PROVIDER_LABELS: Record<string, string> = {
-  google: "Google Gemini (2.5 Flash / Pro)",
-  groq: "Groq (Llama 3.3 70B / Llama 8B / DeepSeek R1)",
-  openrouter: "OpenRouter (Qwen Coder / DeepSeek R1 grátis)",
+  google: "Google Gemini (Flash atual / Pro)",
+  groq: "Groq (Qwen 3.8 / GPT-OSS 120B)",
+  openrouter: "OpenRouter (Qwen 3.8 / Nemotron grátis)",
+
   huggingface: "Hugging Face (Qwen Coder / DeepSeek V3)",
   deepseek: "DeepSeek oficial (V3 / R1 — exige saldo)",
   zai: "Z.AI (GLM-4 Flash)",
