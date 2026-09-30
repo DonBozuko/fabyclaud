@@ -542,8 +542,11 @@ async function chamarOpenAICompat(
   const teto = limiteEntrada(url);
   const promptAjustado = prompt.length > teto ? resumirTexto(prompt, teto) : prompt;
   const isGroq = /api\.groq\.com/i.test(url);
-  const maxTokens = isGroq ? 4096 : 8192;
-  const limiteTurnos = isGroq ? 2 : 6;
+  // Os modelos atuais do Groq aceitam 131k de contexto e 16k de saída: cortar em
+  // 4096 tokens era o que interrompia o arquivo no meio da construção.
+  const maxTokens = isGroq ? 12_288 : 8192;
+  const limiteTurnos = isGroq ? 4 : 6;
+
   const messages = sanitizarHistoricoParaOpenAI(
     historico,
     promptAjustado,
