@@ -198,11 +198,14 @@ function resumirTexto(texto: string, limite: number) {
 }
 
 function limiteEntrada(url: string) {
-  if (/api\.groq\.com/i.test(url)) return 14_000;
+  // Limites conferidos ao vivo: os modelos atuais do Groq têm 131k de contexto,
+  // então 14 mil caracteres cortava o projeto sem necessidade.
+  if (/api\.groq\.com/i.test(url)) return 60_000;
   if (/api\.z\.ai/i.test(url)) return 32_000;
   if (/router\.huggingface\.co/i.test(url)) return 40_000;
   return 52_000;
 }
+
 
 async function postJson(
   url: string,
@@ -287,34 +290,35 @@ async function descobrirModelos(url: string, key: string) {
       headers: { Authorization: `Bearer ${key.trim()}`, Accept: "application/json" },
     });
     if (!resposta.ok) return [];
-    const json = (await resposta.json()) as { data?: { id?: string }[] };
-    const isGroq = /api\.groq\.com/i.test(url);
+    const json = (await resposta.json()) as {
+      data?: { id?: string; context_window?: number; context_length?: number }[];
+    };
     const ids = (json.data ?? [])
+      .filter((m) => {
+        // Modelos de contexto minúsculo (guardas, áudio, 4k) devolvem
+        // "Please reduce the length of the messages" e queimam a chamada à toa.
+        const janela = m.context_window ?? m.context_length ?? 0;
+        return janela === 0 || janela >= 32_000;
+      })
       .map((m) => m.id?.trim())
       .filter((id): id is string => Boolean(id))
       .filter((id) => {
         const nome = id.toLowerCase();
-        // Descarta modelos com limite microscópico de TPM (ex: 8k) ou de moderação/áudio no Groq
-        if (isGroq) {
-          if (
-            /gpt-oss|guard|safeguard|whisper|moderation|distil-whisper|embed|vision/i.test(nome) ||
-            nome.startsWith("openai/")
-          ) {
-            return false;
-          }
-        }
-        return true;
+        // Só descarta o que não serve para escrever código (áudio, moderação, imagem).
+        return !/guard|safeguard|whisper|moderation|orpheus|embed|rerank|tts|vision/i.test(nome);
       });
     const pontos = (id: string) => {
       const nome = id.toLowerCase();
       let total = 0;
       if (/coder|coding|code|devstral/.test(nome)) total -= 50;
+      if (/qwen|gpt-oss|nemotron|deepseek|llama/.test(nome)) total -= 30;
       if (/free|flash|small|mini/.test(nome)) total -= 20;
       if (/instruct|chat/.test(nome)) total -= 10;
       if (/vision|embed|audio|image|rerank|moderation/.test(nome)) total += 80;
       return total;
     };
     return ids.sort((a, b) => pontos(a) - pontos(b)).slice(0, 8);
+
   } catch {
     return [];
   }
@@ -541,8 +545,11 @@ async function chamarOpenAICompat(
   const teto = limiteEntrada(url);
   const promptAjustado = prompt.length > teto ? resumirTexto(prompt, teto) : prompt;
   const isGroq = /api\.groq\.com/i.test(url);
-  const maxTokens = isGroq ? 4096 : 8192;
-  const limiteTurnos = isGroq ? 2 : 6;
+  // Os modelos atuais do Groq aceitam 131k de contexto e 16k de saída: cortar em
+  // 4096 tokens era o que interrompia o arquivo no meio da construção.
+  const maxTokens = isGroq ? 12_288 : 8192;
+  const limiteTurnos = isGroq ? 4 : 6;
+
   const messages = sanitizarHistoricoParaOpenAI(
     historico,
     promptAjustado,
